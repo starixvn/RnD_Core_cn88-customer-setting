@@ -1,4 +1,4 @@
-namespace Fanex.CN88.CustomerSettings.FrontEnd
+namespace CN88.CustomerSettings.FrontEnd
 {
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
