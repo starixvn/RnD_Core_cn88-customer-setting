@@ -1,0 +1,90 @@
+﻿namespace CN88.CustomerSetting.Services.Impl
+{
+    using System;
+    using System.IO;
+    using System.Resources;
+    using System.Xml.Serialization;
+    using Models.Constants;
+    using Models.Messages;
+
+    public interface MessageService
+    {
+        MessageContent TranslateMessage(int msgType, string rawMessage, byte settingLevel, string language);
+    }
+
+    public abstract class MessageServiceBase : MessageService
+    {
+        private const string NotFoundMessageFormat = "Undefined error message {0}";
+        private const string MessageFormat = "Msg_{0}";
+
+        protected MessageServiceBase(ResourceService resourceService)
+        {
+            ResourceService = resourceService;
+        }
+
+        protected ResourceService ResourceService { get; set; }
+
+        public virtual MessageContent TranslateMessage(int msgType, string rawMessage, byte settingLevel, string language)
+        {
+            switch (msgType)
+            {
+                case MessageTypes.Exception:
+                    return TranslateSimpleMessage(rawMessage);
+
+                default:
+                    return new MessageContent(rawMessage);
+            }
+        }
+
+        private MessageContent TranslateSimpleMessage(string rawMessage)
+        {
+            var mainMessage = rawMessage;
+            var simpleMessage = Deserialize<SimpleMessage>(rawMessage);
+
+            if (simpleMessage != null)
+            {
+                mainMessage = GetMessage(AppResources.Messages.ResourceManager, simpleMessage.MessageId);
+            }
+
+            return new MessageContent(mainMessage);
+        }
+
+        protected T Deserialize<T>(string text) where T : SimpleMessage
+        {
+            var serializer = new XmlSerializer(typeof(T));
+
+            using (var stringReader = new StringReader(text))
+            {
+                return (T)serializer.Deserialize(stringReader);
+            }
+        }
+
+        protected string GetMessage(ResourceManager resouceManager, int messsageId)
+        {
+            if (resouceManager == null)
+            {
+                throw new ArgumentNullException(nameof(resouceManager), "Resource Mananger cannot be null");
+            }
+
+            var key = string.Format(MessageFormat, messsageId);
+            var message = resouceManager.GetString(key);
+
+            return !string.IsNullOrEmpty(message)
+                ? message
+                : string.Format(NotFoundMessageFormat, messsageId);
+        }
+
+        protected MessageContent TranslateDefaultSettingTypeViolationMessage(
+            ResourceManager resouceManager,
+            string rawMessage,
+            byte settingLevel,
+            string language)
+        {
+            var mainMessage = Deserialize<MainMessage<DefaultSubMessage>>(rawMessage);
+            var translatedSubMessages = mainMessage.TranslateSubMessages(ResourceService, language, settingLevel);
+            var translatedMainMessage = GetMessage(resouceManager, mainMessage.MessageId);
+
+            return new MessageContent(translatedMainMessage, translatedSubMessages);
+        }
+    }
+}
