@@ -1,0 +1,100 @@
+﻿@import "./Compass/_compass";
+@import "_variables";
+
+@mixin border($side: "", $color: $border-color) {
+    @if ($side != "") {
+        border-#{$side}: $border-size $border-style $color;
+    }
+    @else {
+        border: $border-size $border-style $color;
+    }
+}
+
+@mixin col($width: 20%, $important: false) {
+    @extend %col;
+
+    @if ($important) {
+        width: $width !important;
+    }
+    @else {
+        width: $width;
+    }
+}
+
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+    display: none !important;
+}
+
+%col {
+    //display: inline-block;
+    float: left;
+}
+
+.w16-percent {
+    @include col(16%, true);
+}
+
+.w20-percent {
+    @include col(20%, true);
+}
+
+.w25-percent {
+    @include col(25%, true);
+}
+
+.w28-percent {
+    @include col(28%, true);
+}
+
+.w30-percent {
+    @include col(30%, true);
+}
+
+.w33-percent {
+    @include col(33%, true);
+
+    &--last {
+        width: 34% !important;
+    }
+}
+
+.w40-percent {
+    @include col(40%, true);
+}
+
+.w42-percent {
+    @include col(42%, true);
+}
+
+.w50-percent {
+    @include col(50%, true);
+}
+
+.w60-percent {
+    @include col(60%, true);
+}
+
+.w80-percent {
+    @include col(80%, true);
+}
+
+.w100-percent {
+    @include col(100%, true);
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.red-text {
+    color: $error-color;
+}

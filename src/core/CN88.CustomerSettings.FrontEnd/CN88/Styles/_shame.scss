@@ -1,0 +1,36 @@
+﻿@import "./Compass/_compass";
+@import "_variables";
+
+input[type=checkbox].setting-field {
+    &--error {
+        outline: {
+            style: $border-style;
+            width: 2 * $border-size;
+            color: $error-color;
+        }
+    }
+
+    &--warning {
+        outline: {
+            style: $border-style;
+            width: 2 * $border-size;
+            color: $warning-color;
+        }
+    }
+
+    &--success {
+        outline: {
+            style: $border-style;
+            width: 2 * $border-size;
+            color: $success-color;
+        }
+    }
+}
+
+select.setting-field {
+    min-width: 60px;
+}
+
+.last-setting-type .block {
+    margin-bottom: 0;
+}

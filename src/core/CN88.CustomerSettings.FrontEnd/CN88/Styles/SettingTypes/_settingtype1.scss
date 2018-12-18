@@ -1,0 +1,12 @@
+﻿.setting-type-1 {
+    .block__lbl,
+    .block__value {
+        &--half-width {
+            width: 50%;
+        }
+    }
+
+    .question-block {
+        margin: 5px 0;
+    }
+}
