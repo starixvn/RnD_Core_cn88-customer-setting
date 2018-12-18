@@ -11,12 +11,14 @@
     {
         IResult Update(
             ISettingContext settingContext,
-            InsertCustomerCommand command);
+            CreateCustomerCommand command);
     }
 
     public class InsertCustomerServiceImpl : InsertCustomerService
     {
-        public IResult Update(ISettingContext settingContext, InsertCustomerCommand command)
+        public IResult Update(
+            ISettingContext settingContext, 
+            CreateCustomerCommand command)
         {
             throw new NotImplementedException();
         }

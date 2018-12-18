@@ -8,7 +8,6 @@
     using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.Models.Requests;
     using CN88.CustomerSetting.Models.Results;
-    using CN88.CustomerSetting.Services.Impl;
     using Fanex.Logging;
 
     public interface UpdateSettingService

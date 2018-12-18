@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Functions SiteId="68" SiteName="DCS">
+    <Function Name="Customer_Setting_Core">
+      <Setting Key="CustSetting_ProductProfileSelect" SpName="Acc_CustSetting_ProductProfileSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600">
+        <Mapping DataField="SettingType" ObjectProperty="Id" />
+      </Setting>
+    </Function>
+</Functions>

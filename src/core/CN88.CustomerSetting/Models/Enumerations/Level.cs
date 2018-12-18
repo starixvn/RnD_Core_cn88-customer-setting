@@ -5,11 +5,16 @@
     [Serializable]
     public class Level : Enumeration
     {
-        public static readonly Level Company = new Level(5, "Company");
-        public static readonly Level Super = new Level(4, "Super");
-        public static readonly Level Master = new Level(3, "Master");
-        public static readonly Level Agent = new Level(2, "Agent");
-        public static readonly Level Member = new Level(1, "Member");
+        public const byte CompanyLevelId = 5;
+        public const byte SuperLevelId = 4;
+        public const byte MasterLevelId = 3;
+        public const byte AgentLevelId = 2;
+        public const byte MemberLevelId = 1;
+        public static readonly Level Company = new Level(CompanyLevelId, "Company");
+        public static readonly Level Super = new Level(SuperLevelId, "Super");
+        public static readonly Level Master = new Level(MasterLevelId, "Master");
+        public static readonly Level Agent = new Level(AgentLevelId, "Agent");
+        public static readonly Level Member = new Level(MemberLevelId, "Member");
 
         public Level()
         {

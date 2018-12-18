@@ -5,15 +5,46 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="App_Data\" />
-    <Folder Include="wwwroot\" />
+    <None Include="wwwroot\Templates\customer-setting-ie8.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\Templates\customer-setting.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Fanex.Caching" Version="2.2.0-rc1" />
+    <PackageReference Include="Fanex.Data.Repository" Version="3.0.0" />
+    <PackageReference Include="Fanex.Logging.Extensions.AspNetCore" Version="1.0.0" />
+    <PackageReference Include="Fanex.Logging.Extensions.Database" Version="1.0.5" />
+    <PackageReference Include="Fanex.Logging.Sentry.RavenClient" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\setting-types\setting-type1\CN88.CustomerSetting.SettingType1\CN88.CustomerSetting.SettingType1.csproj" />
+    <ProjectReference Include="..\..\setting-types\setting-type2\CN88.CustomerSetting.SettingType2\CN88.CustomerSetting.SettingType2.csproj" />
+    <ProjectReference Include="..\CN88.CustomerSetting\CN88.CustomerSetting.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="App_Data\SettingSPNames\PRO\Fanex.CustomerSetting.SettingType1.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="App_Data\SettingSPNames\PRO\Fanex.CustomerSetting.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="App_Data\SettingSPNames\UAT\Fanex.CustomerSetting.SettingType1.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="App_Data\SettingSPNames\UAT\Fanex.CustomerSetting.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

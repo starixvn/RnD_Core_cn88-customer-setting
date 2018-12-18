@@ -1,4 +1,4 @@
-﻿namespace CN88.CustomerSetting.Services.Impl
+﻿namespace CN88.CustomerSetting.Services
 {
     using System;
     using System.Collections.Generic;
@@ -20,9 +20,11 @@
         IResult ValidateQuerySettingAction(ISettingContext settingContext, CustomerSettingQuery query);
 
         IResult ValidateUpdateSettingAction(ISettingContext settingContext, UpdateCustomerSettingCommand command);
+
+        IResult ValidateCreateCustomerAction(ISettingContext settingContext, CreateCustomerCommand command);
     }
 
-    internal class ValidationServiceImpl : ValidationService
+    public class ValidationServiceImpl : ValidationService
     {
         private readonly ProductService productService;
         private readonly IValidationDataAccess validationDataAccess;
@@ -262,28 +264,9 @@
             logger.Warn(ex.Message, ex);
         }
 
-        private void CheckUpdateSetting(
-            ISettingContext settingContext,
-            UpdateCustomerSettingCommand command)
+        public IResult ValidateCreateCustomerAction(ISettingContext settingContext, CreateCustomerCommand command)
         {
-            var result = ValidateUpdateSettingAction(settingContext, command);
-
-            if (result.IsNotOk)
-            {
-                throw new CustomerSettingException(result.Message);
-            }
-        }
-
-        private void CheckActorPermissionOnMultipleMembers(
-            ISettingContext settingContext,
-            IEnumerable<int> memberIds)
-        {
-            var result = validationDataAccess.ValidatePermissionMultiple(settingContext.Actor.Id, string.Join(",", memberIds));
-
-            if (result.IsNotOk)
-            {
-                throw new CustomerSettingException(result.Message);
-            }
+            throw new NotImplementedException();
         }
     }
 }

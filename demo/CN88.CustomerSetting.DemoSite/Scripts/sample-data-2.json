@@ -1,0 +1,134 @@
+﻿{
+  "productId": 255,
+  "productName": "Product Sample 2",
+  "customerId": 2,
+  "customerLevel": {
+    "displayName": "Member",
+    "value": 1
+  },
+  "customerInfo": {
+    "userName": "SA-RM",
+    "userName2": null,
+    "firstName": "---",
+    "lastName": "---",
+    "phone": "-",
+    "mobilePhone": "-",
+    "fax": "-",
+    "email": "test@test.com"
+  },
+  "settingTypes": [
+    {
+      "id": 7,
+      "name": "Bet Limnit",
+      "settingLevel": 4,
+      "displayOrder": 5,
+      "displayMode": 1,
+      "settingItems": [
+        {
+          "stakeLevelValues": [
+            {
+              "stakeLevelId": 1,
+              "stakeLevelRange": "10 - 100",
+              "selected": false
+            },
+            {
+              "stakeLevelId": 2,
+              "stakeLevelRange": "101 - 1000",
+              "selected": false
+            },
+            {
+              "stakeLevelId": 3,
+              "stakeLevelRange": "1001 - 10000",
+              "selected": true
+            },
+            {
+              "stakeLevelId": 4,
+              "stakeLevelRange": "10001 - 100000",
+              "selected": false
+            },
+            {
+              "stakeLevelId": 5,
+              "stakeLevelRange": "100001 - 200000",
+              "selected": false
+            }
+          ],
+          "sportTypeId": 121,
+          "sportTypeName": "Sport Type 121",
+          "betTypeId": 30001,
+          "betTypeName": "Bet Type 30001",
+          "typeName": "Fanex.CustomerSetting.SettingType7.Models.StakeLevelItem, Fanex.CustomerSetting.SettingType7, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        },
+        {
+          "stakeLevelValues": [
+            {
+              "stakeLevelId": 1,
+              "stakeLevelRange": "10 - 100",
+              "selected": false
+            },
+            {
+              "stakeLevelId": 2,
+              "stakeLevelRange": "101 - 1000",
+              "selected": true
+            },
+            {
+              "stakeLevelId": 3,
+              "stakeLevelRange": "1001 - 10000",
+              "selected": false
+            }
+          ],
+          "sportTypeId": 121,
+          "sportTypeName": "Sport Type 121",
+          "betTypeId": 30002,
+          "betTypeName": "Bet Type 30002",
+          "typeName": "Fanex.CustomerSetting.SettingType7.Models.StakeLevelItem, Fanex.CustomerSetting.SettingType7, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        },
+        {
+          "stakeLevelValues": [
+            {
+              "stakeLevelId": 1,
+              "stakeLevelRange": "10 - 100",
+              "selected": false
+            },
+            {
+              "stakeLevelId": 2,
+              "stakeLevelRange": "101 - 1000",
+              "selected": true
+            },
+            {
+              "stakeLevelId": 3,
+              "stakeLevelRange": "1001 - 10000",
+              "selected": false
+            },
+            {
+              "stakeLevelId": 4,
+              "stakeLevelRange": "10001 - 100000",
+              "selected": false
+            },
+            {
+              "stakeLevelId": 5,
+              "stakeLevelRange": "100001 - 200000",
+              "selected": false
+            },
+            {
+              "stakeLevelId": 6,
+              "stakeLevelRange": "200001 - 1000000",
+              "selected": false
+            },
+            {
+              "stakeLevelId": 7,
+              "stakeLevelRange": "1000000 - 10000000",
+              "selected": false
+            }
+          ],
+          "sportTypeId": 122,
+          "sportTypeName": "Sport Type 122",
+          "betTypeId": 30001,
+          "betTypeName": "Bet Type 30001",
+          "typeName": "Fanex.CustomerSetting.SettingType7.Models.StakeLevelItem, Fanex.CustomerSetting.SettingType7, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "typeName": "Fanex.CustomerSetting.Models.SettingType, Fanex.CustomerSetting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "isError": false
+    }
+  ]
+}

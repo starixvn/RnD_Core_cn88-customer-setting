@@ -1,10 +1,6 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
-    public class AgentPTItem
+    public class AgentPTItem : PTItem
     {
         public decimal MasterPT { get; set; }
 

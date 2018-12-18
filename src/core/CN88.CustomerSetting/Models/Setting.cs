@@ -15,22 +15,25 @@
         public Setting(
             int customerId,
             Level customerLevel,
+            bool isCreateNew,
             byte productId,
             IEnumerable<SettingType> settingTypes)
         {
             CustomerId = customerId;
             CustomerLevel = customerLevel;
             ProductId = productId;
+            IsCreateNew = isCreateNew;
             SettingTypes = settingTypes ?? Enumerable.Empty<SettingType>();
         }
 
         public Setting(
             int customerId,
             Level customerLevel,
+            bool isCreateNew,
             byte productId,
             string productName,
             IEnumerable<SettingType> settingTypes)
-            : this(customerId, customerLevel, productId, settingTypes)
+            : this(customerId, customerLevel, isCreateNew, productId, settingTypes)
         {
             ProductName = productName;
         }
@@ -48,10 +51,10 @@
 
             set
             {
-                if (value <= 0)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(value), "Customer Id cannot be negative or zero.");
-                }
+                //if (value <= 0)
+                //{
+                //    throw new ArgumentOutOfRangeException(nameof(value), "Customer Id cannot be negative or zero.");
+                //}
 
                 customerId = value;
             }
@@ -83,5 +86,7 @@
         public IEnumerable<SettingType> SettingTypes { get; }
 
         public IResult WarningMessage { get; set; }
+
+        public bool IsCreateNew { get; }
     }
 }

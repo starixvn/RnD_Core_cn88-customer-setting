@@ -2,7 +2,7 @@
 {
     using CN88.CustomerSetting.Models;
 
-    public class AccountDetail : SettingItemDefault
+    public class AccountDetail : SettingType
     {
         public CustomerInfo CustomerInfo { get; set; }
 

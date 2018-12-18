@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\core\CN88.CustomerSetting\CN88.CustomerSetting.csproj" />
+  </ItemGroup>
+
 </Project>

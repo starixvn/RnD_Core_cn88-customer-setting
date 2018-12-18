@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+        @Styles.Render("~/Content/css")
+        @RenderSection("head", required: false)
+    <meta name="description" content="Customer Setting" />
+</head>
+<body>
+    @RenderBody()
+    <script type="text/javascript">
+        var applicationPath = "@Url.Content("~")";
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,4 +1,4 @@
-﻿namespace CN88.CustomerSetting.Services.Impl
+﻿namespace CN88.CustomerSetting.Services
 {
     using System;
     using System.Collections.Concurrent;
@@ -9,10 +9,10 @@
         SettingTypeService GetInstance(SettingType settingType);
     }
 
-    internal class SettingTypeServiceFactoryImpl : SettingTypeServiceFactory
+    public  class SettingTypeServiceFactoryImpl : SettingTypeServiceFactory
     {
-        private const string AssemblyNameFormat = "Fanex.CustomerSetting.SettingType{0}";
-        private const string TypeNameFormat = "{0}.Services.SettingTypeService";
+        private const string AssemblyNameFormat = "CN88.CustomerSetting.SettingType{0}";
+        private const string TypeNameFormat = "{0}.Services.SettingTypeServiceImpl";
 
         private static ConcurrentDictionary<string, SettingTypeService> serviceInstanceCached = new ConcurrentDictionary<string, SettingTypeService>();
 

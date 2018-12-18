@@ -6,40 +6,23 @@
 
     public class UpdateCustomerSettingCommand
     {
-        private Level _uplineLevel;
-        private ISetting _setting;
+        private Level uplineLevel;
 
         public UpdateCustomerSettingCommand(
             ISetting setting,
             Level uplineLevel = null)
         {
-            Setting = setting;
+            Setting = setting ?? throw new ArgumentNullException(nameof(setting), "Setting cannot be null when update customer setting."); ;
             UplineLevel = uplineLevel;
         }
 
-        public ISetting Setting
-        {
-            get
-            {
-                return _setting;
-            }
-
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value), "Setting cannot be null when update customer setting.");
-                }
-
-                _setting = value;
-            }
-        }
+        public ISetting Setting { get; }
 
         public Level UplineLevel
         {
             get
             {
-                return _uplineLevel;
+                return uplineLevel;
             }
 
             set
@@ -61,7 +44,7 @@
                     throw new ArgumentNullException(nameof(value), "Upline cannot be null when update member setting.");
                 }
 
-                _uplineLevel = value;
+                uplineLevel = value;
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace CN88.CustomerSetting.Services.Impl
+﻿namespace CN88.CustomerSetting.Services
 {
     using System;
     using System.IO;

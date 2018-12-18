@@ -5,11 +5,9 @@
 
     public class CustomerSettingQuery
     {
-        private int customerId;
         private Level customerLevel;
         private byte productId;
         private Level uplineLevel;
-
 
         public CustomerSettingQuery(
           bool isCreateNew,
@@ -26,16 +24,18 @@
         }
 
         public CustomerSettingQuery(
+           bool isCreateNew,
            int customerId,
            byte customerLevel,
            byte productId,
            byte? uplineLevel)
         {
+            IsCreateNew = isCreateNew;
             CustomerId = customerId;
             CustomerLevel = Enumeration.FromValue<Level>(customerLevel);
             ProductId = productId;
-            UplineLevel = uplineLevel.HasValue 
-                ? Enumeration.FromValue<Level>(uplineLevel.Value) 
+            UplineLevel = uplineLevel.HasValue
+                ? Enumeration.FromValue<Level>(uplineLevel.Value)
                 : null;
         }
 
@@ -43,23 +43,7 @@
 
         public bool IsNotCreateNew => !IsCreateNew;
 
-        public int CustomerId
-        {
-            get
-            {
-                return customerId;
-            }
-
-            set
-            {
-                if (value <= 0)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(value), "Customer Id cannot be negative or zero.");
-                }
-
-                customerId = value;
-            }
-        }
+        public int CustomerId { get; }
 
         public Level CustomerLevel
         {

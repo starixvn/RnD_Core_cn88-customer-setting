@@ -34,7 +34,7 @@
             byte actionId,
             ActionType actionType,
             string jsonParameters)
-            : base(customerId, customerLevel, productId, uplineLevel)
+            : base(false, customerId, customerLevel, productId, uplineLevel)
         {
             SettingTypeId = settingTypeId;
             ActionId = actionId;

@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<div class="container ie8" data-ng-app="actorForm" data-ng-controller="DemoFormController as ctrl">
+    <div class="left-panel">
+        <div class="form-tab">
+            <label class="tab-label">Customer Setting</label>
+        </div>
+        <div class="form first">
+            <div class="form-group">
+                <label class="control-label">System Type</label>
+                <select class="form-control"
+                        data-ng-options="item.key as item.value for item in ctrl.systemTypes"
+                        data-ng-model="ctrl.actor.system"
+                        data-ng-change="ctrl.switchForm(false)"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Actor Role</label>
+                <select class="form-control"
+                        data-ng-options="item.key as item.value for item in ctrl.actorRoles"
+                        data-ng-model="ctrl.actor.role"
+                        data-ng-change="ctrl.changeActorRole()"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Actor ID</label>
+                <input type="number"
+                       class="form-control"
+                       maxlength="15"
+                       data-ng-model="ctrl.actor.actorId"
+                       data-ng-change="ctrl.switchForm(false)" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Sub-account ID</label>
+                <input type="number"
+                       class="form-control"
+                       maxlength="15"
+                       data-ng-model="ctrl.actor.subAccountId"
+                       data-ng-change="ctrl.switchForm(false)" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Language</label>
+                <select class="form-control"
+                        data-ng-options="item.key as item.value for item in ctrl.languages"
+                        data-ng-model="ctrl.actor.language"
+                        data-ng-change="ctrl.switchForm(false)"></select>
+            </div>
+            <div class="form-group submit">
+                <button type="button"
+                        data-ng-disabled="ctrl.preventSavingSession"
+                        data-ng-class="{'disabled': ctrl.preventSavingSession}"
+                        data-ng-click="ctrl.saveSession()">
+                    Login
+                </button>
+            </div>
+        </div>
+        <div class="form last ">
+            <div class="form-group">
+                <label class="control-label">Customer Role</label>
+                <select class="form-control"
+                        data-ng-options="item.key as item.value for item in ctrl.targetRoles"
+                        data-ng-model="ctrl.target.role"
+                        data-ng-change="ctrl.getTarget(ctrl.actor.role)"></select>
+            </div>
+            <div class="form-group" data-ng-if="ctrl.uplineRoles">
+                <label class="control-label">Upline Role</label>
+                <select class="form-control"
+                        data-ng-options="item.key as item.value for item in ctrl.uplineRoles"
+                        data-ng-model="ctrl.target.uplineRole"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Product ID</label>
+                <input type="number"
+                       class="form-control"
+                       maxlength="15"
+                       data-ng-model="ctrl.target.productId" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Multiple Updates</label>
+                <input type="checkbox"
+                       class="form-control checkbox"
+                       data-ng-model="ctrl.isMultipleUpdates"
+                       data-ng-change="ctrl.getTarget(ctrl.actor.role)" />
+            </div>
+            <div class="form-group" data-ng-if="!ctrl.isMultipleUpdates">
+                <label class="control-label">Customer ID</label>
+                <input type="number"
+                       class="form-control"
+                       maxlength="15"
+                       data-ng-model="ctrl.target.customerId" />
+            </div>
+            <div class="form-group" data-ng-if="ctrl.isMultipleUpdates">
+                <label class="control-label">Customer IDs</label>
+                <input type="text"
+                       class="form-control"
+                       data-ng-model="ctrl.target.customerIds" />
+            </div>
+            <div class="form-group" data-ng-if="ctrl.isMultipleUpdates">
+                <label class="control-label">Customer Names</label>
+                <input type="text"
+                       class="form-control"
+                       data-ng-model="ctrl.target.customerNames" />
+            </div>
+            <div class="form-group submit">
+                <button type="button"
+                        data-ng-disabled="ctrl.preventShowingData"
+                        data-ng-class="{'disabled': ctrl.preventShowingData}"
+                        data-ng-click="ctrl.showSetting()">
+                    Show
+                </button>
+            </div>
+        </div>
+    </div>
+    <div posting-to-iframe></div>
+    <div class="content">
+        <iframe id="setting-page" name="setting-page" class="content-frame" frameborder="0"></iframe>
+    </div>
+</div>
+@section head {
+    @Scripts.Render("~/bundles/ie8tricks")
+}
+@section scripts {
+    @Scripts.Render("~/bundles/ie8js")
+}

@@ -9,7 +9,6 @@
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Constants;
     using CN88.CustomerSetting.Models.Requests;
-    using CN88.CustomerSetting.Services.Impl;
     using Fanex.Data.Repository;
     using Fanex.Logging;
 
@@ -20,16 +19,33 @@
 
     public class QuerySettingServiceImpl : QuerySettingService
     {
+        public QuerySettingServiceImpl(
+            ValidationService validationService,
+            IDynamicRepository dynamicRepository,
+            ILogger logger,
+            ProductService productService,
+            ResourceService resourceService,
+            SettingTypeServiceFactory settingTypeServiceFactory)
+        {
+            ValidationService = validationService;
+            DynamicRepository = dynamicRepository;
+            Logger = logger;
+            ProductService = productService;
+            ResourceService = resourceService;
+            SettingTypeServiceFactory = settingTypeServiceFactory;
+        }
+
         public ISetting GetCustomerSetting(ISettingContext settingContext, CustomerSettingQuery query)
         {
-            Validate(settingContext, query);
+            //Validate(settingContext, query);
 
-            var product = GetProductInfo(settingContext, query.ProductId, settingContext.System);
+            var product = GetProduct(settingContext, query.ProductId, settingContext.System);
             var customerSettingTypes = GetCustomerSettingTypes(settingContext, query, product.SettingTypes);
 
             var setting = new Setting(
                 query.CustomerId,
                 query.CustomerLevel,
+                query.IsCreateNew,
                 product.Id,
                 product.Name,
                 customerSettingTypes);
@@ -49,7 +65,7 @@
 
         protected IDynamicRepository DynamicRepository { get; }
 
-        protected virtual Product GetProductInfo(ISettingContext settingContext, byte productId, byte systemId)
+        protected virtual Product GetProduct(ISettingContext settingContext, byte productId, byte systemId)
         {
             var productSettingTypes = ProductService
                 .GetProductSettingTypes(productId, systemId)
@@ -87,10 +103,7 @@
                 {
                     SettingType customerSettingType = GetCustomerSettingType(settingContext, query, productSettingType);
 
-                    if (customerSettingType.SettingItems.Any())
-                    {
-                        customerSettingTypes.Add(customerSettingType);
-                    }
+                    customerSettingTypes.Add(customerSettingType);
                 });
 
             return customerSettingTypes

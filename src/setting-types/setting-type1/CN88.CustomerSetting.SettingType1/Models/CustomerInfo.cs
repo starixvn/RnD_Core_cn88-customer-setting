@@ -1,12 +1,12 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Models
 {
-    using System;
     using System.Collections.Generic;
-    using System.Text;
 
     public class CustomerInfo
     {
         public string Username { get; set; }
+
+        public string Password { get; set; }
 
         public string FirstName { get; set; }
 
@@ -20,8 +20,16 @@
 
         public int CurrencyId { get; set; }
 
+        public string CurrencyName { get; set; }
+
         public decimal Credit { get; set; }
 
         public decimal AvailableCredit { get; set; }
+
+        public string UGroup { get; set; }
+
+        public IEnumerable<string> UsernameSuffixSuggestion { get; set; }
+
+        public IEnumerable<string> UGroups { get; set; }
     }
 }

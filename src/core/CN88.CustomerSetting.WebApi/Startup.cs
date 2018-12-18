@@ -1,17 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-
-namespace CN88.CustomerSetting.WebApi
+﻿namespace CN88.CustomerSetting.WebApi
 {
+    using System;
+    using System.Linq;
+    using CN88.CustomerSetting.Services;
+    using CN88.CustomerSetting.WebApi.Middlewares;
+    using Fanex.Caching;
+    using Fanex.Data;
+    using Fanex.Data.Repository;
+    using Fanex.Logging;
+    using Fanex.Logging.Extensions;
+    using Fanex.Logging.Extensions.AspNetCore;
+    using Fanex.Logging.Extensions.Database;
+    using Fanex.Logging.Sentry.RavenClient;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using SharpRaven;
+    using Swashbuckle.AspNetCore.Swagger;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -25,6 +33,57 @@ namespace CN88.CustomerSetting.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            InitLogging(services);
+
+            InitFanexData();
+
+            services
+                .AddSingleton<IDynamicRepository, DynamicRepository>()
+                .AddSingleton<ICacheService, CacheService>()
+                .AddSingleton<ValidationService, ValidationServiceImpl>()
+                .AddSingleton<UpdateSettingService, UpdateSettingServiceImpl>()
+                .AddSingleton<InsertCustomerService, InsertCustomerServiceImpl>()
+                .AddSingleton<ResourceService, ResourceServiceImpl>()
+                .AddSingleton<ProductService, ProductServiceImpl>()
+                .AddSingleton<QuerySettingService, QuerySettingServiceImpl>()
+                .AddSingleton<SettingTypeServiceFactory, SettingTypeServiceFactoryImpl>()
+                .AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "CN88 Customer Setting", Version = "v1" });
+            });
+        }
+
+        private void InitFanexData()
+        {
+            var connections = Configuration
+               .GetSection("ConnectionStrings")
+               .GetChildren()
+               .ToDictionary(connection => connection.Key, connection => connection.Value, StringComparer.OrdinalIgnoreCase);
+
+            DbSettingProviderManager
+              .StartNewSession()
+              .UseConnectionStrings(connections)
+              .UseDefaultDbSettingProvider(Configuration["StoredProcedurePath"])
+              .Run();
+        }
+
+        private void InitLogging(IServiceCollection services)
+        {
+            LogManager
+                    .SetDefaultLogCategory(Configuration["Fanex.Logging:DefaultCategory"])
+                    .Use(new SentryLogging(new SentryEngineOptions
+                    {
+                        Dsn = new Dsn(Configuration["Fanex.Logging:SentryUrl"])
+                    }));
+
+            services.AddSingleton(Logger.Log);
+
+            ExceptionHandler
+                // To use custom config
+                .UseConfig(new LoggingConfiguration()
+                .GetHttpHeaderInfo()
+                .UseGetDbExceptionInfo(DatabaseInfoGetters.GetDbExceptionInfo));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,7 +94,21 @@ namespace CN88.CustomerSetting.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMvc();
+            app.UseSwagger()
+               .UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint($"../swagger/v1/swagger.json", "CN88 Customer Setting Docs");
+                })
+                .UseMiddleware(typeof(ErrorHandlingMiddleware))
+                .UseMvc(
+                routes =>
+                {
+                    routes.MapRoute(
+                        name: "default",
+                        template: "{controller=Home}/{action=Index}");
+                });
+
+            //LogService.Info($"CN88 Customer Setting API has been started at {DateTime.Now}");
         }
     }
 }
