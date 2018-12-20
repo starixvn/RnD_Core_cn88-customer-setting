@@ -23,7 +23,7 @@ module.exports = function (configs) {
 
     var sourceDir = path.join(process.cwd(), configs.root, configs.scripts);
     var destinationDir = path.join(process.cwd(), configs.root, configs.publish);
-    var tempDir = path.join(destinationDir, "Temp");
+    var tempDir = path.join(process.cwd(), configs.root, "Temp");
     var styleResources = [
         path.join(process.cwd(), configs.root, configs.styles, "customer-setting.{*.map,css,*.css}"),
         path.join(process.cwd(), configs.root, configs.styles, "flexbox-patch.{*.map,css,*.css}")
@@ -36,19 +36,17 @@ module.exports = function (configs) {
         productsConfigs.forEach(function (prodConfig) {
             var productTempDir = path.join(tempDir, "product-" + prodConfig.productId);
             var tsSources = [
-                path.join(sourceDir, "Core/**/*.ts"),
-                path.join(sourceDir, "Resource/*.ts")
+                path.join(sourceDir, "Core/**/*.ts")
             ];
             var htmSources = [
                 path.join(sourceDir, "Core/**/*.htm"),
-                path.join(sourceDir, "!customer-setting.htm"),
-                path.join(sourceDir, "Resource/*.htm")
+                path.join(sourceDir, "!customer-setting.htm")
             ];
 
             if (prodConfig.settingTypes.length > 0) {
                 prodConfig.settingTypes.forEach(function (item) {
-                    tsSources.push(path.join(sourceDir, "SettingType" + item, "*.ts"));
-                    htmSources.push(path.join(sourceDir, "SettingType" + item, "*.htm"));
+                    tsSources.push(path.join(sourceDir, "SettingType" + item, "**/*.ts"));
+                    htmSources.push(path.join(sourceDir, "SettingType" + item, "**/*.htm"));
                 });
             }
 
@@ -79,8 +77,7 @@ module.exports = function (configs) {
             var sources = [
                 path.join(process.cwd(), configs.bower, "angular/angular.js"),
                 path.join(tempDir, "product-" + prodConfig.productId + ".js"),
-                path.join(sourceDir, "Core/**/*.js"),
-                path.join(sourceDir, "Resource/*.js")
+                path.join(sourceDir, "Core/**/*.js")
             ];
             var destination = path.join(destinationDir, configs.scripts);
 

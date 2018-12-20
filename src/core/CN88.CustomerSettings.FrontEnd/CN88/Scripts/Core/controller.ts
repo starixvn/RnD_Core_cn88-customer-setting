@@ -1,11 +1,13 @@
 ﻿/// <reference path="../typings/angularjs/angular.d.ts" />
-/// <reference path="resources/resource-translation.ts" />
-/// <reference path="common.ts" />
-/// <reference path="helper-services.ts" />
-/// <reference path="models.ts" />
-/// <reference path="module-registrater.ts" />
-/// <reference path="parameters.ts" />
-/// <reference path="requesting-server-service.ts" />
+/// <reference path="models/result.ts" />
+/// <reference path="models/setting.ts" />
+/// <reference path="models/parameters/setting-command.ts" />
+/// <reference path="models/parameters/setting-query.ts" />
+/// <reference path="resources/resource-service.ts" />
+/// <reference path="services/app-config-service.ts" />
+/// <reference path="services/parameters-service.ts" />
+/// <reference path="services/request-service.ts" />
+/// <reference path="services/settingtypes-shared-values-service.ts" />
 
 module CustomerSetting {
     "use strict";

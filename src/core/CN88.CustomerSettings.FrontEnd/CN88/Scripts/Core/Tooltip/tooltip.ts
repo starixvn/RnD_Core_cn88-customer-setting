@@ -1,23 +1,22 @@
 ﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
-/// <reference path="../resources/resource-translation.ts" />
-/// <reference path="../helpers.ts" />
-/// <reference path="../module-registrater.ts" />
+/// <reference path="../models/enums/notification-type.ts" />
+/// <reference path="../models/enums/position-model.ts" />
+/// <reference path="../models/result.ts" />
+/// <reference path="../resources/resource-service.ts" />
 
 module CustomerSetting {
     "use strict";
 
-    interface IFieldHighlightingStateScope extends ng.IScope {
+    interface ITooltipScope extends ng.IScope {
         tooltipMessage: string;
         tooltipType: string;
         tooltipPositionModel: PositionModel,
         tooltipDisplayingSeconds: number;
         displayingTimeoutCallback: Function;
-        highlightType: string,
         fieldName: string;
-        highlightState: {};
     }
 
-    class FieldHighlightingDirective implements ng.IDirective {
+    class TooltipDirective implements ng.IDirective {
         public static $inject: string[] = ["$window", "$compile", "$timeout", "$templateCache", "$rootScope"];
 
         public restrict: string = "A";
@@ -30,13 +29,12 @@ module CustomerSetting {
                 tooltipPositionModel: "@",
                 tooltipDisplayingSeconds: "@",
                 displayingTimeoutCallback: "&",
-                fieldName: "@",
-                highlightState: "="
+                fieldName: "@"
             };
         }
 
-        public link: ng.IDirectiveLinkFn = (scope: IFieldHighlightingStateScope, element: ng.IAugmentedJQuery) => {
-            var template: {} = this.$templateCache.get("DefaultSettingBlock/HighlightField/tooltip.htm");
+        public link: ng.IDirectiveLinkFn = (scope: ITooltipScope, element: ng.IAugmentedJQuery) => {
+            var template: {} = this.$templateCache.get("Tooltip/tooltip.htm");
             var tooltip: ng.IAugmentedJQuery = angular.element(template);
             var debounceResize: any = debounce(() => {
                 if (scope.tooltipMessage) {
@@ -48,14 +46,8 @@ module CustomerSetting {
             element.parent().prepend(tooltip);
 
             scope.$watch("tooltipMessage", () => {
-                var fieldName: string = scope.fieldName;
-                var highlightState: {} = scope.highlightState;
-
-                scope.highlightType = null;
-
                 if (scope.tooltipMessage) {
                     this.calculateTooltipPosition(element, scope.tooltipPositionModel);
-                    scope.highlightType = scope.tooltipType || "error";
 
                     if (scope.tooltipDisplayingSeconds && scope.displayingTimeoutCallback) {
                         this.$timeout(() => {
@@ -63,37 +55,6 @@ module CustomerSetting {
                         }, +scope.tooltipDisplayingSeconds * 1000);
                     }
                 }
-
-                if (highlightState && fieldName) {
-                    highlightState[fieldName] = NotificationType[scope.highlightType || "none"];
-                }
-            });
-
-            if (scope.highlightState) {
-                scope.$watch("highlightState", (highlightState: {}) => {
-                    var fieldHighlightState = (highlightState || {})[scope.fieldName];
-                    var style: string = fieldHighlightState && fieldHighlightState !== NotificationType.none
-                        ? NotificationType[fieldHighlightState]
-                        : null;
-
-                    this.resetElementBorder(element);
-
-                    if (style) {
-                        element.addClass("setting-field--" + style);
-                    }
-                }, true);
-            }
-
-            element.on("change", () => {
-                if (!scope.tooltipMessage && scope.highlightState) {
-                    var fieldHighlightState = scope.highlightState[scope.fieldName];
-
-                    if (fieldHighlightState && fieldHighlightState !== NotificationType.none) {
-                        scope.highlightState[scope.fieldName] = NotificationType.none;
-                    }
-                }
-
-                scope.$apply();
             });
 
             angular.element(this.$window).on("resize", debounceResize);
@@ -187,7 +148,7 @@ module CustomerSetting {
         }
     }
 
-    ModuleRegister.directive("fieldHighlighting", FieldHighlightingDirective);
+    ModuleRegister.directive("tooltip", TooltipDirective);
 
     function TooltipMessage($injector: ng.auto.IInjectorService, $filter: ng.IFilterService): Function {
         return (result: ValidationResult, resourceServiceName: string, fieldName: string, customFilterName: string = null) => {

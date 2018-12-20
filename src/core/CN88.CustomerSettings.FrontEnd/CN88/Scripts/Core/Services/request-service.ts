@@ -1,7 +1,7 @@
-﻿/// <reference path="../typings/angularjs/angular.d.ts" />
-/// <reference path="blockui/block-ui.ts" />
-/// <reference path="module-registrater.ts" />
-/// <reference path="resources/resource-translation.ts" />
+﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
+/// <reference path="../blockui/block-ui.ts" />
+/// <reference path="../resources/resource-service.ts" />
+/// <reference path="../module-registrater.ts" />
 
 module CustomerSetting {
     "use strict";

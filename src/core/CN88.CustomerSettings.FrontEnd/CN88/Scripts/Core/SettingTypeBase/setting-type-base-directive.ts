@@ -1,12 +1,14 @@
 ﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
-/// <reference path="../helper-services.ts" />
-/// <reference path="../models.ts" />
+/// <reference path="../models/enums/level.ts" />
+/// <reference path="../models/setting-item.ts" />
+/// <reference path="../models/setting-type.ts" />
+/// <reference path="../services/settingtypes-shared-values-service.ts" />
 
 module CustomerSetting {
     "use strict";
 
     interface INewSettingItem {
-        (settingItem: any, backup?: boolean, customerLevel?: Level, uplineLevel?: Level, extraData?: Array<KeyValuePair<string, any>>): ISettingItem;
+        (settingItem: any, backup?: boolean, isNew?: boolean, customerLevel?: Level, uplineLevel?: Level, extraData?: Array<KeyValuePair<string, any>>): ISettingItem;
     }
 
     export interface ISettingTypeDirectiveSharedScope extends ng.IScope {
@@ -17,6 +19,7 @@ module CustomerSetting {
         productName: string;
         settingType: SettingType;
         settingTypeName: string;
+        isNew: boolean;
         avaiCustomerLevels: Object;
     }
 
@@ -38,6 +41,7 @@ module CustomerSetting {
                 $scope.customerLevel = settingTypesSharedValuesService.customerLevel;
                 $scope.productId = settingTypesSharedValuesService.productId;
                 $scope.productName = settingTypesSharedValuesService.productName;
+                $scope.isNew = settingTypesSharedValuesService.isNew;
                 $scope.avaiCustomerLevels = Level;
 
                 $scope.$watch("settingType", (settingType: SettingType) => {
@@ -52,6 +56,7 @@ module CustomerSetting {
                                     settingType.settingItems[index] = this.settingItemType(
                                         item,
                                         true,
+                                        $scope.isNew,
                                         $scope.customerLevel,
                                         $scope.uplineLevel,
                                         settingType.extraData);
