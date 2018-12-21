@@ -75,7 +75,15 @@ var DemoFrom;
                 _this.switchForm(true);
             });
         };
-        DemoFormController.prototype.showSetting = function () {
+        DemoFormController.prototype.showSetting = function (isCreateNew) {
+            $.ajax({
+                method: "POST",
+                url: this.resolveUrl("CN88/ViewCustomerSetting/QuerySetting"),
+                data: { productId: this.target.productId, customerId: this.target.customerId, isCreateNew: isCreateNew, customerLevel: this.target.role }
+            })
+                .done(function (msg) {
+                    console.log(msg);
+                });
             var params = {
                 language: this.actor.language,
                 productId: this.target.productId,
@@ -94,6 +102,7 @@ var DemoFrom;
                 params.customerId = this.target.customerId;
             }
             this.postingToIframeService.submitToIframe(params);
+            
         };
         DemoFormController.prototype.viewMatrix = function () {
             var productId = this.target.productId;
@@ -148,7 +157,11 @@ var DemoFrom;
             });
             this.$timeout(function () {
                 _this.scope.submitToIframe();
+
+               
             });
+
+            
         };
         PostingToIframeService.$inject = ["$timeout"];
         return PostingToIframeService;
@@ -174,18 +187,18 @@ var DemoFrom;
                     subAccId = 111;
                     break;
                 case Role.super:
-                    actorId = 1176070;
-                    name = "SA-RM";
+                    actorId = 33418956;
+                    name = "SuperTestCNE";
                     subAccId = 3;
                     break;
                 case Role.master:
-                    actorId = 1176083;
-                    name = "wsrm";
+                    actorId = 33418957;
+                    name = "SuperTestCNE0001";
                     subAccId = 728497;
                     break;
                 case Role.agent:
-                    actorId = 1176086;
-                    name = "428rm";
+                    actorId = 33418960;
+                    name = "SuperTestCNE00010001";
                     subAccId = 728498;
                     break;
             }
@@ -196,19 +209,19 @@ var DemoFrom;
             var name = "";
             switch (role) {
                 case Role.super:
-                    id = 1176070;
+                    id = 0;
                     name = "SuperTest1";
                     break;
                 case Role.master:
-                    id = 1176083;
+                    id = 33418956;
                     name = "master1";
                     break;
                 case Role.agent:
-                    id = 1176086;
+                    id = 33418957;
                     name = "agent01";
                     break;
                 case Role.member:
-                    id = 7890346;
+                    id = 33418960;
                     name = "AGENT01000";
                     break;
             }
@@ -246,7 +259,7 @@ var DemoFrom;
         SampleDataFactory.createMultipleTargetInfo = function (ids, names, role, uplineRole) {
             return new MultipleTargets(ids, names, role, uplineRole, this.defaultProductId);
         };
-        SampleDataFactory.defaultProductId = 33;
+        SampleDataFactory.defaultProductId = 1;
         SampleDataFactory.defaultLanguage = "en-US";
         return SampleDataFactory;
     }());

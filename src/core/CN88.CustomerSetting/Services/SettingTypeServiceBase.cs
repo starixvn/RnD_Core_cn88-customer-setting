@@ -5,6 +5,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using CN88.CustomerSetting.Exceptions;
+    using CN88.CustomerSetting.SpParams.Criteria;
+    using Fanex.Caching;
+    using Fanex.Data.Repository;
     using Fanex.Logging;
     using Models;
     using Models.Constants;
@@ -37,17 +40,24 @@
 
     public abstract class SettingTypeServiceBase : SettingTypeService
     {
+        private const int SettingTypeConfigCacheTimeInHours = 1;
+        private const string SettingTypeConfigCacheKey = "SettingTypeConfigCacheKey_{0}_{1}";
+
         protected SettingTypeServiceBase()
-            : this(null, null)
+            : this(null, null, null, null)
         {
         }
 
         protected SettingTypeServiceBase(
             ResourceService resourceService,
-            ILogger logger)
+            ILogger logger,
+            ICacheService cacheService,
+            IDynamicRepository dynamicRepository)
         {
-            ResourceService = resourceService;
-            Logger = logger;
+            ResourceService = resourceService ?? new ResourceServiceImpl();
+            Logger = logger ?? LogService.LoggerInstance;
+            CacheService = cacheService ?? new CacheService();
+            DynamicRepository = dynamicRepository ?? new DynamicRepository();
         }
 
         protected ResourceService ResourceService { get; set; }
@@ -55,6 +65,10 @@
         protected ILogger Logger { get; set; }
 
         protected MessageService MessageService { get; set; }
+
+        protected ICacheService CacheService { get; set; }
+
+        protected IDynamicRepository DynamicRepository { get; set; }
 
         /// <summary>
         /// Reads the update customer setting type message,
@@ -124,15 +138,13 @@
         }
 
         protected SettingResult CreateSettingResult(IResult result, int customerId, SettingType settingType)
-        {
-            return new SettingResult(
+            => new SettingResult(
                 result.Code,
                 result.Message,
                 result.MsgType,
                 customerId,
                 settingType.Id,
                 settingType.Name);
-        }
 
         protected void SetSettingTypeReadOnlyWhenIndirectUplineEditMember(SettingType settingType, CustomerSettingQuery query)
         {
@@ -142,6 +154,13 @@
                 settingType.DisplayMode = DisplayModes.ReadOnly;
             }
         }
+
+        protected IEnumerable<T> GetSettingTypeConfig<T>(int productId, int settingTypeId) 
+            where T : SettingItemDefault
+            => CacheService.GetOrSet(
+                       string.Format(SettingTypeConfigCacheKey, productId, settingTypeId),
+                       () => DynamicRepository.Fetch<T>(new GetSettingTypeConfigCriteria(productId, settingTypeId)),
+                        new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(SettingTypeConfigCacheTimeInHours, 0, 0)));
 
         public abstract SettingType GetCustomerSettingType(
             ISettingContext settingContext,

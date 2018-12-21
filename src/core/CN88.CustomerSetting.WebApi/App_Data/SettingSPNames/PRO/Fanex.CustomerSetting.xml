@@ -7,5 +7,12 @@
         </Parameters>
         <Mapping DataField="SettingType" ObjectProperty="Id" />
       </Setting>
+      <Setting Key="CS_SettingTypeConfigSel" SpName="CS_SettingTypeConfigSel" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600">
+        <Parameters>
+          <Parameter Name="IsTest" Value="true" />
+        </Parameters>
+        <Mapping DataField="SportType" ObjectProperty="SportTypeId" />
+        <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
+      </Setting>
     </Function>
 </Functions>

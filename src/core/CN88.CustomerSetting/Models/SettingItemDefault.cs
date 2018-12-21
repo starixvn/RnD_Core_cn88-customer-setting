@@ -14,6 +14,14 @@
 
         public string BetTypeName { get; set; }
 
+        public decimal IntervalValue { get; set; }
+
+        public int ChildOrder { get; set; }
+
+        public int LayoutType { get; set; }
+
+        public bool IsLive { get; set; }
+
         /// <summary>
         /// For Controller create exactly concrete class when get json from client.
         /// </summary>

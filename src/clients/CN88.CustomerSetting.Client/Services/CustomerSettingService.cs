@@ -28,7 +28,7 @@
                 throw new CustomerSettingException("Query Setting Request cannot be null");
             }
 
-            var request = new RestRequest("/customersetting/postsettingrequest", Method.POST);
+            var request = new RestRequest("/customersetting/querysetting", Method.POST);
 
             request.AddJsonBody(query);
 

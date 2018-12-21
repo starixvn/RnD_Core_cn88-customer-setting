@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using CN88.CustomerSetting.Criteria;
+    using CN88.CustomerSetting.SpParams.Criteria;
     using Fanex.Caching;
     using Fanex.Data.Repository;
     using Models;

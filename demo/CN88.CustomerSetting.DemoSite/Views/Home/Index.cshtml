@@ -107,8 +107,13 @@
                 </button>
                 <button type="button"
                         data-ng-disabled="ctrl.preventShowingData"
-                        data-ng-click="ctrl.showSetting()">
+                        data-ng-click="ctrl.showSetting(false)">
                     Edit
+                </button>
+                <button type="button"
+                        data-ng-disabled="ctrl.preventShowingData"
+                        data-ng-click="ctrl.showSetting(true)">
+                    Create
                 </button>
             </div>
         </div>
@@ -120,4 +125,5 @@
 </div>
 @section scripts {
     @Scripts.Render("~/bundles/js")
+    
 }

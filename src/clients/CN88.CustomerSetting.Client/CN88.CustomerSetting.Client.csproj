@@ -74,6 +74,7 @@
     <Compile Include="Attributes\CustomerSettingAuth.cs" />
     <Compile Include="Attributes\ValidateAntiForgery.cs" />
     <Compile Include="Configurations\CustomerSettingConfiguration.cs" />
+    <Compile Include="Controllers\CreateCustomerController.cs" />
     <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Controllers\UpdateCustomerSettingController.cs" />
     <Compile Include="Controllers\ViewCustomerSettingController.cs" />

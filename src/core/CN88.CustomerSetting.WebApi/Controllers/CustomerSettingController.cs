@@ -83,13 +83,16 @@
                         CustomerInfo = new CustomerInfo
                         {
                             Username = isCreateNew ? string.Empty : "AccountTest",
-                            CurrencyId = 1,
-                            CurrencyName = "UUS",
+                            Currency = new Currency
+                            {
+                                Id = 1,
+                                Code = "11"
+                            },
                             Credit = isCreateNew ? 0 : 100,
                             AvailableCredit = 1000,
                             UGroup = custLevel.IsMemberLevel() ? "CNA" : null,
                             UGroups = custLevel.IsMemberLevel() ? new List<string> { "CNA", "CNB", "CNC", "CND" } : null,
-                            UsernameSuffixSuggestion = custLevel.IsSuperLevel() || !isCreateNew
+                            UsernameSuffix = custLevel.IsSuperLevel() || !isCreateNew
                                 ? Enumerable.Empty<string>()
                                 : custLevel.IsMemberLevel()
                                     ? new List<string> { "2", "B", "E" }
@@ -106,9 +109,7 @@
 
         [HttpPost]
         public ISetting QuerySetting([FromBody]QuerySettingRequest request)
-        {
-            return querySettingService.GetCustomerSetting(request.GetSettingContext(), request.GetCustomerSettingQuery());
-        }
+            => querySettingService.GetCustomerSetting(request.GetSettingContext(), request.GetCustomerSettingQuery());
 
         [HttpGet]
         public string GetTemplate([FromQuery]bool isIe8)

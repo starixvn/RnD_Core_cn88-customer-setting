@@ -6,7 +6,7 @@
     using CN88.CustomerSetting.AppResources;
     using CN88.CustomerSetting.DataAccesses;
     using CN88.CustomerSetting.Exceptions;
-    using Criteria;
+    using CN88.CustomerSetting.SpParams.Criteria;
     using Fanex.Data.Repository;
     using Fanex.Logging;
     using Models;

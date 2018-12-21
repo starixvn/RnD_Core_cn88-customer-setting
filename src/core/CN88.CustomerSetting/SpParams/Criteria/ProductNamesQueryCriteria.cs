@@ -1,4 +1,4 @@
-﻿namespace CN88.CustomerSetting.Criteria
+﻿namespace CN88.CustomerSetting.SpParams.Criteria
 {
     using Fanex.Data.Repository;
 

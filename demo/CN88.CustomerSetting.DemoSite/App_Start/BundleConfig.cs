@@ -8,6 +8,7 @@
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
+                        "~/Scripts/Libraries/JQuery/jquery.js",
                         "~/Scripts/Libraries/Angular/angular.js",
                         "~/Scripts/DemoForm/demo-form.js"));
 

@@ -24,6 +24,8 @@
 
         public bool IsError { get; set; }
 
+        public decimal Interval { get; set; }
+
         public IEnumerable<ISettingItem> SettingItems
         {
             get

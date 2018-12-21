@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Fanex.Data.Repository" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\core\CN88.CustomerSetting\CN88.CustomerSetting.csproj" />
   </ItemGroup>
 

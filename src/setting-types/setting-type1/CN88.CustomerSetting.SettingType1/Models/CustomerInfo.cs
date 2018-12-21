@@ -18,9 +18,7 @@
 
         public string Fax { get; set; }
 
-        public int CurrencyId { get; set; }
-
-        public string CurrencyName { get; set; }
+        public Currency Currency { get; set; }
 
         public decimal Credit { get; set; }
 
@@ -28,7 +26,9 @@
 
         public string UGroup { get; set; }
 
-        public IEnumerable<string> UsernameSuffixSuggestion { get; set; }
+        public IEnumerable<string> UsernameSuffix { get; set; }
+
+        public string UplineUsername { get; set; }
 
         public IEnumerable<string> UGroups { get; set; }
     }
