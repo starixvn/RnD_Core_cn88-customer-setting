@@ -17,13 +17,14 @@ module CustomerSetting {
         customerLevel: Level;
         productId: number;
         productName: string;
+        sharedSettings: Setting;
         settingType: SettingType;
         settingTypeName: string;
         isNew: boolean;
         avaiCustomerLevels: Object;
     }
 
-    export class SettingTypeDirective implements ng.IDirective {
+    export class SettingTypeBaseDirective implements ng.IDirective {
         public replace: boolean = true;
 
         public get scope(): any {
@@ -41,6 +42,7 @@ module CustomerSetting {
                 $scope.customerLevel = settingTypesSharedValuesService.customerLevel;
                 $scope.productId = settingTypesSharedValuesService.productId;
                 $scope.productName = settingTypesSharedValuesService.productName;
+                $scope.sharedSettings = settingTypesSharedValuesService.sharedSettings;
                 $scope.isNew = settingTypesSharedValuesService.isNew;
                 $scope.avaiCustomerLevels = Level;
 

@@ -58,7 +58,7 @@ module CustomerSetting {
 
                 this.lang = params.language || Defaults.language;
                 this.system = params.system || Defaults.system;
-                this.isCreateNew = params.isNew || false;
+                this.isCreateNew = params.isCreateNew || false;
 
                 this.query = new SettingQuery(
                     params.productId,

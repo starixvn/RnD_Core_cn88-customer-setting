@@ -1,4 +1,5 @@
 ﻿/// <reference path="key-value-pair.ts" />
+/// <reference path="setting-item.ts" />
 
 module CustomerSetting {
     "use strict";

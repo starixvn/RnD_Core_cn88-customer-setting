@@ -78,6 +78,10 @@ module CustomerSetting {
         }
 
         public validate(): boolean {
+            if (!this.validateUsername()) {
+                return false;
+            }
+
             if (!this.validatePassword()) {
                 return false;
             }
@@ -87,6 +91,18 @@ module CustomerSetting {
             }
 
             this.resetValidationState();
+
+            return true;
+        }
+
+        private validateUsername(): boolean {
+            if (this.isNew) {
+                if (!this.username || this.username.length === 0) {
+                    this.validationState = new ValidationResult("RequiredField", "username");
+
+                    return false;
+                }
+            }
 
             return true;
         }
@@ -106,7 +122,7 @@ module CustomerSetting {
                 }
 
                 if (this.customerLevel !== Level.super) {
-                    var strongPassword = /^(?=.*\d)(?=.*[a-zA-Z!@#$%^&*])(?!.*\s).{8,100}$/;
+                    var strongPassword = /^(?=.*\d)(?=.*[a-zA-Z!@#$%^&*])(?!.*\s).{8,40}$/;
 
                     if (!this.password.match(strongPassword)) {
                         this.validationState = new ValidationResult("PasswordRules", "password");

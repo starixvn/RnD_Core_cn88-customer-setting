@@ -17,7 +17,8 @@
         styles: "Styles",
         publish: "Publish",
         templatesDir: "../CN88.CustomerSetting.WebApi/App_Data/Templates",
-        staticResourceProject: "../CN88.CustomerSetting.StaticResources/",
+        //staticResourceProject: "../CN88.CustomerSetting.StaticResources/",
+        staticResourceProject: "wwwroot",
         configFiles: {
             bower: "bower.json",
             tslint: "tslint.json",
