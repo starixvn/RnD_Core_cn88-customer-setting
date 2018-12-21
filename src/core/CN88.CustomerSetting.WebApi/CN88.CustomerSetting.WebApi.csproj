@@ -5,9 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\Templates\customer-setting-ie8.htm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="wwwroot\Templates\customer-setting.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
