@@ -1,495 +1,386 @@
 ﻿{
-    "productId": 255,
-    "productName": "Product Sample 2",
-    "customerId": 2,
-    "customerLevel": {
-        "displayName": "Super",
-        "value": 4
-    },
-    "customerInfo": {
-        "userName": "SA-RM",
-        "userName2": null,
-        "firstName": "---",
-        "lastName": "---",
-        "phone": "-",
-        "mobilePhone": "-",
-        "fax": "-",
-        "email": "test@test.com"
-    },
+  "productId": 1,
+  "productName": "1_en-US",
+  "customerId": 0,
+  "customerLevel": {
+    "displayName": "Super",
+    "value": 4
+  },
   "settingTypes": [
     {
-      "id": 4,
+      "id": 1,
       "name": null,
-      "settingLevel": 3,
-      "displayOrder": 1,
-      "displayMode": 1,
-      "isReadOnly": false,
-      "settingItems": [
-        {
-          "errorMessage": "Unable to load the setting type due to a technical problem. Please try again later or notify system administrator!",
-          "typeName": "Fanex.CustomerSetting.Models.SettingItemError, Fanex.CustomerSetting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        }
-      ],
-      "typeName": "Fanex.CustomerSetting.Models.SettingType, Fanex.CustomerSetting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "isError": true
-    },
-    {
-      "id": 7,
-      "name": "Charged Commission",
       "settingLevel": 1,
-      "displayOrder": 2,
-      "displayMode": 1,
-      "isReadOnly": false,
+      "displayOrder": 1,
+      "displayMode": 0,
+      "isError": false,
+      "interval": 0.0,
       "settingItems": [
         {
-          "chargedCommission": 80,
-          "upline": {
-            "chargedCommission": 90,
-            "upline": null,
-            "sportTypeId": 0,
-            "sportTypeName": null,
-            "betTypeId": 0,
-            "betTypeName": null,
-            "typeName": "Fanex.CustomerSetting.SettingType7.Models.ChargedCommissionItem, Fanex.CustomerSetting.SettingType7, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+          "superMinPT": 0.0,
+          "superMaxPT": 0.0,
+          "maxPT": 90.0,
+          "minPT": 0.0,
+          "username": null,
+          "password": null,
+          "firstName": null,
+          "lastName": null,
+          "phone": null,
+          "mobilePhone": null,
+          "fax": null,
+          "currency": {
+            "id": 1,
+            "name": "SD$",
+            "code": "SGD"
           },
-          "sportTypeId": 121,
-          "sportTypeName": "Sport Type 121",
-          "betTypeId": 30001,
-          "betTypeName": "Bet Type 30001",
-          "typeName": "Fanex.CustomerSetting.SettingType7.Models.ChargedCommissionItem, Fanex.CustomerSetting.SettingType7, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "chargedCommission": 75,
-          "upline": {
-            "chargedCommission": 80,
-            "upline": null,
-            "sportTypeId": 0,
-            "sportTypeName": null,
-            "betTypeId": 0,
-            "betTypeName": null,
-            "typeName": "Fanex.CustomerSetting.SettingType7.Models.ChargedCommissionItem, Fanex.CustomerSetting.SettingType7, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-          },
-          "sportTypeId": 121,
-          "sportTypeName": "Sport Type 121",
-          "betTypeId": 30002,
-          "betTypeName": "Bet Type 30002",
-          "typeName": "Fanex.CustomerSetting.SettingType7.Models.ChargedCommissionItem, Fanex.CustomerSetting.SettingType7, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "chargedCommission": 60,
-          "upline": {
-            "chargedCommission":70,
-            "upline": null,
-            "sportTypeId": 0,
-            "sportTypeName": null,
-            "betTypeId": 0,
-            "betTypeName": null,
-            "typeName": "Fanex.CustomerSetting.SettingType7.Models.ChargedCommissionItem, Fanex.CustomerSetting.SettingType7, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-          },
-          "sportTypeId": 122,
-          "sportTypeName": "Sport Type 122",
-          "betTypeId": 30001,
-          "betTypeName": "Bet Type 30001",
-          "typeName": "Fanex.CustomerSetting.SettingType7.Models.ChargedCommissionItem, Fanex.CustomerSetting.SettingType7, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "chargedCommission": 85,
-          "upline": {
-            "chargedCommission": 90,
-            "upline": null,
-            "sportTypeId": 0,
-            "sportTypeName": null,
-            "betTypeId": 0,
-            "betTypeName": null,
-            "typeName": "Fanex.CustomerSetting.SettingType7.Models.ChargedCommissionItem, Fanex.CustomerSetting.SettingType7, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-          },
-          "sportTypeId": 122,
-          "sportTypeName": "Sport Type 122",
-          "betTypeId": 30002,
-          "betTypeName": "Bet Type 30002",
-          "typeName": "Fanex.CustomerSetting.SettingType7.Models.ChargedCommissionItem, Fanex.CustomerSetting.SettingType7, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+          "credit": 0.0,
+          "availableCredit": 0.0,
+          "uGroup": null,
+          "usernameSuffix": null,
+          "uplineUsername": null,
+          "uGroups": null,
+          "currencies": [
+            {
+              "id": 1,
+              "name": "SD$",
+              "code": "SGD"
+            },
+            {
+              "id": 2,
+              "name": "RM",
+              "code": "MYR"
+            },
+            {
+              "id": 3,
+              "name": "US$",
+              "code": "USD"
+            },
+            {
+              "id": 4,
+              "name": "TB",
+              "code": "THB"
+            },
+            {
+              "id": 5,
+              "name": "HK$",
+              "code": "HKD"
+            },
+            {
+              "id": 6,
+              "name": "EURO",
+              "code": "EUR"
+            },
+            {
+              "id": 9,
+              "name": "AUD",
+              "code": "AUD"
+            },
+            {
+              "id": 12,
+              "name": "GBP",
+              "code": "GBP"
+            },
+            {
+              "id": 13,
+              "name": "RMB",
+              "code": "CNY"
+            },
+            {
+              "id": 15,
+              "name": "IN",
+              "code": "IDR"
+            },
+            {
+              "id": 16,
+              "name": "Yen",
+              "code": "USD"
+            },
+            {
+              "id": 17,
+              "name": "NTD",
+              "code": "USD"
+            },
+            {
+              "id": 20,
+              "name": "UUS",
+              "code": ""
+            },
+            {
+              "id": 21,
+              "name": "CAD",
+              "code": "CAD"
+            },
+            {
+              "id": 22,
+              "name": "IND",
+              "code": "IDR"
+            },
+            {
+              "id": 27,
+              "name": "H",
+              "code": "H"
+            },
+            {
+              "id": 28,
+              "name": "C",
+              "code": "C"
+            },
+            {
+              "id": 30,
+              "name": "NT",
+              "code": "TWD"
+            },
+            {
+              "id": 31,
+              "name": "Pts",
+              "code": "JPY"
+            },
+            {
+              "id": 32,
+              "name": "JPY",
+              "code": "JPY"
+            },
+            {
+              "id": 33,
+              "name": "IDD",
+              "code": "IDR"
+            },
+            {
+              "id": 34,
+              "name": "IDR",
+              "code": "IDR"
+            },
+            {
+              "id": 35,
+              "name": "$US",
+              "code": "USD"
+            },
+            {
+              "id": 36,
+              "name": "Y$US",
+              "code": "USD"
+            },
+            {
+              "id": 37,
+              "name": "P",
+              "code": "JPY"
+            },
+            {
+              "id": 40,
+              "name": "IRR",
+              "code": "USD"
+            },
+            {
+              "id": 41,
+              "name": "CHF",
+              "code": "CHF"
+            },
+            {
+              "id": 42,
+              "name": "PE",
+              "code": "PHP"
+            },
+            {
+              "id": 43,
+              "name": "THB",
+              "code": "THB"
+            },
+            {
+              "id": 44,
+              "name": "PT",
+              "code": "KRW"
+            },
+            {
+              "id": 45,
+              "name": "Won",
+              "code": "KRW"
+            },
+            {
+              "id": 46,
+              "name": "BND",
+              "code": "BND"
+            },
+            {
+              "id": 47,
+              "name": "DDD",
+              "code": "IDR"
+            },
+            {
+              "id": 48,
+              "name": "ZAR",
+              "code": "ZAR"
+            },
+            {
+              "id": 49,
+              "name": "MXN",
+              "code": "MXN"
+            },
+            {
+              "id": 50,
+              "name": "CAN",
+              "code": "CAD"
+            },
+            {
+              "id": 52,
+              "name": "DKK",
+              "code": "DKK"
+            },
+            {
+              "id": 53,
+              "name": "SEK",
+              "code": "SEK"
+            },
+            {
+              "id": 54,
+              "name": "NOK",
+              "code": "NOK"
+            },
+            {
+              "id": 55,
+              "name": "RUB",
+              "code": "RUB"
+            },
+            {
+              "id": 56,
+              "name": "PLN",
+              "code": "PLN"
+            },
+            {
+              "id": 57,
+              "name": "CZK",
+              "code": "CZK"
+            },
+            {
+              "id": 58,
+              "name": "RON",
+              "code": "RON"
+            },
+            {
+              "id": 61,
+              "name": "INR",
+              "code": "INR"
+            },
+            {
+              "id": 62,
+              "name": "KW",
+              "code": "KRW"
+            },
+            {
+              "id": 63,
+              "name": "NZD",
+              "code": "NZD"
+            },
+            {
+              "id": 64,
+              "name": "UT",
+              "code": "USD"
+            },
+            {
+              "id": 65,
+              "name": "UDI",
+              "code": "USD"
+            },
+            {
+              "id": 66,
+              "name": "YUN",
+              "code": "CNY"
+            },
+            {
+              "id": 67,
+              "name": "HKK",
+              "code": "HKD"
+            },
+            {
+              "id": 68,
+              "name": "POS",
+              "code": "USD"
+            },
+            {
+              "id": 69,
+              "name": "MMK",
+              "code": "MMK"
+            },
+            {
+              "id": 70,
+              "name": "MKK",
+              "code": "MMK"
+            },
+            {
+              "id": 71,
+              "name": "KHR",
+              "code": "KHR"
+            },
+            {
+              "id": 72,
+              "name": "YNG",
+              "code": "YNG"
+            },
+            {
+              "id": 73,
+              "name": "LIR",
+              "code": "TRY"
+            },
+            {
+              "id": 74,
+              "name": "TH",
+              "code": "USD"
+            },
+            {
+              "id": 75,
+              "name": "PTU",
+              "code": "INR"
+            },
+            {
+              "id": 76,
+              "name": "PS",
+              "code": "INR"
+            },
+            {
+              "id": 77,
+              "name": "PTH",
+              "code": "INR"
+            },
+            {
+              "id": 78,
+              "name": "EUR",
+              "code": "EUR"
+            },
+            {
+              "id": 79,
+              "name": "KES",
+              "code": "KES"
+            },
+            {
+              "id": 80,
+              "name": "GHS",
+              "code": "GHS"
+            }
+          ],
+          "sportTypeId": 1,
+          "sportTypeName": null,
+          "betTypeId": 1,
+          "betTypeName": null,
+          "intervalValue": 1.00000000,
+          "childOrder": 0,
+          "layoutType": 0,
+          "isLive": false,
+          "typeName": "CN88.CustomerSetting.SettingType1.Models.SuperPTItem, CN88.CustomerSetting.SettingType1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
         }
       ],
-      "typeName": "Fanex.CustomerSetting.Models.SettingType, Fanex.CustomerSetting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "isError": false
-    },
-    {
-      "id": 3,
-      "name": "Commission",
-      "settingLevel": 4,
-      "displayOrder": 2,
-      "displayMode": 1,
-      "isReadOnly": false,
-      "settingItems": [
-        {
-          "commRate": 0.00900000,
-          "upline": {
-            "commRate": 0.01000000,
-            "upline": null,
-            "sportTypeId": 0,
-            "sportTypeName": null,
-            "betTypeId": 0,
-            "betTypeName": null,
-            "typeName": "Fanex.CustomerSetting.SettingType3.Models.CommissionItem, Fanex.CustomerSetting.SettingType3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-          },
-          "sportTypeId": 121,
-          "sportTypeName": "Sport Type 121",
-          "betTypeId": 30001,
-          "betTypeName": "Bet Type 30001",
-          "typeName": "Fanex.CustomerSetting.SettingType3.Models.CommissionItem, Fanex.CustomerSetting.SettingType3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "commRate": 0.00750000,
-          "upline": {
-            "commRate": 0.01000000,
-            "upline": null,
-            "sportTypeId": 0,
-            "sportTypeName": null,
-            "betTypeId": 0,
-            "betTypeName": null,
-            "typeName": "Fanex.CustomerSetting.SettingType3.Models.CommissionItem, Fanex.CustomerSetting.SettingType3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-          },
-          "sportTypeId": 121,
-          "sportTypeName": "Sport Type 121",
-          "betTypeId": 30002,
-          "betTypeName": "Bet Type 30002",
-          "typeName": "Fanex.CustomerSetting.SettingType3.Models.CommissionItem, Fanex.CustomerSetting.SettingType3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "commRate": 0.00900000,
-          "upline": {
-            "commRate": 0.01000000,
-            "upline": null,
-            "sportTypeId": 0,
-            "sportTypeName": null,
-            "betTypeId": 0,
-            "betTypeName": null,
-            "typeName": "Fanex.CustomerSetting.SettingType3.Models.CommissionItem, Fanex.CustomerSetting.SettingType3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-          },
-          "sportTypeId": 122,
-          "sportTypeName": "Sport Type 122",
-          "betTypeId": 30001,
-          "betTypeName": "Bet Type 30001",
-          "typeName": "Fanex.CustomerSetting.SettingType3.Models.CommissionItem, Fanex.CustomerSetting.SettingType3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "commRate": 0.00850000,
-          "upline": {
-            "commRate": 0.01000000,
-            "upline": null,
-            "sportTypeId": 0,
-            "sportTypeName": null,
-            "betTypeId": 0,
-            "betTypeName": null,
-            "typeName": "Fanex.CustomerSetting.SettingType3.Models.CommissionItem, Fanex.CustomerSetting.SettingType3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-          },
-          "sportTypeId": 122,
-          "sportTypeName": "Sport Type 122",
-          "betTypeId": 30002,
-          "betTypeName": "Bet Type 30002",
-          "typeName": "Fanex.CustomerSetting.SettingType3.Models.CommissionItem, Fanex.CustomerSetting.SettingType3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        }
-      ],
-      "typeName": "Fanex.CustomerSetting.Models.SettingType, Fanex.CustomerSetting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "isError": false
+      "typeName": "CN88.CustomerSetting.Models.SettingType, CN88.CustomerSetting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     },
     {
       "id": 2,
-      "name": "Bet Setting",
+      "name": null,
       "settingLevel": 4,
-      "displayOrder": 3,
-      "displayMode": 1,
-      "isReadOnly": false,
-      "settingItems": [
-        {
-          "minBet": 250.0000,
-          "maxBet": 1000.0000,
-          "maxPerMatch": 2000.0000,
-          "upline": {
-            "minBet": 0.0000,
-            "maxBet": 0.0,
-            "maxPerMatch": 0.0,
-            "upline": null,
-            "sportTypeId": 0,
-            "sportTypeName": null,
-            "betTypeId": 0,
-            "betTypeName": null,
-            "typeName": "Fanex.CustomerSetting.SettingType2.Models.BetLimitItem, Fanex.CustomerSetting.SettingType2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-          },
-          "sportTypeId": 121,
-          "sportTypeName": "Sport Type 121",
-          "betTypeId": 30001,
-          "betTypeName": "Bet Type 30001",
-          "typeName": "Fanex.CustomerSetting.SettingType2.Models.BetLimitItem, Fanex.CustomerSetting.SettingType2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "minBet": 250.0000,
-          "maxBet": 1000.0000,
-          "maxPerMatch": 2000.0000,
-          "upline": {
-            "minBet": 0.0000,
-            "maxBet": 0.0,
-            "maxPerMatch": 0.0,
-            "upline": null,
-            "sportTypeId": 0,
-            "sportTypeName": null,
-            "betTypeId": 0,
-            "betTypeName": null,
-            "typeName": "Fanex.CustomerSetting.SettingType2.Models.BetLimitItem, Fanex.CustomerSetting.SettingType2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-          },
-          "sportTypeId": 121,
-          "sportTypeName": "Sport Type 121",
-          "betTypeId": 30002,
-          "betTypeName": "Bet Type 30002",
-          "typeName": "Fanex.CustomerSetting.SettingType2.Models.BetLimitItem, Fanex.CustomerSetting.SettingType2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "minBet": 124.0000,
-          "maxBet": 1000.0000,
-          "maxPerMatch": 2000.0000,
-          "upline": {
-            "minBet": 0.0000,
-            "maxBet": 0.0,
-            "maxPerMatch": 0.0,
-            "upline": null,
-            "sportTypeId": 0,
-            "sportTypeName": null,
-            "betTypeId": 0,
-            "betTypeName": null,
-            "typeName": "Fanex.CustomerSetting.SettingType2.Models.BetLimitItem, Fanex.CustomerSetting.SettingType2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-          },
-          "sportTypeId": 122,
-          "sportTypeName": "Sport Type 122",
-          "betTypeId": 30001,
-          "betTypeName": "Bet Type 30001",
-          "typeName": "Fanex.CustomerSetting.SettingType2.Models.BetLimitItem, Fanex.CustomerSetting.SettingType2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "minBet": 107.0000,
-          "maxBet": 1002.0000,
-          "maxPerMatch": 2000.0000,
-          "upline": {
-            "minBet": 0.0000,
-            "maxBet": 0.0,
-            "maxPerMatch": 0.0,
-            "upline": null,
-            "sportTypeId": 0,
-            "sportTypeName": null,
-            "betTypeId": 0,
-            "betTypeName": null,
-            "typeName": "Fanex.CustomerSetting.SettingType2.Models.BetLimitItem, Fanex.CustomerSetting.SettingType2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-          },
-          "sportTypeId": 122,
-          "sportTypeName": "Sport Type 122",
-          "betTypeId": 30002,
-          "betTypeName": "Bet Type 30002",
-          "typeName": "Fanex.CustomerSetting.SettingType2.Models.BetLimitItem, Fanex.CustomerSetting.SettingType2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        }
-      ],
-      "typeName": "Fanex.CustomerSetting.Models.SettingType, Fanex.CustomerSetting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "isError": false
-    },
-    {
-      "isDisableMasterAutoPT": false,
-      "id": 1,
-      "name": "Position Taking",
-      "settingLevel": 2,
-      "displayOrder": 4,
-      "displayMode": 1,
-      "isReadOnly": false,
-      "settingItems": [
-        {
-          "s4": 90,
-          "m4": 90,
-          "a4": 90,
-          "n4": 80,
-          "defaultMaxPT": 90,
-          "isLive": false,
-          "sportTypeId": 121,
-          "sportTypeName": "Sport Type 121",
-          "betTypeId": 30001,
-          "betTypeName": "Bet Type 30001",
-          "typeName": "Fanex.CustomerSetting.SettingType1.Models.SuperPTItem, Fanex.CustomerSetting.SettingType1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "s4": 90,
-          "m4": 90,
-          "a4": 90,
-          "n4": 85,
-          "defaultMaxPT": 90,
-          "isLive": true,
-          "sportTypeId": 121,
-          "sportTypeName": "Sport Type 121",
-          "betTypeId": 30001,
-          "betTypeName": "Bet Type 30001",
-          "typeName": "Fanex.CustomerSetting.SettingType1.Models.SuperPTItem, Fanex.CustomerSetting.SettingType1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "s4": 90,
-          "m4": 90,
-          "a4": 81,
-          "n4": 85,
-          "defaultMaxPT": 90,
-          "isLive": false,
-          "sportTypeId": 122,
-          "sportTypeName": "Sport Type 122",
-          "betTypeId": 30001,
-          "betTypeName": "Bet Type 30001",
-          "typeName": "Fanex.CustomerSetting.SettingType1.Models.SuperPTItem, Fanex.CustomerSetting.SettingType1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "s4": 90,
-          "m4": 90,
-          "a4": 89,
-          "n4": 85,
-          "defaultMaxPT": 90,
-          "isLive": true,
-          "sportTypeId": 122,
-          "sportTypeName": "Sport Type 122",
-          "betTypeId": 30001,
-          "betTypeName": "Bet Type 30001",
-          "typeName": "Fanex.CustomerSetting.SettingType1.Models.SuperPTItem, Fanex.CustomerSetting.SettingType1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        }
-      ],
-      "typeName": "Fanex.CustomerSetting.SettingType1.Models.PTSettingType, Fanex.CustomerSetting.SettingType1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "isError": false
-    },
-    {
-      "id": 5,
-      "name": "Bet Limnit",
-      "settingLevel": 4,
-      "displayOrder": 5,
-      "displayMode": 1,
-      "isReadOnly": false,
-      "settingItems": [
-        {
-          "stakeLevels": [
-            {
-              "stakeLevelId": 1,
-              "min": 10,
-              "max": 100,
-              "selected": true
-            },
-            {
-              "stakeLevelId": 2,
-              "min": 101,
-              "max": 1000,
-              "selected": true
-            },
-            {
-              "stakeLevelId": 3,
-              "min": 1001,
-              "max": 10000,
-              "selected": false
-            },
-            {
-              "stakeLevelId": 4,
-              "min": 10001,
-              "max": 100000,
-              "selected": false
-            },
-            {
-              "stakeLevelId": 5,
-              "min": 100001,
-              "max": 200000,
-              "selected": false
-            }
-          ],
-          "sportTypeId": 121,
-          "sportTypeName": "Sport Type 121",
-          "betTypeId": 30001,
-          "betTypeName": "Bet Type 30001",
-          "typeName": "Fanex.CustomerSetting.SettingType5.Models.BetLimitItem, Fanex.CustomerSetting.SettingType5, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "stakeLevels": [
-            {
-              "stakeLevelId": 1,
-              "min": 10,
-              "max": 100,
-              "selected": false
-            },
-            {
-              "stakeLevelId": 2,
-              "min": 101,
-              "max": 1000,
-              "selected": true
-            },
-            {
-              "stakeLevelId": 3,
-              "min": 1001,
-              "max": 10000,
-              "selected": false
-            }
-          ],
-          "sportTypeId": 121,
-          "sportTypeName": "Sport Type 121",
-          "betTypeId": 30002,
-          "betTypeName": "Bet Type 30002",
-          "typeName": "Fanex.CustomerSetting.SettingType5.Models.BetLimitItem, Fanex.CustomerSetting.SettingType5, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "stakeLevels": [
-            {
-              "stakeLevelId": 1,
-              "min": 10,
-              "max": 100,
-              "selected": false
-            },
-            {
-              "stakeLevelId": 2,
-              "min": 101,
-              "max": 1000,
-              "selected": true
-            },
-            {
-              "stakeLevelId": 3,
-              "min": 1001,
-              "max": 10000,
-              "selected": false
-            },
-            {
-              "stakeLevelId": 4,
-              "min": 10001,
-              "max": 100000,
-              "selected": false
-            },
-            {
-              "stakeLevelId": 5,
-              "min": 100001,
-              "max": 200000,
-              "selected": true
-            },
-            {
-              "stakeLevelId": 6,
-              "min": 200001,
-              "max": 300000,
-              "selected": false
-            },
-            {
-              "stakeLevelId": 7,
-              "min": 300001,
-              "max": 400000,
-              "selected": false
-            }
-          ],
-          "sportTypeId": 122,
-          "sportTypeName": "Sport Type 122",
-          "betTypeId": 30001,
-          "betTypeName": "Bet Type 30001",
-          "typeName": "Fanex.CustomerSetting.SettingType5.Models.BetLimitItem, Fanex.CustomerSetting.SettingType5, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        },
-        {
-          "stakeLevels": [ ],
-          "sportTypeId": 122,
-          "sportTypeName": "Sport Type 122",
-          "betTypeId": 30002,
-          "betTypeName": "Bet Type 30002",
-          "typeName": "Fanex.CustomerSetting.SettingType5.Models.BetLimitItem, Fanex.CustomerSetting.SettingType5, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
-        }
-      ],
-      "typeName": "Fanex.CustomerSetting.Models.SettingType, Fanex.CustomerSetting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
-      "isError": false
+      "displayOrder": 2,
+      "displayMode": 0,
+      "isError": false,
+      "interval": 0.0,
+      "settingItems": [],
+      "typeName": "CN88.CustomerSetting.SettingType2.Models.CommBetSetting, CN88.CustomerSetting.SettingType2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     }
-  ]
+  ],
+  "warningMessage": null,
+  "isCreateNew": true
 }

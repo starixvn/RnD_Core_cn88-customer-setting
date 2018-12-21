@@ -7,19 +7,7 @@ module CustomerSetting {
     "use strict";
 
     export class SettingQuery extends AbstractSettingQuery {
-        private custId: number;
-
-        public get customerId(): number {
-            return this.custId;
-        }
-
-        public set customerId(custId: number) {
-            if (custId <= 0) {
-                throw Exceptions.negativeParam("customerId");
-            }
-
-            this.custId = custId;
-        }
+        public customerId: number;
 
         constructor(productId: number, uplineLevel: Level, customerLevel: Level, customerId: number) {
             super(productId, uplineLevel, customerLevel);

@@ -9,6 +9,7 @@ module CustomerSetting {
 
         private applicationPath: string;
         private antiForgeryToken: string;
+        private editable: boolean;
 
         private $window: ng.IWindowService;
 
@@ -24,6 +25,7 @@ module CustomerSetting {
             if (appConfig) {
                 this.applicationPath = appConfig.applicationPath;
                 this.antiForgeryToken = appConfig.antiForgeryToken;
+                this.editable = appConfig.editable;
 
                 if (this.applicationPath && this.applicationPath[this.applicationPath.length - 1] !== "/") {
                     this.applicationPath += "/";
@@ -41,6 +43,10 @@ module CustomerSetting {
 
         public requestVerificationToken(): string {
             return this.antiForgeryToken;
+        }
+
+        public canUpdate(): boolean {
+            return this.editable;
         }
     }
 

@@ -29259,6 +29259,79 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
+    var DefaultSettingItem = (function () {
+        function DefaultSettingItem(settingItem) {
+            if (settingItem) {
+                this.sportTypeId = settingItem.sportTypeId;
+                this.sportTypeName = settingItem.sportTypeName;
+                this.betTypeId = settingItem.betTypeId;
+                this.betTypeName = settingItem.betTypeName;
+                this.typeName = settingItem.typeName;
+                if (settingItem.isLive !== undefined) {
+                    this.isLive = settingItem.isLive;
+                }
+            }
+            this.validationState = CustomerSetting.ValidationResult.normal;
+        }
+        DefaultSettingItem.prototype.isChanged = function () {
+            return (this.sportTypeId !== this.oldSetting.sportTypeId)
+                || (this.sportTypeName !== this.oldSetting.sportTypeName)
+                || (this.betTypeId !== this.oldSetting.betTypeId)
+                || (this.betTypeName !== this.oldSetting.betTypeName);
+        };
+        DefaultSettingItem.prototype.validate = function () {
+            return true;
+        };
+        DefaultSettingItem.prototype.toJson = function () {
+            var _this = this;
+            var settingItem = {};
+            var reservedProperties = ["oldSetting", "validationState", "$$hashKey"];
+            Object.keys(this).forEach(function (prop) {
+                if (_this[prop] !== undefined && _this[prop] !== null && reservedProperties.indexOf(prop) < 0) {
+                    if (_this[prop].toJson) {
+                        settingItem[prop] = _this[prop].toJson();
+                    }
+                    else {
+                        settingItem[prop] = _this[prop];
+                    }
+                }
+            });
+            return settingItem;
+        };
+        DefaultSettingItem.prototype.resetValidationState = function () {
+            this.validationState = CustomerSetting.Result.normal;
+        };
+        return DefaultSettingItem;
+    }());
+    CustomerSetting.DefaultSettingItem = DefaultSettingItem;
+    var ErrorSettingItem = (function () {
+        function ErrorSettingItem(errorItem) {
+            if (errorItem && errorItem.errorMessage) {
+                this.errorMessage = errorItem.errorMessage;
+                this.typeName = errorItem.typeName;
+            }
+        }
+        ErrorSettingItem.prototype.isChanged = function () {
+            return false;
+        };
+        ErrorSettingItem.prototype.validate = function () {
+            return true;
+        };
+        ErrorSettingItem.prototype.toJson = function () {
+            return {
+                errorMessage: this.errorMessage,
+                typeName: this.typeName
+            };
+        };
+        ;
+        return ErrorSettingItem;
+    }());
+    CustomerSetting.ErrorSettingItem = ErrorSettingItem;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
     var SettingType = (function () {
         function SettingType(settingType) {
             if (settingType) {
@@ -29557,19 +29630,6 @@ var CustomerSetting;
             _super.call(this, productId, uplineLevel, customerLevel);
             this.customerId = customerId;
         }
-        Object.defineProperty(SettingQuery.prototype, "customerId", {
-            get: function () {
-                return this.custId;
-            },
-            set: function (custId) {
-                if (custId <= 0) {
-                    throw CustomerSetting.Exceptions.negativeParam("customerId");
-                }
-                this.custId = custId;
-            },
-            enumerable: true,
-            configurable: true
-        });
         SettingQuery.prototype.toJson = function () {
             var params = {
                 customerId: this.customerId,
@@ -29623,38 +29683,6 @@ var CustomerSetting;
         return Defaults;
     }());
     CustomerSetting.Defaults = Defaults;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var AppConfigService = (function () {
-        function AppConfigService($window) {
-            var appConfig;
-            this.$window = $window;
-            appConfig = this.$window["appConfig"] || {};
-            if (appConfig) {
-                this.applicationPath = appConfig.applicationPath;
-                this.antiForgeryToken = appConfig.antiForgeryToken;
-                if (this.applicationPath && this.applicationPath[this.applicationPath.length - 1] !== "/") {
-                    this.applicationPath += "/";
-                }
-            }
-        }
-        AppConfigService.prototype.getQueryPath = function () {
-            return this.applicationPath + "viewCustomerSetting/querySetting?";
-        };
-        AppConfigService.prototype.getUpdatePath = function () {
-            return this.applicationPath + "updateCustomerSetting/updateSetting";
-        };
-        AppConfigService.prototype.requestVerificationToken = function () {
-            return this.antiForgeryToken;
-        };
-        AppConfigService.$inject = ["$window"];
-        return AppConfigService;
-    }());
-    CustomerSetting.AppConfigService = AppConfigService;
-    CustomerSetting.ModuleRegister.service("appConfigService", AppConfigService);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -29724,6 +29752,13 @@ var CustomerSetting;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(ParametersService.prototype, "isNew", {
+            get: function () {
+                return this.isCreateNew;
+            },
+            enumerable: true,
+            configurable: true
+        });
         ParametersService.prototype.getSettingQuery = function () {
             return this.query;
         };
@@ -29737,6 +29772,7 @@ var CustomerSetting;
                 var customerLevel = params.customerLevel ? params.customerLevel : undefined;
                 this.lang = params.language || CustomerSetting.Defaults.language;
                 this.system = params.system || CustomerSetting.Defaults.system;
+                this.isCreateNew = params.isCreateNew || false;
                 this.query = new CustomerSetting.SettingQuery(params.productId, uplineLevel, customerLevel, params.customerId);
             }
         };
@@ -29843,6 +29879,42 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
+    var AppConfigService = (function () {
+        function AppConfigService($window) {
+            var appConfig;
+            this.$window = $window;
+            appConfig = this.$window["appConfig"] || {};
+            if (appConfig) {
+                this.applicationPath = appConfig.applicationPath;
+                this.antiForgeryToken = appConfig.antiForgeryToken;
+                this.editable = appConfig.editable;
+                if (this.applicationPath && this.applicationPath[this.applicationPath.length - 1] !== "/") {
+                    this.applicationPath += "/";
+                }
+            }
+        }
+        AppConfigService.prototype.getQueryPath = function () {
+            return this.applicationPath + "viewCustomerSetting/querySetting?";
+        };
+        AppConfigService.prototype.getUpdatePath = function () {
+            return this.applicationPath + "updateCustomerSetting/updateSetting";
+        };
+        AppConfigService.prototype.requestVerificationToken = function () {
+            return this.antiForgeryToken;
+        };
+        AppConfigService.prototype.canUpdate = function () {
+            return this.editable;
+        };
+        AppConfigService.$inject = ["$window"];
+        return AppConfigService;
+    }());
+    CustomerSetting.AppConfigService = AppConfigService;
+    CustomerSetting.ModuleRegister.service("appConfigService", AppConfigService);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
     var BlockUiDirective = (function () {
         function BlockUiDirective() {
             this.replace = true;
@@ -29937,7 +30009,9 @@ var CustomerSetting;
         }
         SettingTypesSharedValuesService.prototype.register = function (setting, uplineLevel) {
             this.uplineLevel = uplineLevel;
+            this.isNew = this.parametersService.isNew;
             if (setting) {
+                this.sharedSettings = setting;
                 this.customerId = setting.customerId;
                 this.customerLevel = setting.customerLevel;
                 this.productId = setting.productId;
@@ -30034,11 +30108,28 @@ var CustomerSetting;
             "parametersService",
             "resourceService",
             "requestService",
-            "updatingSettingTypePromiseChain",
             "settingTypesSharedValuesService"];
         return CustomerSettingController;
     }());
     CustomerSetting.ModuleRegister.controller("customerSettingController", CustomerSettingController);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    function EditableFormFilter(appConfigService) {
+        return function (setting) {
+            var hasEditableSettingType = false;
+            if (setting && setting.settingTypes) {
+                hasEditableSettingType = setting.settingTypes.some(function (item) {
+                    return item.displayMode === CustomerSetting.DisplayMode.editable;
+                });
+            }
+            return appConfigService.canUpdate() && hasEditableSettingType;
+        };
+    }
+    EditableFormFilter.$inject = ["appConfigService"];
+    CustomerSetting.ModuleRegister.filter("editableForm", EditableFormFilter);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -30104,271 +30195,6 @@ var CustomerSetting;
         };
     }
     CustomerSetting.ModuleRegister.filter("validSettingType", ValidSettingTypeFilter);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    (function (NotificationType) {
-        NotificationType[NotificationType["none"] = 0] = "none";
-        NotificationType[NotificationType["success"] = 1] = "success";
-        NotificationType[NotificationType["warning"] = 2] = "warning";
-        NotificationType[NotificationType["error"] = 3] = "error";
-    })(CustomerSetting.NotificationType || (CustomerSetting.NotificationType = {}));
-    var NotificationType = CustomerSetting.NotificationType;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    (function (PositionModel) {
-        PositionModel[PositionModel["relative"] = 1] = "relative";
-        PositionModel[PositionModel["absolute"] = 2] = "absolute";
-        PositionModel[PositionModel["fixed"] = 3] = "fixed";
-    })(CustomerSetting.PositionModel || (CustomerSetting.PositionModel = {}));
-    var PositionModel = CustomerSetting.PositionModel;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var FieldHighlightingDirective = (function () {
-        function FieldHighlightingDirective($window, $compile, $timeout, $templateCache, $rootScope) {
-            var _this = this;
-            this.restrict = "A";
-            this.priority = 100;
-            this.link = function (scope, element) {
-                var template = _this.$templateCache.get("DefaultSettingBlock/HighlightField/tooltip.htm");
-                var tooltip = angular.element(template);
-                var debounceResize = CustomerSetting.debounce(function () {
-                    if (scope.tooltipMessage) {
-                        _this.calculateTooltipPosition(element, scope.tooltipPositionModel);
-                    }
-                }, 100);
-                _this.$compile(tooltip)(scope);
-                element.parent().prepend(tooltip);
-                scope.$watch("tooltipMessage", function () {
-                    var fieldName = scope.fieldName;
-                    var highlightState = scope.highlightState;
-                    scope.highlightType = null;
-                    if (scope.tooltipMessage) {
-                        _this.calculateTooltipPosition(element, scope.tooltipPositionModel);
-                        scope.highlightType = scope.tooltipType || "error";
-                        if (scope.tooltipDisplayingSeconds && scope.displayingTimeoutCallback) {
-                            _this.$timeout(function () {
-                                scope.displayingTimeoutCallback();
-                            }, +scope.tooltipDisplayingSeconds * 1000);
-                        }
-                    }
-                    if (highlightState && fieldName) {
-                        highlightState[fieldName] = CustomerSetting.NotificationType[scope.highlightType || "none"];
-                    }
-                });
-                if (scope.highlightState) {
-                    scope.$watch("highlightState", function (highlightState) {
-                        var fieldHighlightState = (highlightState || {})[scope.fieldName];
-                        var style = fieldHighlightState && fieldHighlightState !== CustomerSetting.NotificationType.none
-                            ? CustomerSetting.NotificationType[fieldHighlightState]
-                            : null;
-                        _this.resetElementBorder(element);
-                        if (style) {
-                            element.addClass("setting-field--" + style);
-                        }
-                    }, true);
-                }
-                element.on("change", function () {
-                    if (!scope.tooltipMessage && scope.highlightState) {
-                        var fieldHighlightState = scope.highlightState[scope.fieldName];
-                        if (fieldHighlightState && fieldHighlightState !== CustomerSetting.NotificationType.none) {
-                            scope.highlightState[scope.fieldName] = CustomerSetting.NotificationType.none;
-                        }
-                    }
-                    scope.$apply();
-                });
-                angular.element(_this.$window).on("resize", debounceResize);
-                _this.$rootScope.$on("page-height-changed", function () {
-                    if (scope.tooltipMessage) {
-                        _this.calculateTooltipPosition(element, scope.tooltipPositionModel);
-                    }
-                });
-            };
-            this.$window = $window;
-            this.$compile = $compile;
-            this.$timeout = $timeout;
-            this.$templateCache = $templateCache;
-            this.$rootScope = $rootScope;
-        }
-        Object.defineProperty(FieldHighlightingDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    tooltipMessage: "@",
-                    tooltipType: "@",
-                    tooltipPositionModel: "@",
-                    tooltipDisplayingSeconds: "@",
-                    displayingTimeoutCallback: "&",
-                    fieldName: "@",
-                    highlightState: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        FieldHighlightingDirective.prototype.calculateTooltipPosition = function (target, positionModel) {
-            var _this = this;
-            this.$timeout(function () {
-                var tooltip = angular.element(target[0].previousElementSibling);
-                if (!tooltip || tooltip.length === 0) {
-                    return;
-                }
-                tooltip.removeClass("tooltip--right tooltip--left");
-                tooltip.css({ "left": "0px", "visibility": "hidden" });
-                var elementRect = target[0].getBoundingClientRect();
-                var tooltipRect = tooltip[0].getBoundingClientRect();
-                var topOffset = 0;
-                var leftOffset = 0;
-                var arrowWidth = 5;
-                if ((+positionModel || CustomerSetting.PositionModel.relative) === CustomerSetting.PositionModel.relative) {
-                    var bodyRect = _this.$window.document.body.getBoundingClientRect();
-                    topOffset = bodyRect.top;
-                    leftOffset = bodyRect.left;
-                }
-                var top = Math.max(0, elementRect.top - topOffset - tooltipRect.height + arrowWidth);
-                var left = elementRect.left + (elementRect.width - tooltipRect.width) / 2 - leftOffset;
-                if (_this.$window.innerWidth < left + tooltipRect.width) {
-                    top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2 + arrowWidth;
-                    left = elementRect.left - tooltipRect.width - arrowWidth;
-                    tooltip.addClass("tooltip--right");
-                }
-                if (left < 0) {
-                    top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2 + arrowWidth;
-                    left = elementRect.left + elementRect.width;
-                    tooltip.addClass("tooltip--left");
-                }
-                tooltip.css({
-                    "top": top + "px",
-                    "left": left + "px",
-                    "visibility": "visible"
-                });
-            });
-        };
-        FieldHighlightingDirective.prototype.resetElementBorder = function (element) {
-            if (element.hasClass("setting-field--error")) {
-                element.removeClass("setting-field--error");
-            }
-            if (element.hasClass("setting-field--warning")) {
-                element.removeClass("setting-field--success");
-            }
-            if (element.hasClass("setting-field--success")) {
-                element.removeClass("setting-field--success");
-            }
-        };
-        FieldHighlightingDirective.$inject = ["$window", "$compile", "$timeout", "$templateCache", "$rootScope"];
-        return FieldHighlightingDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("fieldHighlighting", FieldHighlightingDirective);
-    function TooltipMessage($injector, $filter) {
-        return function (result, resourceServiceName, fieldName, customFilterName) {
-            if (customFilterName === void 0) { customFilterName = null; }
-            var message = null;
-            if (result
-                && result.message
-                && (!fieldName || (fieldName && fieldName === result.fieldName))) {
-                var resourceService = $injector.get(resourceServiceName);
-                var params = (result.msgParams || []).map(function (param) {
-                    if (typeof param === "number") {
-                        var value = $filter("number")(param);
-                        if (customFilterName) {
-                            value = $filter(customFilterName)(value);
-                        }
-                        return value;
-                    }
-                    else {
-                        return param;
-                    }
-                });
-                if (resourceService) {
-                    params.unshift(result.message);
-                    message = resourceService.getFormattedMessage.apply(resourceService, params);
-                }
-            }
-            return message;
-        };
-    }
-    TooltipMessage.$inject = ["$injector", "$filter"];
-    CustomerSetting.ModuleRegister.filter("tooltipMessage", TooltipMessage);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var DefaultSettingItem = (function () {
-        function DefaultSettingItem(settingItem) {
-            if (settingItem) {
-                this.sportTypeId = settingItem.sportTypeId;
-                this.sportTypeName = settingItem.sportTypeName;
-                this.betTypeId = settingItem.betTypeId;
-                this.betTypeName = settingItem.betTypeName;
-                this.typeName = settingItem.typeName;
-                if (settingItem.isLive !== undefined) {
-                    this.isLive = settingItem.isLive;
-                }
-            }
-            this.validationState = CustomerSetting.ValidationResult.normal;
-        }
-        DefaultSettingItem.prototype.isChanged = function () {
-            return (this.sportTypeId !== this.oldSetting.sportTypeId)
-                || (this.sportTypeName !== this.oldSetting.sportTypeName)
-                || (this.betTypeId !== this.oldSetting.betTypeId)
-                || (this.betTypeName !== this.oldSetting.betTypeName);
-        };
-        DefaultSettingItem.prototype.validate = function () {
-            return true;
-        };
-        DefaultSettingItem.prototype.toJson = function () {
-            var _this = this;
-            var settingItem = {};
-            var reservedProperties = ["oldSetting", "validationState", "$$hashKey"];
-            Object.keys(this).forEach(function (prop) {
-                if (_this[prop] !== undefined && _this[prop] !== null && reservedProperties.indexOf(prop) < 0) {
-                    if (_this[prop].toJson) {
-                        settingItem[prop] = _this[prop].toJson();
-                    }
-                    else {
-                        settingItem[prop] = _this[prop];
-                    }
-                }
-            });
-            return settingItem;
-        };
-        DefaultSettingItem.prototype.resetValidationState = function () {
-            this.validationState = CustomerSetting.Result.normal;
-        };
-        return DefaultSettingItem;
-    }());
-    CustomerSetting.DefaultSettingItem = DefaultSettingItem;
-    var ErrorSettingItem = (function () {
-        function ErrorSettingItem(errorItem) {
-            if (errorItem && errorItem.errorMessage) {
-                this.errorMessage = errorItem.errorMessage;
-                this.typeName = errorItem.typeName;
-            }
-        }
-        ErrorSettingItem.prototype.isChanged = function () {
-            return false;
-        };
-        ErrorSettingItem.prototype.validate = function () {
-            return true;
-        };
-        ErrorSettingItem.prototype.toJson = function () {
-            return {
-                errorMessage: this.errorMessage,
-                typeName: this.typeName
-            };
-        };
-        ;
-        return ErrorSettingItem;
-    }());
-    CustomerSetting.ErrorSettingItem = ErrorSettingItem;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -30538,8 +30364,8 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var SettingTypeDirective = (function () {
-        function SettingTypeDirective(settingItemType) {
+    var SettingTypeBaseDirective = (function () {
+        function SettingTypeBaseDirective(settingItemType) {
             var _this = this;
             this.replace = true;
             this.controller = [
@@ -30551,6 +30377,8 @@ var CustomerSetting;
                     $scope.customerLevel = settingTypesSharedValuesService.customerLevel;
                     $scope.productId = settingTypesSharedValuesService.productId;
                     $scope.productName = settingTypesSharedValuesService.productName;
+                    $scope.sharedSettings = settingTypesSharedValuesService.sharedSettings;
+                    $scope.isNew = settingTypesSharedValuesService.isNew;
                     $scope.avaiCustomerLevels = CustomerSetting.Level;
                     $scope.$watch("settingType", function (settingType) {
                         if (settingType && angular.isArray(settingType.settingItems)) {
@@ -30562,7 +30390,7 @@ var CustomerSetting;
                             else {
                                 settingType.settingItems.forEach(function (item, index) {
                                     if (item) {
-                                        settingType.settingItems[index] = _this.settingItemType(item, true, $scope.customerLevel, $scope.uplineLevel, settingType.extraData);
+                                        settingType.settingItems[index] = _this.settingItemType(item, true, $scope.isNew, $scope.customerLevel, $scope.uplineLevel, settingType.extraData);
                                     }
                                 });
                             }
@@ -30571,7 +30399,7 @@ var CustomerSetting;
                 }];
             this.settingItemType = settingItemType;
         }
-        Object.defineProperty(SettingTypeDirective.prototype, "scope", {
+        Object.defineProperty(SettingTypeBaseDirective.prototype, "scope", {
             get: function () {
                 return {
                     settingType: "="
@@ -30580,9 +30408,9 @@ var CustomerSetting;
             enumerable: true,
             configurable: true
         });
-        return SettingTypeDirective;
+        return SettingTypeBaseDirective;
     }());
-    CustomerSetting.SettingTypeDirective = SettingTypeDirective;
+    CustomerSetting.SettingTypeBaseDirective = SettingTypeBaseDirective;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -30648,6 +30476,169 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
+    (function (NotificationType) {
+        NotificationType[NotificationType["none"] = 0] = "none";
+        NotificationType[NotificationType["success"] = 1] = "success";
+        NotificationType[NotificationType["warning"] = 2] = "warning";
+        NotificationType[NotificationType["error"] = 3] = "error";
+    })(CustomerSetting.NotificationType || (CustomerSetting.NotificationType = {}));
+    var NotificationType = CustomerSetting.NotificationType;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    (function (PositionModel) {
+        PositionModel[PositionModel["relative"] = 1] = "relative";
+        PositionModel[PositionModel["absolute"] = 2] = "absolute";
+        PositionModel[PositionModel["fixed"] = 3] = "fixed";
+    })(CustomerSetting.PositionModel || (CustomerSetting.PositionModel = {}));
+    var PositionModel = CustomerSetting.PositionModel;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var TooltipDirective = (function () {
+        function TooltipDirective($window, $compile, $timeout, $templateCache, $rootScope) {
+            var _this = this;
+            this.restrict = "A";
+            this.priority = 100;
+            this.link = function (scope, element) {
+                var template = _this.$templateCache.get("Tooltip/tooltip.htm");
+                var tooltip = angular.element(template);
+                var debounceResize = CustomerSetting.debounce(function () {
+                    if (scope.tooltipMessage) {
+                        _this.calculateTooltipPosition(element, scope.tooltipPositionModel);
+                    }
+                }, 100);
+                _this.$compile(tooltip)(scope);
+                element.parent().prepend(tooltip);
+                scope.$watch("tooltipMessage", function () {
+                    if (scope.tooltipMessage) {
+                        _this.calculateTooltipPosition(element, scope.tooltipPositionModel);
+                        if (scope.tooltipDisplayingSeconds && scope.displayingTimeoutCallback) {
+                            _this.$timeout(function () {
+                                scope.displayingTimeoutCallback();
+                            }, +scope.tooltipDisplayingSeconds * 1000);
+                        }
+                    }
+                });
+                angular.element(_this.$window).on("resize", debounceResize);
+                _this.$rootScope.$on("page-height-changed", function () {
+                    if (scope.tooltipMessage) {
+                        _this.calculateTooltipPosition(element, scope.tooltipPositionModel);
+                    }
+                });
+            };
+            this.$window = $window;
+            this.$compile = $compile;
+            this.$timeout = $timeout;
+            this.$templateCache = $templateCache;
+            this.$rootScope = $rootScope;
+        }
+        Object.defineProperty(TooltipDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    tooltipMessage: "@",
+                    tooltipType: "@",
+                    tooltipPositionModel: "@",
+                    tooltipDisplayingSeconds: "@",
+                    displayingTimeoutCallback: "&",
+                    fieldName: "@"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        TooltipDirective.prototype.calculateTooltipPosition = function (target, positionModel) {
+            var _this = this;
+            this.$timeout(function () {
+                var tooltip = angular.element(target[0].previousElementSibling);
+                if (!tooltip || tooltip.length === 0) {
+                    return;
+                }
+                tooltip.removeClass("tooltip--right tooltip--left");
+                tooltip.css({ "left": "0px", "visibility": "hidden" });
+                var elementRect = target[0].getBoundingClientRect();
+                var tooltipRect = tooltip[0].getBoundingClientRect();
+                var topOffset = 0;
+                var leftOffset = 0;
+                var arrowWidth = 5;
+                if ((+positionModel || CustomerSetting.PositionModel.relative) === CustomerSetting.PositionModel.relative) {
+                    var bodyRect = _this.$window.document.body.getBoundingClientRect();
+                    topOffset = bodyRect.top;
+                    leftOffset = bodyRect.left;
+                }
+                var top = Math.max(0, elementRect.top - topOffset - tooltipRect.height + arrowWidth);
+                var left = elementRect.left + (elementRect.width - tooltipRect.width) / 2 - leftOffset;
+                if (_this.$window.innerWidth < left + tooltipRect.width) {
+                    top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2 + arrowWidth;
+                    left = elementRect.left - tooltipRect.width - arrowWidth;
+                    tooltip.addClass("tooltip--right");
+                }
+                if (left < 0) {
+                    top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2 + arrowWidth;
+                    left = elementRect.left + elementRect.width;
+                    tooltip.addClass("tooltip--left");
+                }
+                tooltip.css({
+                    "top": top + "px",
+                    "left": left + "px",
+                    "visibility": "visible"
+                });
+            });
+        };
+        TooltipDirective.prototype.resetElementBorder = function (element) {
+            if (element.hasClass("setting-field--error")) {
+                element.removeClass("setting-field--error");
+            }
+            if (element.hasClass("setting-field--warning")) {
+                element.removeClass("setting-field--success");
+            }
+            if (element.hasClass("setting-field--success")) {
+                element.removeClass("setting-field--success");
+            }
+        };
+        TooltipDirective.$inject = ["$window", "$compile", "$timeout", "$templateCache", "$rootScope"];
+        return TooltipDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("tooltip", TooltipDirective);
+    function TooltipMessage($injector, $filter) {
+        return function (result, resourceServiceName, fieldName, customFilterName) {
+            if (customFilterName === void 0) { customFilterName = null; }
+            var message = null;
+            if (result
+                && result.message
+                && (!fieldName || (fieldName && fieldName === result.fieldName))) {
+                var resourceService = $injector.get(resourceServiceName);
+                var params = (result.msgParams || []).map(function (param) {
+                    if (typeof param === "number") {
+                        var value = $filter("number")(param);
+                        if (customFilterName) {
+                            value = $filter(customFilterName)(value);
+                        }
+                        return value;
+                    }
+                    else {
+                        return param;
+                    }
+                });
+                if (resourceService) {
+                    params.unshift(result.message);
+                    message = resourceService.getFormattedMessage.apply(resourceService, params);
+                }
+            }
+            return message;
+        };
+    }
+    TooltipMessage.$inject = ["$injector", "$filter"];
+    CustomerSetting.ModuleRegister.filter("tooltipMessage", TooltipMessage);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
     (function (ActionType) {
         ActionType[ActionType["query"] = 0] = "query";
         ActionType[ActionType["update"] = 1] = "update";
@@ -30693,7 +30684,7 @@ var CustomerSetting;
             if (backup) {
                 this.oldPTItem = new PTItem(this);
             }
-            this.validationState = CustomerSetting.ValidationResult.normal;
+            this.resetValidationState();
         }
         PTItem.prototype.isChanged = function () {
             return this.oldPTItem
@@ -30778,8 +30769,122 @@ var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
     var CustomerInfo = (function () {
-        function CustomerInfo() {
+        function CustomerInfo(customerInfo, backup, isNew, customerLevel) {
+            if (backup === void 0) { backup = false; }
+            if (isNew === void 0) { isNew = false; }
+            if (customerLevel === void 0) { customerLevel = null; }
+            this.isNew = isNew;
+            this.customerLevel = customerLevel;
+            if (customerInfo) {
+                this.username = customerInfo.username;
+                this.password = customerInfo.password;
+                this.firstName = customerInfo.firstName;
+                this.lastName = customerInfo.lastName;
+                this.phone = customerInfo.phone;
+                this.mobilePhone = customerInfo.mobilePhone;
+                this.fax = customerInfo.fax;
+                this.currencyId = customerInfo.currencyId;
+                this.currencyName = customerInfo.currencyName;
+                this.currencies = customerInfo.currencies;
+                this.credit = customerInfo.credit;
+                this.availableCredit = customerInfo.availableCredit;
+                this.uGroup = customerInfo.uGroup;
+                this.usernameSuffix = customerInfo.usernameSuffix;
+                this.uGroups = customerInfo.uGroups;
+                this.uplineUsername = customerInfo.uplineUsername;
+            }
+            if (backup) {
+                this.oldCustomerInfo = new CustomerInfo(this);
+            }
+            this.resetValidationState();
         }
+        CustomerInfo.prototype.isChanged = function () {
+            return this.oldCustomerInfo
+                && (this.username !== this.oldCustomerInfo.username
+                    || this.password !== this.oldCustomerInfo.password
+                    || this.firstName !== this.oldCustomerInfo.firstName
+                    || this.lastName !== this.oldCustomerInfo.lastName
+                    || this.phone !== this.oldCustomerInfo.phone
+                    || this.mobilePhone !== this.oldCustomerInfo.mobilePhone
+                    || this.fax !== this.oldCustomerInfo.fax
+                    || this.currencyId !== this.oldCustomerInfo.currencyId
+                    || this.credit !== this.oldCustomerInfo.credit
+                    || this.uGroup !== this.oldCustomerInfo.uGroup);
+        };
+        CustomerInfo.prototype.validate = function () {
+            if (!this.validateUsername()) {
+                return false;
+            }
+            if (!this.validatePassword()) {
+                return false;
+            }
+            if (!this.validateCredit()) {
+                return false;
+            }
+            this.resetValidationState();
+            return true;
+        };
+        CustomerInfo.prototype.validateUsername = function () {
+            if (this.isNew) {
+                if (!this.username || this.username.length === 0) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "username");
+                    return false;
+                }
+            }
+            return true;
+        };
+        CustomerInfo.prototype.validatePassword = function () {
+            if (this.isNew) {
+                if (!this.password || this.password.length === 0) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
+                    return false;
+                }
+                if (this.customerLevel !== CustomerSetting.Level.super && this.confirmPassword !== this.password) {
+                    this.validationState = new CustomerSetting.ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
+                    return false;
+                }
+                if (this.customerLevel !== CustomerSetting.Level.super) {
+                    var strongPassword = /^(?=.*\d)(?=.*[a-zA-Z!@#$%^&*])(?!.*\s).{8,40}$/;
+                    if (!this.password.match(strongPassword)) {
+                        this.validationState = new CustomerSetting.ValidationResult("PasswordRules", "password");
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+        CustomerInfo.prototype.validateCredit = function () {
+            if (this.customerLevel !== CustomerSetting.Level.super || this.credit > this.availableCredit) {
+                this.validationState = new CustomerSetting.ValidationResult("CreditMustBeLessThanOrEqualTo", "credit", [this.availableCredit]);
+                return false;
+            }
+            return true;
+        };
+        CustomerInfo.prototype.resetValidationState = function () {
+            this.validationState = CustomerSetting.Result.normal;
+        };
+        CustomerInfo.prototype.toJson = function () {
+            var json = {
+                username: this.username,
+                firstName: this.firstName,
+                credit: this.credit
+            };
+            if (this.isNew) {
+                json.password = this.password;
+                if (this.customerLevel === CustomerSetting.Level.super) {
+                    json.currencyId = this.currencyId;
+                }
+                else if (this.customerLevel === CustomerSetting.Level.member) {
+                    json.uGroup = this.uGroup;
+                }
+            }
+            if (this.customerLevel === CustomerSetting.Level.super) {
+                json.lastName = this.lastName;
+                json.phone = this.phone;
+                json.mobilePhone = this.mobilePhone;
+                json.fax = this.fax;
+            }
+        };
         return CustomerInfo;
     }());
     CustomerSetting.CustomerInfo = CustomerInfo;
@@ -30830,39 +30935,6 @@ var CustomerSetting;
         return MasterPTItem;
     }(CustomerSetting.PTItem));
     CustomerSetting.MasterPTItem = MasterPTItem;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var SettingType1Item = (function (_super) {
-        __extends(SettingType1Item, _super);
-        function SettingType1Item(settingItem, backup) {
-            if (backup === void 0) { backup = false; }
-            _super.call(this, settingItem);
-            if (settingItem) {
-            }
-            if (backup) {
-                this.oldSetting = new SettingType1Item(this);
-            }
-        }
-        SettingType1Item.prototype.isChanged = function () {
-            var isChanged = _super.prototype.isChanged.call(this);
-            var oldSetting = this.oldSetting;
-            return isChanged;
-        };
-        SettingType1Item.prototype.validate = function () {
-            this.resetValidationState();
-            return true;
-        };
-        return SettingType1Item;
-    }(CustomerSetting.DefaultSettingItem));
-    CustomerSetting.SettingType1Item = SettingType1Item;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
@@ -30944,6 +31016,55 @@ var __extends = (this && this.__extends) || function (d, b) {
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
+    var SettingType1Item = (function (_super) {
+        __extends(SettingType1Item, _super);
+        function SettingType1Item(settingItem, backup, isNew, customerLevel) {
+            if (backup === void 0) { backup = false; }
+            if (isNew === void 0) { isNew = false; }
+            if (customerLevel === void 0) { customerLevel = null; }
+            _super.call(this, settingItem);
+            if (settingItem) {
+                this.customerInfo = new CustomerSetting.CustomerInfo(settingItem.customerInfo, backup, isNew, customerLevel);
+                if (customerLevel === CustomerSetting.Level.super) {
+                    this.ptItem = new CustomerSetting.SuperPTItem(settingItem.ptItem, backup);
+                }
+                else if (customerLevel === CustomerSetting.Level.master) {
+                    this.ptItem = new CustomerSetting.MasterPTItem(settingItem.ptItem, backup);
+                }
+                else if (customerLevel === CustomerSetting.Level.agent) {
+                    this.ptItem = new CustomerSetting.AgentPTItem(settingItem.ptItem, backup);
+                }
+            }
+            if (backup) {
+                this.oldSetting = new SettingType1Item(this);
+            }
+        }
+        SettingType1Item.prototype.isChanged = function () {
+            var isChanged = _super.prototype.isChanged.call(this);
+            return isChanged || this.customerInfo.isChanged() || this.ptItem.isChanged();
+        };
+        SettingType1Item.prototype.validate = function () {
+            if (!this.customerInfo.validate()) {
+                return false;
+            }
+            if (!this.ptItem.validate()) {
+                return false;
+            }
+            return true;
+        };
+        return SettingType1Item;
+    }(CustomerSetting.DefaultSettingItem));
+    CustomerSetting.SettingType1Item = SettingType1Item;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
     var SettingType1ResourceService = (function (_super) {
         __extends(SettingType1ResourceService, _super);
         function SettingType1ResourceService(settingType1Resources, parametersService) {
@@ -31015,8 +31136,8 @@ var CustomerSetting;
 })(CustomerSetting || (CustomerSetting = {}));
 
 angular.module("customerSetting").run(["$templateCache", function($templateCache) {$templateCache.put("BlockUI/block-ui.htm","<div class=\"block-ui-overlay\" data-ng-show=\"isLoading\"><div class=\"block-ui-loading\" data-ng-show=\"isLoading\"></div></div>");
-$templateCache.put("HighlightField/tooltip.htm","<div class=\"tooltip tooltip--{{highlightType}}\" data-ng-if=\"tooltipMessage\"><div class=\"tooltip__content\">{{tooltipMessage}}</div></div>");
-$templateCache.put("SettingResult/setting-result.htm","<div data-ng-show=\"result\"><div class=\"msg msg--{{result.msgTypeName}}\" data-ng-if=\"!result.subResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\">{{result.message}}</div></div><div data-ng-if=\"result.subResults\" data-ng-repeat=\"subResult in result.subResults\"><div class=\"msg__customer-name\" data-ng-if=\"subResult.customerName\">{{subResult.customerName}}</div><div class=\"msg msg--{{subResult.msgTypeName}}\" data-ng-if=\"!subResult.settingResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\">{{subResult.message}}</div></div><div class=\"msg msg--{{settingResult.msgTypeName}}\" data-ng-if=\"subResult.settingResults\" data-ng-repeat=\"settingResult in subResult.settingResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\"><div class=\"msg__main-message\">{{settingResult.message}}</div><div class=\"msg__sub-message\" data-ng-if=\"settingResult.messages\" data-ng-repeat=\"message in settingResult.messages\">{{message}}</div></div></div></div></div>");}]);
+$templateCache.put("SettingResult/setting-result.htm","<div data-ng-show=\"result\"><div class=\"msg msg--{{result.msgTypeName}}\" data-ng-if=\"!result.subResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\">{{result.message}}</div></div><div data-ng-if=\"result.subResults\" data-ng-repeat=\"subResult in result.subResults\"><div class=\"msg__customer-name\" data-ng-if=\"subResult.customerName\">{{subResult.customerName}}</div><div class=\"msg msg--{{subResult.msgTypeName}}\" data-ng-if=\"!subResult.settingResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\">{{subResult.message}}</div></div><div class=\"msg msg--{{settingResult.msgTypeName}}\" data-ng-if=\"subResult.settingResults\" data-ng-repeat=\"settingResult in subResult.settingResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\"><div class=\"msg__main-message\">{{settingResult.message}}</div><div class=\"msg__sub-message\" data-ng-if=\"settingResult.messages\" data-ng-repeat=\"message in settingResult.messages\">{{message}}</div></div></div></div></div>");
+$templateCache.put("Tooltip/tooltip.htm","<div class=\"tooltip tooltip--{{tooltipType}}\" data-ng-if=\"tooltipMessage\"><div class=\"tooltip__content\">{{tooltipMessage | unsafe}}</div></div>");}]);
 /*jshint -W101,-W106,-W044,-W098*/
 
 (function () {

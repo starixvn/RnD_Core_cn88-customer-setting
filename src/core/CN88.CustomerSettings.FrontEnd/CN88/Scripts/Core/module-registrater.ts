@@ -1,5 +1,4 @@
 ﻿/// <reference path="../typings/angularjs/angular.d.ts" />
-/// <reference path="services/app-config-service.ts" />
 
 module CustomerSetting {
     "use strict";

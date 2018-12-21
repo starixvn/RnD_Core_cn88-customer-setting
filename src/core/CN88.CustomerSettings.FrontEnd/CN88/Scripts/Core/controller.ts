@@ -25,7 +25,6 @@ module CustomerSetting {
             "parametersService",
             "resourceService",
             "requestService",
-            "updatingSettingTypePromiseChain",
             "settingTypesSharedValuesService"];
 
         public systemId: number;
