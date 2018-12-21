@@ -98,7 +98,6 @@
                                     ? new List<string> { "2", "B", "E" }
                                     : new List<string> { "4", "C" }
                         },
-                        PTItem = ptItem,
                         SettingLevel = 1,
                         Id = 1,
                         DisplayOrder = 1,

@@ -7,8 +7,6 @@
     {
         public CustomerInfo CustomerInfo { get; set; }
 
-        public PTItem PTItem { get; set; }
-
         public IEnumerable<Currency> Currencies { get; set; }
     }
 }

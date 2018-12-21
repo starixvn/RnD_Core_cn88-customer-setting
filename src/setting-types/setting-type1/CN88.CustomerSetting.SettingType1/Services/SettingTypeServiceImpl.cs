@@ -66,7 +66,9 @@
                     Currency = currencies.FirstOrDefault(),
                     AvailableCredit = createCustomerInfo.AvailableCredit,
                     UplineUsername = createCustomerInfo.UplineUsername,
-                    UsernameSuffix = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString())
+                    UsernameSuffix = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString()),
+                    UGroup = query.CustomerLevel.IsMemberLevel() ? "CNA" : null,
+                    UGroups = query.CustomerLevel.IsMemberLevel() ? new List<string> { "CNA", "CNB", "CNC", "CND" } : null,
                 },
             };
 
@@ -189,9 +191,9 @@
                                 ? Enumerable.Empty<string>()
                                 : query.CustomerLevel.IsMemberLevel()
                                     ? new List<string> { "2", "B", "E" }
-                                    : new List<string> { "4", "C" }
+                                    : new List<string> { "4", "C" },
                 },
-                PTItem = ptItem
+                SettingItems = new List<ISettingItem> { ptItem }
             };
         }
 
