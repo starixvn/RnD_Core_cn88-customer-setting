@@ -16,7 +16,7 @@
         scripts: "Scripts",
         styles: "Styles",
         publish: "Publish",
-        templatesDir: "../CN88.CustomerSetting.WebApi/App_Data/Templates",
+        templatesDir: "../CN88.CustomerSetting.WebApi/wwwroot/Templates",
         //staticResourceProject: "../CN88.CustomerSetting.StaticResources/",
         staticResourceProject: "wwwroot",
         configFiles: {
