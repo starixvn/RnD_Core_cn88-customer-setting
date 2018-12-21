@@ -61,13 +61,6 @@
             return client.VerifyUpdatePermission(checkingPermissionContext);
         }
 
-        internal static bool CheckMultipleUpdatePermission(PermissionContext checkingPermissionContext)
-        {
-            CheckInitializationState();
-
-            return client.VerifyMultipleUpdatePermission(checkingPermissionContext);
-        }
-
         public abstract bool VerifyQueryPermission(PermissionContext permissionContext);
 
         public abstract bool VerifyUpdatePermission(PermissionContext permissionContext);

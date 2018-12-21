@@ -1,9 +1,7 @@
 ﻿namespace CN88.CustomerSetting.SettingType2.Services
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Text;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.Models.Requests;
@@ -16,7 +14,10 @@
         public override SettingType GetCustomerSettingType(ISettingContext settingContext, CustomerSettingQuery query)
             => new CommBetSetting();
 
-        public override Hashtable GetInsertCustomerParams(ISettingContext settingContext, int customerId, Level customerLevel, Level uplineLevel, byte productId, SettingType settingType)
+        public override IDictionary<string, object> GetInsertCustomerParams(
+            ISettingContext settingContext,
+            CreateCustomerCommand command,
+            SettingType settingType)
         {
             throw new NotImplementedException();
         }

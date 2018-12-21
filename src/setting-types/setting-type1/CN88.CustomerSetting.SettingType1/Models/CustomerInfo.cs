@@ -1,8 +1,9 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Models
 {
     using System.Collections.Generic;
+    using CN88.CustomerSetting.Models;
 
-    public class CustomerInfo
+    public class CustomerInfo : SettingItemDefault
     {
         public string Username { get; set; }
 
@@ -31,5 +32,7 @@
         public string UplineUsername { get; set; }
 
         public IEnumerable<string> UGroups { get; set; }
+
+        public IEnumerable<Currency> Currencies { get; set; }
     }
 }

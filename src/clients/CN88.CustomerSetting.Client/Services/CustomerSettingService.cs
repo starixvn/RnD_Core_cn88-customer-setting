@@ -52,23 +52,7 @@
             return UpdateTimeOutResponse(restReponse);
         }
 
-        public IRestResponse MultipleUpdateCustomerSetting(MultipleUpdateSettingRequest multipleUpdate)
-        {
-            if (multipleUpdate == null)
-            {
-                throw new CustomerSettingException("Multiple Update Setting Request cannot be null");
-            }
-
-            var request = new RestRequest("/customersetting/postmultiple/", Method.POST);
-
-            request.AddJsonBody(multipleUpdate);
-            request.Timeout = CN88CustomerSettingConfiguration.Settings.UpdateSettingTimeout;
-
-            IRestResponse restReponse = _restClient.Execute(request);
-
-            return UpdateTimeOutResponse(restReponse);
-        }
-
+        
         private IRestResponse UpdateTimeOutResponse(IRestResponse restReponse)
         {
             if (restReponse.StatusCode == 0)

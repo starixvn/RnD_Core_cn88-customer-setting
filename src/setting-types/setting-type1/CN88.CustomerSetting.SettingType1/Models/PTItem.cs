@@ -1,8 +1,6 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Models
 {
-    using CN88.CustomerSetting.Models;
-
-    public class PTItem : SettingItemDefault
+    public class PTItem : CustomerInfo
     {
         public decimal MaxPT { get; set; }
 

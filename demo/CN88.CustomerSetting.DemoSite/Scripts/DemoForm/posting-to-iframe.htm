@@ -1,6 +1,7 @@
 ﻿<form action="{{path}}" target="{{frameName}}" method="post" class="hide">
     <input type="hidden" name="language" value="{{language}}" />
     <input type="hidden" name="productId" value="{{productId}}" />
+    <input type="hidden" name="isCreateNew" value="{{isCreateNew}}" />
     <input type="hidden" name="customerLevel" value="{{customerLevel}}" />
     <input type="hidden" name="uplineLevel" value="{{uplineLevel}}" data-ng-if="uplineLevel" />
     <input type="hidden" name="customerId" value="{{customerId}}" data-ng-if="!isMultiple" />

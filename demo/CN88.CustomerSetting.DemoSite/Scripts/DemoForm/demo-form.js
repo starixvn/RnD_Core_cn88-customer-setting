@@ -84,11 +84,13 @@ var DemoFrom;
                 .done(function (msg) {
                     console.log(msg);
                 });
+            debugger;
             var params = {
                 language: this.actor.language,
                 productId: this.target.productId,
                 customerLevel: this.target.role,
                 uplineLevel: this.target.uplineRole,
+                isCreateNew: isCreateNew,
                 path: this.resolveUrl("CN88/ViewCustomerSetting"),
                 frameName: "setting-page"
             };

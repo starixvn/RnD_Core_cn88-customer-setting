@@ -32,7 +32,7 @@
                 PermissionContext permissionContext = CN88CustomerSettingRegistration.GetPermissionContext();
 
                 permissionContext.AuthorizationContext = filterContext;
-                permissionContext.AllowUpdate = (actualActionType == ActionTypes.Update) || (actualActionType == ActionTypes.MultipleUpdate);
+                permissionContext.AllowUpdate = actualActionType == ActionTypes.Update;
 
                 switch (actualActionType)
                 {
@@ -42,10 +42,6 @@
 
                     case ActionTypes.Update:
                         isAuthorized = CN88CustomerSettingRegistration.CheckUpdatePermission(permissionContext);
-                        break;
-
-                    case ActionTypes.MultipleUpdate:
-                        isAuthorized = CN88CustomerSettingRegistration.CheckMultipleUpdatePermission(permissionContext);
                         break;
                 }
             }

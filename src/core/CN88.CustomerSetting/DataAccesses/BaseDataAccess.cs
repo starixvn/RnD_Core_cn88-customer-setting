@@ -21,7 +21,9 @@
 
         protected IResult GetResult(Hashtable param)
         {
-            if (param == null || !param.ContainsKey("errcode") || !param.ContainsKey("errmsg"))
+            if (param == null 
+                || !param.ContainsKey("errcode") 
+                || !param.ContainsKey("errmsg"))
             {
                 throw new ArgumentException(
                     "result output param is nulll or does not contain neither errcode nor errmsg.");

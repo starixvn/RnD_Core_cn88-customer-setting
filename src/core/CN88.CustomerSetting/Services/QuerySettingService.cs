@@ -24,14 +24,12 @@
             IDynamicRepository dynamicRepository,
             ILogger logger,
             ProductService productService,
-            ResourceService resourceService,
             SettingTypeServiceFactory settingTypeServiceFactory)
         {
             ValidationService = validationService;
             DynamicRepository = dynamicRepository;
             Logger = logger;
             ProductService = productService;
-            ResourceService = resourceService;
             SettingTypeServiceFactory = settingTypeServiceFactory;
         }
 
@@ -39,7 +37,7 @@
         {
             //Validate(settingContext, query);
 
-            var product = GetProduct(settingContext, query.ProductId, settingContext.System);
+            var product = ProductService.GetProduct(settingContext, query.ProductId, settingContext.System);
             var customerSettingTypes = GetCustomerSettingTypes(settingContext, query, product.SettingTypes);
 
             var setting = new Setting(
@@ -57,23 +55,11 @@
 
         protected ProductService ProductService { get; }
 
-        protected ResourceService ResourceService { get; }
-
         protected ILogger Logger { get; }
 
         protected SettingTypeServiceFactory SettingTypeServiceFactory { get; }
 
         protected IDynamicRepository DynamicRepository { get; }
-
-        protected virtual Product GetProduct(ISettingContext settingContext, byte productId, byte systemId)
-        {
-            var productSettingTypes = ProductService
-                .GetProductSettingTypes(productId, systemId)
-                .Where(product => product.DisplayMode != DisplayModes.Hidden);
-            var productName = ResourceService.GetProductName(productId, settingContext.Language);
-
-            return new Product(productId, productName, productSettingTypes);
-        }
 
         protected virtual void Validate(ISettingContext settingContext, CustomerSettingQuery query)
         {

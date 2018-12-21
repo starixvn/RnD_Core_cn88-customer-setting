@@ -24,13 +24,13 @@
         private readonly SettingTypeServiceFactory settingTypeServiceFactory;
 
         public UpdateSettingServiceImpl(
-            ValidationService validationService = null,
-            ILogger logger = null,
-            SettingTypeServiceFactory settingTypeServiceFactory = null)
+            ValidationService validationService,
+            ILogger logger,
+            SettingTypeServiceFactory settingTypeServiceFactory)
         {
-            this.validationService = validationService ?? new ValidationServiceImpl();
-            this.logger = logger ?? Fanex.Logging.Logger.Log;
-            this.settingTypeServiceFactory = settingTypeServiceFactory ?? new SettingTypeServiceFactoryImpl();
+            this.validationService = validationService;
+            this.logger = logger;
+            this.settingTypeServiceFactory = settingTypeServiceFactory;
         }
 
         protected ValidationService ValidationService { get; }

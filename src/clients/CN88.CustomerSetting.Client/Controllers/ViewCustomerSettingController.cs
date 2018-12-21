@@ -32,7 +32,7 @@
             _customerSettingService = customerSettingService ?? new CustomerSettingService();
         }
 
-        [CustomerSettingAuth(IsUpdate = false, IsMultipleUpdate = false)]
+        [CustomerSettingAuth(IsUpdate = false)]
         public ContentResult Index(SettingFormQuery query)
         {
             if (query == null)
@@ -41,14 +41,12 @@
             }
 
             ObjectCache cache = MemoryCache.Default;
-            bool isIe8 = Request.Browser.Browser == "IE" && Request.Browser.MajorVersion < 9;
-            string cachedKey = isIe8 ? SettingTemplateIe8CachingKey : SettingTemplateCachingKey;
-            string template = cache.Get(cachedKey) as string;
+            string template = cache.Get(SettingTemplateCachingKey) as string;
 
             if (string.IsNullOrEmpty(template))
             {
-                template = BuildTemplate(isIe8);
-                cache.Set(cachedKey, template, DateTime.Now.AddHours(CachingHours));
+                template = BuildTemplate();
+                cache.Set(SettingTemplateCachingKey, template, DateTime.Now.AddHours(CachingHours));
             }
 
             if (!string.IsNullOrEmpty(template))
@@ -64,7 +62,7 @@
         }
 
         [HttpPost]
-        [CustomerSettingAuth(IsUpdate = false, IsMultipleUpdate = false)]
+        [CustomerSettingAuth(IsUpdate = false)]
         public ContentResult QuerySetting(QuerySettingRequest querySettingRequest)
         {
             if (querySettingRequest == null)
@@ -91,9 +89,9 @@
             return Content(customerSettingResponse.Content);
         }
 
-        private string BuildTemplate(bool isIe8)
+        private string BuildTemplate()
         {
-            IRestResponse response = _customerSettingService.QueryCustomerSettingTemplate(isIe8);
+            IRestResponse response = _customerSettingService.QueryCustomerSettingTemplate(false);
             bool isDebug = HttpContext.IsDebuggingEnabled;
             string cdn = RandomHelper.GetRandomUri(CN88CustomerSettingConfiguration.Settings.CdnUris);
 

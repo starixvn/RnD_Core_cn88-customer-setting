@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using CN88.CustomerSetting.DataAccesses;
     using CN88.CustomerSetting.Services;
     using CN88.CustomerSetting.WebApi.Middlewares;
     using Fanex.Caching;
@@ -43,11 +44,13 @@
                 .AddSingleton<ICacheService, CacheService>()
                 .AddSingleton<ValidationService, ValidationServiceImpl>()
                 .AddSingleton<UpdateSettingService, UpdateSettingServiceImpl>()
-                .AddSingleton<InsertCustomerService, InsertCustomerServiceImpl>()
+                .AddSingleton<CreateCustomerService, CreateCustomerServiceImpl>()
                 .AddSingleton<ResourceService, ResourceServiceImpl>()
                 .AddSingleton<ProductService, ProductServiceImpl>()
                 .AddSingleton<QuerySettingService, QuerySettingServiceImpl>()
                 .AddSingleton<SettingTypeServiceFactory, SettingTypeServiceFactoryImpl>()
+                .AddSingleton<CustomerDataAccess, CustomerDataAccessImpl>()
+                .AddSingleton<IValidationDataAccess, ValidationDataAccess>()
                 .AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "CN88 Customer Setting", Version = "v1" });

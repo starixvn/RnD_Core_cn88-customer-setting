@@ -87,7 +87,7 @@
     <Compile Include="Models\AppConfiguration.cs" />
     <Compile Include="Models\Constants\ActionTypes.cs" />
     <Compile Include="Models\PermissionContext.cs" />
-    <Compile Include="Models\Requests\MultipleUpdateSettingRequest.cs" />
+    <Compile Include="Models\Requests\CreateCustomerRequest.cs" />
     <Compile Include="Models\Requests\QuerySettingRequest.cs" />
     <Compile Include="Models\Requests\RedirectRequest.cs" />
     <Compile Include="Models\Requests\SettingRequest.cs" />

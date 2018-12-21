@@ -12,8 +12,6 @@
 
         public byte UplineLevel { get; set; }
 
-        public bool? IsMultiple { get; set; }
-
         public int? CustomerId { get; set; }
 
         public string CustomerIds { get; set; }
@@ -41,16 +39,7 @@
             properties.Add(string.Format("\"isCreateNew\": {0},", IsCreateNew.ToString().ToLowerInvariant()));
             properties.Add(string.Format("\"isForcingMode\": {0},", IsForcingMode.ToString().ToLowerInvariant()));
 
-            if (IsMultiple.HasValue && IsMultiple.Value)
-            {
-                properties.Add(string.Format("\"isMultiple\": {0},", IsMultiple.ToString().ToLowerInvariant()));
-                properties.Add(string.Format("\"customerIds\": \"{0}\",", CustomerIds));
-                properties.Add(string.Format("\"customerNames\": \"{0}\"", CustomerNames));
-            }
-            else
-            {
-                properties.Add(string.Format("\"customerId\": {0}", CustomerId));
-            }
+            properties.Add(string.Format("\"customerId\": {0}", CustomerId));
 
             properties.Add("}");
 

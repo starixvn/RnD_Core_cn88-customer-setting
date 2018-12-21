@@ -4,12 +4,10 @@
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
-    using CN88.CustomerSetting.WebApi.Models.Requests;
     using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Newtonsoft.Json;
 
-    public class UpdateSettingRequestModelBinder<T> : IModelBinder
-        where T : UpdateSettingRequest
+    public class SettingRequestModelBinder<T> : IModelBinder
     {
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {

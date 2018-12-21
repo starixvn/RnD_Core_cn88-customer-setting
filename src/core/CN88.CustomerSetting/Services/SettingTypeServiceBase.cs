@@ -29,12 +29,9 @@
             byte productId,
             SettingType settingType);
 
-        Hashtable GetInsertCustomerParams(
+        IDictionary<string, object> GetInsertCustomerParams(
             ISettingContext settingContext,
-            int customerId,
-            Level customerLevel,
-            Level uplineLevel,
-            byte productId,
+            CreateCustomerCommand command,
             SettingType settingType);
     }
 
@@ -191,6 +188,6 @@
             Logger.Error(customerSettingException.Message, customerSettingException);
         }
 
-        public abstract Hashtable GetInsertCustomerParams(ISettingContext settingContext, int customerId, Level customerLevel, Level uplineLevel, byte productId, SettingType settingType);
+        public abstract IDictionary<string, object> GetInsertCustomerParams(ISettingContext settingContext, CreateCustomerCommand command, SettingType settingType);
     }
 }

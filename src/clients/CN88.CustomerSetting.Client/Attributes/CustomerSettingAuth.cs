@@ -11,8 +11,6 @@
     {
         public bool IsUpdate { get; set; }
 
-        public bool IsMultipleUpdate { get; set; }
-
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             base.OnAuthorization(filterContext);
@@ -24,20 +22,13 @@
 
             var isAuthorized = true;
 
-            if (IsMultipleUpdate)
+            if (IsUpdate)
             {
-                isAuthorized = CN88CustomerSettingRegistration.CheckMultipleUpdatePermission(permissionContext);
+                isAuthorized = CN88CustomerSettingRegistration.CheckUpdatePermission(permissionContext);
             }
             else
             {
-                if (IsUpdate)
-                {
-                    isAuthorized = CN88CustomerSettingRegistration.CheckUpdatePermission(permissionContext);
-                }
-                else
-                {
-                    isAuthorized = CN88CustomerSettingRegistration.CheckQueryPermission(permissionContext);
-                }
+                isAuthorized = CN88CustomerSettingRegistration.CheckQueryPermission(permissionContext);
             }
 
             if (!isAuthorized)

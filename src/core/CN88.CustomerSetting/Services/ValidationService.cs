@@ -32,15 +32,15 @@
         private readonly ILogger logger;
 
         public ValidationServiceImpl(
-            ProductService productService = null,
-            IValidationDataAccess validationDataAccess = null,
-            IDynamicRepository dynamicRepository = null,
-            ILogger logger = null)
+            ProductService productService,
+            IValidationDataAccess validationDataAccess,
+            IDynamicRepository dynamicRepository,
+            ILogger logger)
         {
-            this.productService = productService ?? new ProductServiceImpl();
-            this.validationDataAccess = validationDataAccess ?? new ValidationDataAccess();
-            this.dynamicRepository = dynamicRepository ?? new DynamicRepository();
-            this.logger = logger ?? Logger.Log;
+            this.productService = productService;
+            this.validationDataAccess = validationDataAccess;
+            this.dynamicRepository = dynamicRepository;
+            this.logger = logger;
         }
 
         /// <summary>

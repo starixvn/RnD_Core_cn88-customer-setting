@@ -23,25 +23,11 @@
         }
 
         [HttpPost]
-        [CustomerSettingAuth(IsUpdate = true, IsMultipleUpdate = false)]
+        [CustomerSettingAuth(IsUpdate = true)]
         public ContentResult UpdateSetting(UpdateSettingRequest updateSettingRequest)
         {
             SetActorInformation(updateSettingRequest);
             IRestResponse updateResult = _customerSettingService.UpdateCustomerSetting(updateSettingRequest);
-            Response.StatusCode = (int)updateResult.StatusCode;
-            Response.TrySkipIisCustomErrors = true;
-
-            return Content(updateResult.Content);
-        }
-
-        [HttpPost]
-        [CustomerSettingAuth(IsUpdate = true, IsMultipleUpdate = true)]
-        public ContentResult UpdateMultipleSetting(MultipleUpdateSettingRequest multipleUpdateSetting)
-        {
-            IRestResponse updateResult;
-
-            SetActorInformation(multipleUpdateSetting);
-            updateResult = _customerSettingService.MultipleUpdateCustomerSetting(multipleUpdateSetting);
             Response.StatusCode = (int)updateResult.StatusCode;
             Response.TrySkipIisCustomErrors = true;
 

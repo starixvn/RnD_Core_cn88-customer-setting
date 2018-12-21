@@ -10,6 +10,7 @@
         private string name;
         private int subAccountId;
         private Level level;
+        private string site;
 
         public int Id
         {
@@ -28,6 +29,8 @@
                 id = value;
             }
         }
+
+        public string Site { get; set; }
 
         public string Name
         {

@@ -47,29 +47,25 @@
             return StubData(query);
         }
 
-        private AccountDetail GetCreateNewAccountDetail(CustomerSettingQuery query)
+        private SettingType GetCreateNewAccountDetail(CustomerSettingQuery query)
         {
             var currencies = query.CustomerLevel.IsSuperLevel() 
                 ? GetCurrencies()
                 : Enumerable.Empty<Currency>();
             var createCustomerInfo = GetCreateCustomerInfo(query.CustomerLevel, query.CustomerId);
+            var settingItem = GetDefaultValueForInsertCustomer(query.CustomerLevel, query.CustomerId, query.ProductId);
 
-            var settingType = new AccountDetail
+            settingItem.Currency = currencies.FirstOrDefault();
+            settingItem.AvailableCredit = createCustomerInfo.AvailableCredit;
+            settingItem.UplineUsername = createCustomerInfo.UplineUsername;
+            settingItem.UsernameSuffix = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString());
+            settingItem.UGroup = query.CustomerLevel.IsMemberLevel() ? "CNA" : null;
+            settingItem.UGroups = query.CustomerLevel.IsMemberLevel() ? new List<string> { "CNA", "CNB", "CNC", "CND" } : null;
+            settingItem.Currencies = currencies;
+
+            var settingType = new SettingType
             {
-                SettingItems = new List<ISettingItem>
-                {
-                    GetDefaultValueForInsertCustomer(query.CustomerLevel, query.CustomerId, query.ProductId)
-                },
-                Currencies = currencies,
-                CustomerInfo = new CustomerInfo
-                {
-                    Currency = currencies.FirstOrDefault(),
-                    AvailableCredit = createCustomerInfo.AvailableCredit,
-                    UplineUsername = createCustomerInfo.UplineUsername,
-                    UsernameSuffix = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString()),
-                    UGroup = query.CustomerLevel.IsMemberLevel() ? "CNA" : null,
-                    UGroups = query.CustomerLevel.IsMemberLevel() ? new List<string> { "CNA", "CNB", "CNC", "CND" } : null,
-                },
+                SettingItems = new List<ISettingItem> { settingItem }
             };
 
             return settingType;
@@ -173,39 +169,54 @@
                     break;
             }
 
-            return new AccountDetail
+            //Username = isCreateNew ? string.Empty : "AccountTest",
+            //        Currency = new Currency
+            //        {
+            //            Id = 1,
+            //            Name = "UUS"
+            //        },
+            //        Credit = isCreateNew ? 0 : 100,
+            //        AvailableCredit = 1000,
+            //        UGroup = query.CustomerLevel.IsMemberLevel() ? "CNA" : null,
+            //        UGroups = query.CustomerLevel.IsMemberLevel() ? new List<string> { "CNA", "CNB", "CNC", "CND" } : null,
+            //        UsernameSuffix = query.CustomerLevel.IsSuperLevel() || !isCreateNew
+            //                    ? Enumerable.Empty<string>()
+            //                    : query.CustomerLevel.IsMemberLevel()
+            //                        ? new List<string> { "2", "B", "E" }
+            //                        : new List<string> { "4", "C" },
+
+            return new SettingType
             {
-                CustomerInfo = new CustomerInfo
-                {
-                    Username = isCreateNew ? string.Empty : "AccountTest",
-                    Currency = new Currency
-                    {
-                        Id = 1,
-                        Name = "UUS"
-                    },
-                    Credit = isCreateNew ? 0 : 100,
-                    AvailableCredit = 1000,
-                    UGroup = query.CustomerLevel.IsMemberLevel() ? "CNA" : null,
-                    UGroups = query.CustomerLevel.IsMemberLevel() ? new List<string> { "CNA", "CNB", "CNC", "CND" } : null,
-                    UsernameSuffix = query.CustomerLevel.IsSuperLevel() || !isCreateNew
-                                ? Enumerable.Empty<string>()
-                                : query.CustomerLevel.IsMemberLevel()
-                                    ? new List<string> { "2", "B", "E" }
-                                    : new List<string> { "4", "C" },
-                },
                 SettingItems = new List<ISettingItem> { ptItem }
             };
         }
 
-        public override Hashtable GetInsertCustomerParams(
+        public override IDictionary<string, object> GetInsertCustomerParams(
             ISettingContext settingContext,
-            int customerId,
-            Level customerLevel,
-            Level uplineLevel,
-            byte productId,
+            CreateCustomerCommand command,
             SettingType settingType)
         {
-            throw new NotImplementedException();
+            var settingItem = settingType.SettingItems.FirstOrDefault() as PTItem
+                ?? throw new InvalidOperationException("First Setting Item cannot be null");
+
+            return new Dictionary<string, object>
+            {
+                { "username", settingItem.Username },
+                { "userpwd", settingItem.Password },
+                { "firstname", settingItem.FirstName },
+                { "lastname", settingItem.LastName },
+                { "phone", settingItem.Phone },
+                { "mobilephone", settingItem.MobilePhone },
+                { "fax", settingItem.Fax },
+                { "currency", settingItem.Currency?.Id },
+                { "credit", settingItem.Credit },
+                { "site", settingContext.Actor.Site },
+                { "systemid", settingContext.System },
+                { "ip", settingContext.IP },
+                { "language", settingContext.Language },
+                { "creator", settingContext.Actor.Id },
+                { "ptsetting", settingItem.ToXml() }
+            };
         }
 
         public override SettingResult UpdateCustomerSettingType(

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using CN88.CustomerSetting.Models.Constants;
     using CN88.CustomerSetting.SpParams.Criteria;
     using Fanex.Caching;
     using Fanex.Data.Repository;
@@ -15,6 +16,8 @@
         SettingType GetProductSettingType(byte productId, short settingTypeId, byte systemId);
 
         IEnumerable<Product> GetAllProducts();
+
+        Product GetProduct(ISettingContext settingContext, byte productId, byte systemId);
     }
 
     public class ProductServiceImpl : ProductService
@@ -23,22 +26,27 @@
         private const string SettingTypesCacheKey = "CN88.CustomerSetting.SettingTypesCacheKey_{0}_{1}";
         private const string AllProductNamesCacheKey = "CN88.CustomerSetting.AllProductNamesCacheKey";
 
-        private readonly IDynamicRepository _productRepository;
-        private readonly ICacheService _cachingService;
+        private readonly IDynamicRepository productRepository;
+        private readonly ICacheService cachingService;
+        private readonly ResourceService resourceService;
 
-        public ProductServiceImpl(IDynamicRepository productRepository = null, ICacheService cachingService = null)
+        public ProductServiceImpl(
+            IDynamicRepository productRepository, 
+            ICacheService cachingService,
+            ResourceService resourceService)
         {
-            _productRepository = productRepository ?? new DynamicRepository();
-            _cachingService = cachingService ?? new CacheService();
+            this.productRepository = productRepository;
+            this.cachingService = cachingService;
+            this.resourceService = resourceService;
         }
 
         public IEnumerable<SettingType> GetProductSettingTypes(byte productId, byte systemId)
         {
-            var settingTypes = _cachingService.GetOrSet(
+            var settingTypes = cachingService.GetOrSet(
                    string.Format(SettingTypesCacheKey, productId, systemId),
                    () =>
                    {
-                       return _productRepository.Fetch<SettingType>(
+                       return productRepository.Fetch<SettingType>(
                            new ProductSettingTypesQueryCriteria
                            {
                                ProductId = productId,
@@ -64,17 +72,26 @@
 
         public IEnumerable<Product> GetAllProducts()
         {
-            var products = _cachingService.GetOrSet(
+            var products = cachingService.GetOrSet(
                   AllProductNamesCacheKey,
                   () =>
                   {
-                      return _productRepository
+                      return productRepository
                           .Fetch<ProductName>(new ProductNamesQueryCriteria { LanguageKey = LanguageNameConverter.GetRefLanguageName() })
                           .Select(productName => new Product(productName.ProductId, productName.Name));
                   },
                   new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(CacheDuration, 0, 0)));
 
             return products;
+        }
+
+        public Product GetProduct(ISettingContext settingContext, byte productId, byte systemId)
+        {
+            var productSettingTypes = GetProductSettingTypes(productId, systemId)
+               .Where(product => product.DisplayMode != DisplayModes.Hidden);
+            var productName = resourceService.GetProductName(productId, settingContext.Language);
+
+            return new Product(productId, productName, productSettingTypes);
         }
     }
 }
