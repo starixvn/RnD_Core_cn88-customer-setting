@@ -18,6 +18,8 @@ module CustomerSetting {
         public betTypeName: string;
         public typeName: string;
         public isLive: boolean;
+        public displayOrder: number;
+        public layoutType: number;
         public oldSetting: DefaultSettingItem;
         public validationState: ValidationResult;
 
@@ -30,6 +32,8 @@ module CustomerSetting {
                 this.betTypeId = settingItem.betTypeId;
                 this.betTypeName = settingItem.betTypeName;
                 this.typeName = settingItem.typeName;
+                this.displayOrder = settingItem.childOrder;
+                this.layoutType = settingItem.layoutType;
 
                 if (settingItem.isLive !== undefined) {
                     this.isLive = settingItem.isLive;

@@ -9,7 +9,6 @@ module CustomerSetting {
     export class SettingTypesSharedValuesService {
         public static $inject: string[] = ["parametersService"];
 
-        public sharedSettings: Setting;
         public customerId: number
         public uplineLevel: Level;
         public customerLevel: Level;
@@ -28,7 +27,6 @@ module CustomerSetting {
             this.isNew = this.parametersService.isNew;
 
             if (setting) {
-                this.sharedSettings = setting;
                 this.customerId = setting.customerId;
                 this.customerLevel = setting.customerLevel;
                 this.productId = setting.productId;

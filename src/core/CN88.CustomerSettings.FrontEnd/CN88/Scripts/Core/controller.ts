@@ -7,7 +7,7 @@
 /// <reference path="services/app-config-service.ts" />
 /// <reference path="services/parameters-service.ts" />
 /// <reference path="services/request-service.ts" />
-/// <reference path="services/settingtypes-shared-values-service.ts" />
+/// <reference path="services/setting-types-shared-values-service.ts" />
 
 module CustomerSetting {
     "use strict";
@@ -19,7 +19,6 @@ module CustomerSetting {
     class CustomerSettingController {
         public static $inject: string[] = [
             "$window",
-            "$rootScope",
             "$timeout",
             "appConfigService",
             "parametersService",
@@ -33,7 +32,6 @@ module CustomerSetting {
         public requestMsgResult: Result | UpdatingSettingResult;
 
         private $window: ng.IWindowService;
-        private $rootScope: ng.IRootScopeService;
         private $timeout: ng.ITimeoutService;
         private appConfigService: AppConfigService;
         private parametersService: ParametersService;
@@ -44,7 +42,6 @@ module CustomerSetting {
 
         constructor(
             $window: ng.IWindowService,
-            $rootScope: ng.IRootScopeService,
             $timeout: ng.ITimeoutService,
             appConfigService: AppConfigService,
             parametersService: ParametersService,
@@ -52,7 +49,6 @@ module CustomerSetting {
             requestService: RequestService,
             settingTypesSharedValuesService: SettingTypesSharedValuesService) {
             this.$window = $window;
-            this.$rootScope = $rootScope;
             this.$timeout = $timeout;
             this.appConfigService = appConfigService;
             this.parametersService = parametersService;
@@ -76,7 +72,6 @@ module CustomerSetting {
             var validationResult: Result;
             var command: SettingCommand;
 
-            this.$rootScope.$emit("updateSetting", settingTypeId);
             this.requestMsgResult = undefined;
 
             if (setting) {
@@ -125,7 +120,6 @@ module CustomerSetting {
                     this.setting = new Setting(response.data);
                     this.warningMessages = this.setting.warningMessage;
                     this.settingTypesSharedValuesService.register(this.setting, this.parametersService.uplineLevel);
-                    this.$rootScope.$emit("queriedSetting");
                 });
             }
         }
