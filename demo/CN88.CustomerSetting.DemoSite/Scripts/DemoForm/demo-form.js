@@ -76,7 +76,7 @@ var DemoFrom;
             });
         };
         DemoFormController.prototype.showSetting = function (isCreateNew) {
-            var updateUrl = this.resolveUrl("CreateCustomer/Create");
+            var updateUrl = this.resolveUrl("CN88/CreateCustomer/Create");
             $.ajax({
                 method: "POST",
                 url: this.resolveUrl("CN88/ViewCustomerSetting/QuerySetting"),

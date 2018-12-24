@@ -14,8 +14,6 @@
 
         string ProductName { get; }
 
-        bool IsCreateNew { get; }
-
         IEnumerable<SettingType> SettingTypes { get; }
 
         IResult WarningMessage { get; set; }

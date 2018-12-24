@@ -24,7 +24,7 @@
 
         [HttpPost]
         [CustomerSettingAuth(IsUpdate = true)]
-        public ContentResult UpdateSetting(UpdateSettingRequest updateSettingRequest)
+        public ContentResult Update(UpdateSettingRequest updateSettingRequest)
         {
             SetActorInformation(updateSettingRequest);
             IRestResponse updateResult = _customerSettingService.UpdateCustomerSetting(updateSettingRequest);

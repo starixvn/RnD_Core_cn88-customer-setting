@@ -43,7 +43,6 @@
             var setting = new Setting(
                 query.CustomerId,
                 query.CustomerLevel,
-                query.IsCreateNew,
                 product.Id,
                 product.Name,
                 customerSettingTypes);

@@ -19,25 +19,22 @@
         public Setting(
             int customerId,
             Level customerLevel,
-            bool isCreateNew,
             byte productId,
             IEnumerable<SettingType> settingTypes)
         {
             CustomerId = customerId;
             CustomerLevel = customerLevel;
             ProductId = productId;
-            IsCreateNew = isCreateNew;
             SettingTypes = settingTypes ?? Enumerable.Empty<SettingType>();
         }
 
         public Setting(
             int customerId,
             Level customerLevel,
-            bool isCreateNew,
             byte productId,
             string productName,
             IEnumerable<SettingType> settingTypes)
-            : this(customerId, customerLevel, isCreateNew, productId, settingTypes)
+            : this(customerId, customerLevel, productId, settingTypes)
         {
             ProductName = productName;
         }
@@ -90,7 +87,5 @@
         public IEnumerable<SettingType> SettingTypes { get; set; } = Enumerable.Empty<SettingType>();
 
         public IResult WarningMessage { get; set; }
-
-        public bool IsCreateNew { get; set; }
     }
 }
