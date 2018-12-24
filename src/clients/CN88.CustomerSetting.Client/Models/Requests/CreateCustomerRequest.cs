@@ -3,5 +3,7 @@
     public class CreateCustomerRequest : SettingRequest
     {
         public string Setting { get; set; }
+
+        public int UplineId { get; set; }
     }
 }

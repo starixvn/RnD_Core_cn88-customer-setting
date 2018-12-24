@@ -8,9 +8,6 @@
     {
         private SettingContext settingContext;
 
-        [Range(2, 4)]
-        public byte? UplineLevel { get; set; }
-
         [Range(1, int.MaxValue)]
         public int ActorId { get; set; }
 
@@ -31,6 +28,8 @@
         public string ClientIP { get; set; }
 
         public string Language { get; set; }
+
+        public int UplineId { get; set; }
 
         internal ISettingContext GetSettingContext()
         {

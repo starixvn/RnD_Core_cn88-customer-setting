@@ -25,11 +25,10 @@
             ISettingContext settingContext,
             int customerId,
             Level customerLevel,
-            Level uplineLevel,
             byte productId,
             SettingType settingType);
 
-        IDictionary<string, object> GetInsertCustomerParams(
+        IDictionary<string, object> GetCreateCustomerParams(
             ISettingContext settingContext,
             CreateCustomerCommand command,
             SettingType settingType);
@@ -143,15 +142,6 @@
                 settingType.Id,
                 settingType.Name);
 
-        protected void SetSettingTypeReadOnlyWhenIndirectUplineEditMember(SettingType settingType, CustomerSettingQuery query)
-        {
-            if (query.CustomerLevel.IsMemberLevel()
-                && query.UplineLevel.IsNotAgentLevel())
-            {
-                settingType.DisplayMode = DisplayModes.ReadOnly;
-            }
-        }
-
         protected IEnumerable<T> GetSettingTypeConfig<T>(int productId, int settingTypeId) 
             where T : SettingItemDefault
             => CacheService.GetOrSet(
@@ -167,7 +157,6 @@
             ISettingContext settingContext,
             int customerId,
             Level customerLevel,
-            Level uplineLevel,
             byte productId,
             SettingType settingType);
 
@@ -175,19 +164,18 @@
             ISettingContext settingContext,
             int customerId,
             Level customerLevel,
-            Level uplineLevel,
             byte productId,
             SettingType customerSettingType,
             Exception ex)
         {
             var customerSettingException = new CustomerSettingException(ex.Message, ex);
             customerSettingException.SetSettingContextInfo("Update Setting", settingContext);
-            customerSettingException.SetCustomerInfo(customerId, customerLevel, uplineLevel);
+            customerSettingException.SetCustomerInfo(customerId, customerLevel);
             customerSettingException.SetProductInfo(productId, customerSettingType);
 
             Logger.Error(customerSettingException.Message, customerSettingException);
         }
 
-        public abstract IDictionary<string, object> GetInsertCustomerParams(ISettingContext settingContext, CreateCustomerCommand command, SettingType settingType);
+        public abstract IDictionary<string, object> GetCreateCustomerParams(ISettingContext settingContext, CreateCustomerCommand command, SettingType settingType);
     }
 }

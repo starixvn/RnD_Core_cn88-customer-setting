@@ -60,7 +60,6 @@
 
             var customerId = query.CustomerId;
             var customerLevel = query.CustomerLevel;
-            var uplineLevel = query.UplineLevel;
             var actor = settingContext.Actor;
 
             try
@@ -73,14 +72,12 @@
 
                     CheckActorAndCustomerLevelsConstrain(actor, customerLevel);
 
-                    CheckActorLevelAndCustomerUplineLevelConstrain(actor, customerLevel, uplineLevel);
-
                     CheckBelonging(actor, customerId);
                 }
             }
             catch (CustomerSettingException customerSettingException)
             {
-                WriteQuerySettingLog(settingContext, customerId, customerLevel, uplineLevel, customerSettingException);
+                WriteQuerySettingLog(settingContext, customerId, customerLevel, customerSettingException);
 
                 return new Result(ResultValues.AccessDenied, customerSettingException.OriginalMessage);
             }
@@ -110,18 +107,6 @@
             if (!isValidConstrain)
             {
                 throw new CustomerSettingException(Result.AccessDenied.Message);
-            }
-        }
-
-        private void CheckActorLevelAndCustomerUplineLevelConstrain(User actor, Level customerLevel, Level uplineLevel)
-        {
-            //// If actor is not company when edit member, actor level should equal with upline level.
-            if (actor.IsNotCompany
-                && customerLevel.IsMemberLevel()
-                && uplineLevel.IsNot(null)
-                && actor.Level.IsNot(uplineLevel))
-            {
-                throw new CustomerSettingException(Messages.UplineLevelIsNotValid);
             }
         }
 
@@ -164,11 +149,10 @@
             ISettingContext settingContext,
             int customerId,
             Level customerLevel,
-            Level uplineLevel,
             CustomerSettingException ex)
         {
             ex.SetSettingContextInfo("Validate Query Setting", settingContext);
-            ex.SetCustomerInfo(customerId, customerLevel, uplineLevel);
+            ex.SetCustomerInfo(customerId, customerLevel);
 
             logger.Warn(ex.Message, ex);
         }
@@ -188,12 +172,11 @@
             var customerId = command.Setting.CustomerId;
             var customerLevel = command.Setting.CustomerLevel;
             var productId = command.Setting.ProductId;
-            var uplineLevel = command.UplineLevel;
             var settingTypes = command.Setting.SettingTypes;
 
             try
             {
-                CheckQueryPermission(settingContext, customerId, customerLevel, productId, uplineLevel, false);
+                CheckQueryPermission(settingContext, customerId, customerLevel, productId, false);
 
                 CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes);
 
@@ -214,10 +197,9 @@
             int customerId,
             Level customerLevel,
             byte productId,
-            Level uplineLevel,
             bool isCreateNew)
         {
-            var querySettingParam = new CustomerSettingQuery(isCreateNew, customerId, customerLevel, productId, uplineLevel);
+            var querySettingParam = new CustomerSettingQuery(isCreateNew, customerId, customerLevel.Value, productId);
             var result = ValidateQuerySettingAction(settingContext, querySettingParam);
 
             if (result.IsNotOk)
@@ -258,7 +240,7 @@
             CustomerSettingException ex)
         {
             ex.SetSettingContextInfo("Validate Update Setting", settingContext);
-            ex.SetCustomerInfo(command.Setting.CustomerId, command.Setting.CustomerLevel, command.UplineLevel);
+            ex.SetCustomerInfo(command.Setting.CustomerId, command.Setting.CustomerLevel);
             ex.SetProductInfo(command.Setting.ProductId);
 
             logger.Warn(ex.Message, ex);

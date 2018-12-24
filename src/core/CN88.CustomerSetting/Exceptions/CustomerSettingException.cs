@@ -142,28 +142,23 @@
             }
         }
 
-        public void SetCustomerInfo(int customerId, Level customerLevel, Level uplineLevel = null)
+        public void SetCustomerInfo(int customerId, Level customerLevel)
         {
             CustomerId = customerId;
 
-            SetCustomerLevelAndUplineLevel(customerLevel, uplineLevel);
+            SetCustomerLevelAndUplineLevel(customerLevel);
         }
 
-        public void SetCustomerInfo(string customerIds, Level customerLevel, Level uplineLevel = null)
+        public void SetCustomerInfo(string customerIds, Level customerLevel)
         {
             CustomerIds = customerIds;
 
-            SetCustomerLevelAndUplineLevel(customerLevel, uplineLevel);
+            SetCustomerLevelAndUplineLevel(customerLevel);
         }
 
-        private void SetCustomerLevelAndUplineLevel(Level customerLevel, Level uplineLevel)
+        private void SetCustomerLevelAndUplineLevel(Level customerLevel)
         {
             CustomerLevel = customerLevel.DisplayName;
-
-            if (uplineLevel != null)
-            {
-                UplineLevel = uplineLevel.DisplayName;
-            }
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

@@ -7,37 +7,19 @@
     {
         private Level customerLevel;
         private byte productId;
-        private Level uplineLevel;
-
-        public CustomerSettingQuery(
-          bool isCreateNew,
-          int customerId,
-          Level customerLevel,
-          byte productId,
-          Level uplineLevel = null)
-        {
-            IsCreateNew = isCreateNew;
-            CustomerId = customerId;
-            CustomerLevel = customerLevel;
-            ProductId = productId;
-            UplineLevel = uplineLevel;
-        }
 
         public CustomerSettingQuery(
            bool isCreateNew,
            int customerId,
            byte customerLevel,
            byte productId,
-           byte? uplineLevel)
+           int uplineId = 0)
         {
             IsCreateNew = isCreateNew;
             CustomerId = customerId;
             CustomerLevel = Enumeration.FromValue<Level>(customerLevel);
             ProductId = productId;
-            if (uplineLevel.HasValue)
-            {
-                UplineLevel = Enumeration.FromValue<Level>(uplineLevel.Value);
-            }
+            UplineId = uplineId;
         }
 
         public bool IsCreateNew { get; }
@@ -45,6 +27,8 @@
         public bool IsNotCreateNew => !IsCreateNew;
 
         public int CustomerId { get; }
+
+        public int UplineId { get; }
 
         public Level CustomerLevel
         {
@@ -79,24 +63,6 @@
                 }
 
                 productId = value;
-            }
-        }
-
-        public Level UplineLevel
-        {
-            get
-            {
-                return uplineLevel;
-            }
-
-            set
-            {
-                if (value < Level.Agent || value > Level.Super)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(value), "Upline Level is out of value range.");
-                }
-
-                uplineLevel = value;
             }
         }
     }

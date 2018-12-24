@@ -14,7 +14,7 @@
         public override SettingType GetCustomerSettingType(ISettingContext settingContext, CustomerSettingQuery query)
             => new CommBetSetting();
 
-        public override IDictionary<string, object> GetInsertCustomerParams(
+        public override IDictionary<string, object> GetCreateCustomerParams(
             ISettingContext settingContext,
             CreateCustomerCommand command,
             SettingType settingType)
@@ -26,7 +26,7 @@
             };
         }
 
-        public override SettingResult UpdateCustomerSettingType(ISettingContext settingContext, int customerId, Level customerLevel, Level uplineLevel, byte productId, SettingType settingType)
+        public override SettingResult UpdateCustomerSettingType(ISettingContext settingContext, int customerId, Level customerLevel, byte productId, SettingType settingType)
         {
             throw new NotImplementedException();
         }

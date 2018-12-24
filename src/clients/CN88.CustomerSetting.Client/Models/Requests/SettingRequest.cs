@@ -4,9 +4,6 @@
 
     public abstract class SettingRequest
     {
-        [Range(2, 4)]
-        public byte? UplineLevel { get; set; }
-
         [Range(1, int.MaxValue)]
         public int ActorId { get; set; }
 

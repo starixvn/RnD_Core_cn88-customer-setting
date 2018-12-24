@@ -111,8 +111,6 @@
     <Content Include="Content\site.css" />
     <Content Include="Content\site.min.css" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\DemoForm.IE8\demo-form.js" />
-    <Content Include="Scripts\DemoForm.IE8\posting-to-iframe.htm" />
     <Content Include="Scripts\DemoForm\demo-form.js" />
     <Content Include="Scripts\DemoForm\posting-to-iframe.htm" />
     <Content Include="Scripts\Libraries\Angular-Legacy\angular.js" />
@@ -153,7 +151,6 @@
     <Content Include="Content\site.css.map" />
     <Content Include="Content\site.scss" />
     <None Include="packages.config" />
-    <Content Include="Views\Home\Index-IE8.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />

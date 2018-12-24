@@ -26,6 +26,7 @@ var DemoFrom;
             if (this.applicationPath && this.applicationPath[this.applicationPath.length - 1] !== "/") {
                 this.applicationPath += "/";
             }
+            this.isCreateNew = true;
             this.postingToIframeService = postingToIframeService;
             this.systemTypes = SampleDataFactory.getSystemTypes();
             this.actorRoles = Actor.getAvailableRoles();
@@ -33,6 +34,10 @@ var DemoFrom;
             this.changeActorRole();
         }
         DemoFormController.prototype.switchForm = function (state) {
+            this.preventSavingSession = state;
+            this.preventShowingData = !state;
+        };
+        DemoFormController.prototype.setCreateNew = function (isCreateNew) {
             this.preventSavingSession = state;
             this.preventShowingData = !state;
         };
@@ -46,28 +51,16 @@ var DemoFrom;
             this.getTarget(selectedRole);
             this.switchForm(false);
         };
-        DemoFormController.prototype.getTarget = function (actorRole) {
+        DemoFormController.prototype.getTarget = function () {
             var selectedRole = angular.isDefined(this.target) ? this.target.role : this.targetRoles[0].key;
-            var uplineRole = actorRole;
             this.uplineRoles = undefined;
-            if (selectedRole === Role.member) {
-                if (actorRole === Role.company) {
-                    this.uplineRoles = Target.getUplineRoles(selectedRole);
-                    uplineRole = this.uplineRoles[0].key;
-                }
-                else {
-                    uplineRole = actorRole;
-                }
-            }
-            else {
-                uplineRole = undefined;
-            }
-            if (this.isMultipleUpdates) {
-                this.target = SampleDataFactory.getMultipleTarget(selectedRole, uplineRole);
-            }
-            else {
-                this.target = SampleDataFactory.getSingleTarget(selectedRole, uplineRole);
-            }
+
+            //if (this.isMultipleUpdates) {
+            //    this.target = SampleDataFactory.getMultipleTarget(selectedRole, uplineRole);
+            //}
+            //else {
+                this.target = SampleDataFactory.getSingleTarget(selectedRole);
+            //}
         };
         DemoFormController.prototype.saveSession = function () {
             var _this = this;
@@ -77,22 +70,33 @@ var DemoFrom;
         };
         DemoFormController.prototype.showSetting = function (isCreateNew) {
             var updateUrl = this.resolveUrl("CN88/CreateCustomer/Create");
+            var uplineId = this.target.uplineId;
             $.ajax({
                 method: "POST",
                 url: this.resolveUrl("CN88/ViewCustomerSetting/QuerySetting"),
-                data: { productId: this.target.productId, customerId: this.target.customerId, isCreateNew: isCreateNew, customerLevel: this.target.role }
+                data: {
+                    productId: this.target.productId,
+                    customerId: this.target.customerId,
+                    isCreateNew: isCreateNew,
+                    customerLevel: this.target.role,
+                    uplineId: uplineId
+                }
             })
                 .done(function (rawSetting) {
-                    var setting = JSON.parse(rawSetting);
-                    setting.settingTypes[0].settingItems[0].username = "SupertestCN88Ricky1b";
-                    $.ajax({
-                        method: "POST",
-                        url: updateUrl,
-                        data: { setting: JSON.stringify(setting) }
-                    })
-                        .done(function (msg) {
-                            console.log(msg);
-                        });
+                    console.log(rawSetting);
+                    //var setting = JSON.parse(rawSetting);
+                    //setting.settingTypes[0].settingItems[0].username = "SupertestCN88Ricky1b";
+                    //$.ajax({
+                    //    method: "POST",
+                    //    url: updateUrl,
+                    //    data: {
+                    //        setting: JSON.stringify(setting),
+                    //        uplineId: uplineId
+                    //    }
+                    //})
+                    //    .done(function (msg) {
+                    //        console.log(msg);
+                    //    });
                 });
 
 
@@ -100,7 +104,7 @@ var DemoFrom;
                 language: this.actor.language,
                 productId: this.target.productId,
                 customerLevel: this.target.role,
-                uplineLevel: this.target.uplineRole,
+                uplineId: this.target.uplineId,
                 isCreateNew: isCreateNew,
                 path: this.resolveUrl("CN88/ViewCustomerSetting"),
                 frameName: "setting-page"
@@ -115,7 +119,7 @@ var DemoFrom;
                 params.customerId = this.target.customerId;
             }
             this.postingToIframeService.submitToIframe(params);
-            
+
         };
         DemoFormController.prototype.viewMatrix = function () {
             var productId = this.target.productId;
@@ -153,9 +157,9 @@ var DemoFrom;
         return PostingToIframeDirective;
     }());
     app.directive("postingToIframe", ["postingToIframeService", function () {
-            var args = Array.prototype.concat.apply([null], arguments);
-            return new (Function.prototype.bind.apply(PostingToIframeDirective, args));
-        }]);
+        var args = Array.prototype.concat.apply([null], arguments);
+        return new (Function.prototype.bind.apply(PostingToIframeDirective, args));
+    }]);
     var PostingToIframeService = /** @class */ (function () {
         function PostingToIframeService($timeout) {
             this.$timeout = $timeout;
@@ -171,10 +175,10 @@ var DemoFrom;
             this.$timeout(function () {
                 _this.scope.submitToIframe();
 
-               
+
             });
 
-            
+
         };
         PostingToIframeService.$inject = ["$timeout"];
         return PostingToIframeService;
@@ -217,28 +221,32 @@ var DemoFrom;
             }
             return this.createActor(actorId, name, selectedRole, subAccId, systemId);
         };
-        SampleDataFactory.getSingleTarget = function (role, uplineRole) {
+        SampleDataFactory.getSingleTarget = function (role) {
             var id = 0;
             var name = "";
+            var uplineId = 0;
             switch (role) {
                 case Role.super:
                     id = 0;
-                    name = "SuperTest1";
+                    name = "SuperTestCNE";
                     break;
                 case Role.master:
-                    id = 33418956;
-                    name = "master1";
+                    id = 0;
+                    name = "SuperTestCNE0001";
+                    uplineId = 33418956;
                     break;
                 case Role.agent:
-                    id = 33418957;
-                    name = "agent01";
+                    id = 33418960;
+                    name = "SuperTestCNE00010001";
+                    uplineId = 33418957;
                     break;
                 case Role.member:
-                    id = 33418960;
-                    name = "AGENT01000";
+                    id = 0;
+                    name = "SuperTestCNE000100010001";
+                    uplineId = 33418960;
                     break;
             }
-            return this.createSingleTarget(id, name, role, uplineRole);
+            return this.createSingleTarget(id, name, role, uplineId);
         };
         SampleDataFactory.getMultipleTarget = function (role, uplineRole) {
             var ids = "";
@@ -266,8 +274,8 @@ var DemoFrom;
         SampleDataFactory.createActor = function (id, name, role, subAccId, systemId) {
             return new Actor(id, name, role, subAccId, this.defaultLanguage, systemId);
         };
-        SampleDataFactory.createSingleTarget = function (id, name, role, uplineRole) {
-            return new SingleTarget(id, name, role, uplineRole, this.defaultProductId);
+        SampleDataFactory.createSingleTarget = function (id, name, role, uplineId) {
+            return new SingleTarget(id, name, role, uplineId, this.defaultProductId);
         };
         SampleDataFactory.createMultipleTargetInfo = function (ids, names, role, uplineRole) {
             return new MultipleTargets(ids, names, role, uplineRole, this.defaultProductId);
@@ -315,10 +323,9 @@ var DemoFrom;
         return Actor;
     }());
     var Target = /** @class */ (function () {
-        function Target(productId, role, uplineRole) {
+        function Target(productId, role) {
             this.productId = productId;
             this.role = role;
-            this.uplineRole = uplineRole;
         }
         Target.getAvailableRoles = function (uplineRole) {
             var roles = new Array();
@@ -348,10 +355,11 @@ var DemoFrom;
     }());
     var SingleTarget = /** @class */ (function (_super) {
         __extends(SingleTarget, _super);
-        function SingleTarget(customerId, customerName, role, uplineRole, productId) {
-            var _this = _super.call(this, productId, role, uplineRole) || this;
+        function SingleTarget(customerId, customerName, role, uplineId, productId) {
+            var _this = _super.call(this, productId, role) || this;
             _this.customerId = customerId;
             _this.customerName = customerName;
+            _this.uplineId = uplineId;
             return _this;
         }
         return SingleTarget;
@@ -385,5 +393,5 @@ function successfulUpdatingCallback(isPartialUpdate, isMultipleUpdate) {
     console.log("Be called after updating sucessfully!");
 }
 ;
-/* tslint:enable */ 
+/* tslint:enable */
 //# sourceMappingURL=demo-form.js.map

@@ -69,7 +69,6 @@
             var settingTypes = command.Setting.SettingTypes;
             var customerId = command.Setting.CustomerId;
             var customerLevel = command.Setting.CustomerLevel;
-            var uplineLevel = command.UplineLevel;
             var productId = command.Setting.ProductId;
             var settingTypeResults = new List<SettingResult>();
 
@@ -82,8 +81,7 @@
                     customerId,
                     customerLevel,
                     settingType,
-                    productId,
-                    uplineLevel);
+                    productId);
 
                     settingTypeResults.Add(updateSettingTypeResult);
                 });
@@ -96,27 +94,26 @@
             int customerId,
             Level customerLevel,
             SettingType settingType,
-            byte productId,
-            Level uplineLevel)
+            byte productId)
         {
             try
             {
                 CheckSettingTypeIsValid(settingType);
 
                 var settingTypeService = SettingTypeServiceFactory.GetInstance(settingType);
-                var settingResult = settingTypeService.UpdateCustomerSettingType(settingContext, customerId, customerLevel, uplineLevel, productId, settingType);
+                var settingResult = settingTypeService.UpdateCustomerSettingType(settingContext, customerId, customerLevel, productId, settingType);
 
                 return settingResult;
             }
             catch (CustomerSettingException customerSettingException)
             {
-                WriteLog(settingContext, customerId, customerLevel, uplineLevel, productId, settingType, customerSettingException);
+                WriteLog(settingContext, customerId, customerLevel, productId, settingType, customerSettingException);
 
                 return new SettingResult(Result.AccessDenied.Code, customerSettingException.OriginalMessage, 0, customerId, settingType.Id, settingType.Name);
             }
             catch (Exception ex)
             {
-                WriteLog(settingContext, customerId, customerLevel, uplineLevel, productId, settingType, new CustomerSettingException(ex.Message, ex));
+                WriteLog(settingContext, customerId, customerLevel, productId, settingType, new CustomerSettingException(ex.Message, ex));
 
                 return new SettingResult(
                     Result.SystemError,
@@ -140,13 +137,12 @@
             ISettingContext settingContext,
             int customerId,
             Level customerLevel,
-            Level uplineLevel,
             byte productId,
             SettingType customerSettingType,
             CustomerSettingException ex)
         {
             ex.SetSettingContextInfo("Update Setting", settingContext);
-            ex.SetCustomerInfo(customerId, customerLevel, uplineLevel);
+            ex.SetCustomerInfo(customerId, customerLevel);
             ex.SetProductInfo(productId, customerSettingType);
 
             Logger.Error(ex.Message, ex);

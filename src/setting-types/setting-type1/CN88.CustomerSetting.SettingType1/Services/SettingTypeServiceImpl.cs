@@ -52,8 +52,8 @@
             var currencies = query.CustomerLevel.IsSuperLevel() 
                 ? GetCurrencies()
                 : Enumerable.Empty<Currency>();
-            var createCustomerInfo = GetCreateCustomerInfo(query.CustomerLevel, query.CustomerId);
-            var settingItem = GetDefaultValueForInsertCustomer(query.CustomerLevel, query.CustomerId, query.ProductId);
+            var createCustomerInfo = GetCreateCustomerInfo(query.CustomerLevel, query.UplineId);
+            var settingItem = GetDefaultValueForInsertCustomer(query.CustomerLevel, query.UplineId, query.ProductId);
 
             settingItem.Currency = currencies.FirstOrDefault();
             settingItem.AvailableCredit = createCustomerInfo.AvailableCredit;
@@ -72,7 +72,7 @@
         }
 
         private AccountDetail GetDefaultValueForInsertCustomer(
-            Level level, int custId, int productId)
+            Level level, int uplineId, int productId)
         {
             if(level.IsMemberLevel())
             {
@@ -84,16 +84,21 @@
             switch(level.Value)
             {
                 case Level.SuperLevelId:
-                    accountDetail = GetDefaultSuperAccountDetail(custId, true);
+                    accountDetail = GetDefaultSuperAccountDetail(uplineId, true);
                     break;
 
                 case Level.MasterLevelId:
-                    accountDetail = GetDefaultMasterAccountDetail(custId, true);
+                    accountDetail = GetDefaultMasterAccountDetail(uplineId, true);
                     break;
 
                 default:
-                    accountDetail = GetDefaultAgentAccountDetail(custId, true);
+                    accountDetail = GetDefaultAgentAccountDetail(uplineId, true);
                     break;
+            }
+
+            if(accountDetail == null)
+            {
+                throw new InvalidOperationException($"Cannot get default setting for upline {uplineId} to create new downline");
             }
 
             var settingTypeConfig = GetSettingTypeConfig<AccountDetail>(productId, SettingTypeId).FirstOrDefault();
@@ -120,9 +125,9 @@
                 ? DynamicRepository.Get<AgentAccountDetail>(new GetDefaultPTSettingCriteria(Level.Agent.Value, custId))
                 : null;
 
-        private CreateCustomerInfoDto GetCreateCustomerInfo(Level level, int custId)
+        private CreateCustomerInfoDto GetCreateCustomerInfo(Level level, int uplineId)
             => level.IsNotSuperLevel()
-                ? DynamicRepository.Get<CreateCustomerInfoDto>(new GetInsertCustomerInfoCriteria(level.Value, custId))
+                ? DynamicRepository.Get<CreateCustomerInfoDto>(new GetInsertCustomerInfoCriteria(level.Value, uplineId))
                 : new CreateCustomerInfoDto();
 
         private IEnumerable<Currency> GetCurrencies()
@@ -191,7 +196,7 @@
             };
         }
 
-        public override IDictionary<string, object> GetInsertCustomerParams(
+        public override IDictionary<string, object> GetCreateCustomerParams(
             ISettingContext settingContext,
             CreateCustomerCommand command,
             SettingType settingType)
@@ -199,31 +204,54 @@
             var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetail
                 ?? throw new InvalidOperationException("First Setting Item cannot be null");
 
-            return new Dictionary<string, object>
+            var createNewParams = new Dictionary<string, object>
             {
                 { "username", settingItem.Username ?? throw new InvalidOperationException("Username cannot be null") },
                 { "userpwd", settingItem.Password ?? "56E8A2D78170E87C928E480797CC73" },
                 { "firstname", settingItem.FirstName ?? string.Empty },
-                { "lastname", settingItem.LastName ?? string.Empty},
-                { "phone", settingItem.Phone ?? string.Empty},
-                { "mobilephone", settingItem.MobilePhone ?? string.Empty},
-                { "fax", settingItem.Fax?? string.Empty },
-                { "currency", settingItem.Currency?.Id },
                 { "credit", settingItem.Credit },
-                { "site", "CN88" },
                 { "systemid", settingContext.System },
                 { "ip", settingContext.IP },
                 { "language", settingContext.Language },
                 { "creator", settingContext.Actor.Id },
                 { "ptsetting", settingItem.ToXml() }
             };
+
+            switch(command.Setting.CustomerLevel.Value)
+            {
+                case Level.SuperLevelId:
+                    createNewParams.Add("site", "CN88");
+                    createNewParams.Add("currency", settingItem.Currency?.Id);
+                    createNewParams.Add("lastname", settingItem.LastName ?? string.Empty);
+                    createNewParams.Add("phone", settingItem.Phone ?? string.Empty);
+                    createNewParams.Add("mobilephone", settingItem.MobilePhone ?? string.Empty);
+                    createNewParams.Add("fax", settingItem.Fax ?? string.Empty);
+                    break;
+
+                case Level.MasterLevelId:
+                    createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
+                    createNewParams.Add("srecommend", command.UplineId);
+                    break;
+
+                case Level.AgentLevelId:
+                    createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
+                    createNewParams.Add("mrecommend", command.UplineId);
+                    break;
+
+                case Level.MemberLevelId:
+                    createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
+                    createNewParams.Add("recommend", command.UplineId);
+                    createNewParams.Add("ugroup", settingItem.UGroup);
+                    break;
+            }
+
+            return createNewParams;
         }
 
         public override SettingResult UpdateCustomerSettingType(
             ISettingContext settingContext,
             int customerId,
             Level customerLevel,
-            Level uplineLevel,
             byte productId,
             SettingType settingType)
         {

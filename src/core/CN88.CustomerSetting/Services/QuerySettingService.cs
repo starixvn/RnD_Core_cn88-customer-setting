@@ -137,7 +137,7 @@
             var exception = new CustomerSettingException(ex.Message, ex);
 
             exception.SetSettingContextInfo("Query Setting", settingContext);
-            exception.SetCustomerInfo(query.CustomerId, query.CustomerLevel, query.UplineLevel);
+            exception.SetCustomerInfo(query.CustomerId, query.CustomerLevel);
             exception.SetProductInfo(query.ProductId, productSettingType);
 
             Logger.Error(exception.Message, exception);

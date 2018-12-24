@@ -56,11 +56,6 @@
                 { "settingtype", settingType }
             };
 
-            if (querySettingParam.CustomerLevel == Level.Member)
-            {
-                param.Add("roleid", querySettingParam.UplineLevel.Value);
-            }
-
             return param;
         }
     }

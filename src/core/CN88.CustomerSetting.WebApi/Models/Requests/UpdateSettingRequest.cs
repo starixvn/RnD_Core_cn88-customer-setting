@@ -11,8 +11,7 @@
         internal UpdateCustomerSettingCommand GetUpdateCustomerSettingCommand()
         {
             return new UpdateCustomerSettingCommand(
-                setting: Setting,
-                uplineLevel: UplineLevel == null ? null : Enumeration.FromValue<Level>(UplineLevel.Value));
+                setting: Setting);
         }
     }
 }

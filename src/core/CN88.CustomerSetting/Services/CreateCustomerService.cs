@@ -46,7 +46,7 @@
             {
                 var settingTypeService = settingTypeServiceFactory.GetInstance(settingType);
 
-                var insertSettingTypeParams = settingTypeService.GetInsertCustomerParams(
+                var insertSettingTypeParams = settingTypeService.GetCreateCustomerParams(
                     settingContext,
                     command,
                     settingType);

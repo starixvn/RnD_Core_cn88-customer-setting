@@ -17,15 +17,11 @@
         public bool IsCreateNew { get; set; }
 
         internal CustomerSettingQuery GetCustomerSettingQuery()
-        {
-            var query = new CustomerSettingQuery(
+            => new CustomerSettingQuery(
              IsCreateNew,
              CustomerId,
              CustomerLevel,
              ProductId,
-             UplineLevel);
-
-            return query;
-        }
+             UplineId);
     }
 }

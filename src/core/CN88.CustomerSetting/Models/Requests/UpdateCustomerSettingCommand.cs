@@ -6,46 +6,12 @@
 
     public class UpdateCustomerSettingCommand
     {
-        private Level uplineLevel;
-
         public UpdateCustomerSettingCommand(
-            ISetting setting,
-            Level uplineLevel = null)
+            ISetting setting)
         {
-            Setting = setting ?? throw new ArgumentNullException(nameof(setting), "Setting cannot be null when update customer setting."); ;
-            UplineLevel = uplineLevel;
+            Setting = setting ?? throw new ArgumentNullException(nameof(setting), "Setting cannot be null when update customer setting."); 
         }
 
         public ISetting Setting { get; }
-
-        public Level UplineLevel
-        {
-            get
-            {
-                return uplineLevel;
-            }
-
-            set
-            {
-                if (value != null)
-                {
-                    if (value < Level.Agent || value > Level.Super)
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(value), "Upline Level is out of value range.");
-                    }
-
-                    if (Setting.CustomerLevel.IsNotMemberLevel())
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(value), "Upline should be null when getting customer setting is not member");
-                    }
-                }
-                else if (Setting.CustomerLevel.IsMemberLevel())
-                {
-                    throw new ArgumentNullException(nameof(value), "Upline cannot be null when update member setting.");
-                }
-
-                uplineLevel = value;
-            }
-        }
     }
 }

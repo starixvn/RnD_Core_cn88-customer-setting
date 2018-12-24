@@ -14,5 +14,7 @@
         public byte CustomerLevel { get; set; }
 
         public bool IsCreateNew { get; set; }
+
+        public int UplineId { get; set; }
     }
 }
