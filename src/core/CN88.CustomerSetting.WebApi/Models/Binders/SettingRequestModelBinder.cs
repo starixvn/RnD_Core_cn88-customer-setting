@@ -28,6 +28,11 @@
                 bodyString = await reader.ReadToEndAsync();
             }
 
+            if(string.IsNullOrWhiteSpace(bodyString))
+            {
+                return;
+            }
+
             var updateSettingRequest = JsonConvert.DeserializeObject<T>(
                 bodyString,
                 new SettingConverter(),
@@ -35,7 +40,7 @@
                 new SettingItemConverter(),
                 new LevelConverter());
 
-            bindingContext.Model = updateSettingRequest;
+            bindingContext.Result = ModelBindingResult.Success(updateSettingRequest);
         }
     }
 }

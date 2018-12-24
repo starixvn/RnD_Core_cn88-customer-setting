@@ -19,7 +19,11 @@
             CreateCustomerCommand command,
             SettingType settingType)
         {
-            throw new NotImplementedException();
+            return new Dictionary<string, object>
+            {
+                { "commsetting", "<ROOT><Comm SportType=\"1\" BetType=\"1\" IsLive=\"0\" GroupId = \"1\" ValueId = \"6\"/></ROOT>" },
+                { "betsetting", "<ROOT><BetSetting SportType=\"1\" BetType=\"1\" IsLive=\"0\" MaxBet = \"8000\" MaxPerMatch = \"80000\"/></ROOT>" }
+            };
         }
 
         public override SettingResult UpdateCustomerSettingType(ISettingContext settingContext, int customerId, Level customerLevel, Level uplineLevel, byte productId, SettingType settingType)

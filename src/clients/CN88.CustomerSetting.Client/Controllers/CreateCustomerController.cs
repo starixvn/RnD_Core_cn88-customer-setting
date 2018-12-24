@@ -21,32 +21,31 @@
             _customerSettingService = customerSettingService ?? new CustomerSettingService();
         }
 
-        [HttpPost]
-        [CustomerSettingAuth(IsUpdate = true)]
-        public ContentResult UpdateSetting(UpdateSettingRequest updateSettingRequest)
+        [HttpPost, CustomerSettingAuth(IsUpdate = true)]
+        public ContentResult Create(CreateCustomerRequest request)
         {
-            SetActorInformation(updateSettingRequest);
-            IRestResponse updateResult = _customerSettingService.UpdateCustomerSetting(updateSettingRequest);
+            SetActorInformation(request);
+            IRestResponse updateResult = _customerSettingService.CreateCustomer(request);
             Response.StatusCode = (int)updateResult.StatusCode;
             Response.TrySkipIisCustomErrors = true;
 
             return Content(updateResult.Content);
         }
 
-        private static void SetActorInformation(UpdateSettingRequest updateSetting)
+        private static void SetActorInformation(CreateCustomerRequest request)
         {
-            if (updateSetting != null)
+            if (request != null)
             {
                 SettingContext settingContext = CN88CustomerSettingRegistration.SettingContext;
 
-                updateSetting.ActorId = settingContext.ActorId;
-                updateSetting.ActorLevel = settingContext.ActorLevel;
-                updateSetting.ActorName = settingContext.ActorName;
-                updateSetting.SubAccountId = settingContext.SubAccountId;
-                updateSetting.Domain = settingContext.Domain;
-                updateSetting.Language = settingContext.Language;
-                updateSetting.ClientIP = settingContext.IP;
-                updateSetting.System = settingContext.System;
+                request.ActorId = settingContext.ActorId;
+                request.ActorLevel = settingContext.ActorLevel;
+                request.ActorName = settingContext.ActorName;
+                request.SubAccountId = settingContext.SubAccountId;
+                request.Domain = settingContext.Domain;
+                request.Language = settingContext.Language;
+                request.ClientIP = settingContext.IP;
+                request.System = settingContext.System;
             }
         }
     }

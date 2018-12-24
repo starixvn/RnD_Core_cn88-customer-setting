@@ -9,8 +9,12 @@
     [Serializable]
     public class Setting : ISetting
     {
-        private int customerId;
+        private byte productId;
         private Level customerLevel;
+
+        public Setting()
+        {
+        }
 
         public Setting(
             int customerId,
@@ -38,27 +42,27 @@
             ProductName = productName;
         }
 
-        public byte ProductId { get; }
-
-        public string ProductName { get; protected set; }
-
-        public int CustomerId
+        public byte ProductId
         {
             get
             {
-                return customerId;
+                return productId;
             }
 
             set
             {
-                //if (value <= 0)
-                //{
-                //    throw new ArgumentOutOfRangeException(nameof(value), "Customer Id cannot be negative or zero.");
-                //}
+                if (value <= 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value), "Product Id cannot be negative or zero.");
+                }
 
-                customerId = value;
+                productId = value;
             }
         }
+
+        public string ProductName { get; protected set; }
+
+        public int CustomerId { get; set; }
 
         public Level CustomerLevel
         {
@@ -83,10 +87,10 @@
             }
         }
 
-        public IEnumerable<SettingType> SettingTypes { get; }
+        public IEnumerable<SettingType> SettingTypes { get; set; } = Enumerable.Empty<SettingType>();
 
         public IResult WarningMessage { get; set; }
 
-        public bool IsCreateNew { get; }
+        public bool IsCreateNew { get; set; }
     }
 }

@@ -4,7 +4,7 @@
 
     public class SettingItemDefault : ISettingItem
     {
-        private const string SportTypeBetTypeXmlFormat = "SportType=\"{0}\" BetType=\"{1}\"";
+        private const string SportTypeBetTypeXmlFormat = "SportType=\"{0}\" BetType=\"{1}\" IsLive=\"{2}\"";
 
         public short SportTypeId { get; set; }
 
@@ -33,6 +33,6 @@
             : Result.Success;
 
         public virtual string ToXml()
-            => string.Format(SportTypeBetTypeXmlFormat, SportTypeId, BetTypeId);
+            => string.Format(SportTypeBetTypeXmlFormat, SportTypeId, BetTypeId, IsLive);
     }
 }

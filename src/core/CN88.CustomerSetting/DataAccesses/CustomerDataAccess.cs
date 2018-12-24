@@ -15,6 +15,8 @@
         {
             var spSettingKey = GetSpSettingKey(level);
             parameters.Add("custId", 0);
+            parameters.Add("errcode", 0);
+            parameters.Add("errmsg", string.Empty);
 
             var result = ExecuteNonQuery(spSettingKey, parameters);
 

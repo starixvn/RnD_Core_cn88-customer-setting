@@ -28,7 +28,7 @@
                 throw new CustomerSettingException("Query Setting Request cannot be null");
             }
 
-            var request = new RestRequest("/customersetting/querysetting", Method.POST);
+            var request = new RestRequest("/customersetting/query", Method.POST);
 
             request.AddJsonBody(query);
 
@@ -42,7 +42,7 @@
                 throw new CustomerSettingException("Update Setting Request cannot be null");
             }
 
-            var request = new RestRequest("/customersetting/post/", Method.POST);
+            var request = new RestRequest("/customersetting/update/", Method.POST);
 
             request.AddJsonBody(update);
             request.Timeout = CN88CustomerSettingConfiguration.Settings.UpdateSettingTimeout;
@@ -79,6 +79,23 @@
             restClient.Authenticator = new HmacAuthenticator();
 
             return restClient;
+        }
+
+        public IRestResponse CreateCustomer(CreateCustomerRequest create)
+        {
+            if (create == null)
+            {
+                throw new CustomerSettingException("Create Customer Request cannot be null");
+            }
+
+            var request = new RestRequest("/customersetting/create/", Method.POST);
+
+            request.AddJsonBody(create);
+            request.Timeout = CN88CustomerSettingConfiguration.Settings.UpdateSettingTimeout;
+
+            IRestResponse restReponse = _restClient.Execute(request);
+
+            return UpdateTimeOutResponse(restReponse);
         }
     }
 }

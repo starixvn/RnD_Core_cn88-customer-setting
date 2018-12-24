@@ -71,53 +71,53 @@
             return settingType;
         }
 
-        private PTItem GetDefaultValueForInsertCustomer(
+        private AccountDetail GetDefaultValueForInsertCustomer(
             Level level, int custId, int productId)
         {
             if(level.IsMemberLevel())
             {
-                return default(PTItem);
+                return default(AccountDetail);
             }
 
-            PTItem ptItem;
+            AccountDetail accountDetail;
 
             switch(level.Value)
             {
                 case Level.SuperLevelId:
-                    ptItem = GetSuperPT(custId, true);
+                    accountDetail = GetDefaultSuperAccountDetail(custId, true);
                     break;
 
                 case Level.MasterLevelId:
-                    ptItem = GetMasterPT(custId, true);
+                    accountDetail = GetDefaultMasterAccountDetail(custId, true);
                     break;
 
                 default:
-                    ptItem = GetAgentPT(custId, true);
+                    accountDetail = GetDefaultAgentAccountDetail(custId, true);
                     break;
             }
 
-            var settingTypeConfig = GetSettingTypeConfig<PTItem>(productId, SettingTypeId).FirstOrDefault();
+            var settingTypeConfig = GetSettingTypeConfig<AccountDetail>(productId, SettingTypeId).FirstOrDefault();
             if(settingTypeConfig != null)
             {
-                ptItem.IntervalValue = settingTypeConfig.IntervalValue;
+                accountDetail.IntervalValue = settingTypeConfig.IntervalValue;
             }
 
-            return ptItem;
+            return accountDetail;
         }
 
-        private PTItem GetSuperPT(int custId, bool isCreateNew)
+        private AccountDetail GetDefaultSuperAccountDetail(int custId, bool isCreateNew)
             => isCreateNew
-                ? DynamicRepository.Get<SuperPTItem>(new GetDefaultPTSettingCriteria(Level.Super.Value, custId))
+                ? DynamicRepository.Get<SuperAccountDetail>(new GetDefaultPTSettingCriteria(Level.Super.Value, custId))
                 : null;
 
-        private PTItem GetMasterPT(int custId, bool isCreateNew)
+        private AccountDetail GetDefaultMasterAccountDetail(int custId, bool isCreateNew)
             => isCreateNew
-                ? DynamicRepository.Get<MasterPTItem>(new GetDefaultPTSettingCriteria(Level.Master.Value, custId))
+                ? DynamicRepository.Get<MasterAccountDetail>(new GetDefaultPTSettingCriteria(Level.Master.Value, custId))
                 : null;
 
-        private PTItem GetAgentPT(int custId, bool isCreateNew)
+        private AccountDetail GetDefaultAgentAccountDetail(int custId, bool isCreateNew)
             => isCreateNew
-                ? DynamicRepository.Get<AgentPTItem>(new GetDefaultPTSettingCriteria(Level.Agent.Value, custId))
+                ? DynamicRepository.Get<AgentAccountDetail>(new GetDefaultPTSettingCriteria(Level.Agent.Value, custId))
                 : null;
 
         private CreateCustomerInfoDto GetCreateCustomerInfo(Level level, int custId)
@@ -133,13 +133,13 @@
 
         private static SettingType StubData(CustomerSettingQuery query)
         {
-            PTItem ptItem = null;
+            AccountDetail ptItem = null;
             var isCreateNew = query.IsCreateNew;
 
             switch (query.CustomerLevel.Value)
             {
                 case Level.SuperLevelId:
-                    ptItem = new SuperPTItem
+                    ptItem = new SuperAccountDetail
                     {
                         MaxPT = 90,
                         SuperMaxPT = isCreateNew ? 0 : 80,
@@ -149,7 +149,7 @@
                     break;
 
                 case Level.MasterLevelId:
-                    ptItem = new MasterPTItem
+                    ptItem = new MasterAccountDetail
                     {
                         MaxPT = 80,
                         SuperPT = isCreateNew ? 0 : 10,
@@ -158,7 +158,7 @@
                     break;
 
                 case Level.AgentLevelId:
-                    ptItem = new AgentPTItem
+                    ptItem = new AgentAccountDetail
                     {
                         MaxPT = 70,
                         MinPT = 10,
@@ -196,21 +196,21 @@
             CreateCustomerCommand command,
             SettingType settingType)
         {
-            var settingItem = settingType.SettingItems.FirstOrDefault() as PTItem
+            var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetail
                 ?? throw new InvalidOperationException("First Setting Item cannot be null");
 
             return new Dictionary<string, object>
             {
-                { "username", settingItem.Username },
-                { "userpwd", settingItem.Password },
-                { "firstname", settingItem.FirstName },
-                { "lastname", settingItem.LastName },
-                { "phone", settingItem.Phone },
-                { "mobilephone", settingItem.MobilePhone },
-                { "fax", settingItem.Fax },
+                { "username", settingItem.Username ?? throw new InvalidOperationException("Username cannot be null") },
+                { "userpwd", settingItem.Password ?? "56E8A2D78170E87C928E480797CC73" },
+                { "firstname", settingItem.FirstName ?? string.Empty },
+                { "lastname", settingItem.LastName ?? string.Empty},
+                { "phone", settingItem.Phone ?? string.Empty},
+                { "mobilephone", settingItem.MobilePhone ?? string.Empty},
+                { "fax", settingItem.Fax?? string.Empty },
                 { "currency", settingItem.Currency?.Id },
                 { "credit", settingItem.Credit },
-                { "site", settingContext.Actor.Site },
+                { "site", "CN88" },
                 { "systemid", settingContext.System },
                 { "ip", settingContext.IP },
                 { "language", settingContext.Language },

@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using CN88.CustomerSetting.Models;
 
-    public class CustomerInfo : SettingItemDefault
+    public class AccountDetail : SettingItemDefault
     {
         public string Username { get; set; }
 
@@ -34,5 +34,9 @@
         public IEnumerable<string> UGroups { get; set; }
 
         public IEnumerable<Currency> Currencies { get; set; }
+
+        public decimal MaxPT { get; set; }
+
+        public decimal MinPT { get; set; }
     }
 }

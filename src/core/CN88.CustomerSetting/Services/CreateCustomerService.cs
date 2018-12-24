@@ -1,5 +1,6 @@
 ﻿namespace CN88.CustomerSetting.Services
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
@@ -50,10 +51,14 @@
                     command,
                     settingType);
 
-                insertCustomerParams.Concat(insertSettingTypeParams);
+                insertCustomerParams = insertCustomerParams
+                                            .Concat(insertSettingTypeParams)
+                                            .ToDictionary(pair => pair.Key, pair => pair.Value);
             }
 
-            return customerDataAccess.InsertCustomer(setting.CustomerLevel, new Hashtable(insertCustomerParams));
+            return customerDataAccess.InsertCustomer(
+                setting.CustomerLevel, 
+                new Hashtable(insertCustomerParams, StringComparer.OrdinalIgnoreCase));
         }
     }
 }

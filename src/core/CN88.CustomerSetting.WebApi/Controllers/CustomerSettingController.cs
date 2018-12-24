@@ -37,11 +37,11 @@
         }
 
         [HttpPost]
-        public ISetting QuerySetting([FromBody]QuerySettingRequest request)
+        public ISetting Query([FromBody]QuerySettingRequest request)
             => querySettingService.GetCustomerSetting(request.GetSettingContext(), request.GetCustomerSettingQuery());
 
         [HttpPost]
-        public IResult CreateCustomer(
+        public IResult Create(
             [ModelBinder(typeof(SettingRequestModelBinder<CreateCustomerRequest>))]CreateCustomerRequest request)
             => createCustomerService.Create(request.GetSettingContext(), request.GetCreateCustomerCommand());
 

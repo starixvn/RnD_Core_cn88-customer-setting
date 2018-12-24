@@ -9,6 +9,8 @@
 
         IRestResponse UpdateCustomerSetting(UpdateSettingRequest update);
 
+        IRestResponse CreateCustomer(CreateCustomerRequest create);
+
         IRestResponse QueryCustomerSettingTemplate(bool isIe8);
     }
 }

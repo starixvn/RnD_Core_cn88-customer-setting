@@ -76,15 +76,26 @@ var DemoFrom;
             });
         };
         DemoFormController.prototype.showSetting = function (isCreateNew) {
+            var updateUrl = this.resolveUrl("CreateCustomer/Create");
             $.ajax({
                 method: "POST",
                 url: this.resolveUrl("CN88/ViewCustomerSetting/QuerySetting"),
                 data: { productId: this.target.productId, customerId: this.target.customerId, isCreateNew: isCreateNew, customerLevel: this.target.role }
             })
-                .done(function (msg) {
-                    console.log(msg);
+                .done(function (rawSetting) {
+                    var setting = JSON.parse(rawSetting);
+                    setting.settingTypes[0].settingItems[0].username = "SupertestCN88Ricky1b";
+                    $.ajax({
+                        method: "POST",
+                        url: updateUrl,
+                        data: { setting: JSON.stringify(setting) }
+                    })
+                        .done(function (msg) {
+                            console.log(msg);
+                        });
                 });
-            debugger;
+
+
             var params = {
                 language: this.actor.language,
                 productId: this.target.productId,
