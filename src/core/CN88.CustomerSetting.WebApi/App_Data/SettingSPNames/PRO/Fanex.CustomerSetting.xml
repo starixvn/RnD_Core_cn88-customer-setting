@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Functions SiteId="68" SiteName="DCS">
     <Function Name="Customer_Setting_Core">
+      <Setting Key="CustSetting_SameLineCheck" SpName="Acc_CustSetting_SameLineCheck" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />
+      <Setting Key="CustSetting_MultiCustPermissionValidate" SpName="Acc_CustSetting_MultiCustPermissionValidate" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />
+      <Setting Key="CustSetting_SettingDetailSelect" SpName="Acc_CustSetting_SettingDetailSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />
+      <Setting Key="CustSetting_ActorStatusSelect" SpName="Acc_CustSetting_ActorStatusSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />
+      <Setting Key="CustSetting_CustomerLevelSelect" SpName="Acc_CustSetting_CustomerRoleSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />
       <Setting Key="CustSetting_ProductProfileSelect" SpName="CS_ProductProfileSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600">
         <Parameters>
           <Parameter Name="IsTest" Value="true" />

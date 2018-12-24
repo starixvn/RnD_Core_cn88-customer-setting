@@ -259,6 +259,50 @@
             byte productId,
             SettingType settingType)
         {
+            var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetail
+                ?? throw new InvalidOperationException("AccountDetail cannot be null");
+
+            var createNewParams = new Dictionary<string, object>
+            {
+                { "username", settingItem.Username ?? throw new InvalidOperationException("Username cannot be null") },
+                { "userpwd", settingItem.Password ?? "56E8A2D78170E87C928E480797CC73" },
+                { "firstname", settingItem.FirstName ?? string.Empty },
+                { "credit", settingItem.Credit },
+                { "systemid", settingContext.System },
+                { "ip", settingContext.IP },
+                { "language", settingContext.Language },
+                { "creator", settingContext.Actor.Id }
+            };
+
+            switch (customerLevel.Value)
+            {
+                case Level.SuperLevelId:
+                    createNewParams.Add("site", "CN88");
+                    createNewParams.Add("currency", settingItem.Currency?.Id);
+                    createNewParams.Add("lastname", settingItem.LastName ?? string.Empty);
+                    createNewParams.Add("phone", settingItem.Phone ?? string.Empty);
+                    createNewParams.Add("mobilephone", settingItem.MobilePhone ?? string.Empty);
+                    createNewParams.Add("fax", settingItem.Fax ?? string.Empty);
+                    createNewParams.Add("ptsetting", settingItem.ToXml());
+                    break;
+
+                case Level.MasterLevelId:
+                    createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
+                    createNewParams.Add("ptsetting", settingItem.ToXml());
+                    break;
+
+                case Level.AgentLevelId:
+                    createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
+                    createNewParams.Add("ptsetting", settingItem.ToXml());
+                    break;
+
+                case Level.MemberLevelId:
+                    createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
+                    createNewParams.Add("ugroup", settingItem.UGroup);
+                    break;
+            }
+
+
             throw new NotImplementedException();
         }
     }

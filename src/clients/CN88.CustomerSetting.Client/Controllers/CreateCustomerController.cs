@@ -46,6 +46,7 @@
                 request.Language = settingContext.Language;
                 request.ClientIP = settingContext.IP;
                 request.System = settingContext.System;
+                request.HashKey = settingContext.HashKey;
             }
         }
     }

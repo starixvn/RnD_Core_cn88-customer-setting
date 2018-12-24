@@ -115,6 +115,9 @@
             return !IsDirectDownlineOf(uplineLevel);
         }
 
+        public bool IsUplineOf(Enumeration level)
+            => Value > level.Value;
+
         public bool Is(Enumeration level)
         {
             if (level != null)

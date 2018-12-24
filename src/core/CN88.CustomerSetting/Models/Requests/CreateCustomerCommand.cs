@@ -6,14 +6,18 @@
     {
         public CreateCustomerCommand(
             ISetting setting,
-            int uplineId = 0)
+            int uplineId,
+            string hashKey)
         {
             Setting = setting ?? throw new ArgumentNullException(nameof(setting), "Setting cannot be null when update customer setting.");
             UplineId = uplineId;
+            HashKey = hashKey;
         }
 
         public ISetting Setting { get; }
 
         public int UplineId { get; }
+
+        public string HashKey { get; }
     }
 }

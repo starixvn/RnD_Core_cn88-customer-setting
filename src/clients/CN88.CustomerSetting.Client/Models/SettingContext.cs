@@ -24,5 +24,7 @@
         public string IP { get; set; }
 
         public byte System { get; set; }
+
+        public string HashKey { get; set; }
     }
 }

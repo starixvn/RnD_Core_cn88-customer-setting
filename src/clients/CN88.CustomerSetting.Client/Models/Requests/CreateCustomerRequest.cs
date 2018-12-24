@@ -5,5 +5,7 @@
         public string Setting { get; set; }
 
         public int UplineId { get; set; }
+
+        public string HashKey { get; set; }
     }
 }

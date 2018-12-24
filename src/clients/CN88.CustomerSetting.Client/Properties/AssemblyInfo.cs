@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CN88.CustomerSetting.Client")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Client for CN88 Customer Setting API")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("RnD")]
 [assembly: AssemblyProduct("CN88.CustomerSetting.Client")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]

@@ -61,6 +61,7 @@
             var customerId = query.CustomerId;
             var customerLevel = query.CustomerLevel;
             var actor = settingContext.Actor;
+            var uplineId = query.UplineId;
 
             try
             {
@@ -73,6 +74,10 @@
                     CheckActorAndCustomerLevelsConstrain(actor, customerLevel);
 
                     CheckBelonging(actor, customerId);
+                }
+                else
+                {
+                    CheckBelonging(actor, uplineId);
                 }
             }
             catch (CustomerSettingException customerSettingException)
@@ -102,7 +107,7 @@
         {
             var isValidConstrain = actor.IsCompany
                 || customerLevel.IsMemberLevel()
-                || actor.Level.IsDirectUplineOf(customerLevel);
+                || actor.Level.IsUplineOf(customerLevel);
 
             if (!isValidConstrain)
             {
@@ -112,7 +117,7 @@
 
         private void CheckBelonging(User actor, int customerId)
         {
-            if (actor.IsNotCompany)
+            if (actor.IsNotCompany && actor.Id != customerId)
             {
                 var isBelonging = dynamicRepository.Get<bool>(new CheckBelongingCriteria
                 {
@@ -176,7 +181,7 @@
 
             try
             {
-                CheckQueryPermission(settingContext, customerId, customerLevel, productId, false);
+                CheckQueryPermission(settingContext, customerId, customerLevel, productId, false, 0);
 
                 CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes);
 
@@ -184,7 +189,7 @@
             }
             catch (CustomerSettingException customerSettingException)
             {
-                WriteUpdateSettingLog(settingContext, command, customerSettingException);
+                WriteUpdateSettingLog(settingContext, command.Setting, customerSettingException);
 
                 return new Result(ResultValues.AccessDenied, customerSettingException.OriginalMessage);
             }
@@ -197,9 +202,10 @@
             int customerId,
             Level customerLevel,
             byte productId,
-            bool isCreateNew)
+            bool isCreateNew,
+            int uplineId)
         {
-            var querySettingParam = new CustomerSettingQuery(isCreateNew, customerId, customerLevel.Value, productId);
+            var querySettingParam = new CustomerSettingQuery(isCreateNew, customerId, customerLevel.Value, productId, uplineId);
             var result = ValidateQuerySettingAction(settingContext, querySettingParam);
 
             if (result.IsNotOk)
@@ -236,19 +242,42 @@
 
         private void WriteUpdateSettingLog(
             ISettingContext settingContext,
-            UpdateCustomerSettingCommand command,
+            ISetting setting,
             CustomerSettingException ex)
         {
             ex.SetSettingContextInfo("Validate Update Setting", settingContext);
-            ex.SetCustomerInfo(command.Setting.CustomerId, command.Setting.CustomerLevel);
-            ex.SetProductInfo(command.Setting.ProductId);
+            ex.SetCustomerInfo(setting.CustomerId, setting.CustomerLevel);
+            ex.SetProductInfo(setting.ProductId);
 
             logger.Warn(ex.Message, ex);
         }
 
-        public IResult ValidateCreateCustomerAction(ISettingContext settingContext, CreateCustomerCommand command)
+        public IResult ValidateCreateCustomerAction(
+            ISettingContext settingContext, 
+            CreateCustomerCommand command)
         {
-            throw new NotImplementedException();
+            var actorLevel = settingContext.Actor.Level;
+            var customerId = command.Setting.CustomerId;
+            var customerLevel = command.Setting.CustomerLevel;
+            var productId = command.Setting.ProductId;
+            var settingTypes = command.Setting.SettingTypes;
+
+            try
+            {
+                CheckQueryPermission(settingContext, customerId, customerLevel, productId, true, command.UplineId);
+
+                //CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes);
+
+                //CheckUpdatableCustomerSettingTypes(actorLevel, customerLevel, settingTypes);
+            }
+            catch (CustomerSettingException customerSettingException)
+            {
+                WriteUpdateSettingLog(settingContext, command.Setting, customerSettingException);
+
+                return new Result(ResultValues.AccessDenied, customerSettingException.OriginalMessage);
+            }
+
+            return Result.Success;
         }
     }
 }

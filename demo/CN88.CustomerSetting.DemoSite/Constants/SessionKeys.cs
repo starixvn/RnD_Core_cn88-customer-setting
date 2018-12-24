@@ -8,5 +8,6 @@
         public const string SubAccountIdSessionKey = "Fanex.CustomerSetting.SubAccountId";
         public const string SystemIdSessionKey = "Fanex.CustomerSetting.SystemId";
         public const string LanguageSessionKey = "Fanex.CustomerSetting.Language";
+        public const string HashKeySessionKey = "Fanex.CustomerSetting.HashKey";
     }
 }

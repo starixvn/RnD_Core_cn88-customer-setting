@@ -1,8 +1,10 @@
 ﻿namespace CN88.CustomerSetting.DemoSite.Controllers
 {
+    using System;
     using System.Web.Mvc;
     using System.Web.Security;
     using CN88.CustomerSetting.Client.Configurations;
+    using CN88.CustomerSetting.Client.Helpers;
     using CN88.CustomerSetting.DemoSite.Configurations;
     using CN88.CustomerSetting.DemoSite.Constants;
     using CN88.CustomerSetting.DemoSite.Filters;
@@ -44,6 +46,7 @@
             Session[SessionKeys.SubAccountIdSessionKey] = subAccountId;
             Session[SessionKeys.SystemIdSessionKey] = system;
             Session[SessionKeys.LanguageSessionKey] = language;
+            Session[SessionKeys.HashKeySessionKey] = Encryptor.RandomNumberString(new Random().Next(4, 12));
 
             return Json(new
             {

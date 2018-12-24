@@ -7,9 +7,12 @@
     {
         public Setting Setting { get; set; }
 
+        public string HashKey { get; set; }
+
         internal CreateCustomerCommand GetCreateCustomerCommand()
             => new CreateCustomerCommand(
-                setting: Setting,
-                uplineId: UplineId);
+                Setting,
+                UplineId,
+                HashKey);
     }
 }

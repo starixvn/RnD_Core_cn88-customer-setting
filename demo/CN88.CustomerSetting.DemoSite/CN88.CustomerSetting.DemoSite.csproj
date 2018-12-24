@@ -164,6 +164,7 @@
     <Content Include="Scripts\Libraries\Underscore\underscore-min.map" />
     <Content Include="Scripts\sample-data-2.json" />
     <Content Include="Scripts\sample-data.json" />
+    <Content Include="Web.local.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

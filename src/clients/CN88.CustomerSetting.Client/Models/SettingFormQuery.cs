@@ -20,12 +20,15 @@
 
         public int UplineId { get; set; }
 
+        public string HashKey { get; set; }
+
         internal string ToJson()
         {
             var properties = new List<string>();
 
             properties.Add("{");
             properties.Add(string.Format("\"system\": {0},", System));
+            properties.Add(string.Format("\"hashKey\": \"{0}\",", HashKey));
             properties.Add(string.Format("\"language\": \"{0}\",", Language));
             properties.Add(string.Format("\"productId\": {0},", ProductId));
             properties.Add(string.Format("\"customerLevel\": {0},", CustomerLevel));

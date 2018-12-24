@@ -45,7 +45,7 @@
         public string TypeName => GetType().AssemblyQualifiedName;
 
         public virtual bool SatisfyCustomerLevelConstraint(Level actorLevel, Level customerLevel)
-            => actorLevel.IsCompanyLevel() || actorLevel.IsDirectUplineOf(customerLevel);
+            => actorLevel.IsCompanyLevel() || actorLevel.IsUplineOf(customerLevel);
 
         public override string ToString()
             => string.Join(base.ToString(), Id);

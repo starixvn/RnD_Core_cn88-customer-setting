@@ -35,7 +35,7 @@
 
         public ISetting GetCustomerSetting(ISettingContext settingContext, CustomerSettingQuery query)
         {
-            //Validate(settingContext, query);
+            Validate(settingContext, query);
 
             var product = ProductService.GetProduct(settingContext, query.ProductId, settingContext.System);
             var customerSettingTypes = GetCustomerSettingTypes(settingContext, query, product.SettingTypes);
