@@ -1,6 +1,6 @@
-﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
-/// <reference path="../models/setting.ts" />
-/// <reference path="../module-registrater.ts" />
+﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../models/setting.ts" />
+/// <reference path="../../module-registrater.ts" />
 
 module CustomerSetting {
     "use strict";

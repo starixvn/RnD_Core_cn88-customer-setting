@@ -1,33 +1,58 @@
-﻿$block-ui-overlay: rgba(255, 255, 255, 0.5);
-$block-header-bg: #b5c4d0;
-$block-item-lbl-bg: #b5c4d0;
-$border-color: #7c98a4;
+﻿$field-border-color: #aeaeae;
+$field-focus-border-color: #66afe9;
+$field-error-border-color: #e9322d;
+$field-warning-border-color: #c93;
+$field-success-border-color: #14b22a;
+
+$button-backround-color: #0b599c;
+$button-hover-backround-color: #094b84;
+$button-text-color: #fff;
+
+$block-ui-overlay: rgba(255, 255, 255, 0.5);
+
+$tooltip-text-color: #333;
+$tooltip-success-bg-color: #dfffe1;
+$tooltip-success-border-color: #14b22a;
+$tooltip-warning-bg-color: #c93;
+$tooltip-warning-border-color: #ffc;
+$tooltip-error-bg-color: #ffe8e8;
+$tooltip-error-border-color: #e9322d;
+$tooltip-info-bg-color: #cecece;
+$tooltip-info-border-color: #666;
+
+$msg-container-bg: #fdfbec;
+$msg-container-border-color: #d9d9d9;
+
+$text-color: #333;
+
+$msg-error-color: #fe0000;
+$msg-success-color: #52a220;
+$msg-warning-color: #7e3d00;
+
+$block-header-bg: #666;
+$block-item-lbl-bg: #f8f0e5;
+
+$border-color: #cecece;
+$border-radius: 1px;
 $border-size: 1px;
 $border-style: solid;
-$button-backround-color1: #8594a2;
-$button-backround-color2: #344d61;
-$button-backround-color3: #8594a2;
-$button-text-color: #fff;
-$container-bg: #e6e9f0;
-$default-bg: #fff;
-$default-border-radius: 3px;
-$error-block-header-bg: #ff6964;
-$error-block-error-color: #fff;
+
+$default-bg: #f8f0e5;
+
+$block-error-header-bg: #ff6964;
+$block-error-header-color: #fff;
+$block-error-border-color: #fe8989;
+$block-error-color: #ff6964;
+
 $error-color: #e9322d;
-$field-border-color: #aeaeae;
-$field-focus-border-color: #66afe9;
-$font-family: Tahoma, Arial, helvetica, sans-serif;
-$font-size-root: 11px;
-$font-size-base: 1rem !default;
-$line-height: 1.5 !default;
-$modal-ovarlay: rgba(0, 0, 0, 0.5);
-$modal-header-bg: $block-item-lbl-bg;
-$modal-footer-border-color: #ececec;
-$msg-container-bg: #f5f6f2;
-$sub-header-bg: #cadceb;
 $success-color: #618e11;
 $warning-color: #c28f06;
-$invalid-tooltip-text-color: $button-text-color;
-$error-tooltip-border-color: rgba(233, 50, 45, 0.85);
-$warning-tooltip-border-color: rgba(194, 143, 6, 0.85);
-$success-tooltip-border-color: rgba(97, 142, 17, 0.85);
+
+$font-family: Tahoma, Arial, helvetica, sans-serif;
+$font-size-root: 13px;
+$font-size-base: 1rem !default;
+
+$header-color: #fff;
+$line-height: 1.5 !default;
+
+$sub-header-bg: #fae7d3;

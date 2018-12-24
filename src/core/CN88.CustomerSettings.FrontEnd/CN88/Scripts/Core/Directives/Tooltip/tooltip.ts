@@ -1,8 +1,8 @@
-﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
-/// <reference path="../models/enums/notification-type.ts" />
-/// <reference path="../models/enums/position-model.ts" />
-/// <reference path="../models/result.ts" />
-/// <reference path="../resources/resource-service.ts" />
+﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../models/enums/notification-type.ts" />
+/// <reference path="../../models/enums/position-model.ts" />
+/// <reference path="../../models/result.ts" />
+/// <reference path="../../resources/resource-service.ts" />
 
 module CustomerSetting {
     "use strict";
@@ -34,7 +34,7 @@ module CustomerSetting {
         }
 
         public link: ng.IDirectiveLinkFn = (scope: ITooltipScope, element: ng.IAugmentedJQuery) => {
-            var template: {} = this.$templateCache.get("Tooltip/tooltip.htm");
+            var template: {} = this.$templateCache.get("Directives/Tooltip/tooltip.htm");
             var tooltip: ng.IAugmentedJQuery = angular.element(template);
             var debounceResize: any = debounce(() => {
                 if (scope.tooltipMessage) {

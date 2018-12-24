@@ -1,8 +1,8 @@
-﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
-/// <reference path="../models/enums/level.ts" />
-/// <reference path="../models/setting-item.ts" />
-/// <reference path="../models/setting-type.ts" />
-/// <reference path="../services/setting-types-shared-values-service.ts" />
+﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../models/enums/level.ts" />
+/// <reference path="../../models/setting-item.ts" />
+/// <reference path="../../models/setting-type.ts" />
+/// <reference path="../../services/setting-types-shared-values-service.ts" />
 
 module CustomerSetting {
     "use strict";

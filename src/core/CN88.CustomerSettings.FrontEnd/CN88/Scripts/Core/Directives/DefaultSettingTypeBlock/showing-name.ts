@@ -1,6 +1,6 @@
-﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
-/// <reference path="../models/enums/setting-level.ts" />
-/// <reference path="../models/setting-item.ts" />
+﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../models/enums/setting-level.ts" />
+/// <reference path="../../models/setting-item.ts" />
 
 module CustomerSetting {
     "use strict";

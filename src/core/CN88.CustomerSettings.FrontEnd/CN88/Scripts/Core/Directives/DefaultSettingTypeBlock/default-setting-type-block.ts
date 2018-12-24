@@ -1,6 +1,6 @@
-﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
-/// <reference path="../models/enums/setting-level.ts" />
-/// <reference path="../models/setting-item.ts" />
+﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../models/enums/setting-level.ts" />
+/// <reference path="../../models/setting-item.ts" />
 /// <reference path="../settingtypebase/setting-type-base-directive.ts" />
 
 module CustomerSetting {
@@ -15,7 +15,7 @@ module CustomerSetting {
 
     export class DefaultSettingTypeGroupingDirective implements ng.IDirective {
         public replace: boolean = true;
-        public templateUrl: string = "DefaultSettingTypeBlock/default-setting-type-block.htm";
+        public templateUrl: string = "Directives/DefaultSettingTypeBlock/default-setting-type-block.htm";
 
         public controller: any = ["$scope", ($scope: IDefaultSettingTypeDirectiveScope) => {
             $scope.avaiSettingLevels = SettingLevel;

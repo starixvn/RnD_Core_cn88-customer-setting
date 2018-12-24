@@ -29267,6 +29267,8 @@ var CustomerSetting;
                 this.betTypeId = settingItem.betTypeId;
                 this.betTypeName = settingItem.betTypeName;
                 this.typeName = settingItem.typeName;
+                this.displayOrder = settingItem.childOrder;
+                this.layoutType = settingItem.layoutType;
                 if (settingItem.isLive !== undefined) {
                     this.isLive = settingItem.isLive;
                 }
@@ -29341,7 +29343,7 @@ var CustomerSetting;
                 this.settingItems = settingType.settingItems;
                 this.typeName = settingType.typeName;
                 this.displayOrder = settingType.displayOrder;
-                this.displayMode = settingType.displayMode;
+                this.displayMode = CustomerSetting.DisplayMode.editable;
                 this.isError = settingType.isError;
                 this.extraData = this.getExtraData(settingType);
             }
@@ -29438,17 +29440,9 @@ var CustomerSetting;
                 }
             }
         }
-        Setting.prototype.getEditableSettingTypes = function (settingTypeId) {
+        Setting.prototype.getEditableSettingTypes = function () {
             var newSetting;
-            var editableSettingTypes;
-            if (settingTypeId) {
-                editableSettingTypes = this.settingTypes.filter(function (item) {
-                    return item.id === settingTypeId && item.displayMode === CustomerSetting.DisplayMode.editable;
-                });
-            }
-            else {
-                editableSettingTypes = this.getListOfEditableSettingTypes();
-            }
+            var editableSettingTypes = this.getListOfEditableSettingTypes();
             if (editableSettingTypes && editableSettingTypes.length > 0) {
                 newSetting = new Setting();
                 newSetting.customerId = this.customerId;
@@ -29459,18 +29453,10 @@ var CustomerSetting;
             }
             return newSetting;
         };
-        Setting.prototype.getChanges = function (settingTypeId) {
+        Setting.prototype.getChanges = function () {
             var newSetting;
-            var matchedSettingTypes;
+            var matchedSettingTypes = this.getListOfEditableSettingTypes();
             var changedSettingTypes = new Array();
-            if (settingTypeId) {
-                matchedSettingTypes = this.settingTypes.filter(function (item) {
-                    return item.id === settingTypeId;
-                });
-            }
-            else {
-                matchedSettingTypes = this.getListOfEditableSettingTypes();
-            }
             if (matchedSettingTypes && matchedSettingTypes.length > 0) {
                 matchedSettingTypes.forEach(function (settingType) {
                     var changedSettingType = settingType.getChanges();
@@ -29626,15 +29612,17 @@ var CustomerSetting;
     "use strict";
     var SettingQuery = (function (_super) {
         __extends(SettingQuery, _super);
-        function SettingQuery(productId, uplineLevel, customerLevel, customerId) {
+        function SettingQuery(productId, uplineLevel, customerLevel, customerId, isNew) {
             _super.call(this, productId, uplineLevel, customerLevel);
             this.customerId = customerId;
+            this.isNew = isNew;
         }
         SettingQuery.prototype.toJson = function () {
             var params = {
                 customerId: this.customerId,
                 customerLevel: this.customerLevel,
-                productId: this.productId
+                productId: this.productId,
+                isCreateNew: this.isNew
             };
             if (this.uplineLevel) {
                 params.uplineLevel = this.uplineLevel;
@@ -29773,7 +29761,7 @@ var CustomerSetting;
                 this.lang = params.language || CustomerSetting.Defaults.language;
                 this.system = params.system || CustomerSetting.Defaults.system;
                 this.isCreateNew = params.isCreateNew || false;
-                this.query = new CustomerSetting.SettingQuery(params.productId, uplineLevel, customerLevel, params.customerId);
+                this.query = new CustomerSetting.SettingQuery(params.productId, uplineLevel, customerLevel, params.customerId, this.isNew);
             }
         };
         ParametersService.$inject = ["$window"];
@@ -29896,8 +29884,14 @@ var CustomerSetting;
         AppConfigService.prototype.getQueryPath = function () {
             return this.applicationPath + "viewCustomerSetting/querySetting?";
         };
+        AppConfigService.prototype.getCreatePath = function () {
+            return this.applicationPath + "createCustomer/create";
+        };
         AppConfigService.prototype.getUpdatePath = function () {
-            return this.applicationPath + "updateCustomerSetting/updateSetting";
+            return this.applicationPath + "updateCustomerSetting/update";
+        };
+        AppConfigService.prototype.buildPath = function (relativePath) {
+            return this.applicationPath + relativePath;
         };
         AppConfigService.prototype.requestVerificationToken = function () {
             return this.antiForgeryToken;
@@ -29918,7 +29912,7 @@ var CustomerSetting;
     var BlockUiDirective = (function () {
         function BlockUiDirective() {
             this.replace = true;
-            this.templateUrl = "BlockUI/block-ui.htm";
+            this.templateUrl = "Directives/BlockUI/block-ui.htm";
             this.controller = ["$scope", "blockUiService", function ($scope, blockUiService) {
                     blockUiService.setup($scope);
                 }];
@@ -30011,7 +30005,6 @@ var CustomerSetting;
             this.uplineLevel = uplineLevel;
             this.isNew = this.parametersService.isNew;
             if (setting) {
-                this.sharedSettings = setting;
                 this.customerId = setting.customerId;
                 this.customerLevel = setting.customerLevel;
                 this.productId = setting.productId;
@@ -30029,10 +30022,9 @@ var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
     var CustomerSettingController = (function () {
-        function CustomerSettingController($window, $rootScope, $timeout, appConfigService, parametersService, resourceService, requestService, settingTypesSharedValuesService) {
+        function CustomerSettingController($window, $timeout, appConfigService, parametersService, resourceService, requestService, settingTypesSharedValuesService) {
             var _this = this;
             this.$window = $window;
-            this.$rootScope = $rootScope;
             this.$timeout = $timeout;
             this.appConfigService = appConfigService;
             this.parametersService = parametersService;
@@ -30046,17 +30038,18 @@ var CustomerSetting;
                 _this.querySetting();
             });
         }
-        CustomerSettingController.prototype.update = function (settingTypeId) {
-            var path = this.appConfigService.getUpdatePath();
-            var editableSettings = this.setting.getEditableSettingTypes(settingTypeId);
-            var setting = this.setting.getChanges(settingTypeId);
+        CustomerSettingController.prototype.update = function () {
+            var editableSettings = this.setting.getEditableSettingTypes();
+            var changedSettings = this.setting.getChanges();
             var validationResult;
             var command;
-            this.$rootScope.$emit("updateSetting", settingTypeId);
+            var path = this.settingTypesSharedValuesService.isNew
+                ? this.appConfigService.getCreatePath()
+                : this.appConfigService.getUpdatePath();
             this.requestMsgResult = undefined;
-            if (setting) {
+            if (changedSettings) {
                 if (editableSettings.validate()) {
-                    command = this.parametersService.createSettingCommand(setting);
+                    command = this.parametersService.createSettingCommand(changedSettings);
                     validationResult = command.validate();
                     if (validationResult.isSuccessful) {
                         this.updateSetting(path, command);
@@ -30096,13 +30089,11 @@ var CustomerSetting;
                     _this.setting = new CustomerSetting.Setting(response.data);
                     _this.warningMessages = _this.setting.warningMessage;
                     _this.settingTypesSharedValuesService.register(_this.setting, _this.parametersService.uplineLevel);
-                    _this.$rootScope.$emit("queriedSetting");
                 });
             }
         };
         CustomerSettingController.$inject = [
             "$window",
-            "$rootScope",
             "$timeout",
             "appConfigService",
             "parametersService",
@@ -30195,6 +30186,222 @@ var CustomerSetting;
         };
     }
     CustomerSetting.ModuleRegister.filter("validSettingType", ValidSettingTypeFilter);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var CrossingSettingTypesServiceBus = (function () {
+        function CrossingSettingTypesServiceBus($q) {
+            this.$q = $q;
+            this.promises = [];
+        }
+        CrossingSettingTypesServiceBus.prototype.reset = function () {
+            this.promises = [];
+        };
+        CrossingSettingTypesServiceBus.prototype.register = function (channel, promise) {
+            var isNew = this.promises.some(function (promise) {
+                return channel === promise.key;
+            });
+            if (isNew) {
+                this.promises.push(new CustomerSetting.KeyValuePair(channel, promise));
+            }
+        };
+        CrossingSettingTypesServiceBus.prototype.execute = function (trigger, sharedData) {
+            var deferred = this.$q.defer();
+            if (sharedData) {
+                var current;
+                this.promises.forEach(function (promise) {
+                    if (promise.key === trigger) {
+                        if (!current) {
+                            current = promise.value(sharedData);
+                        }
+                        else {
+                            current = current.then(function () { return promise.value(sharedData); });
+                        }
+                    }
+                });
+                if (current) {
+                    return current;
+                }
+            }
+            deferred.resolve();
+            return deferred.promise;
+        };
+        CrossingSettingTypesServiceBus.$inject = ["$q"];
+        return CrossingSettingTypesServiceBus;
+    }());
+    CustomerSetting.CrossingSettingTypesServiceBus = CrossingSettingTypesServiceBus;
+    CustomerSetting.ModuleRegister.service("crossingSettingTypesServiceBus", CrossingSettingTypesServiceBus);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var ValueRangeService = (function () {
+        function ValueRangeService() {
+        }
+        ValueRangeService.prototype.generateRanges = function (value, min, max, step, roundingFactor) {
+            var ranges = new Array();
+            min = Math.max(0, min);
+            max = Math.max(0, max);
+            if (value > max) {
+                ranges.push(new CustomerSetting.KeyValuePair(value, value));
+            }
+            while (max >= min) {
+                ranges.push(new CustomerSetting.KeyValuePair(max, max));
+                max -= step;
+                max = Math.round(max * roundingFactor) / roundingFactor;
+            }
+            if (value < min) {
+                ranges.push(new CustomerSetting.KeyValuePair(value, value));
+            }
+            return ranges;
+        };
+        return ValueRangeService;
+    }());
+    CustomerSetting.ValueRangeService = ValueRangeService;
+    CustomerSetting.ModuleRegister.service("valueRangeService", ValueRangeService);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    (function (SettingLevel) {
+        SettingLevel[SettingLevel["product"] = 1] = "product";
+        SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
+        SettingLevel[SettingLevel["betType"] = 3] = "betType";
+        SettingLevel[SettingLevel["sportTypeBetType"] = 4] = "sportTypeBetType";
+    })(CustomerSetting.SettingLevel || (CustomerSetting.SettingLevel = {}));
+    var SettingLevel = CustomerSetting.SettingLevel;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var SettingTypeBaseDirective = (function () {
+        function SettingTypeBaseDirective(settingItemType) {
+            var _this = this;
+            this.replace = true;
+            this.controller = [
+                "$scope",
+                "settingTypesSharedValuesService",
+                function ($scope, settingTypesSharedValuesService) {
+                    $scope.customerId = settingTypesSharedValuesService.customerId;
+                    $scope.uplineLevel = settingTypesSharedValuesService.uplineLevel;
+                    $scope.customerLevel = settingTypesSharedValuesService.customerLevel;
+                    $scope.productId = settingTypesSharedValuesService.productId;
+                    $scope.productName = settingTypesSharedValuesService.productName;
+                    $scope.isNew = settingTypesSharedValuesService.isNew;
+                    $scope.avaiCustomerLevels = CustomerSetting.Level;
+                    $scope.$watch("settingType", function (settingType) {
+                        if (settingType && angular.isArray(settingType.settingItems)) {
+                            if (settingType.isError) {
+                                if (settingType.settingItems.length > 0) {
+                                    settingType.settingItems[0] = new CustomerSetting.ErrorSettingItem(settingType.settingItems[0]);
+                                }
+                            }
+                            else {
+                                settingType.settingItems.forEach(function (item, index) {
+                                    if (item) {
+                                        settingType.settingItems[index] = _this.settingItemType(item, true, $scope.isNew, $scope.customerLevel, $scope.uplineLevel, settingType.extraData);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }];
+            this.settingItemType = settingItemType;
+        }
+        Object.defineProperty(SettingTypeBaseDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    settingType: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return SettingTypeBaseDirective;
+    }());
+    CustomerSetting.SettingTypeBaseDirective = SettingTypeBaseDirective;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var DefaultSettingTypeGroupingDirective = (function () {
+        function DefaultSettingTypeGroupingDirective() {
+            var _this = this;
+            this.replace = true;
+            this.templateUrl = "Directives/DefaultSettingTypeBlock/default-setting-type-block.htm";
+            this.controller = ["$scope", function ($scope) {
+                    $scope.avaiSettingLevels = CustomerSetting.SettingLevel;
+                    $scope.$watch("settingType", function (settingType) {
+                        if (settingType && angular.isArray(settingType.settingItems)) {
+                            if (settingType.settingLevel === CustomerSetting.SettingLevel.sportTypeBetType) {
+                                $scope.sportGroups = _this.groupSettingItemsBySportType(settingType.settingItems);
+                            }
+                            else {
+                                $scope.sportGroups = [settingType.settingItems];
+                            }
+                            _this.reorderBetTypesOfSports($scope.sportGroups);
+                        }
+                    });
+                }];
+        }
+        DefaultSettingTypeGroupingDirective.prototype.groupSettingItemsBySportType = function (settingItems) {
+            var currentSportTypeId = -1;
+            var result = new Array();
+            var group;
+            settingItems.forEach(function (item) {
+                var settingItem = item;
+                if (currentSportTypeId !== settingItem.sportTypeId) {
+                    if (group) {
+                        result.push(group);
+                    }
+                    currentSportTypeId = settingItem.sportTypeId;
+                    group = new Array();
+                }
+                group.push(settingItem);
+            });
+            if (group) {
+                result.push(group);
+            }
+            return result;
+        };
+        DefaultSettingTypeGroupingDirective.prototype.reorderBetTypesOfSports = function (originalSportGroups) {
+            originalSportGroups.forEach(function (group) {
+                group.sort(function (firstSettingItem, secondSettingItem) {
+                    if (firstSettingItem.displayOrder > secondSettingItem.displayOrder) {
+                        return 1;
+                    }
+                    if (firstSettingItem.displayOrder < secondSettingItem.displayOrder) {
+                        return -1;
+                    }
+                    return 0;
+                });
+            });
+        };
+        return DefaultSettingTypeGroupingDirective;
+    }());
+    CustomerSetting.DefaultSettingTypeGroupingDirective = DefaultSettingTypeGroupingDirective;
+    CustomerSetting.ModuleRegister.directive("defaultSettingTypeGrouping", DefaultSettingTypeGroupingDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    function ShowingName() {
+        return function (settingItem, settingLevel, productName) {
+            return settingLevel === CustomerSetting.SettingLevel.product
+                ? productName
+                : (settingLevel === CustomerSetting.SettingLevel.sportType
+                    ? settingItem.sportTypeName
+                    : settingItem.betTypeName);
+        };
+    }
+    CustomerSetting.ModuleRegister.filter("showingName", ShowingName);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -30305,39 +30512,10 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var ValueRangeService = (function () {
-        function ValueRangeService() {
-        }
-        ValueRangeService.prototype.generateRanges = function (value, min, max, step, roundingFactor) {
-            var ranges = new Array();
-            min = Math.max(0, min);
-            max = Math.max(0, max);
-            if (value > max) {
-                ranges.push(new CustomerSetting.KeyValuePair(value, value));
-            }
-            while (max >= min) {
-                ranges.push(new CustomerSetting.KeyValuePair(max, max));
-                max -= step;
-                max = Math.round(max * roundingFactor) / roundingFactor;
-            }
-            if (value < min) {
-                ranges.push(new CustomerSetting.KeyValuePair(value, value));
-            }
-            return ranges;
-        };
-        return ValueRangeService;
-    }());
-    CustomerSetting.ValueRangeService = ValueRangeService;
-    CustomerSetting.ModuleRegister.service("valueRangeService", ValueRangeService);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
     var SettingResultDirective = (function () {
         function SettingResultDirective() {
             this.replace = true;
-            this.templateUrl = "SettingResult/setting-result.htm";
+            this.templateUrl = "Directives/SettingResult/setting-result.htm";
             this.controller = ["$rootScope", "$scope", "$window", function ($rootScope, $scope, $window) {
                     $scope.$watch("result", function (result) {
                         $rootScope.$emit("page-height-changed");
@@ -30359,58 +30537,6 @@ var CustomerSetting;
         return SettingResultDirective;
     }());
     CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var SettingTypeBaseDirective = (function () {
-        function SettingTypeBaseDirective(settingItemType) {
-            var _this = this;
-            this.replace = true;
-            this.controller = [
-                "$scope",
-                "settingTypesSharedValuesService",
-                function ($scope, settingTypesSharedValuesService) {
-                    $scope.customerId = settingTypesSharedValuesService.customerId;
-                    $scope.uplineLevel = settingTypesSharedValuesService.uplineLevel;
-                    $scope.customerLevel = settingTypesSharedValuesService.customerLevel;
-                    $scope.productId = settingTypesSharedValuesService.productId;
-                    $scope.productName = settingTypesSharedValuesService.productName;
-                    $scope.sharedSettings = settingTypesSharedValuesService.sharedSettings;
-                    $scope.isNew = settingTypesSharedValuesService.isNew;
-                    $scope.avaiCustomerLevels = CustomerSetting.Level;
-                    $scope.$watch("settingType", function (settingType) {
-                        if (settingType && angular.isArray(settingType.settingItems)) {
-                            if (settingType.isError) {
-                                if (settingType.settingItems.length > 0) {
-                                    settingType.settingItems[0] = new CustomerSetting.ErrorSettingItem(settingType.settingItems[0]);
-                                }
-                            }
-                            else {
-                                settingType.settingItems.forEach(function (item, index) {
-                                    if (item) {
-                                        settingType.settingItems[index] = _this.settingItemType(item, true, $scope.isNew, $scope.customerLevel, $scope.uplineLevel, settingType.extraData);
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }];
-            this.settingItemType = settingItemType;
-        }
-        Object.defineProperty(SettingTypeBaseDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    settingType: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return SettingTypeBaseDirective;
-    }());
-    CustomerSetting.SettingTypeBaseDirective = SettingTypeBaseDirective;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -30505,7 +30631,7 @@ var CustomerSetting;
             this.restrict = "A";
             this.priority = 100;
             this.link = function (scope, element) {
-                var template = _this.$templateCache.get("Tooltip/tooltip.htm");
+                var template = _this.$templateCache.get("Directives/Tooltip/tooltip.htm");
                 var tooltip = angular.element(template);
                 var debounceResize = CustomerSetting.debounce(function () {
                     if (scope.tooltipMessage) {
@@ -30650,64 +30776,12 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    (function (SettingLevel) {
-        SettingLevel[SettingLevel["product"] = 1] = "product";
-        SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
-        SettingLevel[SettingLevel["betType"] = 3] = "betType";
-        SettingLevel[SettingLevel["sportTypeBetType"] = 4] = "sportTypeBetType";
-    })(CustomerSetting.SettingLevel || (CustomerSetting.SettingLevel = {}));
-    var SettingLevel = CustomerSetting.SettingLevel;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
     (function (System) {
         System[System["nap"] = 1] = "nap";
         System[System["alpha"] = 2] = "alpha";
         System[System["internalAlpha"] = 3] = "internalAlpha";
     })(CustomerSetting.System || (CustomerSetting.System = {}));
     var System = CustomerSetting.System;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var PTItem = (function () {
-        function PTItem(ptItem, backup) {
-            if (backup === void 0) { backup = false; }
-            if (ptItem) {
-                this.minPT = ptItem.minPT;
-                this.maxPT = ptItem.maxPT;
-                this.interval = ptItem.interval;
-            }
-            if (backup) {
-                this.oldPTItem = new PTItem(this);
-            }
-            this.resetValidationState();
-        }
-        PTItem.prototype.isChanged = function () {
-            return this.oldPTItem
-                && (this.minPT !== this.oldPTItem.minPT
-                    || this.maxPT !== this.oldPTItem.maxPT
-                    || this.interval !== this.oldPTItem.interval);
-        };
-        PTItem.prototype.validate = function () {
-            return true;
-        };
-        PTItem.prototype.resetValidationState = function () {
-            this.validationState = CustomerSetting.Result.normal;
-        };
-        PTItem.prototype.toJson = function () {
-            return {
-                minPT: this.minPT,
-                maxPT: this.maxPT,
-                interval: this.interval
-            };
-        };
-        return PTItem;
-    }());
-    CustomerSetting.PTItem = PTItem;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
@@ -30718,100 +30792,50 @@ var __extends = (this && this.__extends) || function (d, b) {
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var AgentPTItem = (function (_super) {
-        __extends(AgentPTItem, _super);
-        function AgentPTItem(agentPTItem, backup) {
-            if (backup === void 0) { backup = false; }
-            if (agentPTItem) {
-                _super.call(this, agentPTItem);
-                this.masterPT = agentPTItem.masterPT;
-                this.agentPT = agentPTItem.agentPT;
-            }
-            if (backup) {
-                this.oldPTItem = new AgentPTItem(this);
-            }
-        }
-        AgentPTItem.prototype.isChanged = function () {
-            var isChanged = _super.prototype.isChanged.call(this);
-            var oldAgentPTItem = this.oldPTItem;
-            return isChanged
-                || this.masterPT !== oldAgentPTItem.masterPT
-                || this.agentPT !== oldAgentPTItem.agentPT;
-        };
-        AgentPTItem.prototype.validate = function () {
-            if (this.masterPT > this.maxPT) {
-                this.validationState = new CustomerSetting.ValidationResult("MasterPTMustBeLessThanOrEqualTo", "masterPT", [this.maxPT]);
-                return false;
-            }
-            if (this.agentPT > this.maxPT) {
-                this.validationState = new CustomerSetting.ValidationResult("AgentPTMustBeLessThanOrEqualTo", "agentPT", [this.maxPT]);
-                return false;
-            }
-            if ((this.masterPT + this.agentPT > this.maxPT) || (this.masterPT + this.agentPT < this.minPT)) {
-                this.validationState = new CustomerSetting.ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minPT, this.maxPT]);
-                return false;
-            }
-            this.resetValidationState();
-            return true;
-        };
-        AgentPTItem.prototype.toJson = function () {
-            var json = _super.prototype.toJson.call(this);
-            json.superMinPT = this.masterPT;
-            json.superMaxPT = this.agentPT;
-            return json;
-        };
-        return AgentPTItem;
-    }(CustomerSetting.PTItem));
-    CustomerSetting.AgentPTItem = AgentPTItem;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var CustomerInfo = (function () {
-        function CustomerInfo(customerInfo, backup, isNew, customerLevel) {
+    var AccountDetail = (function (_super) {
+        __extends(AccountDetail, _super);
+        function AccountDetail(accountDetail, backup, isNew, customerLevel) {
             if (backup === void 0) { backup = false; }
             if (isNew === void 0) { isNew = false; }
             if (customerLevel === void 0) { customerLevel = null; }
+            _super.call(this, accountDetail);
             this.isNew = isNew;
             this.customerLevel = customerLevel;
-            if (customerInfo) {
-                this.username = customerInfo.username;
-                this.password = customerInfo.password;
-                this.firstName = customerInfo.firstName;
-                this.lastName = customerInfo.lastName;
-                this.phone = customerInfo.phone;
-                this.mobilePhone = customerInfo.mobilePhone;
-                this.fax = customerInfo.fax;
-                this.currencyId = customerInfo.currencyId;
-                this.currencyName = customerInfo.currencyName;
-                this.currencies = customerInfo.currencies;
-                this.credit = customerInfo.credit;
-                this.availableCredit = customerInfo.availableCredit;
-                this.uGroup = customerInfo.uGroup;
-                this.usernameSuffix = customerInfo.usernameSuffix;
-                this.uGroups = customerInfo.uGroups;
-                this.uplineUsername = customerInfo.uplineUsername;
+            if (accountDetail) {
+                this.username = accountDetail.username;
+                this.password = accountDetail.password;
+                this.firstName = accountDetail.firstName;
+                this.lastName = accountDetail.lastName;
+                this.phone = accountDetail.phone;
+                this.mobilePhone = accountDetail.mobilePhone;
+                this.fax = accountDetail.fax;
+                this.credit = accountDetail.credit;
+                this.availableCredit = accountDetail.availableCredit;
+                this.usernameSuffix = accountDetail.usernameSuffix;
+                this.uplineUsername = accountDetail.uplineUsername;
+                this.minPT = accountDetail.minPT;
+                this.maxPT = accountDetail.maxPT;
+                this.interval = accountDetail.interval;
             }
             if (backup) {
-                this.oldCustomerInfo = new CustomerInfo(this);
+                this.oldSetting = new AccountDetail(this);
             }
             this.resetValidationState();
         }
-        CustomerInfo.prototype.isChanged = function () {
-            return this.oldCustomerInfo
-                && (this.username !== this.oldCustomerInfo.username
-                    || this.password !== this.oldCustomerInfo.password
-                    || this.firstName !== this.oldCustomerInfo.firstName
-                    || this.lastName !== this.oldCustomerInfo.lastName
-                    || this.phone !== this.oldCustomerInfo.phone
-                    || this.mobilePhone !== this.oldCustomerInfo.mobilePhone
-                    || this.fax !== this.oldCustomerInfo.fax
-                    || this.currencyId !== this.oldCustomerInfo.currencyId
-                    || this.credit !== this.oldCustomerInfo.credit
-                    || this.uGroup !== this.oldCustomerInfo.uGroup);
+        AccountDetail.prototype.isChanged = function () {
+            var isChanged = _super.prototype.isChanged.call(this);
+            var oldSetting = this.oldSetting;
+            return isChanged
+                || this.username !== oldSetting.username
+                || this.password !== oldSetting.password
+                || this.firstName !== oldSetting.firstName
+                || this.lastName !== oldSetting.lastName
+                || this.phone !== oldSetting.phone
+                || this.mobilePhone !== oldSetting.mobilePhone
+                || this.fax !== oldSetting.fax
+                || this.credit !== oldSetting.credit;
         };
-        CustomerInfo.prototype.validate = function () {
+        AccountDetail.prototype.validate = function () {
             if (!this.validateUsername()) {
                 return false;
             }
@@ -30824,7 +30848,7 @@ var CustomerSetting;
             this.resetValidationState();
             return true;
         };
-        CustomerInfo.prototype.validateUsername = function () {
+        AccountDetail.prototype.validateUsername = function () {
             if (this.isNew) {
                 if (!this.username || this.username.length === 0) {
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "username");
@@ -30833,61 +30857,40 @@ var CustomerSetting;
             }
             return true;
         };
-        CustomerInfo.prototype.validatePassword = function () {
+        AccountDetail.prototype.validatePassword = function () {
             if (this.isNew) {
                 if (!this.password || this.password.length === 0) {
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
                     return false;
                 }
-                if (this.customerLevel !== CustomerSetting.Level.super && this.confirmPassword !== this.password) {
+                if (this.confirmPassword !== this.password) {
                     this.validationState = new CustomerSetting.ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
                     return false;
                 }
-                if (this.customerLevel !== CustomerSetting.Level.super) {
-                    var strongPassword = /^(?=.*\d)(?=.*[a-zA-Z!@#$%^&*])(?!.*\s).{8,40}$/;
-                    if (!this.password.match(strongPassword)) {
-                        this.validationState = new CustomerSetting.ValidationResult("PasswordRules", "password");
-                        return false;
-                    }
+                var strongPassword = /^(?=.*\d)(?=.*[a-zA-Z!@#$%^&*])(?!.*\s).{8,40}$/;
+                if (!this.password.match(strongPassword)) {
+                    this.validationState = new CustomerSetting.ValidationResult("PasswordRules", "password");
+                    return false;
                 }
             }
             return true;
         };
-        CustomerInfo.prototype.validateCredit = function () {
-            if (this.customerLevel !== CustomerSetting.Level.super || this.credit > this.availableCredit) {
+        AccountDetail.prototype.validateCredit = function () {
+            if (this.credit > this.availableCredit) {
                 this.validationState = new CustomerSetting.ValidationResult("CreditMustBeLessThanOrEqualTo", "credit", [this.availableCredit]);
                 return false;
             }
             return true;
         };
-        CustomerInfo.prototype.resetValidationState = function () {
-            this.validationState = CustomerSetting.Result.normal;
-        };
-        CustomerInfo.prototype.toJson = function () {
-            var json = {
-                username: this.username,
-                firstName: this.firstName,
-                credit: this.credit
-            };
+        AccountDetail.prototype.toJson = function () {
+            var json = _super.prototype.toJson.call(this);
             if (this.isNew) {
-                json.password = this.password;
-                if (this.customerLevel === CustomerSetting.Level.super) {
-                    json.currencyId = this.currencyId;
-                }
-                else if (this.customerLevel === CustomerSetting.Level.member) {
-                    json.uGroup = this.uGroup;
-                }
             }
-            if (this.customerLevel === CustomerSetting.Level.super) {
-                json.lastName = this.lastName;
-                json.phone = this.phone;
-                json.mobilePhone = this.mobilePhone;
-                json.fax = this.fax;
-            }
+            return json;
         };
-        return CustomerInfo;
-    }());
-    CustomerSetting.CustomerInfo = CustomerInfo;
+        return AccountDetail;
+    }(CustomerSetting.DefaultSettingItem));
+    CustomerSetting.AccountDetail = AccountDetail;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
@@ -30898,24 +30901,96 @@ var __extends = (this && this.__extends) || function (d, b) {
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var MasterPTItem = (function (_super) {
-        __extends(MasterPTItem, _super);
-        function MasterPTItem(masterPTItem, backup) {
+    var AgentAccountDetail = (function (_super) {
+        __extends(AgentAccountDetail, _super);
+        function AgentAccountDetail(accountDetail, backup, isNew, customerLevel) {
             if (backup === void 0) { backup = false; }
-            if (masterPTItem) {
-                _super.call(this, masterPTItem);
-                this.superPT = masterPTItem.superPT;
+            if (isNew === void 0) { isNew = false; }
+            if (customerLevel === void 0) { customerLevel = null; }
+            if (accountDetail) {
+                _super.call(this, accountDetail, backup, isNew, customerLevel);
+                this.masterPT = accountDetail.masterPT;
+                this.agentPT = accountDetail.agentPT;
             }
             if (backup) {
-                this.oldPTItem = new MasterPTItem(this);
+                this.oldSetting = new AgentAccountDetail(this);
             }
         }
-        MasterPTItem.prototype.isChanged = function () {
+        AgentAccountDetail.prototype.isChanged = function () {
             var isChanged = _super.prototype.isChanged.call(this);
-            var oldMasterPTItem = this.oldPTItem;
-            return isChanged || this.superPT !== oldMasterPTItem.superPT;
+            var oldSetting = this.oldSetting;
+            return isChanged
+                || this.masterPT !== oldSetting.masterPT
+                || this.agentPT !== oldSetting.agentPT;
         };
-        MasterPTItem.prototype.validate = function () {
+        AgentAccountDetail.prototype.validate = function () {
+            if (!_super.prototype.validate.call(this)) {
+                return false;
+            }
+            if (!this.validatePT()) {
+                return false;
+            }
+            this.resetValidationState();
+            return true;
+        };
+        AgentAccountDetail.prototype.validatePT = function () {
+            if (this.masterPT > this.maxPT) {
+                this.validationState = new CustomerSetting.ValidationResult("MasterPTMustBeLessThanOrEqualTo", "masterPT", [this.maxPT]);
+                return false;
+            }
+            if (this.agentPT > this.maxPT) {
+                this.validationState = new CustomerSetting.ValidationResult("AgentPTMustBeLessThanOrEqualTo", "agentPT", [this.maxPT]);
+                return false;
+            }
+            if ((this.masterPT + this.agentPT > this.maxPT) || (this.masterPT + this.agentPT < this.minPT)) {
+                this.validationState = new CustomerSetting.ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minPT, this.maxPT]);
+                return false;
+            }
+            return true;
+        };
+        return AgentAccountDetail;
+    }(CustomerSetting.AccountDetail));
+    CustomerSetting.AgentAccountDetail = AgentAccountDetail;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var MasterAccountDetail = (function (_super) {
+        __extends(MasterAccountDetail, _super);
+        function MasterAccountDetail(accountDetail, backup, isNew, customerLevel) {
+            if (backup === void 0) { backup = false; }
+            if (isNew === void 0) { isNew = false; }
+            if (customerLevel === void 0) { customerLevel = null; }
+            if (accountDetail) {
+                _super.call(this, accountDetail, backup, isNew, customerLevel);
+                this.superPT = accountDetail.superPT;
+            }
+            if (backup) {
+                this.oldSetting = new MasterAccountDetail(this);
+            }
+        }
+        MasterAccountDetail.prototype.isChanged = function () {
+            var isChanged = _super.prototype.isChanged.call(this);
+            var oldSetting = this.oldSetting;
+            return isChanged || this.superPT !== oldSetting.superPT;
+        };
+        MasterAccountDetail.prototype.validate = function () {
+            if (!_super.prototype.validate.call(this)) {
+                return false;
+            }
+            if (!this.validateSuperPT()) {
+                return false;
+            }
+            this.resetValidationState();
+            return true;
+        };
+        MasterAccountDetail.prototype.validateSuperPT = function () {
             if (this.superPT < this.minPT) {
                 this.validationState = new CustomerSetting.ValidationResult("SuperPTMustBeGreaterThanOrEqualTo", "superPT", [this.minPT]);
                 return false;
@@ -30924,17 +30999,15 @@ var CustomerSetting;
                 this.validationState = new CustomerSetting.ValidationResult("SuperPTMustBeLessThanOrEqualTo", "superPT", [this.maxPT]);
                 return false;
             }
-            this.resetValidationState();
-            return true;
         };
-        MasterPTItem.prototype.toJson = function () {
-            var json = _super.prototype.toJson.call(this);
-            json.superPT = this.superPT;
-            return json;
-        };
-        return MasterPTItem;
-    }(CustomerSetting.PTItem));
-    CustomerSetting.MasterPTItem = MasterPTItem;
+        return MasterAccountDetail;
+    }(CustomerSetting.AccountDetail));
+    CustomerSetting.MasterAccountDetail = MasterAccountDetail;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
 })(CustomerSetting || (CustomerSetting = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
@@ -30945,27 +31018,46 @@ var __extends = (this && this.__extends) || function (d, b) {
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var SuperPTItem = (function (_super) {
-        __extends(SuperPTItem, _super);
-        function SuperPTItem(superPTItem, backup) {
+    var SuperAccountDetail = (function (_super) {
+        __extends(SuperAccountDetail, _super);
+        function SuperAccountDetail(accountDetail, backup, isNew, customerLevel) {
             if (backup === void 0) { backup = false; }
-            if (superPTItem) {
-                _super.call(this, superPTItem);
-                this.superMinPT = superPTItem.superMinPT;
-                this.superMaxPT = superPTItem.superMaxPT;
+            if (isNew === void 0) { isNew = false; }
+            if (customerLevel === void 0) { customerLevel = null; }
+            if (accountDetail) {
+                _super.call(this, accountDetail, backup, isNew, customerLevel);
+                this.superMinPT = accountDetail.superMinPT;
+                this.superMaxPT = accountDetail.superMaxPT;
+                this.currency = accountDetail.currency;
+                this.currencies = accountDetail.currencies;
             }
             if (backup) {
-                this.oldPTItem = new SuperPTItem(this);
+                this.oldSetting = new SuperAccountDetail(this);
             }
         }
-        SuperPTItem.prototype.isChanged = function () {
+        SuperAccountDetail.prototype.isChanged = function () {
             var isChanged = _super.prototype.isChanged.call(this);
-            var oldSuperPTItem = this.oldPTItem;
+            var oldSetting = this.oldSetting;
             return isChanged
-                || this.superMinPT !== oldSuperPTItem.superMinPT
-                || this.superMaxPT !== oldSuperPTItem.superMaxPT;
+                || this.superMinPT !== oldSetting.superMinPT
+                || this.superMaxPT !== oldSetting.superMaxPT
+                || this.currency.id !== oldSetting.currency.id;
         };
-        SuperPTItem.prototype.validate = function () {
+        SuperAccountDetail.prototype.validate = function () {
+            if (this.isNew) {
+                if (!this.username || this.username.length === 0) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "username");
+                    return false;
+                }
+                if (!this.password || this.password.length === 0) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
+                    return false;
+                }
+                if (!this.currency) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "currency");
+                    return false;
+                }
+            }
             if (!this.validateSuperMinPT()) {
                 return false;
             }
@@ -30975,7 +31067,7 @@ var CustomerSetting;
             this.resetValidationState();
             return true;
         };
-        SuperPTItem.prototype.validateSuperMinPT = function () {
+        SuperAccountDetail.prototype.validateSuperMinPT = function () {
             if (this.superMinPT < this.minPT) {
                 this.validationState = new CustomerSetting.ValidationResult("SuperMinPTMustBeGreaterThanOrEqualTo", "superMinPT", [this.minPT]);
                 return false;
@@ -30986,7 +31078,7 @@ var CustomerSetting;
             }
             return true;
         };
-        SuperPTItem.prototype.validateSuperMaxPT = function () {
+        SuperAccountDetail.prototype.validateSuperMaxPT = function () {
             if (this.superMaxPT < this.minPT) {
                 this.validationState = new CustomerSetting.ValidationResult("SuperMaxPTMustBeGreaterThanOrEqualTo", "superMaxPT", [this.minPT]);
                 return false;
@@ -30997,15 +31089,9 @@ var CustomerSetting;
             }
             return true;
         };
-        SuperPTItem.prototype.toJson = function () {
-            var json = _super.prototype.toJson.call(this);
-            json.superMinPT = this.superMinPT;
-            json.superMaxPT = this.superMaxPT;
-            return json;
-        };
-        return SuperPTItem;
-    }(CustomerSetting.PTItem));
-    CustomerSetting.SuperPTItem = SuperPTItem;
+        return SuperAccountDetail;
+    }(CustomerSetting.AccountDetail));
+    CustomerSetting.SuperAccountDetail = SuperAccountDetail;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
@@ -31016,44 +31102,72 @@ var __extends = (this && this.__extends) || function (d, b) {
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var SettingType1Item = (function (_super) {
-        __extends(SettingType1Item, _super);
-        function SettingType1Item(settingItem, backup, isNew, customerLevel) {
+    var MemberAccountDetail = (function (_super) {
+        __extends(MemberAccountDetail, _super);
+        function MemberAccountDetail(accountDetail, backup, isNew, customerLevel) {
             if (backup === void 0) { backup = false; }
             if (isNew === void 0) { isNew = false; }
             if (customerLevel === void 0) { customerLevel = null; }
-            _super.call(this, settingItem);
-            if (settingItem) {
-                this.customerInfo = new CustomerSetting.CustomerInfo(settingItem.customerInfo, backup, isNew, customerLevel);
-                if (customerLevel === CustomerSetting.Level.super) {
-                    this.ptItem = new CustomerSetting.SuperPTItem(settingItem.ptItem, backup);
-                }
-                else if (customerLevel === CustomerSetting.Level.master) {
-                    this.ptItem = new CustomerSetting.MasterPTItem(settingItem.ptItem, backup);
-                }
-                else if (customerLevel === CustomerSetting.Level.agent) {
-                    this.ptItem = new CustomerSetting.AgentPTItem(settingItem.ptItem, backup);
-                }
+            if (accountDetail) {
+                _super.call(this, accountDetail, backup, isNew, customerLevel);
+                this.uGroup = accountDetail.uGroup;
+                this.uGroups = accountDetail.uGroups;
             }
             if (backup) {
-                this.oldSetting = new SettingType1Item(this);
+                this.oldSetting = new MemberAccountDetail(this);
             }
         }
-        SettingType1Item.prototype.isChanged = function () {
+        MemberAccountDetail.prototype.isChanged = function () {
             var isChanged = _super.prototype.isChanged.call(this);
-            return isChanged || this.customerInfo.isChanged() || this.ptItem.isChanged();
+            var oldSetting = this.oldSetting;
+            return isChanged || this.uGroup !== oldSetting.uGroup;
         };
-        SettingType1Item.prototype.validate = function () {
-            if (!this.customerInfo.validate()) {
+        MemberAccountDetail.prototype.validate = function () {
+            if (!_super.prototype.validate.call(this)) {
                 return false;
             }
-            if (!this.ptItem.validate()) {
-                return false;
+            if (this.isNew) {
+                if (!this.uGroup || this.uGroup.length === 0) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "uGroup");
+                    return false;
+                }
             }
+            this.resetValidationState();
             return true;
         };
+        return MemberAccountDetail;
+    }(CustomerSetting.AccountDetail));
+    CustomerSetting.MemberAccountDetail = MemberAccountDetail;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var SettingType1Item = (function () {
+        function SettingType1Item() {
+        }
+        SettingType1Item.factory = function (settingItem, backup, isNew, customerLevel) {
+            if (backup === void 0) { backup = false; }
+            if (isNew === void 0) { isNew = false; }
+            if (customerLevel === void 0) { customerLevel = null; }
+            if (settingItem) {
+                if (customerLevel === CustomerSetting.Level.super) {
+                    return new CustomerSetting.SuperAccountDetail(settingItem, backup, isNew, customerLevel);
+                }
+                if (customerLevel === CustomerSetting.Level.master) {
+                    return new CustomerSetting.MasterAccountDetail(settingItem, backup, isNew, customerLevel);
+                }
+                if (customerLevel === CustomerSetting.Level.agent) {
+                    return new CustomerSetting.AgentAccountDetail(settingItem, backup, isNew, customerLevel);
+                }
+                if (customerLevel === CustomerSetting.Level.member) {
+                    return new CustomerSetting.MemberAccountDetail(settingItem, backup, isNew, customerLevel);
+                }
+                return new CustomerSetting.AccountDetail(settingItem, backup, isNew, customerLevel);
+            }
+        };
         return SettingType1Item;
-    }(CustomerSetting.DefaultSettingItem));
+    }());
     CustomerSetting.SettingType1Item = SettingType1Item;
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -31104,6 +31218,31 @@ var __extends = (this && this.__extends) || function (d, b) {
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
+    var SettingType1Directive = (function (_super) {
+        __extends(SettingType1Directive, _super);
+        function SettingType1Directive(settingType1ResourceService) {
+            var _this = this;
+            _super.call(this, CustomerSetting.SettingType1Item.factory);
+            this.templateUrl = "setting-type1.htm";
+            this.link = function (scope) {
+                scope.settingTypeName = _this.settingType1ResourceService.getLabel("AccountDetail");
+            };
+            this.settingType1ResourceService = settingType1ResourceService;
+        }
+        SettingType1Directive.$inject = ["settingType1ResourceService"];
+        return SettingType1Directive;
+    }(CustomerSetting.SettingTypeBaseDirective));
+    CustomerSetting.ModuleRegister.directive("settingtype1", SettingType1Directive);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
     var SettingType2ResourceService = (function (_super) {
         __extends(SettingType2ResourceService, _super);
         function SettingType2ResourceService(settingType2Resources, parametersService) {
@@ -31135,9 +31274,11 @@ var CustomerSetting;
     CustomerSetting.ModuleRegister.filter("settingType2Message", SettingType2MessageFilter);
 })(CustomerSetting || (CustomerSetting = {}));
 
-angular.module("customerSetting").run(["$templateCache", function($templateCache) {$templateCache.put("BlockUI/block-ui.htm","<div class=\"block-ui-overlay\" data-ng-show=\"isLoading\"><div class=\"block-ui-loading\" data-ng-show=\"isLoading\"></div></div>");
-$templateCache.put("SettingResult/setting-result.htm","<div data-ng-show=\"result\"><div class=\"msg msg--{{result.msgTypeName}}\" data-ng-if=\"!result.subResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\">{{result.message}}</div></div><div data-ng-if=\"result.subResults\" data-ng-repeat=\"subResult in result.subResults\"><div class=\"msg__customer-name\" data-ng-if=\"subResult.customerName\">{{subResult.customerName}}</div><div class=\"msg msg--{{subResult.msgTypeName}}\" data-ng-if=\"!subResult.settingResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\">{{subResult.message}}</div></div><div class=\"msg msg--{{settingResult.msgTypeName}}\" data-ng-if=\"subResult.settingResults\" data-ng-repeat=\"settingResult in subResult.settingResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\"><div class=\"msg__main-message\">{{settingResult.message}}</div><div class=\"msg__sub-message\" data-ng-if=\"settingResult.messages\" data-ng-repeat=\"message in settingResult.messages\">{{message}}</div></div></div></div></div>");
-$templateCache.put("Tooltip/tooltip.htm","<div class=\"tooltip tooltip--{{tooltipType}}\" data-ng-if=\"tooltipMessage\"><div class=\"tooltip__content\">{{tooltipMessage | unsafe}}</div></div>");}]);
+angular.module("customerSetting").run(["$templateCache", function($templateCache) {$templateCache.put("Directives/BlockUI/block-ui.htm","<div class=\"block-ui-overlay\" data-ng-show=\"isLoading\"><div class=\"block-ui-loading\" data-ng-show=\"isLoading\"></div></div>");
+$templateCache.put("Directives/DefaultSettingTypeBlock/default-setting-type-block.htm","<div class=\"block\" data-ng-show=\"settingType\" data-ng-class=\"{ \'block--error\': !(settingType | validSettingType) }\"><div class=\"block__header\" data-setting-type=\"{{settingType.id}}\" data-ng-class=\"{ \'block__header--error\': !(settingType | validSettingType) }\">{{settingTypeName}}</div><div class=\"block__item-group\" data-ng-if=\"settingType | validSettingType\" data-ng-repeat=\"group in sportGroups\"><div class=\"block__sub-header\" data-ng-if=\"settingType.settingLevel === avaiSettingLevels.sportTypeBetType\" data-ng-class=\"{ \'block__sub-header--border-top\': ($index > 0) }\" data-sport-type=\"{{group[0].sportTypeId}}\">{{group[0].sportTypeName}}</div><div class=\"block__lbl-group\" data-ng-include=\"headerTemplateUrl\"></div><div class=\"block__item\" data-ng-repeat=\"item in group\" data-ng-class=\"{ \'block__item--last\': $last, \'block__item--near-last\': $index === group.length - 2 && $index % 2 === 0, \'block__item--before-extra-item\': $last && group.length % 2 === 1 && group.length > 1, \'block__item--odd\': $odd, \'block__item--full-width\': group.length === 1 }\"><div class=\"block__lbl\" data-product=\"{{productId}}\" data-sport-type=\"{{item.sportTypeId}}\" data-bet-type=\"{{item.betTypeId}}\">{{item | showingName:settingType.settingLevel:productName }}</div><div class=\"block__value\" data-ng-include=\"valueTemplateUrl\"></div></div><div class=\"block__item block__item--last block__item--extra\" data-ng-if=\"group.length % 2 === 1 && group.length > 1\"><div class=\"block__lbl\"></div><div class=\"block__value\"></div></div></div><div class=\"block__item block__item--error\" data-ng-if=\"!(settingType | validSettingType)\">{{sportGroups[0][0].errorMessage}}</div></div>");
+$templateCache.put("Directives/SettingResult/setting-result.htm","<div data-ng-show=\"result\"><div class=\"msg msg--{{result.msgTypeName}}\" data-ng-if=\"!result.subResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\">{{result.message}}</div></div><div data-ng-if=\"result.subResults\" data-ng-repeat=\"subResult in result.subResults\"><div class=\"msg__customer-name\" data-ng-if=\"subResult.customerName\">{{subResult.customerName}}</div><div class=\"msg msg--{{subResult.msgTypeName}}\" data-ng-if=\"!subResult.settingResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\">{{subResult.message}}</div></div><div class=\"msg msg--{{settingResult.msgTypeName}}\" data-ng-if=\"subResult.settingResults\" data-ng-repeat=\"settingResult in subResult.settingResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\"><div class=\"msg__main-message\">{{settingResult.message}}</div><div class=\"msg__sub-message\" data-ng-if=\"settingResult.messages\" data-ng-repeat=\"message in settingResult.messages\">{{message}}</div></div></div></div></div>");
+$templateCache.put("Directives/Tooltip/tooltip.htm","<div class=\"tooltip tooltip--{{tooltipType}}\" data-ng-if=\"tooltipMessage\"><div class=\"tooltip__content\">{{tooltipMessage | unsafe}}</div></div>");
+$templateCache.put("setting-type1.htm","<div class=\"setting-type-1 block\" data-ng-show=\"settingType\" data-ng-class=\"{ \'block--error\': !(settingType | validSettingType) }\"><div class=\"block__header\" data-setting-type=\"{{settingType.id}}\" data-ng-class=\"{ \'block__header--error\': !(settingType | validSettingType) }\">{{settingTypeName}}</div><div class=\"block__item block__item--error\" data-ng-if=\"!(settingType | validSettingType)\">{{sportGroups[0][0].errorMessage}}</div></div>");}]);
 /*jshint -W101,-W106,-W044,-W098*/
 
 (function () {
@@ -31213,4 +31354,159 @@ $templateCache.put("Tooltip/tooltip.htm","<div class=\"tooltip tooltip--{{toolti
     };
 
     angular.module("customerSetting").value("customerSettingResources", resources);
+})();
+
+/*jshint -W101,-W106,-W044,-W098*/
+
+(function () {
+    "use strict";
+
+    var labels = {};
+
+    labels["en-us"] = {
+        "Master": "Master",
+        "Agent": "Agent",
+        "AccountDetail": "Account Detail",
+        "GeneralData": "General Data",
+        "Name": "Name",
+        "Username": "Username",
+        "Password": "Password",
+        "ConfirmPassword": "Confirm Password",
+        "FirstName": "First Name",
+        "LastName": "Last Name",
+        "Phone": "Phone",
+        "MobilePhone": "Mobile Phone",
+        "Fax": "Fax",
+        "SpreadGroup": "Spread Group",
+        "Credit": "Credit",
+        "AvailableCredit": "Available Credit",
+        "Currency": "Currency",
+        "PositionTaking": "Position Taking",
+        "SuperMinPT": "Super Min PT",
+        "SuperMaxPT": "Super Max PT",
+        "SuperPT": "Super PT",
+        "MasterPT": "Master PT",
+        "AgentPT": "Agent PT"
+    };
+
+    labels["zh-cn"] = {
+    };
+
+    labels["zh-tw"] = {
+    };
+
+    labels["zh-hans"] = {
+    };
+
+    labels["ko-kr"] = {
+    };
+
+    labels["ja-jp"] = {
+    };
+
+    labels["th-th"] = {
+    };
+
+    var messages = {};
+
+    messages["en-us"] = {
+        "RequiredField": "This field is required.",
+        "ConfirmPasswordMustMatchPassword": "Confirm Password must match Password.",
+        "PasswordRules": "<div>Password must be at least 8 characters without white-space and contain at least 3 of the following:<ul><li>Uppercase letter [A-Z]</li><li>Lowercase letter [a-z]</li><li>Numeric [0-9]</li><li>Special character (!,,#,etc..)</li></ul></div><div><span class='note'>For example:</span>59D7!4$h, 493abcDE</div><div><span class='note'>Note:</span> your password is cAsE sEnSiTiVe</div>",
+        "SpreadGroupRule": "Once the account is created, Spread Group can no longer be changed.",
+        "SuperMinPTMustBeGreaterThanOrEqualTo": "Super Min PT must be greater than or equal to {0}.",
+        "SuperMinPTMustBeLessThanOrEqualTo": "Super Min PT must be less than or equal to {0}.",
+        "SuperMaxPTMustBeGreaterThanOrEqualTo": "Super Max PT must be greater than or equal to {0}.",
+        "SuperMaxPTMustBeLessThanOrEqualTo": "Super Max PT must be less than or equal to {0}.",
+        "SuperPTMustBeGreaterThanOrEqualTo": "Super PT must be greater than or equal to {0}.",
+        "SuperPTMustBeLessThanOrEqualTo": "Super PT must be less than or equal to {0}.",
+        "MasterPTMustBeLessThanOrEqualTo": "Master PT must be greater than or equal to {0}.",
+        "AgentPTMustBeLessThanOrEqualTo": "Agent PT must be less than or equal to {0}.",
+        "TotalPTMustBeInRange": "Total Position Taking must be between {0} and {1}. Please try again.",
+        "CreditMustBeLessThanOrEqualTo": "Credit must be less than or equal to {0}."
+    };
+
+    messages["zh-cn"] = {
+    };
+
+    messages["zh-tw"] = {
+    };
+
+    messages["zh-hans"] = {
+    };
+
+    messages["ko-kr"] = {
+    };
+
+    messages["ja-jp"] = {
+    };
+
+    messages["th-th"] = {
+    };
+
+    var settingType1Resources = {
+        "labels": labels,
+        "messages": messages
+    };
+
+    angular.module("customerSetting").value("settingType1Resources", settingType1Resources);
+})();
+/*jshint -W101,-W106,-W044,-W098*/
+
+(function () {
+    "use strict";
+
+    var labels = {};
+
+    labels["en-us"] = {
+        "AccountDetail": "Account Detail"
+    };
+
+    labels["zh-cn"] = {
+    };
+
+    labels["zh-tw"] = {
+    };
+
+    labels["zh-hans"] = {
+    };
+
+    labels["ko-kr"] = {
+    };
+
+    labels["ja-jp"] = {
+    };
+
+    labels["th-th"] = {
+    };
+
+    var messages = {};
+
+    messages["en-us"] = {
+    };
+
+    messages["zh-cn"] = {
+    };
+
+    messages["zh-tw"] = {
+    };
+
+    messages["zh-hans"] = {
+    };
+
+    messages["ko-kr"] = {
+    };
+
+    messages["ja-jp"] = {
+    };
+
+    messages["th-th"] = {
+    };
+
+    var settingType2Resources = {
+        "labels": labels,
+        "messages": messages
+    };
+
+    angular.module("customerSetting").value("settingType2Resources", settingType2Resources);
 })();

@@ -10,6 +10,8 @@
 
 .setting-field {
     @include border($color: $field-border-color);
+    height: 2rem;
+    padding: 0 4px;
 
     &:focus {
         border-color: $field-focus-border-color;
@@ -20,24 +22,18 @@
     }
 
     &--error {
-        border: {
-            color: $error-color !important;
-            width: 2 * $border-size;
-        }
+        border-color: $field-error-border-color;
+        border-width: 2 * $border-size;
     }
 
     &--warning {
-        border: {
-            color: $warning-color !important;
-            width: 2 * $border-size;
-        }
+        border-color: $field-warning-border-color;
+        border-width: 2 * $border-size;
     }
 
     &--success {
-        border: {
-            color: $success-color !important;
-            width: 2 * $border-size;
-        }
+        border-color: $field-success-border-color;
+        border-width: 2 * $border-size;
     }
 
     &--has-constraint {
@@ -60,38 +56,20 @@
 }
 
 .btn {
-    @include background-image(linear-gradient($button-backround-color1, $button-backround-color2, $button-backround-color3));
-    @include border-radius($default-border-radius);
-    background-color: $button-backround-color2;
-    background-repeat: no-repeat;
-    border: 0;
+    @include border-radius($border-radius);
+    box-shadow: rgba(0, 0, 0, 0.3) 0 2px 2px;
+    background-color: $button-backround-color;
+    border: none;
     color: $button-text-color;
-    font-weight: bold;
-    padding: 4px 12px;
-
-    &--small {
-        min-width: 60px;
-        padding: 2px 6px;
-    }
+    height: 28px;
+    padding: 4px 16px;
 
     &--margin-top {
         margin-top: 10px;
     }
-}
 
-.icon {
-    background: {
-        image: url("Images/sprite.png");
-        position: 0 0;
-        repeat: no-repeat;
-    }
-
-    display: inline-block;
-
-    &--update {
-        background-position: 0 0;
-        height: 15px;
-        width: 15px;
+    &:hover, &:focus {
+        background-color: $button-hover-backround-color;
     }
 }
 
@@ -110,7 +88,7 @@
 }
 
 .block-ui-loading {
-    background: url(images/loading.gif) no-repeat center center;
+    background: rgba(0, 0, 0, 0) url(images/loading.gif) no-repeat scroll center center;
     bottom: 0;
     left: 0;
     position: fixed;
@@ -122,120 +100,263 @@
 .tooltip {
     cursor: default;
     left: 0;
+    overflow: hidden;
     position: absolute;
     top: 0;
     visibility: hidden;
     z-index: 1;
 
-    &:after {
-        border: {
-            color: transparent;
-            style: $border-style;
-            width: 5px;
-        }
-
-        content: " ";
-        display: block;
-        margin: 0 auto;
-        width: 0;
-    }
-
     &__content {
-        @include border-radius($default-border-radius);
-        @include opacity(0.85);
-        color: $invalid-tooltip-text-color;
+        @include border-radius(2 * $border-radius);
+        @include opacity(1);
+        color: $tooltip-text-color;
+        margin-bottom: 12px;
         max-width: 300px;
         padding: 4px 8px;
+        position: relative;
         text-align: center;
         text-decoration: none;
+        top: 0;
+
+        &:after, &:before {
+            border: {
+                color: transparent;
+                style: $border-style;
+            }
+
+            content: " ";
+            height: 0;
+            left: 50%;
+            margin: 0 auto;
+            pointer-events: none;
+            position: absolute;
+            top: 100%;
+            width: 0;
+        }
+
+        &:after {
+            border-color: rgba(255,255,204,0);
+            border-width: 8px;
+            margin-left: -8px;
+        }
+
+        &:before {
+            border-color: rgba(204,153,51,0);
+            border-width: 9px;
+            margin-left: -9px;
+        }
     }
 
     &--right {
-        &:after {
-            display: inline-block;
+        .tooltip-content {
+            margin: {
+                bottom: 0;
+                left: 12px;
+            }
+
+            &:after, &:before {
+                left: 0;
+                margin-top: -8px;
+                top: 50%;
+            }
+
+            &:after {
+                border-width: 8px;
+                margin-left: -16px;
+            }
+
+            &:before {
+                border-width: 9px;
+                margin-left: -15px;
+            }
         }
 
-        .tooltip__content {
-            display: inline-block;
+        .tooltip--success {
+            .tooltip__content {
+                &:after {
+                    border-right-color: $tooltip-success-bg-color;
+                }
+
+                &:before {
+                    border-right-color: $tooltip-success-border-color;
+                }
+            }
+        }
+
+        .tooltip--warning {
+            .tooltip__content {
+                &:after {
+                    border-right-color: $tooltip-warning-bg-color;
+                }
+
+                &:before {
+                    border-right-color: $tooltip-warning-border-color;
+                }
+            }
+        }
+
+        .tooltip--error {
+            .tooltip__content {
+                &:after {
+                    border-right-color: $tooltip-error-bg-color;
+                }
+
+                &:before {
+                    border-right-color: $tooltip-error-border-color;
+                }
+            }
+        }
+
+        .tooltip--info {
+            .tooltip__content {
+                &:after {
+                    border-right-color: $tooltip-info-bg-color;
+                }
+
+                &:before {
+                    border-right-color: $tooltip-info-border-color;
+                }
+            }
         }
     }
 
     &--left {
-        &:after {
-            display: inline-block;
+        .tooltip-content {
+            margin: {
+                bottom: 0;
+                right: 12px;
+            }
+
+            &:after, &:before {
+                right: 0;
+                margin-top: -8px;
+                top: 50%;
+            }
+
+            &:after {
+                border-width: 8px;
+                margin-right: -16px;
+            }
+
+            &:before {
+                border-width: 9px;
+                margin-right: -15px;
+            }
         }
 
-        .tooltip__content {
-            display: inline-block;
-            float: right;
-        }
-    }
+        .tooltip--success {
+            .tooltip__content {
+                &:after {
+                    border-left-color: $tooltip-success-bg-color;
+                }
 
-    &--error {
-        &:after {
-            border-top-color: $error-tooltip-border-color;
-        }
-
-        &.tooltip--right:after {
-            border-left-color: $error-tooltip-border-color;
-            border-top-color: transparent;
+                &:before {
+                    border-left-color: $tooltip-success-border-color;
+                }
+            }
         }
 
-        &.tooltip--left:after {
-            border-right-color: $error-tooltip-border-color;
-            border-top-color: transparent;
+        .tooltip--warning {
+            .tooltip__content {
+                &:after {
+                    border-left-color: $tooltip-warning-bg-color;
+                }
+
+                &:before {
+                    border-left-color: $tooltip-warning-border-color;
+                }
+            }
         }
 
-        .tooltip__content {
-            background-color: $error-color;
-        }
-    }
+        .tooltip--error {
+            .tooltip__content {
+                &:after {
+                    border-left-color: $tooltip-error-bg-color;
+                }
 
-    &--warning {
-        &:after {
-            border-top-color: $warning-tooltip-border-color;
-        }
-
-        &.tooltip--right:after {
-            border-left-color: $warning-tooltip-border-color;
-            border-top-color: transparent;
+                &:before {
+                    border-left-color: $tooltip-error-border-color;
+                }
+            }
         }
 
-        &.tooltip--left:after {
-            border-right-color: $warning-tooltip-border-color;
-            border-top-color: transparent;
-        }
+        .tooltip--info {
+            .tooltip__content {
+                &:after {
+                    border-right-color: $tooltip-info-bg-color;
+                }
 
-        .tooltip__content {
-            background-color: $warning-color;
+                &:before {
+                    border-right-color: $tooltip-info-border-color;
+                }
+            }
         }
     }
 
     &--success {
-        &:after {
-            border-top-color: $success-tooltip-border-color;
-        }
-
-        &.tooltip--right:after {
-            border-left-color: $success-tooltip-border-color;
-            border-top-color: transparent;
-        }
-
-        &.tooltip--left:after {
-            border-right-color: $success-tooltip-border-color;
-            border-top-color: transparent;
-        }
-
         .tooltip__content {
-            background-color: $success-color;
+            @include border($color: $tooltip-success-border-color);
+            background-color: $tooltip-success-bg-color;
+
+            &:after {
+                border-top-color: $tooltip-success-bg-color;
+            }
+
+            &:before {
+                border-top-color: $tooltip-success-border-color;
+            }
+        }
+    }
+
+    &--warning {
+        .tooltip__content {
+            @include border($color: $tooltip-warning-border-color);
+            background-color: $tooltip-warning-bg-color;
+
+            &:after {
+                border-top-color: $tooltip-warning-bg-color;
+            }
+
+            &:before {
+                border-top-color: $tooltip-warning-border-color;
+            }
+        }
+    }
+
+    &--error {
+        .tooltip__content {
+            @include border($color: $tooltip-error-border-color);
+            background-color: $tooltip-error-bg-color;
+
+            &:after {
+                border-top-color: $tooltip-error-bg-color;
+            }
+
+            &:before {
+                border-top-color: $tooltip-error-border-color;
+            }
+        }
+    }
+
+    &--info {
+        .tooltip__content {
+            @include border($color: $tooltip-info-border-color);
+            background-color: $tooltip-info-bg-color;
+
+            &:after {
+                border-top-color: $tooltip-info-bg-color;
+            }
+
+            &:before {
+                border-top-color: $tooltip-info-border-color;
+            }
         }
     }
 }
 
 .msg-container {
-    @include border();
+    @include border($color: $msg-container-border-color);
     background-color: $msg-container-bg;
-    font-weight: bold;
     margin-bottom: 10px;
     max-height: 500px;
     overflow-x: auto;
@@ -246,7 +367,7 @@
     display: -moz-box;
     display: -ms-flexbox;
     display: flex;
-    padding: 3px 5px;
+    padding: 4px 16px 4px 40px;
 
     &__content {
         display: inline-block;
@@ -266,15 +387,11 @@
 
     &__customer-name {
         font-weight: bold;
-
-        margin: {
-            left: 5px;
-            top: 5px;
-        }
+        padding: 0 20px;
     }
 
     &--success {
-        color: $success-color;
+        color: $msg-success-color;
 
         .msg__icon {
             background-position: -65px 0;
@@ -282,7 +399,7 @@
     }
 
     &--warning {
-        color: $warning-color;
+        color: $msg-warning-color;
 
         .msg__icon {
             background-position: -51px 0;
@@ -290,18 +407,12 @@
     }
 
     &--error {
-        color: $error-color;
+        color: $msg-error-color;
 
         .msg__icon {
             background-position: -51px 0;
         }
     }
-}
-
-.customer-setting {
-    @include border();
-    background-color: $container-bg;
-    padding: 2px;
 }
 
 .block {
@@ -311,15 +422,17 @@
     margin-bottom: 10px;
 
     &--error {
-        border-color: $error-color;
+        border-color: $block-error-border-color;
     }
 
     &__header {
         @include border(bottom);
         background-color: $block-header-bg;
+        color: $header-color;
         font-weight: bold;
         line-height: 2.7rem;
-        text-align: center;
+        padding-left: 8px;
+        text-align: left;
         word-wrap: break-word;
 
         &--no-border {
@@ -327,9 +440,9 @@
         }
 
         &--error {
-            background-color: $error-block-header-bg;
-            border-bottom-color: $error-color;
-            color: $error-block-error-color;
+            background-color: $block-error-header-bg;
+            border-bottom-color: $block-error-border-color;
+            color: $block-error-header-color;
         }
     }
 
@@ -411,7 +524,7 @@
 
         &--error {
             border: none;
-            color: $error-color;
+            color: $block-error-color;
             font-weight: bold;
             justify-content: center;
             line-height: 2.64rem;

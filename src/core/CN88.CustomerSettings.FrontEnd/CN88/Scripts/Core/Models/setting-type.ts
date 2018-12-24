@@ -1,4 +1,5 @@
-﻿/// <reference path="key-value-pair.ts" />
+﻿/// <reference path="enums/display-mode.ts" />
+/// <reference path="key-value-pair.ts" />
 /// <reference path="setting-item.ts" />
 
 module CustomerSetting {
@@ -25,7 +26,7 @@ module CustomerSetting {
                 this.settingItems = settingType.settingItems;
                 this.typeName = settingType.typeName;
                 this.displayOrder = settingType.displayOrder;
-                this.displayMode = settingType.displayMode;
+                this.displayMode = DisplayMode.editable;
                 this.isError = settingType.isError;
                 this.extraData = this.getExtraData(settingType);
             }

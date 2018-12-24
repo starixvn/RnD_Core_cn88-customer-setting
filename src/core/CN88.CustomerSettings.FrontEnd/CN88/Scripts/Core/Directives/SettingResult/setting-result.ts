@@ -1,6 +1,6 @@
-﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
-/// <reference path="../models/result.ts" />
-/// <reference path="../module-registrater.ts" />
+﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../models/result.ts" />
+/// <reference path="../../module-registrater.ts" />
 
 module CustomerSetting {
     "use strict";
@@ -18,7 +18,7 @@ module CustomerSetting {
             };
         }
 
-        public templateUrl: string = "SettingResult/setting-result.htm";
+        public templateUrl: string = "Directives/SettingResult/setting-result.htm";
 
         public controller: any = ["$rootScope", "$scope", "$window", ($rootScope: ng.IRootScopeService, $scope: ISettingResultScope, $window: ng.IWindowService) => {
             $scope.$watch("result", (result: UpdatingSettingResult) => {
