@@ -9,6 +9,8 @@ module CustomerSetting {
     export interface IDefaultSettingTypeDirectiveScope extends ISettingTypeDirectiveSharedScope {
         avaiSettingLevels: Object;
         sportGroups: DefaultSettingItem[][];
+        headerTemplateUrl: string;
+        valueTemplateUrl: string;
     }
 
     export class DefaultSettingTypeGroupingDirective implements ng.IDirective {

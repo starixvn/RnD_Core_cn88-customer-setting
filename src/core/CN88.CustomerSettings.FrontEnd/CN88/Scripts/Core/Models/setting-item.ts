@@ -54,7 +54,7 @@ module CustomerSetting {
             return true;
         }
 
-        public toJson(): {} {
+        public toJson(): any {
             var settingItem: any = {};
             var reservedProperties: string[] = ["oldSetting", "validationState", "$$hashKey"];
 

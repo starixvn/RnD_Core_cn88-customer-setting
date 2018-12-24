@@ -37,8 +37,16 @@ module CustomerSetting {
             return this.applicationPath + "viewCustomerSetting/querySetting?";
         }
 
+        public getCreatePath(): string {
+            return this.applicationPath + "createCustomer/create";
+        }
+
         public getUpdatePath(): string {
-            return this.applicationPath + "updateCustomerSetting/updateSetting";
+            return this.applicationPath + "updateCustomerSetting/update";
+        }
+
+        public buildPath(relativePath: string): string {
+            return this.applicationPath + relativePath;
         }
 
         public requestVerificationToken(): string {

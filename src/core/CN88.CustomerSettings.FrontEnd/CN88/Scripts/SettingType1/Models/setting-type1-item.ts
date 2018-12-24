@@ -1,59 +1,34 @@
-﻿/// <reference path="../../core/models/result.ts" />
+﻿/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/setting-item.ts" />
-/// <reference path="customer-info.ts" />
-/// <reference path="pt-item.ts" />
-/// <reference path="super-pt-item.ts" />
-/// <reference path="master-pt-item.ts" />
-/// <reference path="agent-pt-item.ts" />
+/// <reference path="agent-account-detail.ts" />
+/// <reference path="master-account-detail.ts" />
+/// <reference path="super-account-detail.ts" />
+/// <reference path="member-account-detail.ts" />
 
 module CustomerSetting {
     "use strict";
 
-    export class SettingType1Item extends DefaultSettingItem {
-        public customerInfo: CustomerInfo;
-        public ptItem: PTItem;
-
-        constructor();
-        constructor(settingItem: any);
-        constructor(settingItem: any, backup: boolean)
-        constructor(settingItem: any, backup: boolean, isNew: boolean)
-        constructor(settingItem: any, backup: boolean, isNew: boolean, customerLevel: Level)
-        constructor(settingItem?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null) {
-            super(settingItem);
-
+    export class SettingType1Item {
+        public static factory(settingItem?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null): ISettingItem {
             if (settingItem) {
-                this.customerInfo = new CustomerInfo(settingItem.customerInfo, backup, isNew, customerLevel);
-
                 if (customerLevel === Level.super) {
-                    this.ptItem = new SuperPTItem(settingItem.ptItem, backup);
-                } else if (customerLevel === Level.master) {
-                    this.ptItem = new MasterPTItem(settingItem.ptItem, backup);
-                } else if (customerLevel === Level.agent) {
-                    this.ptItem = new AgentPTItem(settingItem.ptItem, backup);
+                    return new SuperAccountDetail(settingItem, backup, isNew, customerLevel);
                 }
+
+                if (customerLevel === Level.master) {
+                    return new MasterAccountDetail(settingItem, backup, isNew, customerLevel);
+                }
+
+                if (customerLevel === Level.agent) {
+                    return new AgentAccountDetail(settingItem, backup, isNew, customerLevel);
+                }
+
+                if (customerLevel === Level.member) {
+                    return new MemberAccountDetail(settingItem, backup, isNew, customerLevel);
+                }
+
+                return new AccountDetail(settingItem, backup, isNew, customerLevel);
             }
-
-            if (backup) {
-                this.oldSetting = new SettingType1Item(this);
-            }
-        }
-
-        public isChanged(): boolean {
-            var isChanged: boolean = super.isChanged();
-
-            return isChanged || this.customerInfo.isChanged() || this.ptItem.isChanged();
-        }
-
-        public validate(): boolean {
-            if (!this.customerInfo.validate()) {
-                return false;
-            }
-
-            if (!this.ptItem.validate()) {
-                return false;
-            }
-
-            return true;
         }
     }
 }

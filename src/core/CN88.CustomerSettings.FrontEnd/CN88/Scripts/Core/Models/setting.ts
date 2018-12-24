@@ -14,7 +14,6 @@ module CustomerSetting {
         public productName: string;
         public settingTypes: Array<SettingType>;
         public warningMessage: UpdatingSettingResult;
-        public isNew: boolean;
 
         constructor();
         constructor(setting: any)
@@ -37,17 +36,9 @@ module CustomerSetting {
             }
         }
 
-        public getEditableSettingTypes(settingTypeId?: number): Setting {
+        public getEditableSettingTypes(): Setting {
             var newSetting: Setting;
-            var editableSettingTypes: SettingType[];
-
-            if (settingTypeId) {
-                editableSettingTypes = this.settingTypes.filter((item: SettingType) => {
-                    return item.id === settingTypeId && item.displayMode === DisplayMode.editable;
-                });
-            } else {
-                editableSettingTypes = this.getListOfEditableSettingTypes();
-            }
+            var editableSettingTypes: SettingType[] = this.getListOfEditableSettingTypes();
 
             if (editableSettingTypes && editableSettingTypes.length > 0) {
                 newSetting = new Setting();
@@ -62,18 +53,10 @@ module CustomerSetting {
             return newSetting;
         }
 
-        public getChanges(settingTypeId?: number): Setting {
+        public getChanges(): Setting {
             var newSetting: Setting;
-            var matchedSettingTypes: Array<SettingType>;
+            var matchedSettingTypes: Array<SettingType> = this.getListOfEditableSettingTypes();
             var changedSettingTypes: Array<SettingType> = new Array<SettingType>();
-
-            if (settingTypeId) {
-                matchedSettingTypes = this.settingTypes.filter((item: SettingType) => {
-                    return item.id === settingTypeId;
-                });
-            } else {
-                matchedSettingTypes = this.getListOfEditableSettingTypes();
-            }
 
             if (matchedSettingTypes && matchedSettingTypes.length > 0) {
                 matchedSettingTypes.forEach((settingType: SettingType) => {

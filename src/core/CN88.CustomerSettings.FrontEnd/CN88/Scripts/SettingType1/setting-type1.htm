@@ -1,0 +1,11 @@
+﻿<div class="setting-type-1 block" data-ng-show="settingType" data-ng-class="{ 'block--error': !(settingType | validSettingType) }">
+    <div class="block__header"
+         data-setting-type="{{settingType.id}}"
+         data-ng-class="{ 'block__header--error': !(settingType | validSettingType) }">
+        {{settingTypeName}}
+    </div>
+
+    <div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">
+        {{sportGroups[0][0].errorMessage}}
+    </div>
+</div>

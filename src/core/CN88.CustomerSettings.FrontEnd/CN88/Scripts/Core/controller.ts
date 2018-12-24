@@ -65,18 +65,20 @@ module CustomerSetting {
             });
         }
 
-        public update(settingTypeId?: number): void {
-            var path: string = this.appConfigService.getUpdatePath();
-            var editableSettings: Setting = this.setting.getEditableSettingTypes(settingTypeId);
-            var setting: Setting = this.setting.getChanges(settingTypeId);
+        public update(): void {
+            var editableSettings: Setting = this.setting.getEditableSettingTypes();
+            var changedSettings: Setting = this.setting.getChanges();
             var validationResult: Result;
             var command: SettingCommand;
+            var path: string = this.settingTypesSharedValuesService.isNew
+                ? this.appConfigService.getCreatePath()
+                : this.appConfigService.getUpdatePath();
 
             this.requestMsgResult = undefined;
 
-            if (setting) {
+            if (changedSettings) {
                 if (editableSettings.validate()) {
-                    command = this.parametersService.createSettingCommand(setting);
+                    command = this.parametersService.createSettingCommand(changedSettings);
                     validationResult = command.validate();
 
                     if (validationResult.isSuccessful) {

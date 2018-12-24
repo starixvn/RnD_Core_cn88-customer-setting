@@ -83,7 +83,7 @@ module.exports = function (configs) {
 
             if (prodConfig.settingTypes.length > 0) {
                 prodConfig.settingTypes.forEach(function (item) {
-                    sources.push(path.join(sourceDir, "SettingType" + item, "*.js"));
+                    sources.push(path.join(sourceDir, "SettingType" + item, "**/*.js"));
                 });
             }
 

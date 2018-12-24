@@ -64,7 +64,8 @@ module CustomerSetting {
                     params.productId,
                     uplineLevel,
                     customerLevel,
-                    params.customerId);
+                    params.customerId,
+                    this.isNew);
             }
         }
     }
