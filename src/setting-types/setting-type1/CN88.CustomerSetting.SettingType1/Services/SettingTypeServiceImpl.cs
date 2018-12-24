@@ -49,13 +49,15 @@
 
         private SettingType GetCreateNewAccountDetail(CustomerSettingQuery query)
         {
-            var currencies = query.CustomerLevel.IsSuperLevel() 
-                ? GetCurrencies()
-                : Enumerable.Empty<Currency>();
-            var createCustomerInfo = GetCreateCustomerInfo(query.CustomerLevel, query.UplineId);
             var settingItem = GetDefaultValueForInsertCustomer(query.CustomerLevel, query.UplineId, query.ProductId);
 
+            var currencies = query.CustomerLevel.IsSuperLevel()
+                                ? GetCurrencies()
+                                : Enumerable.Empty<Currency>();
             settingItem.Currency = currencies.FirstOrDefault();
+
+            var createCustomerInfo = GetCreateCustomerInfo(query.CustomerLevel, query.UplineId);
+
             settingItem.AvailableCredit = createCustomerInfo.AvailableCredit;
             settingItem.UplineUsername = createCustomerInfo.UplineUsername;
             settingItem.UsernameSuffix = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString());
@@ -76,7 +78,7 @@
         {
             if(level.IsMemberLevel())
             {
-                return default(AccountDetail);
+                return new AccountDetail();
             }
 
             AccountDetail accountDetail;
@@ -213,8 +215,7 @@
                 { "systemid", settingContext.System },
                 { "ip", settingContext.IP },
                 { "language", settingContext.Language },
-                { "creator", settingContext.Actor.Id },
-                { "ptsetting", settingItem.ToXml() }
+                { "creator", settingContext.Actor.Id }
             };
 
             switch(command.Setting.CustomerLevel.Value)
@@ -226,16 +227,19 @@
                     createNewParams.Add("phone", settingItem.Phone ?? string.Empty);
                     createNewParams.Add("mobilephone", settingItem.MobilePhone ?? string.Empty);
                     createNewParams.Add("fax", settingItem.Fax ?? string.Empty);
+                    createNewParams.Add("ptsetting", settingItem.ToXml());
                     break;
 
                 case Level.MasterLevelId:
                     createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
                     createNewParams.Add("srecommend", command.UplineId);
+                    createNewParams.Add("ptsetting", settingItem.ToXml());
                     break;
 
                 case Level.AgentLevelId:
                     createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
                     createNewParams.Add("mrecommend", command.UplineId);
+                    createNewParams.Add("ptsetting", settingItem.ToXml());
                     break;
 
                 case Level.MemberLevelId:

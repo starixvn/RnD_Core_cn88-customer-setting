@@ -71,6 +71,7 @@ var DemoFrom;
         DemoFormController.prototype.showSetting = function (isCreateNew) {
             var updateUrl = this.resolveUrl("CN88/CreateCustomer/Create");
             var uplineId = this.target.uplineId;
+            var role = this.target.role;
             $.ajax({
                 method: "POST",
                 url: this.resolveUrl("CN88/ViewCustomerSetting/QuerySetting"),
@@ -83,20 +84,29 @@ var DemoFrom;
                 }
             })
                 .done(function (rawSetting) {
-                    console.log(rawSetting);
-                    //var setting = JSON.parse(rawSetting);
-                    //setting.settingTypes[0].settingItems[0].username = "SupertestCN88Ricky1b";
-                    //$.ajax({
-                    //    method: "POST",
-                    //    url: updateUrl,
-                    //    data: {
-                    //        setting: JSON.stringify(setting),
-                    //        uplineId: uplineId
-                    //    }
-                    //})
-                    //    .done(function (msg) {
-                    //        console.log(msg);
-                    //    });
+                    //console.log(rawSetting);
+                    var setting = JSON.parse(rawSetting);
+                    var newUsername = "SupertestCN88Ricky1d";
+                    if (role === 3) {
+                        newUsername = "SupertestCN88Ricky1c001";
+                    } else if (role === 2) {
+                        newUsername = "SupertestCN88Ricky1c001001";
+                    }
+                    else if (role === 1) {
+                        newUsername = "SupertestCN88Ricky1c001001002";
+                    }
+                    setting.settingTypes[0].settingItems[0].username = newUsername;
+                    $.ajax({
+                        method: "POST",
+                        url: updateUrl,
+                        data: {
+                            setting: JSON.stringify(setting),
+                            uplineId: uplineId
+                        }
+                    })
+                        .done(function (msg) {
+                            console.log(msg);
+                        });
                 });
 
 
@@ -209,12 +219,12 @@ var DemoFrom;
                     subAccId = 3;
                     break;
                 case Role.master:
-                    actorId = 33418957;
+                    actorId = 33489329;
                     name = "SuperTestCNE0001";
                     subAccId = 728497;
                     break;
                 case Role.agent:
-                    actorId = 33418960;
+                    actorId = 33489330;
                     name = "SuperTestCNE00010001";
                     subAccId = 728498;
                     break;
@@ -233,17 +243,17 @@ var DemoFrom;
                 case Role.master:
                     id = 0;
                     name = "SuperTestCNE0001";
-                    uplineId = 33418956;
+                    uplineId = 33489328;
                     break;
                 case Role.agent:
                     id = 33418960;
                     name = "SuperTestCNE00010001";
-                    uplineId = 33418957;
+                    uplineId = 33489329;
                     break;
                 case Role.member:
                     id = 0;
                     name = "SuperTestCNE000100010001";
-                    uplineId = 33418960;
+                    uplineId = 33489330;
                     break;
             }
             return this.createSingleTarget(id, name, role, uplineId);
