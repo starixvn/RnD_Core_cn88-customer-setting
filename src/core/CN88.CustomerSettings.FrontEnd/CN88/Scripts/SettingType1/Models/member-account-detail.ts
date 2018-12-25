@@ -13,9 +13,10 @@ module CustomerSetting {
         constructor(accountDetail: any, backup: boolean)
         constructor(accountDetail: any, backup: boolean, isNew: boolean)
         constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level)
-        constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null) {
+        constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string)
+        constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
             if (accountDetail) {
-                super(accountDetail, backup, isNew, customerLevel);
+                super(accountDetail, backup, isNew, customerLevel, hashKey);
 
                 this.uGroup = accountDetail.uGroup;
                 this.uGroups = accountDetail.uGroups;
@@ -24,6 +25,8 @@ module CustomerSetting {
             if (backup) {
                 this.oldSetting = new MemberAccountDetail(this);
             }
+
+            this.ignoredProperties.push("uGroups");
         }
 
         public isChanged(): boolean {

@@ -1,0 +1,69 @@
+﻿<div class="position-taking">
+    <div class="sub-header" data-ng-if="customerLevel !== avaiCustomerLevels.agent">{{::('PositionTaking' | settingType1Label)}}</div>
+    <div class="sub-header" data-ng-if="customerLevel === avaiCustomerLevels.agent">
+        <span class="sub-header__title">{{::('PositionTaking' | settingType1Label)}}</span>
+        <span class="position-taking-constraint">{{'MinAllowed' | settingType1Label}} <span class="position-taking-constraint__value">{{accountDetail.minAllowedPT | formatPercentage}}</span></span>
+        <span class="position-taking-constraint">{{'MaxAllowed' | settingType1Label}} <span class="position-taking-constraint__value">{{accountDetail.maxAllowedPT | formatPercentage}}</span></span>
+    </div>
+    <div data-ng-if="customerLevel === avaiCustomerLevels.super">
+        <div class="row">
+            <label class="w50-percent">{{::('SuperMinPT' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superMinPT'}}">
+                <percentage-dropdown data-ng-model="accountDetail.superMinPT"
+                                     data-min="accountDetail.minSuperMinPT"
+                                     data-max="accountDetail.maxSuperMinPT"
+                                     data-step="accountDetail.interval"></percentage-dropdown>
+            </div>
+        </div>
+        <div class="row">
+            <label class="w50-percent">{{::('SuperMaxPT' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superMaxPT'}}">
+                <percentage-dropdown data-ng-model="accountDetail.superMaxPT"
+                                     data-min="accountDetail.minSuperMaxPT"
+                                     data-max="accountDetail.maxSuperMaxPT"
+                                     data-step="accountDetail.interval"></percentage-dropdown>
+            </div>
+        </div>
+    </div>
+    <div data-ng-if="customerLevel === avaiCustomerLevels.master">
+        <div class="row">
+            <label class="w50-percent">{{::('SuperPT' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superPT'}}">
+                <percentage-dropdown data-ng-model="accountDetail.superPT"
+                                     data-min="accountDetail.minSuperPT"
+                                     data-max="accountDetail.maxSuperPT"
+                                     data-step="accountDetail.interval"></percentage-dropdown>
+            </div>
+        </div>
+    </div>
+    <div data-ng-if="customerLevel === avaiCustomerLevels.agent">
+        <div class="row">
+            <label class="w50-percent">{{::('MasterPT' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'masterPT'}}">
+                <percentage-dropdown data-ng-model="accountDetail.masterPT"
+                                     data-min="0"
+                                     data-max="accountDetail.maxMasterPT"
+                                     data-step="accountDetail.interval"></percentage-dropdown>
+            </div>
+        </div>
+        <div class="row">
+            <label class="w50-percent">{{::('AgentPT' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'agentPT'}}">
+                <percentage-dropdown data-ng-model="accountDetail.agentPT"
+                                     data-min="0"
+                                     data-max="accountDetail.maxAgentPT"
+                                     data-step="accountDetail.interval"></percentage-dropdown>
+            </div>
+        </div>
+    </div>
+</div>

@@ -9,25 +9,25 @@ module CustomerSetting {
     "use strict";
 
     export class SettingType1Item {
-        public static factory(settingItem?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null): ISettingItem {
+        public static factory(settingItem: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string): ISettingItem {
             if (settingItem) {
                 if (customerLevel === Level.super) {
-                    return new SuperAccountDetail(settingItem, backup, isNew, customerLevel);
+                    return new SuperAccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
                 }
 
                 if (customerLevel === Level.master) {
-                    return new MasterAccountDetail(settingItem, backup, isNew, customerLevel);
+                    return new MasterAccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
                 }
 
                 if (customerLevel === Level.agent) {
-                    return new AgentAccountDetail(settingItem, backup, isNew, customerLevel);
+                    return new AgentAccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
                 }
 
                 if (customerLevel === Level.member) {
-                    return new MemberAccountDetail(settingItem, backup, isNew, customerLevel);
+                    return new MemberAccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
                 }
 
-                return new AccountDetail(settingItem, backup, isNew, customerLevel);
+                return new AccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
             }
         }
     }

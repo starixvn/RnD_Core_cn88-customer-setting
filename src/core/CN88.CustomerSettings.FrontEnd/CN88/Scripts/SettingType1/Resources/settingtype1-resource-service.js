@@ -28,7 +28,9 @@
         "SuperMaxPT": "Super Max PT",
         "SuperPT": "Super PT",
         "MasterPT": "Master PT",
-        "AgentPT": "Agent PT"
+        "AgentPT": "Agent PT",
+        "MinAllowed": "Min. Allowed:",
+        "MaxAllowed": "Max. Allowed:"
     };
 
     labels["zh-cn"] = {
@@ -60,12 +62,14 @@
         "SuperMinPTMustBeLessThanOrEqualTo": "Super Min PT must be less than or equal to {0}.",
         "SuperMaxPTMustBeGreaterThanOrEqualTo": "Super Max PT must be greater than or equal to {0}.",
         "SuperMaxPTMustBeLessThanOrEqualTo": "Super Max PT must be less than or equal to {0}.",
+        "SuperMinPTMustBeLessThanOrEqualToSuperMaxPT": "Super Min PT must be less than or equal to Super Max PT.",
         "SuperPTMustBeGreaterThanOrEqualTo": "Super PT must be greater than or equal to {0}.",
         "SuperPTMustBeLessThanOrEqualTo": "Super PT must be less than or equal to {0}.",
         "MasterPTMustBeLessThanOrEqualTo": "Master PT must be greater than or equal to {0}.",
         "AgentPTMustBeLessThanOrEqualTo": "Agent PT must be less than or equal to {0}.",
         "TotalPTMustBeInRange": "Total Position Taking must be between {0} and {1}. Please try again.",
-        "CreditMustBeLessThanOrEqualTo": "Credit must be less than or equal to {0}."
+        "CreditMustBeLessThanOrEqualTo": "Credit must be less than or equal to {0}.",
+        "InvalidCurrency": "Invalid currency."
     };
 
     messages["zh-cn"] = {

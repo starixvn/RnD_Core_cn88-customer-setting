@@ -26,7 +26,7 @@ module CustomerSetting {
                 this.settingItems = settingType.settingItems;
                 this.typeName = settingType.typeName;
                 this.displayOrder = settingType.displayOrder;
-                this.displayMode = DisplayMode.editable;
+                this.displayMode = settingType.displayMode;
                 this.isError = settingType.isError;
                 this.extraData = this.getExtraData(settingType);
             }

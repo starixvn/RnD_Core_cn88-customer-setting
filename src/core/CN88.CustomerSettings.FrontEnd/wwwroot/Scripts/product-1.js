@@ -28902,6 +28902,46 @@ $provide.value("$locale", {
 })(window, document);
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
+String.prototype.encrypt = function (key) {
+    var pt = this;
+    s = new Array();
+    for (var i = 0; i < 256; i++) {
+        s[i] = i;
+    }
+    var j = 0;
+    var x;
+    for (i = 0; i < 256; i++) {
+        j = (j + s[i] + key.charCodeAt(i % key.length)) % 256;
+        x = s[i];
+        s[i] = s[j];
+        s[j] = x;
+    }
+    i = 0;
+    j = 0;
+    var ct = '';
+    for (var y = 0; y < pt.length; y++) {
+        i = (i + 1) % 256;
+        j = (j + s[i]) % 256;
+        x = s[i];
+        s[i] = s[j];
+        s[j] = x;
+        ct += String.fromCharCode(pt.charCodeAt(y) ^ s[(s[i] + s[j]) % 256]);
+    }
+    return ct;
+};
+
+String.prototype.hash = function () {
+    var b16_digits = '0123456789abcdef';
+    var b16_map = new Array();
+    for (var i = 0; i < 256; i++) {
+        b16_map[i] = b16_digits.charAt(i >> 4) + b16_digits.charAt(i & 15);
+    }
+    var result = new Array();
+    for (var i = 0; i < this.length; i++) {
+        result[i] = b16_map[this.charCodeAt(i)];
+    }
+    return result.join('');
+}
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
@@ -29343,7 +29383,7 @@ var CustomerSetting;
                 this.settingItems = settingType.settingItems;
                 this.typeName = settingType.typeName;
                 this.displayOrder = settingType.displayOrder;
-                this.displayMode = CustomerSetting.DisplayMode.editable;
+                this.displayMode = settingType.displayMode;
                 this.isError = settingType.isError;
                 this.extraData = this.getExtraData(settingType);
             }
@@ -29481,7 +29521,6 @@ var CustomerSetting;
                 return item.validate();
             });
             return this.customerLevel < CustomerSetting.Level.company
-                && this.customerId > 0
                 && this.productId > 0
                 && validSettingTypes;
         };
@@ -29525,9 +29564,9 @@ var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
     var AbstractSettingQuery = (function () {
-        function AbstractSettingQuery(productId, uplineLevel, customerLevel) {
+        function AbstractSettingQuery(productId, uplineId, customerLevel) {
             this.productId = productId;
-            this.uplineLevel = uplineLevel;
+            this.uplineId = uplineId;
             this.customerLevel = customerLevel;
         }
         Object.defineProperty(AbstractSettingQuery.prototype, "productId", {
@@ -29539,22 +29578,6 @@ var CustomerSetting;
                     throw CustomerSetting.Exceptions.negativeParam("productId");
                 }
                 this.prodId = productId;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(AbstractSettingQuery.prototype, "uplineLevel", {
-            get: function () {
-                return this.uplineLv;
-            },
-            set: function (level) {
-                if (level < CustomerSetting.Level.agent) {
-                    throw CustomerSetting.Exceptions.invalidParam("uplineLevel");
-                }
-                if (level === CustomerSetting.Level.company) {
-                    level = null;
-                }
-                this.uplineLv = level;
             },
             enumerable: true,
             configurable: true
@@ -29581,19 +29604,16 @@ var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
     var SettingCommand = (function () {
-        function SettingCommand(uplineLevel, setting) {
-            this.uplineLevel = uplineLevel;
+        function SettingCommand(uplineId, setting) {
+            this.uplineId = uplineId;
             this.setting = setting;
         }
         SettingCommand.prototype.validate = function () {
-            if ((this.uplineLevel && (this.uplineLevel <= CustomerSetting.Level.member || this.uplineLevel >= CustomerSetting.Level.company)) || !this.setting) {
-                return CustomerSetting.Result.invalidParameters;
-            }
             return CustomerSetting.Result.normal;
         };
         SettingCommand.prototype.toJson = function () {
             return {
-                uplineLevel: this.uplineLevel,
+                uplineId: this.uplineId,
                 setting: JSON.stringify(this.setting.toJson())
             };
         };
@@ -29612,8 +29632,8 @@ var CustomerSetting;
     "use strict";
     var SettingQuery = (function (_super) {
         __extends(SettingQuery, _super);
-        function SettingQuery(productId, uplineLevel, customerLevel, customerId, isNew) {
-            _super.call(this, productId, uplineLevel, customerLevel);
+        function SettingQuery(productId, uplineId, customerLevel, customerId, isNew) {
+            _super.call(this, productId, uplineId, customerLevel);
             this.customerId = customerId;
             this.isNew = isNew;
         }
@@ -29622,11 +29642,9 @@ var CustomerSetting;
                 customerId: this.customerId,
                 customerLevel: this.customerLevel,
                 productId: this.productId,
-                isCreateNew: this.isNew
+                isCreateNew: this.isNew,
+                uplineId: this.uplineId
             };
-            if (this.uplineLevel) {
-                params.uplineLevel = this.uplineLevel;
-            }
             return params;
         };
         return SettingQuery;
@@ -29733,9 +29751,9 @@ var CustomerSetting;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(ParametersService.prototype, "uplineLevel", {
+        Object.defineProperty(ParametersService.prototype, "uplineId", {
             get: function () {
-                return this.query.uplineLevel;
+                return this.query.uplineId;
             },
             enumerable: true,
             configurable: true
@@ -29751,17 +29769,18 @@ var CustomerSetting;
             return this.query;
         };
         ParametersService.prototype.createSettingCommand = function (setting) {
-            return new CustomerSetting.SettingCommand(this.query.uplineLevel, setting);
+            return new CustomerSetting.SettingCommand(this.query.uplineId, setting);
         };
         ParametersService.prototype.fetchParams = function () {
             var params = this.$window["params"];
             if (params) {
-                var uplineLevel = params.uplineLevel ? params.uplineLevel : undefined;
+                var uplineId = params.uplineId ? params.uplineId : undefined;
                 var customerLevel = params.customerLevel ? params.customerLevel : undefined;
                 this.lang = params.language || CustomerSetting.Defaults.language;
                 this.system = params.system || CustomerSetting.Defaults.system;
                 this.isCreateNew = params.isCreateNew || false;
-                this.query = new CustomerSetting.SettingQuery(params.productId, uplineLevel, customerLevel, params.customerId, this.isNew);
+                this.hashKey = params.hashKey;
+                this.query = new CustomerSetting.SettingQuery(params.productId, uplineId, customerLevel, params.customerId, this.isNew);
             }
         };
         ParametersService.$inject = ["$window"];
@@ -30001,9 +30020,10 @@ var CustomerSetting;
         function SettingTypesSharedValuesService(parametersService) {
             this.parametersService = parametersService;
         }
-        SettingTypesSharedValuesService.prototype.register = function (setting, uplineLevel) {
-            this.uplineLevel = uplineLevel;
+        SettingTypesSharedValuesService.prototype.register = function (setting, uplineId) {
+            this.uplineId = uplineId;
             this.isNew = this.parametersService.isNew;
+            this.hashKey = this.parametersService.hashKey;
             if (setting) {
                 this.customerId = setting.customerId;
                 this.customerLevel = setting.customerLevel;
@@ -30040,7 +30060,7 @@ var CustomerSetting;
         }
         CustomerSettingController.prototype.update = function () {
             var editableSettings = this.setting.getEditableSettingTypes();
-            var changedSettings = this.setting.getChanges();
+            var changedSettings = this.settingTypesSharedValuesService.isNew ? editableSettings : this.setting.getChanges();
             var validationResult;
             var command;
             var path = this.settingTypesSharedValuesService.isNew
@@ -30088,7 +30108,7 @@ var CustomerSetting;
                 this.requestService.request(this.appConfigService.getQueryPath(), query.toJson(), function (response) {
                     _this.setting = new CustomerSetting.Setting(response.data);
                     _this.warningMessages = _this.setting.warningMessage;
-                    _this.settingTypesSharedValuesService.register(_this.setting, _this.parametersService.uplineLevel);
+                    _this.settingTypesSharedValuesService.register(_this.setting, _this.parametersService.uplineId);
                 });
             }
         };
@@ -30126,55 +30146,69 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    function FormatNumber($filter) {
+    function FormatNumberFilter($filter) {
         var numberFilter = $filter("number");
         return function (value, factor) {
             factor = factor || value.toString().indexOf(".") > 0 ? 2 : 0;
             return numberFilter(value, factor);
         };
     }
-    FormatNumber.$inject = ["$filter"];
-    CustomerSetting.ModuleRegister.filter("formatNumber", FormatNumber);
+    FormatNumberFilter.$inject = ["$filter"];
+    CustomerSetting.ModuleRegister.filter("formatNumber", FormatNumberFilter);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    function MinValue() {
+    function FormatPercentageFilter($filter) {
+        var numberFilter = $filter("number");
+        return function (value, factor) {
+            factor = factor || value.toString().indexOf(".") > 0 ? 2 : 0;
+            return numberFilter(value, factor) + "%";
+        };
+    }
+    FormatPercentageFilter.$inject = ["$filter"];
+    CustomerSetting.ModuleRegister.filter("formatPercentage", FormatPercentageFilter);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    function MinValueFilter() {
         return function (numbers) {
             return Math.min.apply(Math, numbers);
         };
     }
-    CustomerSetting.ModuleRegister.filter("minValue", MinValue);
-    function MaxValue() {
+    CustomerSetting.ModuleRegister.filter("minValue", MinValueFilter);
+    function MaxValueFilter() {
         return function (numbers) {
             return Math.max.apply(Math, numbers);
         };
     }
-    CustomerSetting.ModuleRegister.filter("maxValue", MaxValue);
+    CustomerSetting.ModuleRegister.filter("maxValue", MaxValueFilter);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    function NAValue() {
+    function NAValueFilter() {
         return function (value) {
             return value || "---";
         };
     }
-    CustomerSetting.ModuleRegister.filter("naValue", NAValue);
+    CustomerSetting.ModuleRegister.filter("naValue", NAValueFilter);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    function Unsafe($sce) {
+    function UnsafeFilter($sce) {
         return function (value) {
             return $sce.trustAsHtml(value);
         };
     }
-    Unsafe.$inject = ["$sce"];
-    CustomerSetting.ModuleRegister.filter("unsafe", Unsafe);
+    UnsafeFilter.$inject = ["$sce"];
+    CustomerSetting.ModuleRegister.filter("unsafe", UnsafeFilter);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -30191,6 +30225,46 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
+    var ValueRangeService = (function () {
+        function ValueRangeService() {
+        }
+        ValueRangeService.prototype.generateRanges = function (value, min, max, step, roundingFactor) {
+            var ranges = [];
+            min = Math.max(0, min);
+            max = Math.max(0, max);
+            if (value > max) {
+                ranges.push(value);
+            }
+            while (max >= min) {
+                ranges.push(max);
+                max -= step;
+                max = Math.round(max * roundingFactor) / roundingFactor;
+            }
+            if (value < min) {
+                ranges.push(value);
+            }
+            return ranges;
+        };
+        return ValueRangeService;
+    }());
+    CustomerSetting.ValueRangeService = ValueRangeService;
+    CustomerSetting.ModuleRegister.service("valueRangeService", ValueRangeService);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    function ValueRangeFilter(valueRangeService) {
+        return function (value, min, max, step, roundingFactor) {
+            return valueRangeService.generateRanges(value, min, max, step, roundingFactor);
+        };
+    }
+    CustomerSetting.ModuleRegister.filter("valueRange", ValueRangeFilter);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
     var CrossingSettingTypesServiceBus = (function () {
         function CrossingSettingTypesServiceBus($q) {
             this.$q = $q;
@@ -30200,8 +30274,8 @@ var CustomerSetting;
             this.promises = [];
         };
         CrossingSettingTypesServiceBus.prototype.register = function (channel, promise) {
-            var isNew = this.promises.some(function (promise) {
-                return channel === promise.key;
+            var isNew = this.promises.every(function (promise) {
+                return channel !== promise.key;
             });
             if (isNew) {
                 this.promises.push(new CustomerSetting.KeyValuePair(channel, promise));
@@ -30238,35 +30312,6 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var ValueRangeService = (function () {
-        function ValueRangeService() {
-        }
-        ValueRangeService.prototype.generateRanges = function (value, min, max, step, roundingFactor) {
-            var ranges = new Array();
-            min = Math.max(0, min);
-            max = Math.max(0, max);
-            if (value > max) {
-                ranges.push(new CustomerSetting.KeyValuePair(value, value));
-            }
-            while (max >= min) {
-                ranges.push(new CustomerSetting.KeyValuePair(max, max));
-                max -= step;
-                max = Math.round(max * roundingFactor) / roundingFactor;
-            }
-            if (value < min) {
-                ranges.push(new CustomerSetting.KeyValuePair(value, value));
-            }
-            return ranges;
-        };
-        return ValueRangeService;
-    }());
-    CustomerSetting.ValueRangeService = ValueRangeService;
-    CustomerSetting.ModuleRegister.service("valueRangeService", ValueRangeService);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
     (function (SettingLevel) {
         SettingLevel[SettingLevel["product"] = 1] = "product";
         SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
@@ -30280,7 +30325,7 @@ var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
     var SettingTypeBaseDirective = (function () {
-        function SettingTypeBaseDirective(settingItemType) {
+        function SettingTypeBaseDirective(instantiateSettingItem) {
             var _this = this;
             this.replace = true;
             this.controller = [
@@ -30288,7 +30333,7 @@ var CustomerSetting;
                 "settingTypesSharedValuesService",
                 function ($scope, settingTypesSharedValuesService) {
                     $scope.customerId = settingTypesSharedValuesService.customerId;
-                    $scope.uplineLevel = settingTypesSharedValuesService.uplineLevel;
+                    $scope.uplineId = settingTypesSharedValuesService.uplineId;
                     $scope.customerLevel = settingTypesSharedValuesService.customerLevel;
                     $scope.productId = settingTypesSharedValuesService.productId;
                     $scope.productName = settingTypesSharedValuesService.productName;
@@ -30304,14 +30349,14 @@ var CustomerSetting;
                             else {
                                 settingType.settingItems.forEach(function (item, index) {
                                     if (item) {
-                                        settingType.settingItems[index] = _this.settingItemType(item, true, $scope.isNew, $scope.customerLevel, $scope.uplineLevel, settingType.extraData);
+                                        settingType.settingItems[index] = _this.instantiateSettingItem(item, true, $scope.isNew, $scope.customerLevel, $scope.uplineId, settingType.extraData);
                                     }
                                 });
                             }
                         }
                     });
                 }];
-            this.settingItemType = settingItemType;
+            this.instantiateSettingItem = instantiateSettingItem;
         }
         Object.defineProperty(SettingTypeBaseDirective.prototype, "scope", {
             get: function () {
@@ -30407,12 +30452,14 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var NumericInput = (function () {
-        function NumericInput($filter) {
+    var NumericInputDirective = (function () {
+        function NumericInputDirective($filter) {
             var _this = this;
             this.restrict = "A";
-            this.link = function (scope, element) {
+            this.link = function (scope, originalElement) {
+                var element = angular.element(originalElement[0]);
                 var modelCtrl = element.controller("ngModel");
+                scope.precision = scope.precision || 0;
                 element.on("focus", function () {
                     element.data("focused", true);
                 });
@@ -30435,7 +30482,7 @@ var CustomerSetting;
                         return;
                     }
                     if ([110, 190].indexOf(event.keyCode) >= 0) {
-                        if (numberParts.length > 1) {
+                        if (numberParts.length > 1 || scope.precision === 0) {
                             event.preventDefault();
                             return;
                         }
@@ -30494,7 +30541,7 @@ var CustomerSetting;
             };
             this.$filter = $filter;
         }
-        Object.defineProperty(NumericInput.prototype, "scope", {
+        Object.defineProperty(NumericInputDirective.prototype, "scope", {
             get: function () {
                 return {
                     precision: "="
@@ -30503,10 +30550,42 @@ var CustomerSetting;
             enumerable: true,
             configurable: true
         });
-        NumericInput.$inject = ["$compile", "$filter"];
-        return NumericInput;
+        NumericInputDirective.$inject = ["$filter"];
+        return NumericInputDirective;
     }());
-    CustomerSetting.ModuleRegister.directive("numericInput", NumericInput);
+    CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var PercentageDropdownDirective = (function () {
+        function PercentageDropdownDirective() {
+            this.replace = true;
+            this.templateUrl = "Directives/PercentageDropdown/percentage-dropdown.htm";
+            this.restrict = "E";
+            this.controller = ["$scope", "valueRangeService", function ($scope, valueRangeService) {
+                    $scope.factor = $scope.factor || 1;
+                    $scope.step = $scope.step || 1;
+                    $scope.range = valueRangeService.generateRanges($scope.value, $scope.min, $scope.max, $scope.step, $scope.factor);
+                }];
+        }
+        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    value: "=ngModel",
+                    min: "=",
+                    max: "=",
+                    step: "=",
+                    factor: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return PercentageDropdownDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -30630,30 +30709,39 @@ var CustomerSetting;
             var _this = this;
             this.restrict = "A";
             this.priority = 100;
-            this.link = function (scope, element) {
+            this.link = function (scope, wrappedElement) {
+                var element = angular.element(wrappedElement);
+                var target = angular.element(element.children()[0]);
                 var template = _this.$templateCache.get("Directives/Tooltip/tooltip.htm");
                 var tooltip = angular.element(template);
                 var debounceResize = CustomerSetting.debounce(function () {
                     if (scope.tooltipMessage) {
-                        _this.calculateTooltipPosition(element, scope.tooltipPositionModel);
+                        _this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel);
                     }
                 }, 100);
+                scope.tooltipType = scope.tooltipType || "error";
+                if (scope.onHover) {
+                    element.on("mouseenter", function () { return scope.showed = true; });
+                    element.on("mouseleave", function () { return scope.showed = false; });
+                }
+                else {
+                    scope.showed = true;
+                }
                 _this.$compile(tooltip)(scope);
-                element.parent().prepend(tooltip);
+                wrappedElement.prepend(tooltip);
                 scope.$watch("tooltipMessage", function () {
                     if (scope.tooltipMessage) {
-                        _this.calculateTooltipPosition(element, scope.tooltipPositionModel);
-                        if (scope.tooltipDisplayingSeconds && scope.displayingTimeoutCallback) {
-                            _this.$timeout(function () {
-                                scope.displayingTimeoutCallback();
-                            }, +scope.tooltipDisplayingSeconds * 1000);
-                        }
+                        _this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel);
+                        target.addClass("setting-field--" + scope.tooltipType);
+                    }
+                    else {
+                        target.removeClass("setting-field--" + scope.tooltipType);
                     }
                 });
                 angular.element(_this.$window).on("resize", debounceResize);
                 _this.$rootScope.$on("page-height-changed", function () {
                     if (scope.tooltipMessage) {
-                        _this.calculateTooltipPosition(element, scope.tooltipPositionModel);
+                        _this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel);
                     }
                 });
             };
@@ -30669,18 +30757,18 @@ var CustomerSetting;
                     tooltipMessage: "@",
                     tooltipType: "@",
                     tooltipPositionModel: "@",
-                    tooltipDisplayingSeconds: "@",
-                    displayingTimeoutCallback: "&",
+                    onHover: "@",
                     fieldName: "@"
                 };
             },
             enumerable: true,
             configurable: true
         });
-        TooltipDirective.prototype.calculateTooltipPosition = function (target, positionModel) {
+        TooltipDirective.prototype.calculateTooltipPosition = function (wrappedElement, positionModel) {
             var _this = this;
             this.$timeout(function () {
-                var tooltip = angular.element(target[0].previousElementSibling);
+                var tooltip = angular.element(wrappedElement.children()[0]);
+                var target = angular.element(wrappedElement.children()[1]);
                 if (!tooltip || tooltip.length === 0) {
                     return;
                 }
@@ -30714,17 +30802,6 @@ var CustomerSetting;
                     "visibility": "visible"
                 });
             });
-        };
-        TooltipDirective.prototype.resetElementBorder = function (element) {
-            if (element.hasClass("setting-field--error")) {
-                element.removeClass("setting-field--error");
-            }
-            if (element.hasClass("setting-field--warning")) {
-                element.removeClass("setting-field--success");
-            }
-            if (element.hasClass("setting-field--success")) {
-                element.removeClass("setting-field--success");
-            }
         };
         TooltipDirective.$inject = ["$window", "$compile", "$timeout", "$templateCache", "$rootScope"];
         return TooltipDirective;
@@ -30794,13 +30871,15 @@ var CustomerSetting;
     "use strict";
     var AccountDetail = (function (_super) {
         __extends(AccountDetail, _super);
-        function AccountDetail(accountDetail, backup, isNew, customerLevel) {
+        function AccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
             if (backup === void 0) { backup = false; }
             if (isNew === void 0) { isNew = false; }
             if (customerLevel === void 0) { customerLevel = null; }
+            if (hashKey === void 0) { hashKey = null; }
             _super.call(this, accountDetail);
             this.isNew = isNew;
             this.customerLevel = customerLevel;
+            this.hashKey = hashKey;
             if (accountDetail) {
                 this.username = accountDetail.username;
                 this.password = accountDetail.password;
@@ -30811,16 +30890,24 @@ var CustomerSetting;
                 this.fax = accountDetail.fax;
                 this.credit = accountDetail.credit;
                 this.availableCredit = accountDetail.availableCredit;
-                this.usernameSuffix = accountDetail.usernameSuffix;
+                this.usernameSuffixes = accountDetail.usernameSuffix;
                 this.uplineUsername = accountDetail.uplineUsername;
-                this.minPT = accountDetail.minPT;
-                this.maxPT = accountDetail.maxPT;
-                this.interval = accountDetail.interval;
+                this.interval = accountDetail.intervalValue;
             }
             if (backup) {
                 this.oldSetting = new AccountDetail(this);
             }
             this.resetValidationState();
+            this.ignoredProperties = [
+                "usernameSuffixes",
+                "interval",
+                "isNew",
+                "customerLevel",
+                "ignoredProperties",
+                "oldSetting",
+                "validationState",
+                "hashKey",
+                "$$hashKey"];
         }
         AccountDetail.prototype.isChanged = function () {
             var isChanged = _super.prototype.isChanged.call(this);
@@ -30883,10 +30970,18 @@ var CustomerSetting;
             return true;
         };
         AccountDetail.prototype.toJson = function () {
-            var json = _super.prototype.toJson.call(this);
+            var _this = this;
+            var accountDetail = {};
+            Object.keys(this).forEach(function (prop) {
+                if (_this[prop] !== undefined && _this[prop] !== null && _this.ignoredProperties.indexOf(prop) < 0) {
+                    accountDetail[prop] = _this[prop];
+                }
+            });
             if (this.isNew) {
+                var originalPassword = accountDetail.password;
+                accountDetail.password = originalPassword.encrypt(this.hashKey).hash();
             }
-            return json;
+            return accountDetail;
         };
         return AccountDetail;
     }(CustomerSetting.DefaultSettingItem));
@@ -30903,14 +30998,21 @@ var CustomerSetting;
     "use strict";
     var AgentAccountDetail = (function (_super) {
         __extends(AgentAccountDetail, _super);
-        function AgentAccountDetail(accountDetail, backup, isNew, customerLevel) {
+        function AgentAccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
             if (backup === void 0) { backup = false; }
             if (isNew === void 0) { isNew = false; }
             if (customerLevel === void 0) { customerLevel = null; }
+            if (hashKey === void 0) { hashKey = null; }
             if (accountDetail) {
-                _super.call(this, accountDetail, backup, isNew, customerLevel);
+                _super.call(this, accountDetail, backup, isNew, customerLevel, hashKey);
                 this.masterPT = accountDetail.masterPT;
+                this.minMasterPT = accountDetail.minMasterPT;
+                this.maxMasterPT = accountDetail.maxMasterPT;
                 this.agentPT = accountDetail.agentPT;
+                this.minAgentPT = accountDetail.minAgentPT;
+                this.maxAgentPT = accountDetail.maxAgentPT;
+                this.minAllowedPT = accountDetail.minAllowedPT;
+                this.maxAllowedPT = accountDetail.maxAllowedPT;
             }
             if (backup) {
                 this.oldSetting = new AgentAccountDetail(this);
@@ -30934,16 +31036,16 @@ var CustomerSetting;
             return true;
         };
         AgentAccountDetail.prototype.validatePT = function () {
-            if (this.masterPT > this.maxPT) {
-                this.validationState = new CustomerSetting.ValidationResult("MasterPTMustBeLessThanOrEqualTo", "masterPT", [this.maxPT]);
+            if (this.masterPT > this.maxMasterPT) {
+                this.validationState = new CustomerSetting.ValidationResult("MasterPTMustBeLessThanOrEqualTo", "masterPT", [this.maxMasterPT]);
                 return false;
             }
-            if (this.agentPT > this.maxPT) {
-                this.validationState = new CustomerSetting.ValidationResult("AgentPTMustBeLessThanOrEqualTo", "agentPT", [this.maxPT]);
+            if (this.agentPT > this.maxAgentPT) {
+                this.validationState = new CustomerSetting.ValidationResult("AgentPTMustBeLessThanOrEqualTo", "agentPT", [this.maxAgentPT]);
                 return false;
             }
-            if ((this.masterPT + this.agentPT > this.maxPT) || (this.masterPT + this.agentPT < this.minPT)) {
-                this.validationState = new CustomerSetting.ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minPT, this.maxPT]);
+            if ((this.masterPT + this.agentPT > this.maxAllowedPT) || (this.masterPT + this.agentPT < this.minAllowedPT)) {
+                this.validationState = new CustomerSetting.ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minAllowedPT, this.maxAllowedPT]);
                 return false;
             }
             return true;
@@ -30963,13 +31065,16 @@ var CustomerSetting;
     "use strict";
     var MasterAccountDetail = (function (_super) {
         __extends(MasterAccountDetail, _super);
-        function MasterAccountDetail(accountDetail, backup, isNew, customerLevel) {
+        function MasterAccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
             if (backup === void 0) { backup = false; }
             if (isNew === void 0) { isNew = false; }
             if (customerLevel === void 0) { customerLevel = null; }
+            if (hashKey === void 0) { hashKey = null; }
             if (accountDetail) {
-                _super.call(this, accountDetail, backup, isNew, customerLevel);
+                _super.call(this, accountDetail, backup, isNew, customerLevel, hashKey);
                 this.superPT = accountDetail.superPT;
+                this.minSuperPT = accountDetail.minSuperPT;
+                this.maxSuperPT = accountDetail.maxSuperPT;
             }
             if (backup) {
                 this.oldSetting = new MasterAccountDetail(this);
@@ -30991,12 +31096,12 @@ var CustomerSetting;
             return true;
         };
         MasterAccountDetail.prototype.validateSuperPT = function () {
-            if (this.superPT < this.minPT) {
-                this.validationState = new CustomerSetting.ValidationResult("SuperPTMustBeGreaterThanOrEqualTo", "superPT", [this.minPT]);
+            if (this.superPT < this.minSuperPT) {
+                this.validationState = new CustomerSetting.ValidationResult("SuperPTMustBeGreaterThanOrEqualTo", "superPT", [this.minSuperPT]);
                 return false;
             }
-            if (this.superPT > this.maxPT) {
-                this.validationState = new CustomerSetting.ValidationResult("SuperPTMustBeLessThanOrEqualTo", "superPT", [this.maxPT]);
+            if (this.superPT > this.maxSuperPT) {
+                this.validationState = new CustomerSetting.ValidationResult("SuperPTMustBeLessThanOrEqualTo", "superPT", [this.maxSuperPT]);
                 return false;
             }
         };
@@ -31020,20 +31125,26 @@ var CustomerSetting;
     "use strict";
     var SuperAccountDetail = (function (_super) {
         __extends(SuperAccountDetail, _super);
-        function SuperAccountDetail(accountDetail, backup, isNew, customerLevel) {
+        function SuperAccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
             if (backup === void 0) { backup = false; }
             if (isNew === void 0) { isNew = false; }
             if (customerLevel === void 0) { customerLevel = null; }
+            if (hashKey === void 0) { hashKey = null; }
             if (accountDetail) {
-                _super.call(this, accountDetail, backup, isNew, customerLevel);
+                _super.call(this, accountDetail, backup, isNew, customerLevel, hashKey);
                 this.superMinPT = accountDetail.superMinPT;
+                this.minSuperMinPT = accountDetail.minSuperMinPT;
+                this.maxSuperMinPT = accountDetail.maxSuperMinPT;
                 this.superMaxPT = accountDetail.superMaxPT;
+                this.minSuperMaxPT = accountDetail.minSuperMaxPT;
+                this.maxSuperMaxPT = accountDetail.maxSuperMaxPT;
                 this.currency = accountDetail.currency;
                 this.currencies = accountDetail.currencies;
             }
             if (backup) {
                 this.oldSetting = new SuperAccountDetail(this);
             }
+            this.ignoredProperties.push("currencies");
         }
         SuperAccountDetail.prototype.isChanged = function () {
             var isChanged = _super.prototype.isChanged.call(this);
@@ -31044,47 +31155,75 @@ var CustomerSetting;
                 || this.currency.id !== oldSetting.currency.id;
         };
         SuperAccountDetail.prototype.validate = function () {
+            if (!_super.prototype.validateUsername.call(this)) {
+                return false;
+            }
+            if (!this.validatePassword()) {
+                return false;
+            }
+            if (!this.validateCurrency()) {
+                return false;
+            }
+            if (!this.validatePT()) {
+                return false;
+            }
+            this.resetValidationState();
+            return true;
+        };
+        SuperAccountDetail.prototype.validatePassword = function () {
             if (this.isNew) {
-                if (!this.username || this.username.length === 0) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "username");
-                    return false;
-                }
                 if (!this.password || this.password.length === 0) {
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
                     return false;
                 }
+            }
+            return true;
+        };
+        SuperAccountDetail.prototype.validateCurrency = function () {
+            var _this = this;
+            if (this.isNew) {
                 if (!this.currency) {
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "currency");
                     return false;
                 }
+                if (this.currencies.every(function (currency) { return _this.currency.id !== currency.id; })) {
+                    this.validationState = new CustomerSetting.ValidationResult("InvalidCurrency", "currency");
+                    return false;
+                }
             }
+            return true;
+        };
+        SuperAccountDetail.prototype.validatePT = function () {
             if (!this.validateSuperMinPT()) {
                 return false;
             }
             if (!this.validateSuperMaxPT()) {
                 return false;
             }
-            this.resetValidationState();
+            if (this.superMinPT > this.superMaxPT) {
+                this.validationState = new CustomerSetting.ValidationResult("SuperMinPTMustBeLessThanOrEqualToSuperMaxPT", "superMinPT");
+                return false;
+            }
             return true;
         };
         SuperAccountDetail.prototype.validateSuperMinPT = function () {
-            if (this.superMinPT < this.minPT) {
-                this.validationState = new CustomerSetting.ValidationResult("SuperMinPTMustBeGreaterThanOrEqualTo", "superMinPT", [this.minPT]);
+            if (this.superMinPT < this.minSuperMinPT) {
+                this.validationState = new CustomerSetting.ValidationResult("SuperMinPTMustBeGreaterThanOrEqualTo", "superMinPT", [this.minSuperMinPT]);
                 return false;
             }
-            if (this.superMinPT > this.maxPT) {
-                this.validationState = new CustomerSetting.ValidationResult("SuperMinPTMustBeLessThanOrEqualTo", "superMinPT", [this.maxPT]);
+            if (this.superMinPT > this.maxSuperMinPT) {
+                this.validationState = new CustomerSetting.ValidationResult("SuperMinPTMustBeLessThanOrEqualTo", "superMinPT", [this.maxSuperMinPT]);
                 return false;
             }
             return true;
         };
         SuperAccountDetail.prototype.validateSuperMaxPT = function () {
-            if (this.superMaxPT < this.minPT) {
-                this.validationState = new CustomerSetting.ValidationResult("SuperMaxPTMustBeGreaterThanOrEqualTo", "superMaxPT", [this.minPT]);
+            if (this.superMaxPT < this.minSuperMaxPT) {
+                this.validationState = new CustomerSetting.ValidationResult("SuperMaxPTMustBeGreaterThanOrEqualTo", "superMaxPT", [this.minSuperMaxPT]);
                 return false;
             }
-            if (this.superMaxPT > this.maxPT) {
-                this.validationState = new CustomerSetting.ValidationResult("SuperMaxPTMustLessThanOrEqualTo", "superMaxPT", [this.minPT]);
+            if (this.superMaxPT > this.maxSuperMinPT) {
+                this.validationState = new CustomerSetting.ValidationResult("SuperMaxPTMustLessThanOrEqualTo", "superMaxPT", [this.maxSuperMinPT]);
                 return false;
             }
             return true;
@@ -31104,18 +31243,20 @@ var CustomerSetting;
     "use strict";
     var MemberAccountDetail = (function (_super) {
         __extends(MemberAccountDetail, _super);
-        function MemberAccountDetail(accountDetail, backup, isNew, customerLevel) {
+        function MemberAccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
             if (backup === void 0) { backup = false; }
             if (isNew === void 0) { isNew = false; }
             if (customerLevel === void 0) { customerLevel = null; }
+            if (hashKey === void 0) { hashKey = null; }
             if (accountDetail) {
-                _super.call(this, accountDetail, backup, isNew, customerLevel);
+                _super.call(this, accountDetail, backup, isNew, customerLevel, hashKey);
                 this.uGroup = accountDetail.uGroup;
                 this.uGroups = accountDetail.uGroups;
             }
             if (backup) {
                 this.oldSetting = new MemberAccountDetail(this);
             }
+            this.ignoredProperties.push("uGroups");
         }
         MemberAccountDetail.prototype.isChanged = function () {
             var isChanged = _super.prototype.isChanged.call(this);
@@ -31146,24 +31287,21 @@ var CustomerSetting;
     var SettingType1Item = (function () {
         function SettingType1Item() {
         }
-        SettingType1Item.factory = function (settingItem, backup, isNew, customerLevel) {
-            if (backup === void 0) { backup = false; }
-            if (isNew === void 0) { isNew = false; }
-            if (customerLevel === void 0) { customerLevel = null; }
+        SettingType1Item.factory = function (settingItem, backup, isNew, customerLevel, hashKey) {
             if (settingItem) {
                 if (customerLevel === CustomerSetting.Level.super) {
-                    return new CustomerSetting.SuperAccountDetail(settingItem, backup, isNew, customerLevel);
+                    return new CustomerSetting.SuperAccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
                 }
                 if (customerLevel === CustomerSetting.Level.master) {
-                    return new CustomerSetting.MasterAccountDetail(settingItem, backup, isNew, customerLevel);
+                    return new CustomerSetting.MasterAccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
                 }
                 if (customerLevel === CustomerSetting.Level.agent) {
-                    return new CustomerSetting.AgentAccountDetail(settingItem, backup, isNew, customerLevel);
+                    return new CustomerSetting.AgentAccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
                 }
                 if (customerLevel === CustomerSetting.Level.member) {
-                    return new CustomerSetting.MemberAccountDetail(settingItem, backup, isNew, customerLevel);
+                    return new CustomerSetting.MemberAccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
                 }
-                return new CustomerSetting.AccountDetail(settingItem, backup, isNew, customerLevel);
+                return new CustomerSetting.AccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
             }
         };
         return SettingType1Item;
@@ -31210,29 +31348,149 @@ var CustomerSetting;
     CustomerSetting.ModuleRegister.filter("settingType1Message", SettingType1MessageFilter);
 })(CustomerSetting || (CustomerSetting = {}));
 
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var SettingType1Directive = (function (_super) {
-        __extends(SettingType1Directive, _super);
-        function SettingType1Directive(settingType1ResourceService) {
+    var SettingType1Directive = (function () {
+        function SettingType1Directive(settingType1ResourceService, settingTypesSharedValuesService) {
             var _this = this;
-            _super.call(this, CustomerSetting.SettingType1Item.factory);
+            this.replace = true;
             this.templateUrl = "setting-type1.htm";
             this.link = function (scope) {
                 scope.settingTypeName = _this.settingType1ResourceService.getLabel("AccountDetail");
+                scope.customerId = _this.settingTypesSharedValuesService.customerId;
+                scope.uplineId = _this.settingTypesSharedValuesService.uplineId;
+                scope.customerLevel = _this.settingTypesSharedValuesService.customerLevel;
+                scope.productId = _this.settingTypesSharedValuesService.productId;
+                scope.productName = _this.settingTypesSharedValuesService.productName;
+                scope.isNew = _this.settingTypesSharedValuesService.isNew;
+                scope.avaiCustomerLevels = CustomerSetting.Level;
+                scope.$watch("settingType", function (settingType) {
+                    if (settingType && angular.isArray(settingType.settingItems)) {
+                        if (settingType.isError) {
+                            if (settingType.settingItems.length > 0) {
+                                settingType.settingItems[0] = new CustomerSetting.ErrorSettingItem(settingType.settingItems[0]);
+                            }
+                        }
+                        else {
+                            settingType.settingItems.forEach(function (item, index) {
+                                if (item) {
+                                    settingType.settingItems[index] = CustomerSetting.SettingType1Item.factory(item, true, scope.isNew, scope.customerLevel, _this.settingTypesSharedValuesService.hashKey);
+                                }
+                            });
+                        }
+                    }
+                });
             };
             this.settingType1ResourceService = settingType1ResourceService;
+            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
         }
-        SettingType1Directive.$inject = ["settingType1ResourceService"];
+        Object.defineProperty(SettingType1Directive.prototype, "scope", {
+            get: function () {
+                return {
+                    settingType: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingType1Directive.$inject = [
+            "settingType1ResourceService",
+            "settingTypesSharedValuesService"
+        ];
         return SettingType1Directive;
-    }(CustomerSetting.SettingTypeBaseDirective));
+    }());
     CustomerSetting.ModuleRegister.directive("settingtype1", SettingType1Directive);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var CustomerCreditDirective = (function () {
+        function CustomerCreditDirective() {
+            this.replace = true;
+            this.templateUrl = "CustomerCredit/customer-credit.htm";
+            this.controller = [
+                "$scope",
+                "settingTypesSharedValuesService",
+                function ($scope, settingTypesSharedValuesService) {
+                    $scope.customerLevel = settingTypesSharedValuesService.customerLevel;
+                    $scope.isNew = settingTypesSharedValuesService.isNew;
+                    $scope.avaiCustomerLevels = CustomerSetting.Level;
+                }];
+        }
+        Object.defineProperty(CustomerCreditDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    accountDetail: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return CustomerCreditDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("customerCredit", CustomerCreditDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var GeneralDataDirective = (function () {
+        function GeneralDataDirective() {
+            this.replace = true;
+            this.templateUrl = "GeneralData/general-data.htm";
+            this.controller = [
+                "$scope",
+                "settingTypesSharedValuesService",
+                function ($scope, settingTypesSharedValuesService) {
+                    $scope.customerLevel = settingTypesSharedValuesService.customerLevel;
+                    $scope.isNew = settingTypesSharedValuesService.isNew;
+                    $scope.avaiCustomerLevels = CustomerSetting.Level;
+                }];
+        }
+        Object.defineProperty(GeneralDataDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    accountDetail: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return GeneralDataDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("generalData", GeneralDataDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var PositionTakingDirective = (function () {
+        function PositionTakingDirective() {
+            this.replace = true;
+            this.templateUrl = "PositionTaking/position-taking.htm";
+            this.controller = [
+                "$scope",
+                "settingTypesSharedValuesService",
+                function ($scope, settingTypesSharedValuesService) {
+                    $scope.customerLevel = settingTypesSharedValuesService.customerLevel;
+                    $scope.isNew = settingTypesSharedValuesService.isNew;
+                    $scope.avaiCustomerLevels = CustomerSetting.Level;
+                }];
+        }
+        Object.defineProperty(PositionTakingDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    accountDetail: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return PositionTakingDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("positionTaking", PositionTakingDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
@@ -31276,9 +31534,13 @@ var CustomerSetting;
 
 angular.module("customerSetting").run(["$templateCache", function($templateCache) {$templateCache.put("Directives/BlockUI/block-ui.htm","<div class=\"block-ui-overlay\" data-ng-show=\"isLoading\"><div class=\"block-ui-loading\" data-ng-show=\"isLoading\"></div></div>");
 $templateCache.put("Directives/DefaultSettingTypeBlock/default-setting-type-block.htm","<div class=\"block\" data-ng-show=\"settingType\" data-ng-class=\"{ \'block--error\': !(settingType | validSettingType) }\"><div class=\"block__header\" data-setting-type=\"{{settingType.id}}\" data-ng-class=\"{ \'block__header--error\': !(settingType | validSettingType) }\">{{settingTypeName}}</div><div class=\"block__item-group\" data-ng-if=\"settingType | validSettingType\" data-ng-repeat=\"group in sportGroups\"><div class=\"block__sub-header\" data-ng-if=\"settingType.settingLevel === avaiSettingLevels.sportTypeBetType\" data-ng-class=\"{ \'block__sub-header--border-top\': ($index > 0) }\" data-sport-type=\"{{group[0].sportTypeId}}\">{{group[0].sportTypeName}}</div><div class=\"block__lbl-group\" data-ng-include=\"headerTemplateUrl\"></div><div class=\"block__item\" data-ng-repeat=\"item in group\" data-ng-class=\"{ \'block__item--last\': $last, \'block__item--near-last\': $index === group.length - 2 && $index % 2 === 0, \'block__item--before-extra-item\': $last && group.length % 2 === 1 && group.length > 1, \'block__item--odd\': $odd, \'block__item--full-width\': group.length === 1 }\"><div class=\"block__lbl\" data-product=\"{{productId}}\" data-sport-type=\"{{item.sportTypeId}}\" data-bet-type=\"{{item.betTypeId}}\">{{item | showingName:settingType.settingLevel:productName }}</div><div class=\"block__value\" data-ng-include=\"valueTemplateUrl\"></div></div><div class=\"block__item block__item--last block__item--extra\" data-ng-if=\"group.length % 2 === 1 && group.length > 1\"><div class=\"block__lbl\"></div><div class=\"block__value\"></div></div></div><div class=\"block__item block__item--error\" data-ng-if=\"!(settingType | validSettingType)\">{{sportGroups[0][0].errorMessage}}</div></div>");
+$templateCache.put("Directives/PercentageDropdown/percentage-dropdown.htm","<select class=\"setting-field setting-field--fullwidth\" data-ng-options=\"item as (item | formatPercentage) for item in range\"></select>");
 $templateCache.put("Directives/SettingResult/setting-result.htm","<div data-ng-show=\"result\"><div class=\"msg msg--{{result.msgTypeName}}\" data-ng-if=\"!result.subResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\">{{result.message}}</div></div><div data-ng-if=\"result.subResults\" data-ng-repeat=\"subResult in result.subResults\"><div class=\"msg__customer-name\" data-ng-if=\"subResult.customerName\">{{subResult.customerName}}</div><div class=\"msg msg--{{subResult.msgTypeName}}\" data-ng-if=\"!subResult.settingResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\">{{subResult.message}}</div></div><div class=\"msg msg--{{settingResult.msgTypeName}}\" data-ng-if=\"subResult.settingResults\" data-ng-repeat=\"settingResult in subResult.settingResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\"><div class=\"msg__main-message\">{{settingResult.message}}</div><div class=\"msg__sub-message\" data-ng-if=\"settingResult.messages\" data-ng-repeat=\"message in settingResult.messages\">{{message}}</div></div></div></div></div>");
-$templateCache.put("Directives/Tooltip/tooltip.htm","<div class=\"tooltip tooltip--{{tooltipType}}\" data-ng-if=\"tooltipMessage\"><div class=\"tooltip__content\">{{tooltipMessage | unsafe}}</div></div>");
-$templateCache.put("setting-type1.htm","<div class=\"setting-type-1 block\" data-ng-show=\"settingType\" data-ng-class=\"{ \'block--error\': !(settingType | validSettingType) }\"><div class=\"block__header\" data-setting-type=\"{{settingType.id}}\" data-ng-class=\"{ \'block__header--error\': !(settingType | validSettingType) }\">{{settingTypeName}}</div><div class=\"block__item block__item--error\" data-ng-if=\"!(settingType | validSettingType)\">{{sportGroups[0][0].errorMessage}}</div></div>");}]);
+$templateCache.put("Directives/Tooltip/tooltip.htm","<div class=\"tooltip tooltip--{{tooltipType}}\" data-ng-if=\"tooltipMessage && showed\"><div class=\"tooltip__content\">{{tooltipMessage | unsafe}}</div></div>");
+$templateCache.put("setting-type1.htm","<div class=\"setting-type-1\"><div class=\"block\" data-ng-show=\"settingType\" data-ng-class=\"{ \'block--error\': !(settingType | validSettingType) }\"><div class=\"block__header\" data-setting-type=\"{{settingType.id}}\" data-ng-class=\"{ \'block__header--error\': !(settingType | validSettingType) }\">{{settingTypeName}}</div><div class=\"col\"><general-data data-account-detail=\"settingType.settingItems[0]\"></general-data></div><div class=\"col\"><customer-credit data-account-detail=\"settingType.settingItems[0]\"></customer-credit><position-taking data-ng-if=\"customerLevel !== avaiCustomerLevels.member\" data-account-detail=\"settingType.settingItems[0]\"></position-taking></div><div class=\"block__item block__item--error\" data-ng-if=\"!(settingType | validSettingType)\">{{settingType.settingItems[0].errorMessage}}</div></div></div>");
+$templateCache.put("CustomerCredit/customer-credit.htm","<div class=\"customer-credit\"><div class=\"sub-header\">{{::(\'Credit\' | settingType1Label)}}</div><div data-ng-if=\"customerLevel === avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w50-percent\">{{::(\'Currency\' | settingType1Label)}}</label><div class=\"setting-field-wrapper w50-percent\"><select class=\"setting-field setting-field--fullwidth\" data-ng-if=\"isNew\" data-ng-model=\"accountDetail.currency\" data-ng-options=\"currency.name for currency in accountDetail.currencies track by currency.id\"></select><label class=\"currency\" data-ng-if=\"!isNew\">{{accountDetail.currency.name}}</label></div></div><div class=\"row\"><label class=\"w50-percent\">{{::(\'Credit\' | settingType1Label)}}</label><div class=\"setting-field-wrapper w50-percent\" data-tooltip data-tooltip-message=\"{{accountDetail.validationState | tooltipMessage:\'settingType1ResourceService\':\'credit\'}}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--fullwidth setting-field--number\" data-numeric-input data-ng-model=\"accountDetail.credit\"></div></div></div><div data-ng-if=\"customerLevel !== avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w50-percent\">{{::(\'Credit\' | settingType1Label)}}<span class=\"required-field-mark\">*</span></label><div class=\"setting-field-wrapper w50-percent\" data-tooltip data-tooltip-message=\"{{accountDetail.validationState | tooltipMessage:\'settingType1ResourceService\':\'credit\'}}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--fullwidth setting-field--number\" data-numeric-input data-ng-model=\"accountDetail.credit\"></div></div><div class=\"row\"><label class=\"w50-percent\">{{::(\'AvailableCredit\' | settingType1Label)}}</label> <label class=\"w50-percent available-credit\">{{accountDetail.availableCredit | formatNumber}}</label></div></div></div>");
+$templateCache.put("GeneralData/general-data.htm","<div class=\"general-data\"><div class=\"sub-header\">{{::(\'GeneralData\' | settingType1Label)}}</div><div data-ng-if=\"customerLevel === avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w50-percent\">{{::(\'Username\' | settingType1Label)}}<span class=\"required-field-mark\">*</span></label><div class=\"setting-field-wrapper w50-percent\" data-tooltip data-tooltip-message=\"{{accountDetail.validationState | tooltipMessage:\'settingType1ResourceService\':\'username\'}}\"><input type=\"text\" maxlength=\"50\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.username\"></div></div><div class=\"row\" data-ng-if=\"isNew\"><label class=\"w50-percent\">{{::(\'Password\' | settingType1Label)}}<span class=\"required-field-mark\">*</span></label><div class=\"setting-field-wrapper w50-percent\" data-tooltip data-tooltip-message=\"{{accountDetail.validationState | tooltipMessage:\'settingType1ResourceService\':\'password\'}}\"><input type=\"password\" maxlength=\"40\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.password\"></div></div><div class=\"row\"><label class=\"w50-percent\">{{::(\'FirstName\' | settingType1Label)}}</label><div class=\"setting-field-wrapper w50-percent\"><input type=\"text\" maxlength=\"50\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.firstName\"></div></div><div class=\"row\"><label class=\"w50-percent\">{{::(\'LastName\' | settingType1Label)}}</label><div class=\"setting-field-wrapper w50-percent\"><input type=\"text\" maxlength=\"50\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.lastName\"></div></div><div class=\"row\"><label class=\"w50-percent\">{{::(\'Phone\' | settingType1Label)}}</label><div class=\"setting-field-wrapper w50-percent\"><input type=\"text\" maxlength=\"50\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.phone\"></div></div><div class=\"row\"><label class=\"w50-percent\">{{::(\'MobilePhone\' | settingType1Label)}}</label><div class=\"setting-field-wrapper w50-percent\"><input type=\"text\" maxlength=\"50\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.mobilePhone\"></div></div><div class=\"row\"><label class=\"w50-percent\">{{::(\'Fax\' | settingType1Label)}}</label><div class=\"setting-field-wrapper w50-percent\"><input type=\"text\" maxlength=\"50\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.fax\"></div></div></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.master\"></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.agent\"></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.member\"></div></div>");
+$templateCache.put("PositionTaking/position-taking.htm","<div class=\"position-taking\"><div class=\"sub-header\" data-ng-if=\"customerLevel !== avaiCustomerLevels.agent\">{{::(\'PositionTaking\' | settingType1Label)}}</div><div class=\"sub-header\" data-ng-if=\"customerLevel === avaiCustomerLevels.agent\"><span class=\"sub-header__title\">{{::(\'PositionTaking\' | settingType1Label)}}</span> <span class=\"position-taking-constraint\">{{\'MinAllowed\' | settingType1Label}} <span class=\"position-taking-constraint__value\">{{accountDetail.minAllowedPT | formatPercentage}}</span></span> <span class=\"position-taking-constraint\">{{\'MaxAllowed\' | settingType1Label}} <span class=\"position-taking-constraint__value\">{{accountDetail.maxAllowedPT | formatPercentage}}</span></span></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w50-percent\">{{::(\'SuperMinPT\' | settingType1Label)}}</label><div class=\"setting-field-wrapper w50-percent\" data-tooltip data-tooltip-message=\"{{accountDetail.validationState | tooltipMessage:\'settingType1ResourceService\':\'superMinPT\'}}\"><percentage-dropdown data-ng-model=\"accountDetail.superMinPT\" data-min=\"accountDetail.minSuperMinPT\" data-max=\"accountDetail.maxSuperMinPT\" data-step=\"accountDetail.interval\"></percentage-dropdown></div></div><div class=\"row\"><label class=\"w50-percent\">{{::(\'SuperMaxPT\' | settingType1Label)}}</label><div class=\"setting-field-wrapper w50-percent\" data-tooltip data-tooltip-message=\"{{accountDetail.validationState | tooltipMessage:\'settingType1ResourceService\':\'superMaxPT\'}}\"><percentage-dropdown data-ng-model=\"accountDetail.superMaxPT\" data-min=\"accountDetail.minSuperMaxPT\" data-max=\"accountDetail.maxSuperMaxPT\" data-step=\"accountDetail.interval\"></percentage-dropdown></div></div></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.master\"><div class=\"row\"><label class=\"w50-percent\">{{::(\'SuperPT\' | settingType1Label)}}</label><div class=\"setting-field-wrapper w50-percent\" data-tooltip data-tooltip-message=\"{{accountDetail.validationState | tooltipMessage:\'settingType1ResourceService\':\'superPT\'}}\"><percentage-dropdown data-ng-model=\"accountDetail.superPT\" data-min=\"accountDetail.minSuperPT\" data-max=\"accountDetail.maxSuperPT\" data-step=\"accountDetail.interval\"></percentage-dropdown></div></div></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.agent\"><div class=\"row\"><label class=\"w50-percent\">{{::(\'MasterPT\' | settingType1Label)}}</label><div class=\"setting-field-wrapper w50-percent\" data-tooltip data-tooltip-message=\"{{accountDetail.validationState | tooltipMessage:\'settingType1ResourceService\':\'masterPT\'}}\"><percentage-dropdown data-ng-model=\"accountDetail.masterPT\" data-min=\"0\" data-max=\"accountDetail.maxMasterPT\" data-step=\"accountDetail.interval\"></percentage-dropdown></div></div><div class=\"row\"><label class=\"w50-percent\">{{::(\'AgentPT\' | settingType1Label)}}</label><div class=\"setting-field-wrapper w50-percent\" data-tooltip data-tooltip-message=\"{{accountDetail.validationState | tooltipMessage:\'settingType1ResourceService\':\'agentPT\'}}\"><percentage-dropdown data-ng-model=\"accountDetail.agentPT\" data-min=\"0\" data-max=\"accountDetail.maxAgentPT\" data-step=\"accountDetail.interval\"></percentage-dropdown></div></div></div></div>");}]);
 /*jshint -W101,-W106,-W044,-W098*/
 
 (function () {
@@ -31386,7 +31648,9 @@ $templateCache.put("setting-type1.htm","<div class=\"setting-type-1 block\" data
         "SuperMaxPT": "Super Max PT",
         "SuperPT": "Super PT",
         "MasterPT": "Master PT",
-        "AgentPT": "Agent PT"
+        "AgentPT": "Agent PT",
+        "MinAllowed": "Min. Allowed:",
+        "MaxAllowed": "Max. Allowed:"
     };
 
     labels["zh-cn"] = {
@@ -31418,12 +31682,14 @@ $templateCache.put("setting-type1.htm","<div class=\"setting-type-1 block\" data
         "SuperMinPTMustBeLessThanOrEqualTo": "Super Min PT must be less than or equal to {0}.",
         "SuperMaxPTMustBeGreaterThanOrEqualTo": "Super Max PT must be greater than or equal to {0}.",
         "SuperMaxPTMustBeLessThanOrEqualTo": "Super Max PT must be less than or equal to {0}.",
+        "SuperMinPTMustBeLessThanOrEqualToSuperMaxPT": "Super Min PT must be less than or equal to Super Max PT.",
         "SuperPTMustBeGreaterThanOrEqualTo": "Super PT must be greater than or equal to {0}.",
         "SuperPTMustBeLessThanOrEqualTo": "Super PT must be less than or equal to {0}.",
         "MasterPTMustBeLessThanOrEqualTo": "Master PT must be greater than or equal to {0}.",
         "AgentPTMustBeLessThanOrEqualTo": "Agent PT must be less than or equal to {0}.",
         "TotalPTMustBeInRange": "Total Position Taking must be between {0} and {1}. Please try again.",
-        "CreditMustBeLessThanOrEqualTo": "Credit must be less than or equal to {0}."
+        "CreditMustBeLessThanOrEqualTo": "Credit must be less than or equal to {0}.",
+        "InvalidCurrency": "Invalid currency."
     };
 
     messages["zh-cn"] = {

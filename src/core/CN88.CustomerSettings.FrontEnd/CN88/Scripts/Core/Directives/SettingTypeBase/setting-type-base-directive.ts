@@ -8,12 +8,12 @@ module CustomerSetting {
     "use strict";
 
     interface INewSettingItem {
-        (settingItem: any, backup?: boolean, isNew?: boolean, customerLevel?: Level, uplineLevel?: Level, extraData?: Array<KeyValuePair<string, any>>): ISettingItem;
+        (settingItem: any, backup?: boolean, isNew?: boolean, customerLevel?: Level, uplineId?: number, extraData?: Array<KeyValuePair<string, any>>): ISettingItem;
     }
 
     export interface ISettingTypeDirectiveSharedScope extends ng.IScope {
         customerId: number;
-        uplineLevel: Level;
+        uplineId: number;
         customerLevel: Level;
         productId: number;
         productName: string;
@@ -37,7 +37,7 @@ module CustomerSetting {
             "settingTypesSharedValuesService",
             ($scope: ISettingTypeDirectiveSharedScope, settingTypesSharedValuesService: SettingTypesSharedValuesService) => {
                 $scope.customerId = settingTypesSharedValuesService.customerId;
-                $scope.uplineLevel = settingTypesSharedValuesService.uplineLevel;
+                $scope.uplineId = settingTypesSharedValuesService.uplineId;
                 $scope.customerLevel = settingTypesSharedValuesService.customerLevel;
                 $scope.productId = settingTypesSharedValuesService.productId;
                 $scope.productName = settingTypesSharedValuesService.productName;
@@ -53,12 +53,12 @@ module CustomerSetting {
                         } else {
                             settingType.settingItems.forEach((item: any, index: number) => {
                                 if (item) {
-                                    settingType.settingItems[index] = this.settingItemType(
+                                    settingType.settingItems[index] = this.instantiateSettingItem(
                                         item,
                                         true,
                                         $scope.isNew,
                                         $scope.customerLevel,
-                                        $scope.uplineLevel,
+                                        $scope.uplineId,
                                         settingType.extraData);
                                 }
                             });
@@ -67,10 +67,10 @@ module CustomerSetting {
                 });
             }];
 
-        private settingItemType: INewSettingItem;
+        private instantiateSettingItem: INewSettingItem;
 
-        constructor(settingItemType: INewSettingItem) {
-            this.settingItemType = settingItemType;
+        constructor(instantiateSettingItem: INewSettingItem) {
+            this.instantiateSettingItem = instantiateSettingItem;
         }
     }
 }

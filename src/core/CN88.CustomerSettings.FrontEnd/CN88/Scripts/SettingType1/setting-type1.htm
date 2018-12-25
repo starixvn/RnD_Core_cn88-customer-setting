@@ -1,11 +1,19 @@
-﻿<div class="setting-type-1 block" data-ng-show="settingType" data-ng-class="{ 'block--error': !(settingType | validSettingType) }">
-    <div class="block__header"
-         data-setting-type="{{settingType.id}}"
-         data-ng-class="{ 'block__header--error': !(settingType | validSettingType) }">
-        {{settingTypeName}}
-    </div>
-
-    <div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">
-        {{sportGroups[0][0].errorMessage}}
+﻿<div class="setting-type-1">
+    <div class="block" data-ng-show="settingType" data-ng-class="{ 'block--error': !(settingType | validSettingType) }">
+        <div class="block__header"
+             data-setting-type="{{settingType.id}}"
+             data-ng-class="{ 'block__header--error': !(settingType | validSettingType) }">
+            {{settingTypeName}}
+        </div>
+        <div class="col">
+            <general-data data-account-detail="settingType.settingItems[0]"></general-data>
+        </div>
+        <div class="col">
+            <customer-credit data-account-detail="settingType.settingItems[0]"></customer-credit>
+            <position-taking data-ng-if="customerLevel !== avaiCustomerLevels.member" data-account-detail="settingType.settingItems[0]"></position-taking>
+        </div>
+        <div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">
+            {{settingType.settingItems[0].errorMessage}}
+        </div>
     </div>
 </div>

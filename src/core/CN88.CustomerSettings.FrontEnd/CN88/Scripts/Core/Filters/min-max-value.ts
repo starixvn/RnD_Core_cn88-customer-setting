@@ -4,19 +4,19 @@
 module CustomerSetting {
     "use strict";
 
-    function MinValue(): Function {
+    function MinValueFilter(): Function {
         return (numbers: number[]) => {
             return Math.min.apply(Math, numbers);
         };
     }
 
-    ModuleRegister.filter("minValue", MinValue);
+    ModuleRegister.filter("minValue", MinValueFilter);
 
-    function MaxValue(): Function {
+    function MaxValueFilter(): Function {
         return (numbers: number[]) => {
             return Math.max.apply(Math, numbers);
         };
     }
 
-    ModuleRegister.filter("maxValue", MaxValue);
+    ModuleRegister.filter("maxValue", MaxValueFilter);
 }

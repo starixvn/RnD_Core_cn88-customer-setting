@@ -1,0 +1,78 @@
+﻿<div class="general-data">
+    <div class="sub-header">{{::('GeneralData' | settingType1Label)}}</div>
+    <div data-ng-if="customerLevel === avaiCustomerLevels.super">
+        <div class="row">
+            <label class="w50-percent">{{::('Username' | settingType1Label)}}<span class="required-field-mark">*</span></label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'username'}}">
+                <input type="text"
+                       maxlength="50"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.username" />
+            </div>
+        </div>
+        <div class="row" data-ng-if="isNew">
+            <label class="w50-percent">{{::('Password' | settingType1Label)}}<span class="required-field-mark">*</span></label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'password'}}">
+                <input type="password"
+                       maxlength="40"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.password" />
+            </div>
+        </div>
+        <div class="row">
+            <label class="w50-percent">{{::('FirstName' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent">
+                <input type="text"
+                       maxlength="50"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.firstName" />
+            </div>
+        </div>
+        <div class="row">
+            <label class="w50-percent">{{::('LastName' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent">
+                <input type="text"
+                       maxlength="50"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.lastName" />
+            </div>
+        </div>
+        <div class="row">
+            <label class="w50-percent">{{::('Phone' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent">
+                <input type="text"
+                       maxlength="50"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.phone" />
+            </div>
+        </div>
+        <div class="row">
+            <label class="w50-percent">{{::('MobilePhone' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent">
+                <input type="text"
+                       maxlength="50"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.mobilePhone" />
+            </div>
+        </div>
+        <div class="row">
+            <label class="w50-percent">{{::('Fax' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent">
+                <input type="text"
+                       maxlength="50"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.fax" />
+            </div>
+        </div>
+    </div>
+    <div data-ng-if="customerLevel === avaiCustomerLevels.master">
+    </div>
+    <div data-ng-if="customerLevel === avaiCustomerLevels.agent">
+    </div>
+    <div data-ng-if="customerLevel === avaiCustomerLevels.member">
+    </div>
+</div>

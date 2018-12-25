@@ -6,19 +6,32 @@ module CustomerSetting {
 
     export class AgentAccountDetail extends AccountDetail {
         public masterPT: number;
+        public minMasterPT: number;
+        public maxMasterPT: number;
         public agentPT: number;
+        public minAgentPT: number;
+        public maxAgentPT: number;
+        public minAllowedPT: number;
+        public maxAllowedPT: number;
 
         constructor();
         constructor(accountDetail: any);
         constructor(accountDetail: any, backup: boolean)
         constructor(accountDetail: any, backup: boolean, isNew: boolean)
         constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level)
-        constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null) {
+        constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string)
+        constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
             if (accountDetail) {
-                super(accountDetail, backup, isNew, customerLevel);
+                super(accountDetail, backup, isNew, customerLevel, hashKey);
 
                 this.masterPT = accountDetail.masterPT;
+                this.minMasterPT = accountDetail.minMasterPT;
+                this.maxMasterPT = accountDetail.maxMasterPT;
                 this.agentPT = accountDetail.agentPT;
+                this.minAgentPT = accountDetail.minAgentPT;
+                this.maxAgentPT = accountDetail.maxAgentPT;
+                this.minAllowedPT = accountDetail.minAllowedPT;
+                this.maxAllowedPT = accountDetail.maxAllowedPT;
             }
 
             if (backup) {
@@ -50,20 +63,20 @@ module CustomerSetting {
         }
 
         private validatePT(): boolean {
-            if (this.masterPT > this.maxPT) {
-                this.validationState = new ValidationResult("MasterPTMustBeLessThanOrEqualTo", "masterPT", [this.maxPT]);
+            if (this.masterPT > this.maxMasterPT) {
+                this.validationState = new ValidationResult("MasterPTMustBeLessThanOrEqualTo", "masterPT", [this.maxMasterPT]);
 
                 return false;
             }
 
-            if (this.agentPT > this.maxPT) {
-                this.validationState = new ValidationResult("AgentPTMustBeLessThanOrEqualTo", "agentPT", [this.maxPT]);
+            if (this.agentPT > this.maxAgentPT) {
+                this.validationState = new ValidationResult("AgentPTMustBeLessThanOrEqualTo", "agentPT", [this.maxAgentPT]);
 
                 return false;
             }
 
-            if ((this.masterPT + this.agentPT > this.maxPT) || (this.masterPT + this.agentPT < this.minPT)) {
-                this.validationState = new ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minPT, this.maxPT]);
+            if ((this.masterPT + this.agentPT > this.maxAllowedPT) || (this.masterPT + this.agentPT < this.minAllowedPT)) {
+                this.validationState = new ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minAllowedPT, this.maxAllowedPT]);
 
                 return false;
             }

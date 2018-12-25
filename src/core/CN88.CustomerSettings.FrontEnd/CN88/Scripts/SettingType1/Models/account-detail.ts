@@ -1,5 +1,7 @@
-﻿/// <reference path="../../core/models/enums/level.ts" />
+﻿/// <reference path="../../../libraries/hash.d.ts" />
+/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
+/// <reference path="../../core/models/setting-item.ts" />
 
 module CustomerSetting {
     "use strict";
@@ -15,25 +17,27 @@ module CustomerSetting {
         public fax: string;
         public credit: number;
         public availableCredit: number;
-        public usernameSuffix: string[];
+        public usernameSuffixes: string[];
         public uplineUsername: string;
-        public minPT: number;
-        public maxPT: number;
         public interval: number;
 
         protected isNew: boolean;
         protected customerLevel: Level;
+        protected ignoredProperties: string[];
+        protected hashKey: string;
 
         constructor();
         constructor(accountDetail: any);
         constructor(accountDetail: any, backup: boolean)
         constructor(accountDetail: any, backup: boolean, isNew: boolean)
         constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level)
-        constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null) {
+        constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string)
+        constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
             super(accountDetail);
 
             this.isNew = isNew;
             this.customerLevel = customerLevel;
+            this.hashKey = hashKey;
 
             if (accountDetail) {
                 this.username = accountDetail.username;
@@ -45,11 +49,9 @@ module CustomerSetting {
                 this.fax = accountDetail.fax;
                 this.credit = accountDetail.credit;
                 this.availableCredit = accountDetail.availableCredit;
-                this.usernameSuffix = accountDetail.usernameSuffix;
+                this.usernameSuffixes = accountDetail.usernameSuffix;
                 this.uplineUsername = accountDetail.uplineUsername;
-                this.minPT = accountDetail.minPT;
-                this.maxPT = accountDetail.maxPT;
-                this.interval = accountDetail.interval;
+                this.interval = accountDetail.intervalValue;
             }
 
             if (backup) {
@@ -57,6 +59,16 @@ module CustomerSetting {
             }
 
             this.resetValidationState();
+            this.ignoredProperties = [
+                "usernameSuffixes",
+                "interval",
+                "isNew",
+                "customerLevel",
+                "ignoredProperties",
+                "oldSetting",
+                "validationState",
+                "hashKey",
+                "$$hashKey"];
         }
 
         public isChanged(): boolean {
@@ -92,7 +104,7 @@ module CustomerSetting {
             return true;
         }
 
-        private validateUsername(): boolean {
+        protected validateUsername(): boolean {
             if (this.isNew) {
                 if (!this.username || this.username.length === 0) {
                     this.validationState = new ValidationResult("RequiredField", "username");
@@ -104,7 +116,7 @@ module CustomerSetting {
             return true;
         }
 
-        private validatePassword(): boolean {
+        protected validatePassword(): boolean {
             if (this.isNew) {
                 if (!this.password || this.password.length === 0) {
                     this.validationState = new ValidationResult("RequiredField", "password");
@@ -130,7 +142,7 @@ module CustomerSetting {
             return true;
         }
 
-        private validateCredit(): boolean {
+        protected validateCredit(): boolean {
             if (this.credit > this.availableCredit) {
                 this.validationState = new ValidationResult("CreditMustBeLessThanOrEqualTo", "credit", [this.availableCredit]);
 
@@ -141,13 +153,21 @@ module CustomerSetting {
         }
 
         public toJson(): any {
-            var json: any = super.toJson();
+            var accountDetail: any = {};
+
+            Object.keys(this).forEach((prop: string) => {
+                if (this[prop] !== undefined && this[prop] !== null && this.ignoredProperties.indexOf(prop) < 0) {
+                    accountDetail[prop] = this[prop];
+                }
+            });
 
             if (this.isNew) {
-                // @@TODO: encrypt password
+                var originalPassword: string = accountDetail.password;
+
+                accountDetail.password = originalPassword.encrypt(this.hashKey).hash();
             }
 
-            return json;
+            return accountDetail;
         }
     }
 }

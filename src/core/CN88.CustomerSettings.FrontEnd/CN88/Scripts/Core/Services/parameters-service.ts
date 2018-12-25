@@ -11,6 +11,8 @@ module CustomerSetting {
     export class ParametersService {
         public static $inject: string[] = ["$window"];
 
+        public hashKey: string;
+
         public get systemId(): number {
             return this.system;
         }
@@ -19,8 +21,8 @@ module CustomerSetting {
             return this.lang;
         }
 
-        public get uplineLevel(): Level {
-            return this.query.uplineLevel;
+        public get uplineId(): number {
+            return this.query.uplineId;
         }
 
         public get isNew(): boolean {
@@ -44,7 +46,7 @@ module CustomerSetting {
         }
 
         public createSettingCommand(setting: Setting): SettingCommand {
-            return new SettingCommand(this.query.uplineLevel, setting);
+            return new SettingCommand(this.query.uplineId, setting);
         }
 
         private fetchParams(): void {
@@ -53,16 +55,17 @@ module CustomerSetting {
             /* tslint:enable:no-string-literal */
 
             if (params) {
-                var uplineLevel = params.uplineLevel ? params.uplineLevel : undefined;
+                var uplineId = params.uplineId ? params.uplineId : undefined;
                 var customerLevel = params.customerLevel ? params.customerLevel : undefined;
 
                 this.lang = params.language || Defaults.language;
                 this.system = params.system || Defaults.system;
                 this.isCreateNew = params.isCreateNew || false;
+                this.hashKey = params.hashKey;
 
                 this.query = new SettingQuery(
                     params.productId,
-                    uplineLevel,
+                    uplineId,
                     customerLevel,
                     params.customerId,
                     this.isNew);

@@ -11,9 +11,9 @@ module CustomerSetting {
         tooltipMessage: string;
         tooltipType: string;
         tooltipPositionModel: PositionModel,
-        tooltipDisplayingSeconds: number;
-        displayingTimeoutCallback: Function;
+        onHover: boolean;
         fieldName: string;
+        showed: boolean;
     }
 
     class TooltipDirective implements ng.IDirective {
@@ -27,40 +27,49 @@ module CustomerSetting {
                 tooltipMessage: "@",
                 tooltipType: "@",
                 tooltipPositionModel: "@",
-                tooltipDisplayingSeconds: "@",
-                displayingTimeoutCallback: "&",
+                onHover: "@",
                 fieldName: "@"
             };
         }
 
-        public link: ng.IDirectiveLinkFn = (scope: ITooltipScope, element: ng.IAugmentedJQuery) => {
+        public link: ng.IDirectiveLinkFn = (scope: ITooltipScope, wrappedElement: ng.IAugmentedJQuery) => {
+            var element: ng.IAugmentedJQuery = angular.element(wrappedElement);
+            var target: ng.IAugmentedJQuery = angular.element(element.children()[0]);
+
             var template: {} = this.$templateCache.get("Directives/Tooltip/tooltip.htm");
             var tooltip: ng.IAugmentedJQuery = angular.element(template);
+
             var debounceResize: any = debounce(() => {
                 if (scope.tooltipMessage) {
-                    this.calculateTooltipPosition(element, scope.tooltipPositionModel);
+                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel);
                 }
             }, 100);
 
+            scope.tooltipType = scope.tooltipType || "error";
+
+            if (scope.onHover) {
+                element.on("mouseenter", () => scope.showed = true);
+                element.on("mouseleave", () => scope.showed = false);
+            } else {
+                scope.showed = true;
+            }
+
             this.$compile(tooltip)(scope);
-            element.parent().prepend(tooltip);
+            wrappedElement.prepend(tooltip);
 
             scope.$watch("tooltipMessage", () => {
                 if (scope.tooltipMessage) {
-                    this.calculateTooltipPosition(element, scope.tooltipPositionModel);
-
-                    if (scope.tooltipDisplayingSeconds && scope.displayingTimeoutCallback) {
-                        this.$timeout(() => {
-                            scope.displayingTimeoutCallback();
-                        }, +scope.tooltipDisplayingSeconds * 1000);
-                    }
+                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel);
+                    target.addClass("setting-field--" + scope.tooltipType);
+                } else {
+                    target.removeClass("setting-field--" + scope.tooltipType);
                 }
             });
 
             angular.element(this.$window).on("resize", debounceResize);
             this.$rootScope.$on("page-height-changed", () => {
                 if (scope.tooltipMessage) {
-                    this.calculateTooltipPosition(element, scope.tooltipPositionModel);
+                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel);
                 }
             });
         };
@@ -84,9 +93,10 @@ module CustomerSetting {
             this.$rootScope = $rootScope;
         }
 
-        private calculateTooltipPosition(target: ng.IAugmentedJQuery, positionModel: PositionModel): void {
+        private calculateTooltipPosition(wrappedElement: ng.IAugmentedJQuery, positionModel: PositionModel): void {
             this.$timeout(() => {
-                var tooltip: ng.IAugmentedJQuery = angular.element(target[0].previousElementSibling);
+                var tooltip: ng.IAugmentedJQuery = angular.element(wrappedElement.children()[0]);
+                var target: ng.IAugmentedJQuery = angular.element(wrappedElement.children()[1]);
 
                 if (!tooltip || tooltip.length === 0) {
                     return;
@@ -131,20 +141,6 @@ module CustomerSetting {
                     "visibility": "visible"
                 });
             });
-        }
-
-        private resetElementBorder(element: ng.IAugmentedJQuery): void {
-            if (element.hasClass("setting-field--error")) {
-                element.removeClass("setting-field--error");
-            }
-
-            if (element.hasClass("setting-field--warning")) {
-                element.removeClass("setting-field--success");
-            }
-
-            if (element.hasClass("setting-field--success")) {
-                element.removeClass("setting-field--success");
-            }
         }
     }
 

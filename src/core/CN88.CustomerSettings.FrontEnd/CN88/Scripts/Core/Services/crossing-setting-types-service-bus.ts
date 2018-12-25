@@ -1,4 +1,5 @@
 ﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
+/// <reference path="../models/key-value-pair.ts" />
 /// <reference path="../models/setting-type.ts" />
 /// <reference path="../module-registrater.ts" />
 
@@ -31,8 +32,8 @@ module CustomerSetting {
         }
 
         public register(channel: string, promise: ICrossingSettingTypesPromise): void {
-            var isNew: boolean = this.promises.some((promise: KeyValuePair<string, ICrossingSettingTypesPromise>) => {
-                return channel === promise.key;
+            var isNew: boolean = this.promises.every((promise: KeyValuePair<string, ICrossingSettingTypesPromise>) => {
+                return channel !== promise.key;
             });
 
             if (isNew) {

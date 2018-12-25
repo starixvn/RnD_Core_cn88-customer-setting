@@ -88,7 +88,6 @@ module CustomerSetting {
             });
 
             return this.customerLevel < Level.company
-                && this.customerId > 0
                 && this.productId > 0
                 && validSettingTypes;
         }

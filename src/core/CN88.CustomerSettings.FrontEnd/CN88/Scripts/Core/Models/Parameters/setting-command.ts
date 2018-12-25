@@ -8,25 +8,21 @@ module CustomerSetting {
     "use strict";
 
     export class SettingCommand {
-        public uplineLevel: Level;
+        public uplineId: number;
         public setting: Setting;
 
-        constructor(uplineLevel: Level, setting: Setting) {
-            this.uplineLevel = uplineLevel;
+        constructor(uplineId: number, setting: Setting) {
+            this.uplineId = uplineId;
             this.setting = setting;
         }
 
         public validate(): Result {
-            if ((this.uplineLevel && (this.uplineLevel <= Level.member || this.uplineLevel >= Level.company)) || !this.setting) {
-                return Result.invalidParameters;
-            }
-
             return Result.normal;
         }
 
         public toJson(): {} {
             return {
-                uplineLevel: this.uplineLevel,
+                uplineId: this.uplineId,
                 setting: JSON.stringify(this.setting.toJson())
             };
         }

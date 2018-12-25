@@ -71,14 +71,17 @@ module.exports = function (configs) {
 
     gulp.task("product:js:combine", ["product:scripts:compile"], function () {
         var productsConfigs = require(path.join(process.cwd(), configs.gulpDir, configs.configFiles.productsConfig));
+        var libPaths = [
+            path.join(process.cwd(), configs.bower, "angular/angular.js"),
+            path.join(process.cwd(), configs.root, "Libraries/**/*.js")
+        ];
         var streams = [];
 
         productsConfigs.forEach(function (prodConfig) {
-            var sources = [
-                path.join(process.cwd(), configs.bower, "angular/angular.js"),
+            var sources = libPaths.concat([
                 path.join(tempDir, "product-" + prodConfig.productId + ".js"),
                 path.join(sourceDir, "Core/**/*.js")
-            ];
+            ]);
             var destination = path.join(destinationDir, configs.scripts);
 
             if (prodConfig.settingTypes.length > 0) {

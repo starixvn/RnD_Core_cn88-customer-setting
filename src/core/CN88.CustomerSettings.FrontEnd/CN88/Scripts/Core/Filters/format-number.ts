@@ -4,7 +4,7 @@
 module CustomerSetting {
     "use strict";
 
-    function FormatNumber($filter: ng.IFilterService): Function {
+    function FormatNumberFilter($filter: ng.IFilterService): Function {
         var numberFilter = $filter("number");
 
         return (value: number, factor?: number) => {
@@ -14,6 +14,6 @@ module CustomerSetting {
         };
     }
 
-    FormatNumber.$inject = ["$filter"];
-    ModuleRegister.filter("formatNumber", FormatNumber);
+    FormatNumberFilter.$inject = ["$filter"];
+    ModuleRegister.filter("formatNumber", FormatNumberFilter);
 }

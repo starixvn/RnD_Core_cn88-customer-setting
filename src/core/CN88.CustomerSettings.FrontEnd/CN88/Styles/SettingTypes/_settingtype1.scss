@@ -1,12 +1,59 @@
-﻿.setting-type-1 {
-    .block__lbl,
-    .block__value {
-        &--half-width {
-            width: 50%;
+﻿@import "../other";
+@import "../variables";
+
+$sub-header-color: #97141e;
+$sub-header-border-color: #67151b;
+
+.setting-type-1 {
+    .col {
+        @include col(50%, true);
+        padding: 15px 5% 15px 30px;
+
+        &--last {
+            padding-left: 5%;
+            padding-right: 30px;
         }
     }
 
-    .question-block {
-        margin: 5px 0;
+    .row {
+        @include clearfix();
+        margin: 10px 25px;
+    }
+
+    .sub-header {
+        border-bottom: 2 * $border-size solid $sub-header-border-color;
+        color: $sub-header-color;
+        font-weight: bold;
+        margin-bottom: 15px;
+        padding-left: 15px;
+
+        &__title {
+            margin-right: 20px;
+        }
+    }
+
+    .setting-field-wrapper {
+        padding: 0;
+    }
+
+    .customer-credit {
+        margin-bottom: 15px;
+
+        .available-credit, .currency {
+            padding-right: 4px;
+            text-align: right;
+        }
+    }
+
+    .position-taking {
+        .position-taking-constraint {
+            color: $text-color;
+            font-weight: normal;
+            margin: 0 10px;
+
+            &__value {
+                font-weight: bold;
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿$field-border-color: #aeaeae;
+﻿$field-border-color: #cecece;
 $field-focus-border-color: #66afe9;
 $field-error-border-color: #e9322d;
 $field-warning-border-color: #c93;
@@ -13,8 +13,8 @@ $block-ui-overlay: rgba(255, 255, 255, 0.5);
 $tooltip-text-color: #333;
 $tooltip-success-bg-color: #dfffe1;
 $tooltip-success-border-color: #14b22a;
-$tooltip-warning-bg-color: #c93;
-$tooltip-warning-border-color: #ffc;
+$tooltip-warning-bg-color: #ffc;
+$tooltip-warning-border-color: #c93;
 $tooltip-error-bg-color: #ffe8e8;
 $tooltip-error-border-color: #e9322d;
 $tooltip-info-bg-color: #cecece;
@@ -29,16 +29,16 @@ $msg-error-color: #fe0000;
 $msg-success-color: #52a220;
 $msg-warning-color: #7e3d00;
 
-$block-header-bg: #666;
-$block-item-lbl-bg: #f8f0e5;
-
 $border-color: #cecece;
 $border-radius: 1px;
 $border-size: 1px;
 $border-style: solid;
 
-$default-bg: #f8f0e5;
+$default-bg: #fff;
 
+$block-background-color: #f8f0e5;
+$block-header-bg: #666;
+$block-item-lbl-bg: #f8f0e5;
 $block-error-header-bg: #ff6964;
 $block-error-header-color: #fff;
 $block-error-border-color: #fe8989;

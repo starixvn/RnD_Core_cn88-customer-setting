@@ -7,7 +7,11 @@ module CustomerSetting {
 
     export class SuperAccountDetail extends AccountDetail {
         public superMinPT: number;
+        public minSuperMinPT: number;
+        public maxSuperMinPT: number;
         public superMaxPT: number;
+        public minSuperMaxPT: number;
+        public maxSuperMaxPT: number;
         public currency: ICurrency;
         public currencies: ICurrency[];
 
@@ -16,12 +20,17 @@ module CustomerSetting {
         constructor(accountDetail: any, backup: boolean)
         constructor(accountDetail: any, backup: boolean, isNew: boolean)
         constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level)
-        constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null) {
+        constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string)
+        constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
             if (accountDetail) {
-                super(accountDetail, backup, isNew, customerLevel);
+                super(accountDetail, backup, isNew, customerLevel, hashKey);
 
                 this.superMinPT = accountDetail.superMinPT;
+                this.minSuperMinPT = accountDetail.minSuperMinPT;
+                this.maxSuperMinPT = accountDetail.maxSuperMinPT;
                 this.superMaxPT = accountDetail.superMaxPT;
+                this.minSuperMaxPT = accountDetail.minSuperMaxPT;
+                this.maxSuperMaxPT = accountDetail.maxSuperMaxPT;
                 this.currency = accountDetail.currency;
                 this.currencies = accountDetail.currencies;
             }
@@ -29,6 +38,8 @@ module CustomerSetting {
             if (backup) {
                 this.oldSetting = new SuperAccountDetail(this);
             }
+
+            this.ignoredProperties.push("currencies");
         }
 
         public isChanged(): boolean {
@@ -42,31 +53,19 @@ module CustomerSetting {
         }
 
         public validate(): boolean {
-            if (this.isNew) {
-                if (!this.username || this.username.length === 0) {
-                    this.validationState = new ValidationResult("RequiredField", "username");
-
-                    return false;
-                }
-
-                if (!this.password || this.password.length === 0) {
-                    this.validationState = new ValidationResult("RequiredField", "password");
-
-                    return false;
-                }
-
-                if (!this.currency) {
-                    this.validationState = new ValidationResult("RequiredField", "currency");
-
-                    return false;
-                }
-            }
-
-            if (!this.validateSuperMinPT()) {
+            if (!super.validateUsername()) {
                 return false;
             }
 
-            if (!this.validateSuperMaxPT()) {
+            if (!this.validatePassword()) {
+                return false;
+            }
+
+            if (!this.validateCurrency()) {
+                return false;
+            }
+
+            if (!this.validatePT()) {
                 return false;
             }
 
@@ -75,15 +74,47 @@ module CustomerSetting {
             return true;
         }
 
-        public validateSuperMinPT(): boolean {
-            if (this.superMinPT < this.minPT) {
-                this.validationState = new ValidationResult("SuperMinPTMustBeGreaterThanOrEqualTo", "superMinPT", [this.minPT]);
+        protected validatePassword(): boolean {
+            if (this.isNew) {
+                if (!this.password || this.password.length === 0) {
+                    this.validationState = new ValidationResult("RequiredField", "password");
 
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private validateCurrency(): boolean {
+            if (this.isNew) {
+                if (!this.currency) {
+                    this.validationState = new ValidationResult("RequiredField", "currency");
+
+                    return false;
+                }
+
+                if (this.currencies.every((currency: ICurrency) => this.currency.id !== currency.id)) {
+                    this.validationState = new ValidationResult("InvalidCurrency", "currency");
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private validatePT(): boolean {
+            if (!this.validateSuperMinPT()) {
                 return false;
             }
 
-            if (this.superMinPT > this.maxPT) {
-                this.validationState = new ValidationResult("SuperMinPTMustBeLessThanOrEqualTo", "superMinPT", [this.maxPT]);
+            if (!this.validateSuperMaxPT()) {
+                return false;
+            }
+
+            if (this.superMinPT > this.superMaxPT) {
+                this.validationState = new ValidationResult("SuperMinPTMustBeLessThanOrEqualToSuperMaxPT", "superMinPT");
 
                 return false;
             }
@@ -91,15 +122,31 @@ module CustomerSetting {
             return true;
         }
 
-        public validateSuperMaxPT(): boolean {
-            if (this.superMaxPT < this.minPT) {
-                this.validationState = new ValidationResult("SuperMaxPTMustBeGreaterThanOrEqualTo", "superMaxPT", [this.minPT]);
+        private validateSuperMinPT(): boolean {
+            if (this.superMinPT < this.minSuperMinPT) {
+                this.validationState = new ValidationResult("SuperMinPTMustBeGreaterThanOrEqualTo", "superMinPT", [this.minSuperMinPT]);
 
                 return false;
             }
 
-            if (this.superMaxPT > this.maxPT) {
-                this.validationState = new ValidationResult("SuperMaxPTMustLessThanOrEqualTo", "superMaxPT", [this.minPT]);
+            if (this.superMinPT > this.maxSuperMinPT) {
+                this.validationState = new ValidationResult("SuperMinPTMustBeLessThanOrEqualTo", "superMinPT", [this.maxSuperMinPT]);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private validateSuperMaxPT(): boolean {
+            if (this.superMaxPT < this.minSuperMaxPT) {
+                this.validationState = new ValidationResult("SuperMaxPTMustBeGreaterThanOrEqualTo", "superMaxPT", [this.minSuperMaxPT]);
+
+                return false;
+            }
+
+            if (this.superMaxPT > this.maxSuperMinPT) {
+                this.validationState = new ValidationResult("SuperMaxPTMustLessThanOrEqualTo", "superMaxPT", [this.maxSuperMinPT]);
 
                 return false;
             }

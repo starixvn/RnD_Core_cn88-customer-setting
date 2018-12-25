@@ -4,11 +4,11 @@
 module CustomerSetting {
     "use strict";
 
-    function NAValue(): Function {
+    function NAValueFilter(): Function {
         return (value: string) => {
             return value || "---";
         };
     }
 
-    ModuleRegister.filter("naValue", NAValue);
+    ModuleRegister.filter("naValue", NAValueFilter);
 }

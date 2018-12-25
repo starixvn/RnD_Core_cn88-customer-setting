@@ -67,7 +67,7 @@ module CustomerSetting {
 
         public update(): void {
             var editableSettings: Setting = this.setting.getEditableSettingTypes();
-            var changedSettings: Setting = this.setting.getChanges();
+            var changedSettings: Setting = this.settingTypesSharedValuesService.isNew ? editableSettings : this.setting.getChanges();
             var validationResult: Result;
             var command: SettingCommand;
             var path: string = this.settingTypesSharedValuesService.isNew
@@ -121,7 +121,7 @@ module CustomerSetting {
                 this.requestService.request(this.appConfigService.getQueryPath(), query.toJson(), (response: ng.IHttpPromiseCallbackArg<any>) => {
                     this.setting = new Setting(response.data);
                     this.warningMessages = this.setting.warningMessage;
-                    this.settingTypesSharedValuesService.register(this.setting, this.parametersService.uplineLevel);
+                    this.settingTypesSharedValuesService.register(this.setting, this.parametersService.uplineId);
                 });
             }
         }

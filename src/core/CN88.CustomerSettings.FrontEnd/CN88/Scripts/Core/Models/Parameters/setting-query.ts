@@ -2,7 +2,6 @@
 /// <reference path="../exceptions.ts" />
 /// <reference path="abstract-setting-query.ts" />
 
-
 module CustomerSetting {
     "use strict";
 
@@ -10,8 +9,8 @@ module CustomerSetting {
         public customerId: number;
         public isNew: boolean;
 
-        constructor(productId: number, uplineLevel: Level, customerLevel: Level, customerId: number, isNew: boolean) {
-            super(productId, uplineLevel, customerLevel);
+        constructor(productId: number, uplineId: number, customerLevel: Level, customerId: number, isNew: boolean) {
+            super(productId, uplineId, customerLevel);
             this.customerId = customerId;
             this.isNew = isNew;
         }
@@ -21,12 +20,9 @@ module CustomerSetting {
                 customerId: this.customerId,
                 customerLevel: this.customerLevel,
                 productId: this.productId,
-                isCreateNew: this.isNew
+                isCreateNew: this.isNew,
+                uplineId: this.uplineId
             };
-
-            if (this.uplineLevel) {
-                params.uplineLevel = this.uplineLevel;
-            }
 
             return params;
         }

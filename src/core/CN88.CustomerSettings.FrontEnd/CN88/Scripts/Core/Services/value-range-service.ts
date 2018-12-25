@@ -6,24 +6,24 @@ module CustomerSetting {
     "use strict";
 
     export class ValueRangeService {
-        public generateRanges(value: number, min: number, max: number, step: number, roundingFactor: number): Array<KeyValuePair<number, number>> {
-            var ranges: Array<KeyValuePair<number, number>> = new Array<KeyValuePair<number, number>>();
+        public generateRanges(value: number, min: number, max: number, step: number, roundingFactor: number): number[] {
+            var ranges: number[] = [];
 
             min = Math.max(0, min);
             max = Math.max(0, max);
 
             if (value > max) {
-                ranges.push(new KeyValuePair<number, number>(value, value));
+                ranges.push(value);
             }
 
             while (max >= min) {
-                ranges.push(new KeyValuePair<number, number>(max, max));
+                ranges.push(max);
                 max -= step;
                 max = Math.round(max * roundingFactor) / roundingFactor;
             }
 
             if (value < min) {
-                ranges.push(new KeyValuePair<number, number>(value, value));
+                ranges.push(value);
             }
 
             return ranges;

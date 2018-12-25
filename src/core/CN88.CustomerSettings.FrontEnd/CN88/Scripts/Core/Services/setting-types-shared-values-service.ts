@@ -10,11 +10,12 @@ module CustomerSetting {
         public static $inject: string[] = ["parametersService"];
 
         public customerId: number
-        public uplineLevel: Level;
+        public uplineId: number;
         public customerLevel: Level;
         public productId: number;
         public productName: string;
         public isNew: boolean;
+        public hashKey: string;
 
         private parametersService: ParametersService;
 
@@ -22,9 +23,10 @@ module CustomerSetting {
             this.parametersService = parametersService;
         }
 
-        public register(setting: Setting, uplineLevel: Level): void {
-            this.uplineLevel = uplineLevel;
+        public register(setting: Setting, uplineId: number): void {
+            this.uplineId = uplineId;
             this.isNew = this.parametersService.isNew;
+            this.hashKey = this.parametersService.hashKey;
 
             if (setting) {
                 this.customerId = setting.customerId;

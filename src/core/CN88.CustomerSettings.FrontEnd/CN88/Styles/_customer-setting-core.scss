@@ -23,17 +23,14 @@
 
     &--error {
         border-color: $field-error-border-color;
-        border-width: 2 * $border-size;
     }
 
     &--warning {
         border-color: $field-warning-border-color;
-        border-width: 2 * $border-size;
     }
 
     &--success {
         border-color: $field-success-border-color;
-        border-width: 2 * $border-size;
     }
 
     &--has-constraint {
@@ -53,6 +50,10 @@
             top: 3px;
         }
     }
+}
+
+.required-field-mark {
+    color: $error-color;
 }
 
 .btn {
@@ -88,7 +89,7 @@
 }
 
 .block-ui-loading {
-    background: rgba(0, 0, 0, 0) url(images/loading.gif) no-repeat scroll center center;
+    background: rgba(0, 0, 0, 0) url(images/ajax-loader.gif) no-repeat scroll center center;
     bottom: 0;
     left: 0;
     position: fixed;
@@ -354,6 +355,16 @@
     }
 }
 
+.icon {
+    background: {
+        image: url("Images/sprite.png");
+        position: 0 0;
+        repeat: no-repeat;
+    }
+
+    display: inline-block;
+}
+
 .msg-container {
     @include border($color: $msg-container-border-color);
     background-color: $msg-container-bg;
@@ -367,7 +378,7 @@
     display: -moz-box;
     display: -ms-flexbox;
     display: flex;
-    padding: 4px 16px 4px 40px;
+    padding: 4px 16px;
 
     &__content {
         display: inline-block;
@@ -380,7 +391,7 @@
     }
 
     &__icon {
-        height: 13px;
+        height: 20px;
         vertical-align: middle;
         width: 14px;
     }
@@ -394,7 +405,7 @@
         color: $msg-success-color;
 
         .msg__icon {
-            background-position: -65px 0;
+            background-position: -65px 3px;
         }
     }
 
@@ -402,7 +413,7 @@
         color: $msg-warning-color;
 
         .msg__icon {
-            background-position: -51px 0;
+            background-position: -51px 3px;
         }
     }
 
@@ -410,7 +421,7 @@
         color: $msg-error-color;
 
         .msg__icon {
-            background-position: -51px 0;
+            background-position: -51px 3px;
         }
     }
 }
@@ -418,7 +429,7 @@
 .block {
     @include border();
     @include clearfix();
-    background-color: $default-bg;
+    background-color: $block-background-color;
     margin-bottom: 10px;
 
     &--error {

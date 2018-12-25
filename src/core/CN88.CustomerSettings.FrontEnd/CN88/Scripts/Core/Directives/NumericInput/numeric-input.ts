@@ -8,8 +8,8 @@ module CustomerSetting {
         precision: number;
     }
 
-    class NumericInput implements ng.IDirective {
-        public static $inject: string[] = ["$compile", "$filter"];
+    class NumericInputDirective implements ng.IDirective {
+        public static $inject: string[] = ["$filter"];
 
         public restrict: string = "A";
 
@@ -19,8 +19,11 @@ module CustomerSetting {
             };
         }
 
-        public link: ng.IDirectiveLinkFn = (scope: INumericInputScope, element: ng.IAugmentedJQuery) => {
+        public link: ng.IDirectiveLinkFn = (scope: INumericInputScope, originalElement: ng.IAugmentedJQuery) => {
+            var element: ng.IAugmentedJQuery = angular.element(originalElement[0]);
             var modelCtrl: any = element.controller("ngModel");
+
+            scope.precision = scope.precision || 0;
 
             // Chrome has a weird behavior with the mouseup event on textboxes.
             // The position of the cursor is set on this event so that once it is fired, the selection will be removed.
@@ -54,7 +57,7 @@ module CustomerSetting {
                 }
 
                 if ([110, 190].indexOf(event.keyCode) >= 0) {
-                    if (numberParts.length > 1) {
+                    if (numberParts.length > 1 || scope.precision === 0) {
                         event.preventDefault();
 
                         return;
@@ -135,5 +138,5 @@ module CustomerSetting {
         }
     }
 
-    ModuleRegister.directive("numericInput", NumericInput);
+    ModuleRegister.directive("numericInput", NumericInputDirective);
 }

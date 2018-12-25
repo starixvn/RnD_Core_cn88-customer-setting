@@ -4,12 +4,12 @@
 module CustomerSetting {
     "use strict";
 
-    function Unsafe($sce: ng.ISCEService): Function {
+    function UnsafeFilter($sce: ng.ISCEService): Function {
         return (value: string) => {
             return $sce.trustAsHtml(value);
         };
     }
 
-    Unsafe.$inject = ["$sce"];
-    ModuleRegister.filter("unsafe", Unsafe);
+    UnsafeFilter.$inject = ["$sce"];
+    ModuleRegister.filter("unsafe", UnsafeFilter);
 }

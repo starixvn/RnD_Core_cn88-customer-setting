@@ -1,0 +1,45 @@
+﻿<div class="customer-credit">
+    <div class="sub-header">{{::('Credit' | settingType1Label)}}</div>
+    <div data-ng-if="customerLevel === avaiCustomerLevels.super">
+        <div class="row">
+            <label class="w50-percent">{{::('Currency' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent">
+                <select class="setting-field setting-field--fullwidth"
+                        data-ng-if="isNew"
+                        data-ng-model="accountDetail.currency"
+                        data-ng-options="currency.name for currency in accountDetail.currencies track by currency.id"></select>
+                <label class="currency" data-ng-if="!isNew">{{accountDetail.currency.name}}</label>
+            </div>
+        </div>
+        <div class="row">
+            <label class="w50-percent">{{::('Credit' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'credit'}}">
+                <input type="text"
+                       maxlength="14"
+                       class="setting-field setting-field--fullwidth setting-field--number"
+                       data-numeric-input
+                       data-ng-model="accountDetail.credit" />
+            </div>
+        </div>
+    </div>
+    <div data-ng-if="customerLevel !== avaiCustomerLevels.super">
+        <div class="row">
+            <label class="w50-percent">{{::('Credit' | settingType1Label)}}<span class="required-field-mark">*</span></label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'credit'}}">
+                <input type="text"
+                       maxlength="14"
+                       class="setting-field setting-field--fullwidth setting-field--number"
+                       data-numeric-input
+                       data-ng-model="accountDetail.credit" />
+            </div>
+        </div>
+        <div class="row">
+            <label class="w50-percent">{{::('AvailableCredit' | settingType1Label)}}</label>
+            <label class="w50-percent available-credit">{{accountDetail.availableCredit | formatNumber}}</label>
+        </div>
+    </div>
+</div>

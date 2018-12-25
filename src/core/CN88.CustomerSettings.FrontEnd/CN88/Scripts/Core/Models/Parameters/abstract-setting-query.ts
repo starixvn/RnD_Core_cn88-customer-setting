@@ -6,8 +6,9 @@ module CustomerSetting {
 
     export class AbstractSettingQuery {
         private prodId: number;
-        private uplineLv: Level;
         private custLv: Level;
+
+        public uplineId: number;
 
         public get productId(): number {
             return this.prodId;
@@ -19,22 +20,6 @@ module CustomerSetting {
             }
 
             this.prodId = productId;
-        }
-
-        public get uplineLevel(): Level {
-            return this.uplineLv;
-        }
-
-        public set uplineLevel(level: Level) {
-            if (level < Level.agent) {
-                throw Exceptions.invalidParam("uplineLevel");
-            }
-
-            if (level === Level.company) {
-                level = null;
-            }
-
-            this.uplineLv = level;
         }
 
         public get customerLevel(): Level {
@@ -49,9 +34,9 @@ module CustomerSetting {
             this.custLv = level;
         }
 
-        constructor(productId: number, uplineLevel: Level, customerLevel: Level) {
+        constructor(productId: number, uplineId: number, customerLevel: Level) {
             this.productId = productId;
-            this.uplineLevel = uplineLevel;
+            this.uplineId = uplineId;
             this.customerLevel = customerLevel;
         }
     }
