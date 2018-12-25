@@ -21,6 +21,7 @@
         private const int SettingTypeId = 1;
         private const int CurrencyCacheTimeInMinutes = 5;
         private const string CurrencyCacheKey = "CN88.CustomerSetting.CurrencyCacheKey";
+        private static readonly List<string> defaultGroups = new List<string> { "CNA", "CNB", "CNC", "CND" };
 
         public SettingTypeServiceImpl() :
             this(null, null, null, null)
@@ -50,27 +51,31 @@
         private SettingType GetCreateNewAccountDetail(CustomerSettingQuery query)
         {
             var settingItem = GetDefaultValueForInsertCustomer(query.CustomerLevel, query.UplineId, query.ProductId);
-
-            var currencies = query.CustomerLevel.IsSuperLevel()
-                                ? GetCurrencies()
-                                : Enumerable.Empty<Currency>();
-            settingItem.Currency = currencies.FirstOrDefault();
-
             var createCustomerInfo = GetCreateCustomerInfo(query.CustomerLevel, query.UplineId);
 
             settingItem.AvailableCredit = createCustomerInfo.AvailableCredit;
             settingItem.UplineUsername = createCustomerInfo.UplineUsername;
             settingItem.UsernameSuffix = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString());
-            settingItem.UGroup = query.CustomerLevel.IsMemberLevel() ? "CNA" : null;
-            settingItem.UGroups = query.CustomerLevel.IsMemberLevel() ? new List<string> { "CNA", "CNB", "CNC", "CND" } : null;
-            settingItem.Currencies = currencies;
 
-            var settingType = new SettingType
+            if (query.CustomerLevel.IsMemberLevel())
+            {
+                settingItem.UGroup = defaultGroups.FirstOrDefault();
+                settingItem.UGroups = defaultGroups;
+            }
+
+            if (query.CustomerLevel.IsSuperLevel())
+            {
+                var currencies = query.CustomerLevel.IsSuperLevel()
+                                ? GetCurrencies()
+                                : Enumerable.Empty<Currency>();
+                settingItem.Currency = currencies.FirstOrDefault();
+                settingItem.Currencies = currencies;
+            }
+
+            return new SettingType
             {
                 SettingItems = new List<ISettingItem> { settingItem }
             };
-
-            return settingType;
         }
 
         private AccountDetail GetDefaultValueForInsertCustomer(
@@ -86,15 +91,15 @@
             switch(level.Value)
             {
                 case Level.SuperLevelId:
-                    accountDetail = GetDefaultSuperAccountDetail(uplineId, true);
+                    accountDetail = GetSuperAccountDetail(uplineId, true);
                     break;
 
                 case Level.MasterLevelId:
-                    accountDetail = GetDefaultMasterAccountDetail(uplineId, true);
+                    accountDetail = GetMasterAccountDetail(uplineId, true);
                     break;
 
                 default:
-                    accountDetail = GetDefaultAgentAccountDetail(uplineId, true);
+                    accountDetail = GetAgentAccountDetail(uplineId, true);
                     break;
             }
 
@@ -112,20 +117,20 @@
             return accountDetail;
         }
 
-        private AccountDetail GetDefaultSuperAccountDetail(int custId, bool isCreateNew)
+        private AccountDetail GetSuperAccountDetail(int custId, bool isCreateNew)
             => isCreateNew
                 ? DynamicRepository.Get<SuperAccountDetail>(new GetDefaultPTSettingCriteria(Level.Super.Value, custId))
-                : null;
+                : DynamicRepository.Get<SuperAccountDetail>(new GetPTSettingCriteria(Level.Super.Value, custId));
 
-        private AccountDetail GetDefaultMasterAccountDetail(int custId, bool isCreateNew)
+        private AccountDetail GetMasterAccountDetail(int custId, bool isCreateNew)
             => isCreateNew
                 ? DynamicRepository.Get<MasterAccountDetail>(new GetDefaultPTSettingCriteria(Level.Master.Value, custId))
-                : null;
+                : DynamicRepository.Get<MasterAccountDetail>(new GetPTSettingCriteria(Level.Master.Value, custId));
 
-        private AccountDetail GetDefaultAgentAccountDetail(int custId, bool isCreateNew)
+        private AccountDetail GetAgentAccountDetail(int custId, bool isCreateNew)
             => isCreateNew
                 ? DynamicRepository.Get<AgentAccountDetail>(new GetDefaultPTSettingCriteria(Level.Agent.Value, custId))
-                : null;
+                : DynamicRepository.Get<AgentAccountDetail>(new GetPTSettingCriteria(Level.Agent.Value, custId));
 
         private CreateCustomerInfoDto GetCreateCustomerInfo(Level level, int uplineId)
             => level.IsNotSuperLevel()
@@ -148,7 +153,10 @@
                 case Level.SuperLevelId:
                     ptItem = new SuperAccountDetail
                     {
-                        MaxPT = 90,
+                        MinSuperMinPT = 0,
+                        MaxSuperMinPT = 80,
+                        MinSuperMaxPT = 80,
+                        MaxSuperMaxPT = 90,
                         SuperMaxPT = isCreateNew ? 0 : 80,
                         SuperMinPT = isCreateNew ? 0 : 20,
                     };
@@ -158,7 +166,8 @@
                 case Level.MasterLevelId:
                     ptItem = new MasterAccountDetail
                     {
-                        MaxPT = 80,
+                        MinSuperPT = 0,
+                        MaxSuperPT = 80,
                         SuperPT = isCreateNew ? 0 : 10,
                     };
 
@@ -167,8 +176,12 @@
                 case Level.AgentLevelId:
                     ptItem = new AgentAccountDetail
                     {
-                        MaxPT = 70,
-                        MinPT = 10,
+                        MinAllowedPT = 70,
+                        MaxAllowedPT = 10,
+                        MinAgentPT = 0,
+                        MaxAgentPT = 70,
+                        MinMasterPT = 0,
+                        MaxMasterPT = 70,
                         MasterPT = isCreateNew ? 0 : 40,
                         AgentPT = isCreateNew ? 0 : 20,
                     };
@@ -205,8 +218,33 @@
         {
             var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetail
                 ?? throw new InvalidOperationException("First Setting Item cannot be null");
+            var createNewParams = CreateAddNewParams(settingContext, settingItem);
 
-            var createNewParams = new Dictionary<string, object>
+            switch (command.Setting.CustomerLevel.Value)
+            {
+                case Level.SuperLevelId:
+                    AddParamsForAddNewSuper(settingItem, createNewParams);
+                    break;
+
+                case Level.MasterLevelId:
+                    AddParamsForAddNewMaster(settingContext, command, settingItem, createNewParams);
+                    break;
+
+                case Level.AgentLevelId:
+                    AddParamsForAddNewAgent(settingContext, command, settingItem, createNewParams);
+                    break;
+
+                case Level.MemberLevelId:
+                    AddParamsForAddNewMember(settingContext, command, settingItem, createNewParams);
+                    break;
+            }
+
+            return createNewParams;
+        }
+
+        private static Dictionary<string, object> CreateAddNewParams(ISettingContext settingContext, AccountDetail settingItem)
+        {
+            return new Dictionary<string, object>
             {
                 { "username", settingItem.Username ?? throw new InvalidOperationException("Username cannot be null") },
                 { "userpwd", settingItem.Password ?? "56E8A2D78170E87C928E480797CC73" },
@@ -217,39 +255,38 @@
                 { "language", settingContext.Language },
                 { "creator", settingContext.Actor.Id }
             };
+        }
 
-            switch(command.Setting.CustomerLevel.Value)
-            {
-                case Level.SuperLevelId:
-                    createNewParams.Add("site", "CN88");
-                    createNewParams.Add("currency", settingItem.Currency?.Id);
-                    createNewParams.Add("lastname", settingItem.LastName ?? string.Empty);
-                    createNewParams.Add("phone", settingItem.Phone ?? string.Empty);
-                    createNewParams.Add("mobilephone", settingItem.MobilePhone ?? string.Empty);
-                    createNewParams.Add("fax", settingItem.Fax ?? string.Empty);
-                    createNewParams.Add("ptsetting", settingItem.ToXml());
-                    break;
+        private static void AddParamsForAddNewMember(ISettingContext settingContext, CreateCustomerCommand command, AccountDetail settingItem, Dictionary<string, object> createNewParams)
+        {
+            createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
+            createNewParams.Add("recommend", command.UplineId);
+            createNewParams.Add("ugroup", settingItem.UGroup);
+        }
 
-                case Level.MasterLevelId:
-                    createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
-                    createNewParams.Add("srecommend", command.UplineId);
-                    createNewParams.Add("ptsetting", settingItem.ToXml());
-                    break;
+        private static void AddParamsForAddNewAgent(ISettingContext settingContext, CreateCustomerCommand command, AccountDetail settingItem, Dictionary<string, object> createNewParams)
+        {
+            createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
+            createNewParams.Add("mrecommend", command.UplineId);
+            createNewParams.Add("ptsetting", settingItem.ToXml());
+        }
 
-                case Level.AgentLevelId:
-                    createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
-                    createNewParams.Add("mrecommend", command.UplineId);
-                    createNewParams.Add("ptsetting", settingItem.ToXml());
-                    break;
+        private static void AddParamsForAddNewMaster(ISettingContext settingContext, CreateCustomerCommand command, AccountDetail settingItem, Dictionary<string, object> createNewParams)
+        {
+            createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
+            createNewParams.Add("srecommend", command.UplineId);
+            createNewParams.Add("ptsetting", settingItem.ToXml());
+        }
 
-                case Level.MemberLevelId:
-                    createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
-                    createNewParams.Add("recommend", command.UplineId);
-                    createNewParams.Add("ugroup", settingItem.UGroup);
-                    break;
-            }
-
-            return createNewParams;
+        private static void AddParamsForAddNewSuper(AccountDetail settingItem, Dictionary<string, object> createNewParams)
+        {
+            createNewParams.Add("site", "CN88");
+            createNewParams.Add("currency", settingItem.Currency?.Id);
+            createNewParams.Add("lastname", settingItem.LastName ?? string.Empty);
+            createNewParams.Add("phone", settingItem.Phone ?? string.Empty);
+            createNewParams.Add("mobilephone", settingItem.MobilePhone ?? string.Empty);
+            createNewParams.Add("fax", settingItem.Fax ?? string.Empty);
+            createNewParams.Add("ptsetting", settingItem.ToXml());
         }
 
         public override SettingResult UpdateCustomerSettingType(

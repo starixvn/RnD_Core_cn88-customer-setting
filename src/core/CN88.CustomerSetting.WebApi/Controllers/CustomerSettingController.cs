@@ -46,6 +46,10 @@
             => createCustomerService.Create(request.GetSettingContext(), request.GetCreateCustomerCommand());
 
         [HttpGet]
+        public IResult CheckExistedUsername(string username)
+            => createCustomerService.IsUsernameExisted(username);
+
+        [HttpGet]
         public string GetTemplate([FromQuery]bool isIe8)
         {
             string template = string.Empty;

@@ -32,6 +32,16 @@
             return Content(updateResult.Content);
         }
 
+        [HttpGet, CustomerSettingAuth(IsUpdate = false)]
+        public ContentResult CheckExistedUsername(string username)
+        {
+            IRestResponse result = _customerSettingService.CheckExistedUsername(username);
+            Response.StatusCode = (int)result.StatusCode;
+            Response.TrySkipIisCustomErrors = true;
+
+            return Content(result.Content);
+        }
+
         private static void SetActorInformation(CreateCustomerRequest request)
         {
             if (request != null)

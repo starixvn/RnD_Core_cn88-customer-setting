@@ -34,9 +34,5 @@
         public IEnumerable<string> UGroups { get; set; }
 
         public IEnumerable<Currency> Currencies { get; set; }
-
-        public decimal MaxPT { get; set; }
-
-        public decimal MinPT { get; set; }
     }
 }

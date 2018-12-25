@@ -12,7 +12,7 @@
     public class SettingTypeServiceImpl : SettingTypeServiceBase, SettingTypeService
     {
         public override SettingType GetCustomerSettingType(ISettingContext settingContext, CustomerSettingQuery query)
-            => new CommBetSetting();
+            => new SettingType();
 
         public override IDictionary<string, object> GetCreateCustomerParams(
             ISettingContext settingContext,

@@ -12,5 +12,7 @@
         IRestResponse CreateCustomer(CreateCustomerRequest create);
 
         IRestResponse QueryCustomerSettingTemplate(bool isIe8);
+
+        IRestResponse CheckExistedUsername(string username);
     }
 }

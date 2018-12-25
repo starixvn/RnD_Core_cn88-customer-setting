@@ -17,5 +17,10 @@
       <Mapping DataField="SportType" ObjectProperty="SportTypeId" />
       <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
     </Setting>
+    <Setting Key="CS_CustSetting_PTSetting_Sel" SpName="CS_CustSetting_PTSetting_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600">
+      <Parameters>
+        <Parameter Name="IsTest" Value="true" />
+      </Parameters>
+    </Setting>
   </Function>
 </Functions>

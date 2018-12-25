@@ -97,5 +97,14 @@
 
             return UpdateTimeOutResponse(restReponse);
         }
+
+        public IRestResponse CheckExistedUsername(string username)
+        {
+            IRestRequest request = new RestRequest("/customersetting/CheckExistedUsername", Method.GET);
+
+            request.AddParameter("username", username);
+
+            return _restClient.Execute(request);
+        }
     }
 }

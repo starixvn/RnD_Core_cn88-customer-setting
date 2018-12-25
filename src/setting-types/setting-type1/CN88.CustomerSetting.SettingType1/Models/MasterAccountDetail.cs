@@ -7,6 +7,10 @@
 
         public decimal SuperPT { get; set; }
 
+        public decimal MinSuperPT { get; set; }
+
+        public decimal MaxSuperPT { get; set; }
+
         public override string ToXml()
             => string.Format(PTXmlFormat, base.ToXml(), SuperPT);
     }

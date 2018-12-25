@@ -23,5 +23,6 @@
       <Setting Key="CS_CustomerIns_SAg" SpName="CS_CustomerIns_SAg" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />
       <Setting Key="CS_CustomerIns_MAg" SpName="CS_CustomerIns_MAg" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />
       <Setting Key="CS_CustomerIns_Ag" SpName="CS_CustomerIns_Ag" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />
+      <Setting Key="Age_CustomerCheckExists" SpName="Age_CustomerCheckExists" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" />
     </Function>
 </Functions>

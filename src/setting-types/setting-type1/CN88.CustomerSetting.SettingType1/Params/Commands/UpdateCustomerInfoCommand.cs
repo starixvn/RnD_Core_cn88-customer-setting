@@ -5,7 +5,7 @@
     using System.Text;
     using Fanex.Data.Repository;
 
-    public class UpdateCustomerDetailCommand : NonQueryCommand
+    public class UpdateCustomerInfoCommand : NonQueryCommand
     {
         public int CustId { get; set; }
 

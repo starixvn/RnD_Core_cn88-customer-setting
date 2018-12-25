@@ -5,7 +5,7 @@
     using System.Text;
     using Fanex.Data.Repository;
 
-    public class UpdateSuperAccountDetailCommand : UpdateCustomerDetailCommand
+    public class UpdateSuperCustomerInfoCommand : UpdateCustomerInfoCommand
     {
         public string LastName { get; set; }
 

@@ -9,9 +9,9 @@
             int uplineId,
             string hashKey)
         {
-            Setting = setting ?? throw new ArgumentNullException(nameof(setting), "Setting cannot be null when update customer setting.");
+            Setting = setting ?? throw new ArgumentNullException(nameof(setting), "Setting cannot be null when create customer.");
             UplineId = uplineId;
-            HashKey = hashKey;
+            HashKey = hashKey ?? throw new ArgumentNullException(nameof(setting), "Haskey cannot be null when create customer.");
         }
 
         public ISetting Setting { get; }

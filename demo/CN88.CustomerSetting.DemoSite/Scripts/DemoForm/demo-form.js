@@ -73,6 +73,22 @@ var DemoFrom;
             var uplineId = this.target.uplineId;
             var role = this.target.role;
             $.ajax({
+                method: "GET",
+                url: this.resolveUrl("CN88/CreateCustomer/CheckExistedUsername"),
+                data: {
+                    username: "SupertestCN88Ricky1d"
+                }
+            }).done(function (result) { console.log(result); });
+
+            $.ajax({
+                method: "GET",
+                url: this.resolveUrl("CN88/CreateCustomer/CheckExistedUsername"),
+                data: {
+                    username: "SupertestCN88Ricky10d"
+                }
+            }).done(function (result) { console.log(result); });
+
+            $.ajax({
                 method: "POST",
                 url: this.resolveUrl("CN88/ViewCustomerSetting/QuerySetting"),
                 data: {
@@ -214,17 +230,17 @@ var DemoFrom;
                     subAccId = 111;
                     break;
                 case Role.super:
-                    actorId = 33489328;
+                    actorId = 33489322;
                     name = "SuperTestCNE";
                     subAccId = 3;
                     break;
                 case Role.master:
-                    actorId = 33489329;
+                    actorId = 33489350;
                     name = "SuperTestCNE0001";
                     subAccId = 728497;
                     break;
                 case Role.agent:
-                    actorId = 33489330;
+                    actorId = 33489365;
                     name = "SuperTestCNE00010001";
                     subAccId = 728498;
                     break;
@@ -241,19 +257,19 @@ var DemoFrom;
                     name = "SuperTestCNE";
                     break;
                 case Role.master:
-                    id = 0;
+                    id = 33489350;
                     name = "SuperTestCNE0001";
-                    uplineId = 33489328;
+                    uplineId = 33489322;
                     break;
                 case Role.agent:
-                    id = 33418960;
+                    id = 33489365;
                     name = "SuperTestCNE00010001";
-                    uplineId = 33489329;
+                    uplineId = 33489350;
                     break;
                 case Role.member:
                     id = 0;
                     name = "SuperTestCNE000100010001";
-                    uplineId = 33489330;
+                    uplineId = 33489365;
                     break;
             }
             return this.createSingleTarget(id, name, role, uplineId);
