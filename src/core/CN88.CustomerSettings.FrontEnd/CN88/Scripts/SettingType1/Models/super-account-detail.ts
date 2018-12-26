@@ -40,6 +40,10 @@ module CustomerSetting {
             }
 
             this.ignoredProperties.push("currencies");
+
+            if (!this.isNew) {
+                this.ignoredProperties.push("currency");
+            }
         }
 
         public isChanged(): boolean {

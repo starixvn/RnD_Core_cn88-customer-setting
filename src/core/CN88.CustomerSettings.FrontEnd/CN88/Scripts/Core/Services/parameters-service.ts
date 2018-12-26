@@ -1,4 +1,5 @@
 ﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
+/// <reference path="../models/enums/level.ts" />
 /// <reference path="../models/parameters/setting-command.ts" />
 /// <reference path="../models/parameters/setting-query.ts" />
 /// <reference path="../models/defaults.ts" />
@@ -17,6 +18,10 @@ module CustomerSetting {
             return this.system;
         }
 
+        public get actorLevel(): Level {
+            return this.actorLv;
+        }
+
         public get language(): string {
             return this.lang;
         }
@@ -29,10 +34,11 @@ module CustomerSetting {
             return this.isCreateNew;
         }
 
-        private query: SettingQuery;
-        private lang: string;
         private system: number;
+        private actorLv: Level;
+        private lang: string;
         private isCreateNew: boolean;
+        private query: SettingQuery;
 
         private $window: ng.IWindowService;
 
@@ -62,6 +68,7 @@ module CustomerSetting {
                 this.system = params.system || Defaults.system;
                 this.isCreateNew = params.isCreateNew || false;
                 this.hashKey = params.hashKey;
+                this.actorLv = params.actorLevel ? params.actorLevel : undefined;
 
                 this.query = new SettingQuery(
                     params.productId,

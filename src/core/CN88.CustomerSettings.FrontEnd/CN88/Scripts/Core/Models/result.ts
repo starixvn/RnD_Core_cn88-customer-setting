@@ -154,17 +154,27 @@ module CustomerSetting {
 
     export class UpdatingSettingResult extends Result {
         public subResults: Array<CustomerSettingResult>;
+        public isFailed: boolean;
 
         public get isSuccessful(): boolean {
-            return !this.subResults
-                || this.subResults.every((result: CustomerSettingResult) => {
+            if (this.subResults) {
+                var allSubResultsSucceeded: boolean = this.subResults.every((result: CustomerSettingResult) => {
                     return result.isSuccessful;
                 });
+
+                return !this.isFailed && allSubResultsSucceeded;
+            }
+
+            return !this.isFailed;
         }
 
         constructor(result: any) {
             if (result) {
                 super(result.code, result.message, result.msgType);
+
+                if (result.isFailed) {
+                    this.isFailed = result.isFailed;
+                }
 
                 if (result.subResults) {
                     this.subResults = new Array<CustomerSettingResult>();

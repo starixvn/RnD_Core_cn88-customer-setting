@@ -2,23 +2,31 @@
     <div class="sub-header">{{::('GeneralData' | settingType1Label)}}</div>
     <div data-ng-if="customerLevel === avaiCustomerLevels.super">
         <div class="row">
-            <label class="w50-percent">{{::('Username' | settingType1Label)}}<span class="required-field-mark">*</span></label>
+            <label class="w50-percent">
+                <span>{{::('Username' | settingType1Label)}}</span>
+                <span class="required-field-mark" data-ng-if="isNew"> *</span>
+            </label>
             <div class="setting-field-wrapper w50-percent"
+                 data-ng-if="isNew"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'username'}}">
                 <input type="text"
-                       maxlength="50"
+                       maxlength="30"
                        class="setting-field setting-field--fullwidth"
                        data-ng-model="accountDetail.username" />
             </div>
+            <label data-ng-if="!isNew">{{accountDetail.username}}</label>
         </div>
         <div class="row" data-ng-if="isNew">
-            <label class="w50-percent">{{::('Password' | settingType1Label)}}<span class="required-field-mark">*</span></label>
+            <label class="w50-percent">
+                <span>{{::('Password' | settingType1Label)}}</span>
+                <span class="required-field-mark"> *</span>
+            </label>
             <div class="setting-field-wrapper w50-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'password'}}">
                 <input type="password"
-                       maxlength="40"
+                       maxlength="30"
                        class="setting-field setting-field--fullwidth"
                        data-ng-model="accountDetail.password" />
             </div>
@@ -70,9 +78,201 @@
         </div>
     </div>
     <div data-ng-if="customerLevel === avaiCustomerLevels.master">
+        <div class="row">
+            <label class="w50-percent">
+                <span>{{::('Username' | settingType1Label)}}</span>
+                <span class="required-field-mark" data-ng-if="isNew"> *</span>
+            </label>
+            <div class="setting-field-wrapper w50-percent" data-ng-if="isNew">
+                <span>{{accountDetail.uplineUsername}}</span>
+                <username-suffix-group></username-suffix-group>
+            </div>
+            <label data-ng-if="!isNew">{{accountDetail.username}}</label>
+        </div>
+        <div class="row">
+            <label class="w50-percent">{{::('Name' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent">
+                <input type="text"
+                       maxlength="30"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.firstName" />
+            </div>
+        </div>
+        <div class="row" data-ng-if="isNew">
+            <label class="w50-percent">
+                <span>{{::('Password' | settingType1Label)}}</span>
+                <span class="required-field-mark"> *</span>
+                <span data-on-hover="true"
+                      data-tooltip
+                      data-tooltip-type="warning"
+                      data-tooltip-message="{{'PasswordRules' | settingType1Message}}">
+                    <span class="icon icon--info"></span>
+                </span>
+            </label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'password'}}">
+                <input type="password"
+                       maxlength="18"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.password" />
+            </div>
+        </div>
+        <div class="row" data-ng-if="isNew">
+            <label class="w50-percent">
+                <span>{{::('ConfirmPassword' | settingType1Label)}}</span>
+                <span class="required-field-mark"> *</span>
+            </label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'confirmPassword'}}">
+                <input type="password"
+                       maxlength="18"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.confirmPassword" />
+            </div>
+        </div>
     </div>
     <div data-ng-if="customerLevel === avaiCustomerLevels.agent">
+        <div class="row" data-ng-if="isNew">
+            <label class="w50-percent">
+                <span>{{::('Master' | settingType1Label)}}</span>
+            </label>
+            <label>{{accountDetail.uplineUsername}}</label>
+        </div>
+        <div class="row">
+            <label class="w50-percent">
+                <span>{{::('Username' | settingType1Label)}}</span>
+                <span class="required-field-mark" data-ng-if="isNew"> *</span>
+            </label>
+            <div class="setting-field-wrapper w50-percent" data-ng-if="isNew">
+                <span>{{accountDetail.uplineUsername}}</span>
+                <username-suffix-group></username-suffix-group>
+            </div>
+            <label data-ng-if="!isNew">{{accountDetail.username}}</label>
+        </div>
+        <div class="row">
+            <label class="w50-percent">{{::('Name' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent">
+                <input type="text"
+                       maxlength="30"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.firstName" />
+            </div>
+        </div>
+        <div class="row" data-ng-if="isNew">
+            <label class="w50-percent">
+                <span>{{::('Password' | settingType1Label)}}</span>
+                <span class="required-field-mark"> *</span>
+                <span data-on-hover="true"
+                      data-tooltip
+                      data-tooltip-type="warning"
+                      data-tooltip-message="{{'PasswordRules' | settingType1Message}}">
+                    <span class="icon icon--info"></span>
+                </span>
+            </label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'password'}}">
+                <input type="password"
+                       maxlength="18"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.password" />
+            </div>
+        </div>
+        <div class="row" data-ng-if="isNew">
+            <label class="w50-percent">
+                <span>{{::('ConfirmPassword' | settingType1Label)}}</span>
+                <span class="required-field-mark"> *</span>
+            </label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'confirmPassword'}}">
+                <input type="password"
+                       maxlength="18"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.confirmPassword" />
+            </div>
+        </div>
     </div>
     <div data-ng-if="customerLevel === avaiCustomerLevels.member">
+        <div class="row" data-ng-if="isNew">
+            <label class="w50-percent">
+                <span>{{::('Agent' | settingType1Label)}}</span>
+            </label>
+            <label>{{accountDetail.uplineUsername}}</label>
+        </div>
+        <div class="row">
+            <label class="w50-percent">
+                <span>{{::('Username' | settingType1Label)}}</span>
+                <span class="required-field-mark" data-ng-if="isNew"> *</span>
+            </label>
+            <div class="setting-field-wrapper w50-percent" data-ng-if="isNew">
+                <span>{{accountDetail.uplineUsername}}</span>
+                <username-suffix-group></username-suffix-group>
+            </div>
+            <label data-ng-if="!isNew">{{accountDetail.username}}</label>
+        </div>
+        <div class="row">
+            <label class="w50-percent">
+                <span>{{::('SpredGroup' | settingType1Label)}}</span>
+                <span class="required-field-mark" data-ng-if="isNew"> *</span>
+                <span data-on-hover="true"
+                      data-tooltip
+                      data-tooltip-type="warning"
+                      data-tooltip-message="{{'SpreadGroupRule' | settingType1Message}}">
+                    <span class="icon icon--info"></span>
+                </span>
+            </label>
+            <div class="setting-field-wrapper w50-percent" data-ng-if="isNew">
+                <select class="setting-field setting-field--fullwidth"
+                        data-ng-model="accountDetail.uGroup"
+                        data-ng-options="group for group in accountDetail.uGroups"></select>
+            </div>
+            <label data-ng-if="!isNew">{{accountDetail.uGroup}}</label>
+        </div>
+        <div class="row">
+            <label class="w50-percent">{{::('Name' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w50-percent">
+                <input type="text"
+                       maxlength="30"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.firstName" />
+            </div>
+        </div>
+        <div class="row" data-ng-if="isNew">
+            <label class="w50-percent">
+                <span>{{::('Password' | settingType1Label)}}</span>
+                <span class="required-field-mark"> *</span>
+                <span data-on-hover="true"
+                      data-tooltip
+                      data-tooltip-type="warning"
+                      data-tooltip-message="{{'PasswordRules' | settingType1Message}}">
+                    <span class="icon icon--info"></span>
+                </span>
+            </label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'password'}}">
+                <input type="password"
+                       maxlength="18"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.password" />
+            </div>
+        </div>
+        <div class="row" data-ng-if="isNew">
+            <label class="w50-percent">
+                <span>{{::('ConfirmPassword' | settingType1Label)}}</span>
+                <span class="required-field-mark"> *</span>
+            </label>
+            <div class="setting-field-wrapper w50-percent"
+                 data-tooltip
+                 data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'confirmPassword'}}">
+                <input type="password"
+                       maxlength="18"
+                       class="setting-field setting-field--fullwidth"
+                       data-ng-model="accountDetail.confirmPassword" />
+            </div>
+        </div>
     </div>
 </div>

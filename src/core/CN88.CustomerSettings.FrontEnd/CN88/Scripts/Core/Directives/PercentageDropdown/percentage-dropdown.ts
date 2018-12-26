@@ -1,4 +1,5 @@
 ﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../services/value-range-service.ts" />
 /// <reference path="../../module-registrater.ts" />
 
 module CustomerSetting {

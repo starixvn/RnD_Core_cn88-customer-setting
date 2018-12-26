@@ -34,39 +34,58 @@ module CustomerSetting {
             this.sharedScope = sharedScope;
         }
 
-        public request(path: string, parameters: any, callback: IServerRequestCallback) {
+        public get(path: string, parameters: any, callback: IServerRequestCallback) {
+            this.blockUiService.blockUi();
+
+            this.$http
+                .get(path, { params: parameters })
+                .then(
+                    (response: ng.IHttpPromiseCallbackArg<any>) => this.handleSuccessfulResponse(response, callback),
+                    (response: ng.IHttpPromiseCallbackArg<any>) => this.handleErrorResponse(response))
+                .finally(() => {
+                    this.blockUiService.unblockUi();
+                });
+        }
+
+        public post(path: string, parameters: any, callback: IServerRequestCallback) {
             this.blockUiService.blockUi();
 
             this.$http
                 .post(path, parameters)
-                .then((response: ng.IHttpPromiseCallbackArg<any>) => {
-                    if (typeof response.data === "string") {
-                        this.$window.document.write(response.data);
-                    } else if (response.data.code === -302 && response.data.redirect) {
-                        this.$window.location.href = this.$window.location.origin + response.data.redirect;
-                    } else {
-                        callback(response);
-                    }
-                }, (response: ng.IHttpPromiseCallbackArg<any>) => {
-                    var error: Result;
-
-                    if (response) {
-                        if (response.status === 401) {
-                            error = Result.notAuthorizedError;
-                            error.message = this.resourceService.getMessage(error.message);
-                        } else if (response.data) {
-                            error = new Result(response.status, response.data.message, MessageType.error);
-                        } else {
-                            error = Result.systemError;
-                            error.message = this.resourceService.getMessage(error.message);
-                        }
-                    }
-
-                    this.sharedScope.requestMsgResult = error;
-                })
+                .then(
+                    (response: ng.IHttpPromiseCallbackArg<any>) => this.handleSuccessfulResponse(response, callback),
+                    (response: ng.IHttpPromiseCallbackArg<any>) => this.handleErrorResponse(response))
                 .finally(() => {
                     this.blockUiService.unblockUi();
                 });
+        }
+
+        private handleSuccessfulResponse(response: ng.IHttpPromiseCallbackArg<any>, callback: IServerRequestCallback): any {
+            if (typeof response.data === "string") {
+                this.$window.document.write(response.data);
+            } else if (response.data.code === -302 && response.data.redirect) {
+                this.$window.location.href = this.$window.location.origin + response.data.redirect;
+            } else {
+                callback(response);
+            }
+        }
+
+        private handleErrorResponse(response: ng.IHttpPromiseCallbackArg<any>): any {
+            var error: Result;
+
+            if (response) {
+                if (response.status === 401) {
+                    error = Result.notAuthorizedError;
+                    error.message = this.resourceService.getMessage(error.message);
+                } else if (response.data) {
+                    error = new Result(response.status, response.data.message, MessageType.error);
+                } else {
+                    error = Result.systemError;
+                    error.message = this.resourceService.getMessage(error.message);
+                }
+            }
+
+            this.sharedScope.requestMsgResult = error;
         }
     }
 

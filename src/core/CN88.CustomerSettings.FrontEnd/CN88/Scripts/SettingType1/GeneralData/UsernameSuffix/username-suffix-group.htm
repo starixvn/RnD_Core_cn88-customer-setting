@@ -1,0 +1,8 @@
+﻿<div class="username-selection">
+    <username-suffix data-ng-repeat="suffix in accountDetail.usernameSuffixes track by $index"
+                     data-suffix-index="$index"
+                     data-suffix="suffix"
+                     data-validate-username="validateUsername"></username-suffix>
+    <span class="icon icon--valid-username" data-ng-if="isChanged && isValid"></span>
+    <span class="icon icon--invalid-username" data-ng-if="isChanged && !isValid"></span>
+</div>

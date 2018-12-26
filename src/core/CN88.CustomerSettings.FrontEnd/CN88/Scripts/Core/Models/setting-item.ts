@@ -23,6 +23,8 @@ module CustomerSetting {
         public oldSetting: DefaultSettingItem;
         public validationState: ValidationResult;
 
+        protected ignoredProperties: string[];
+
         constructor();
         constructor(settingItem: any);
         constructor(settingItem?: any) {
@@ -41,6 +43,13 @@ module CustomerSetting {
             }
 
             this.validationState = <ValidationResult>ValidationResult.normal;
+            this.ignoredProperties = [
+                "sportTypeName",
+                "betTypeName",
+                "oldSetting",
+                "validationState",
+                "ignoredProperties",
+                "$$hashKey"];
         }
 
         public isChanged(): boolean {
@@ -56,10 +65,9 @@ module CustomerSetting {
 
         public toJson(): any {
             var settingItem: any = {};
-            var reservedProperties: string[] = ["oldSetting", "validationState", "$$hashKey"];
 
             Object.keys(this).forEach((prop: string) => {
-                if (this[prop] !== undefined && this[prop] !== null && reservedProperties.indexOf(prop) < 0) {
+                if (this[prop] !== undefined && this[prop] !== null && this.ignoredProperties.indexOf(prop) < 0) {
                     if (this[prop].toJson) {
                         settingItem[prop] = this[prop].toJson();
                     } else {

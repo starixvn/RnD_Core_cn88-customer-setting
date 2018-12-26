@@ -56,7 +56,8 @@
     messages["en-us"] = {
         "RequiredField": "This field is required.",
         "ConfirmPasswordMustMatchPassword": "Confirm Password must match Password.",
-        "PasswordRules": "<div>Password must be at least 8 characters without white-space and contain at least 3 of the following:<ul><li>Uppercase letter [A-Z]</li><li>Lowercase letter [a-z]</li><li>Numeric [0-9]</li><li>Special character (!,,#,etc..)</li></ul></div><div><span class='note'>For example:</span>59D7!4$h, 493abcDE</div><div><span class='note'>Note:</span> your password is cAsE sEnSiTiVe</div>",
+        "PasswordRules": "<div class='password-rule'><div>Password must be at least 8 characters without white-space and contain at least 3 of the following:<ul><li>Uppercase letter [A-Z]</li><li>Lowercase letter [a-z]</li><li>Numeric [0-9]</li><li>Special character (!,,#,etc..)</li></ul></div><div><span class='note'>For example:</span> 59D7!4$h, 493abcDE</div><div><span class='note'>Note:</span> your password is cAsE sEnSiTiVe</div></div>",
+        "InvalidPassword": "Invalid password.",
         "SpreadGroupRule": "Once the account is created, Spread Group can no longer be changed.",
         "SuperMinPTMustBeGreaterThanOrEqualTo": "Super Min PT must be greater than or equal to {0}.",
         "SuperMinPTMustBeLessThanOrEqualTo": "Super Min PT must be less than or equal to {0}.",

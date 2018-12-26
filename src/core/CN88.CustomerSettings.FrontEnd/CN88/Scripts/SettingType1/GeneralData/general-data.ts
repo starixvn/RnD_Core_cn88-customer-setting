@@ -5,7 +5,7 @@
 module CustomerSetting {
     "use strict";
 
-    export interface IGeneralDataScope extends ng.IScope {
+    interface IGeneralDataScope extends ng.IScope {
         customerLevel: Level;
         accountDetail: AccountDetail;
         isNew: boolean;

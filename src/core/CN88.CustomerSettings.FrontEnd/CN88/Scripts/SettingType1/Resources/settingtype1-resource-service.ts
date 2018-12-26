@@ -28,7 +28,7 @@ module CustomerSetting {
         return (name: string, ...replacements: any[]) => {
             replacements.unshift(name)
 
-            return settingType1ResourceService.getFormattedMessage.apply(SettingType1ResourceService, replacements);
+            return settingType1ResourceService.getFormattedMessage.apply(settingType1ResourceService, replacements);
         };
     }
 

@@ -23,7 +23,6 @@ module CustomerSetting {
 
         protected isNew: boolean;
         protected customerLevel: Level;
-        protected ignoredProperties: string[];
         protected hashKey: string;
 
         constructor();
@@ -49,7 +48,7 @@ module CustomerSetting {
                 this.fax = accountDetail.fax;
                 this.credit = accountDetail.credit;
                 this.availableCredit = accountDetail.availableCredit;
-                this.usernameSuffixes = accountDetail.usernameSuffix;
+                this.usernameSuffixes = accountDetail.usernameSuffixes;
                 this.uplineUsername = accountDetail.uplineUsername;
                 this.interval = accountDetail.intervalValue;
             }
@@ -59,16 +58,17 @@ module CustomerSetting {
             }
 
             this.resetValidationState();
-            this.ignoredProperties = [
+            this.ignoredProperties = this.ignoredProperties.concat([
                 "usernameSuffixes",
+                "uplineUsername",
                 "interval",
                 "isNew",
                 "customerLevel",
-                "ignoredProperties",
-                "oldSetting",
-                "validationState",
-                "hashKey",
-                "$$hashKey"];
+                "hashKey"]);
+
+            if (!this.isNew) {
+                this.ignoredProperties.push("username");
+            }
         }
 
         public isChanged(): boolean {
@@ -124,16 +124,16 @@ module CustomerSetting {
                     return false;
                 }
 
-                if (this.confirmPassword !== this.password) {
-                    this.validationState = new ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
+                var strongPassword = /^(?=.*\d)(?=.*[a-zA-Z!@#$%^&*])(?!.*\s).{8,40}$/;
+
+                if (!this.password.match(strongPassword)) {
+                    this.validationState = new ValidationResult("InvalidPassword", "password");
 
                     return false;
                 }
 
-                var strongPassword = /^(?=.*\d)(?=.*[a-zA-Z!@#$%^&*])(?!.*\s).{8,40}$/;
-
-                if (!this.password.match(strongPassword)) {
-                    this.validationState = new ValidationResult("PasswordRules", "password");
+                if (this.confirmPassword !== this.password) {
+                    this.validationState = new ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
 
                     return false;
                 }
@@ -153,13 +153,7 @@ module CustomerSetting {
         }
 
         public toJson(): any {
-            var accountDetail: any = {};
-
-            Object.keys(this).forEach((prop: string) => {
-                if (this[prop] !== undefined && this[prop] !== null && this.ignoredProperties.indexOf(prop) < 0) {
-                    accountDetail[prop] = this[prop];
-                }
-            });
+            var accountDetail: any = super.toJson();
 
             if (this.isNew) {
                 var originalPassword: string = accountDetail.password;

@@ -9,6 +9,7 @@ module CustomerSetting {
     export class SettingTypesSharedValuesService {
         public static $inject: string[] = ["parametersService"];
 
+        public actorLevel: Level;
         public customerId: number
         public uplineId: number;
         public customerLevel: Level;
@@ -24,6 +25,7 @@ module CustomerSetting {
         }
 
         public register(setting: Setting, uplineId: number): void {
+            this.actorLevel = this.parametersService.actorLevel;
             this.uplineId = uplineId;
             this.isNew = this.parametersService.isNew;
             this.hashKey = this.parametersService.hashKey;

@@ -26,6 +26,7 @@ module CustomerSetting {
 
         public link: ng.IDirectiveLinkFn = (scope: ISettingTypeDirectiveSharedScope) => {
             scope.settingTypeName = this.settingType1ResourceService.getLabel("AccountDetail");
+            scope.actorLevel = this.settingTypesSharedValuesService.actorLevel;
             scope.customerId = this.settingTypesSharedValuesService.customerId;
             scope.uplineId = this.settingTypesSharedValuesService.uplineId;
             scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;

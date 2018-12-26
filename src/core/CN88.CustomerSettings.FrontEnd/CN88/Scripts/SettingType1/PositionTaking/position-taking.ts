@@ -5,7 +5,7 @@
 module CustomerSetting {
     "use strict";
 
-    export interface IPositionTakingScope extends ng.IScope {
+    interface IPositionTakingScope extends ng.IScope {
         customerLevel: Level;
         accountDetail: AccountDetail;
         isNew: boolean;

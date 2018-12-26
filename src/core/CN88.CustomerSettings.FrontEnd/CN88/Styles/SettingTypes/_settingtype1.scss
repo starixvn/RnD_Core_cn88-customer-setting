@@ -1,8 +1,12 @@
 ﻿@import "../other";
 @import "../variables";
 
-$sub-header-color: #97141e;
-$sub-header-border-color: #67151b;
+$sub-header-super-color: #97141e;
+$sub-header-border-super-color: #67151b;
+$sub-header-master-color: #97141e;
+$sub-header-border-master-color: #276443;
+$sub-header-agent-color: #2267b6;
+$sub-header-border-agent-color: #516e8f;
 
 .setting-type-1 {
     .col {
@@ -17,12 +21,17 @@ $sub-header-border-color: #67151b;
 
     .row {
         @include clearfix();
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        align-items: center;
         margin: 10px 25px;
     }
 
     .sub-header {
-        border-bottom: 2 * $border-size solid $sub-header-border-color;
-        color: $sub-header-color;
+        border-bottom: 2 * $border-size solid $sub-header-border-super-color;
+        color: $sub-header-super-color;
         font-weight: bold;
         margin-bottom: 15px;
         padding-left: 15px;
@@ -32,8 +41,38 @@ $sub-header-border-color: #67151b;
         }
     }
 
+    .master .sub-header {
+        border-color: $sub-header-border-master-color;
+        color: $sub-header-master-color;
+    }
+
+    .agent .sub-header {
+        border-color: $sub-header-border-agent-color;
+        color: $sub-header-agent-color;
+    }
+
     .setting-field-wrapper {
         padding: 0;
+    }
+
+    .general-data {
+        .password-rule {
+            text-align: left;
+
+            .note {
+                font-weight: bold;
+            }
+        }
+
+        .username-selection {
+            display: inline-block;
+            margin: 0 10px;
+
+            .setting-field {
+                margin: 0 5px;
+                min-width: initial;
+            }
+        }
     }
 
     .customer-credit {
@@ -54,6 +93,16 @@ $sub-header-border-color: #67151b;
             &__value {
                 font-weight: bold;
             }
+        }
+    }
+
+    .icon {
+        &--valid-username {
+            background-position: -3px -108px;
+        }
+
+        &--invalid-username {
+            background-position: -3px -87px;
         }
     }
 }

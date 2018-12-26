@@ -1,14 +1,14 @@
 ﻿<div class="setting-type-1">
-    <div class="block" data-ng-show="settingType" data-ng-class="{ 'block--error': !(settingType | validSettingType) }">
+    <div class="block {{avaiCustomerLevels[actorLevel]}}" data-ng-show="settingType" data-ng-class="{ 'block--error': !(settingType | validSettingType) }">
         <div class="block__header"
              data-setting-type="{{settingType.id}}"
              data-ng-class="{ 'block__header--error': !(settingType | validSettingType) }">
             {{settingTypeName}}
         </div>
-        <div class="col">
+        <div class="col" data-ng-if="settingType | validSettingType">
             <general-data data-account-detail="settingType.settingItems[0]"></general-data>
         </div>
-        <div class="col">
+        <div class="col" data-ng-if="settingType | validSettingType">
             <customer-credit data-account-detail="settingType.settingItems[0]"></customer-credit>
             <position-taking data-ng-if="customerLevel !== avaiCustomerLevels.member" data-account-detail="settingType.settingItems[0]"></position-taking>
         </div>

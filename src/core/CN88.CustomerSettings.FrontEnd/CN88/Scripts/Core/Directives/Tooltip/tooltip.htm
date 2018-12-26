@@ -1,3 +1,3 @@
 ﻿<div class="tooltip tooltip--{{tooltipType}}" data-ng-if="tooltipMessage && showed">
-    <div class="tooltip__content">{{tooltipMessage | unsafe}}</div>
+    <div class="tooltip__content" data-ng-bind-html="tooltipMessage | unsafe"></div>
 </div>

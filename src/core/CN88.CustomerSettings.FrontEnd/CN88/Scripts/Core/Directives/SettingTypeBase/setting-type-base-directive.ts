@@ -12,6 +12,7 @@ module CustomerSetting {
     }
 
     export interface ISettingTypeDirectiveSharedScope extends ng.IScope {
+        actorLevel: Level;
         customerId: number;
         uplineId: number;
         customerLevel: Level;
@@ -36,6 +37,7 @@ module CustomerSetting {
             "$scope",
             "settingTypesSharedValuesService",
             ($scope: ISettingTypeDirectiveSharedScope, settingTypesSharedValuesService: SettingTypesSharedValuesService) => {
+                $scope.actorLevel = settingTypesSharedValuesService.actorLevel;
                 $scope.customerId = settingTypesSharedValuesService.customerId;
                 $scope.uplineId = settingTypesSharedValuesService.uplineId;
                 $scope.customerLevel = settingTypesSharedValuesService.customerLevel;

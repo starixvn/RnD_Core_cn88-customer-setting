@@ -13,7 +13,7 @@ module CustomerSetting {
     "use strict";
 
     interface ISuccessfulUpdatingCallback {
-        (): any;
+        (isSuccessful: boolean): any;
     }
 
     class CustomerSettingController {
@@ -96,18 +96,21 @@ module CustomerSetting {
         }
 
         private updateSetting(path: string, command: SettingCommand): void {
-            this.requestService.request(path, command.toJson(), (response: ng.IHttpPromiseCallbackArg<any>) => {
+            this.requestService.post(path, command.toJson(), (response: ng.IHttpPromiseCallbackArg<any>) => {
                 this.requestMsgResult = new UpdatingSettingResult(response.data);
-                this.querySetting();
 
                 this.$timeout(() => {
                     var settingResults = (<UpdatingSettingResult>this.requestMsgResult);
 
-                    if (settingResults && settingResults.removeSuccessResults && settingResults.removeSuccessResults().length === 0) {
+                    if (settingResults && settingResults.removeSuccessResults) {
+                        settingResults.removeSuccessResults();
+                    }
+
+                    if (settingResults.isSuccessful) {
                         this.requestMsgResult = undefined;
 
                         if (this.successfulUpdatingCallback) {
-                            this.successfulUpdatingCallback();
+                            this.successfulUpdatingCallback(settingResults.isSuccessful);
                         }
                     }
                 }, Defaults.displayingMsgTime);
@@ -118,7 +121,7 @@ module CustomerSetting {
             var query: SettingQuery = this.parametersService.getSettingQuery();
 
             if (query) {
-                this.requestService.request(this.appConfigService.getQueryPath(), query.toJson(), (response: ng.IHttpPromiseCallbackArg<any>) => {
+                this.requestService.post(this.appConfigService.getQueryPath(), query.toJson(), (response: ng.IHttpPromiseCallbackArg<any>) => {
                     this.setting = new Setting(response.data);
                     this.warningMessages = this.setting.warningMessage;
                     this.settingTypesSharedValuesService.register(this.setting, this.parametersService.uplineId);

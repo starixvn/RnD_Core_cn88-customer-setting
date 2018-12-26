@@ -27,6 +27,10 @@ module CustomerSetting {
             }
 
             this.ignoredProperties.push("uGroups");
+
+            if (!this.isNew) {
+                this.ignoredProperties.push("uGroup");
+            }
         }
 
         public isChanged(): boolean {

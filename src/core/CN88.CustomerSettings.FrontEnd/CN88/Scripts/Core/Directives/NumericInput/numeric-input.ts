@@ -10,6 +10,7 @@ module CustomerSetting {
 
     class NumericInputDirective implements ng.IDirective {
         public static $inject: string[] = ["$filter"];
+        public static defaultPrecision: number = 0;
 
         public restrict: string = "A";
 
@@ -23,7 +24,7 @@ module CustomerSetting {
             var element: ng.IAugmentedJQuery = angular.element(originalElement[0]);
             var modelCtrl: any = element.controller("ngModel");
 
-            scope.precision = scope.precision || 0;
+            scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
 
             // Chrome has a weird behavior with the mouseup event on textboxes.
             // The position of the cursor is set on this event so that once it is fired, the selection will be removed.
@@ -88,7 +89,7 @@ module CustomerSetting {
             });
 
             modelCtrl.$formatters.unshift(() => {
-                return this.$filter("number")(modelCtrl.$modelValue);
+                return this.$filter("number")(modelCtrl.$modelValue, scope.precision);
             });
 
             modelCtrl.$parsers.unshift((viewValue: string) => {
@@ -99,7 +100,7 @@ module CustomerSetting {
                 var numberParts: string[] = viewValue ? viewValue.split(".") : [];
 
                 if (numberParts.length > 1) {
-                    var precision = scope.precision || 0;
+                    var precision = scope.precision;
                     var plainIntegerPart: string = numberParts[0].replace(/[\,]/g, "") || "0";
                     var decimalPart: string = numberParts[1].replace(/[\,\.]/g, "") || "";
 

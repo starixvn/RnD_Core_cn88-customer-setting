@@ -48,8 +48,16 @@ module CustomerSetting {
             scope.tooltipType = scope.tooltipType || "error";
 
             if (scope.onHover) {
-                element.on("mouseenter", () => scope.showed = true);
-                element.on("mouseleave", () => scope.showed = false);
+                element.on("mouseenter", () => {
+                    scope.showed = true;
+                    scope.$apply();
+                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel);
+                });
+
+                element.on("mouseleave", () => {
+                    scope.showed = false;
+                    scope.$apply();
+                });
             } else {
                 scope.showed = true;
             }
@@ -94,13 +102,15 @@ module CustomerSetting {
         }
 
         private calculateTooltipPosition(wrappedElement: ng.IAugmentedJQuery, positionModel: PositionModel): void {
-            this.$timeout(() => {
-                var tooltip: ng.IAugmentedJQuery = angular.element(wrappedElement.children()[0]);
-                var target: ng.IAugmentedJQuery = angular.element(wrappedElement.children()[1]);
+            var children = wrappedElement.children();
 
-                if (!tooltip || tooltip.length === 0) {
-                    return;
-                }
+            if (!children || children.length !== 2) {
+                return;
+            }
+
+            this.$timeout(() => {
+                var tooltip: ng.IAugmentedJQuery = angular.element(children[0]);
+                var target: ng.IAugmentedJQuery = angular.element(children[1]);
 
                 tooltip.removeClass("tooltip--right tooltip--left");
                 tooltip.css({ "left": "0px", "visibility": "hidden" });
@@ -120,7 +130,7 @@ module CustomerSetting {
                     leftOffset = bodyRect.left;
                 }
 
-                var top: number = Math.max(0, elementRect.top - topOffset - tooltipRect.height + arrowWidth);
+                var top: number = elementRect.top - topOffset - tooltipRect.height + arrowWidth;
                 var left: number = elementRect.left + (elementRect.width - tooltipRect.width) / 2 - leftOffset;
 
                 if (this.$window.innerWidth < left + tooltipRect.width) {
@@ -133,6 +143,11 @@ module CustomerSetting {
                     top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2 + arrowWidth;
                     left = elementRect.left + elementRect.width;
                     tooltip.addClass("tooltip--left");
+                }
+
+                if (top < 0) {
+                    top = elementRect.bottom - topOffset - arrowWidth;
+                    tooltip.addClass("tooltip--bottom");
                 }
 
                 tooltip.css({
