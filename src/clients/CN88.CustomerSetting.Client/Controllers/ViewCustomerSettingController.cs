@@ -56,6 +56,7 @@
                 query.System = settingContext.System;
                 query.Language = settingContext.Language;
                 query.HashKey = settingContext.HashKey;
+                query.ActorLevel = settingContext.ActorLevel;
 
                 template = ReplaceParameters(template, query);
             }

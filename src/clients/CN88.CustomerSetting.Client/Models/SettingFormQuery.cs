@@ -22,6 +22,8 @@
 
         public string HashKey { get; set; }
 
+        public byte ActorLevel { get; set; }
+
         internal string ToJson()
         {
             var properties = new List<string>();
@@ -32,6 +34,7 @@
             properties.Add(string.Format("\"language\": \"{0}\",", Language));
             properties.Add(string.Format("\"productId\": {0},", ProductId));
             properties.Add(string.Format("\"customerLevel\": {0},", CustomerLevel));
+            properties.Add(string.Format("\"actorLevel\": {0},", ActorLevel));
             properties.Add(string.Format("\"uplineId\": {0},", UplineId));
             properties.Add(string.Format("\"isCreateNew\": {0},", IsCreateNew.ToString().ToLowerInvariant()));
 
