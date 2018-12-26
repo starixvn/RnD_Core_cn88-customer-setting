@@ -1,6 +1,8 @@
 ﻿namespace CN88.CustomerSetting.WebApi
 {
     using System;
+    using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using CN88.CustomerSetting.DataAccesses;
     using CN88.CustomerSetting.Services;
@@ -15,6 +17,7 @@
     using Fanex.Logging.Sentry.RavenClient;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Localization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +57,22 @@
                 .AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "CN88 Customer Setting", Version = "v1" });
+            });
+
+            var supportedCultures = new[] {
+                new CultureInfo("en-US"),
+                new CultureInfo("zh-CN")
+            };
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+                options.RequestCultureProviders = new List<IRequestCultureProvider>
+                {
+                    new QueryStringRequestCultureProvider()
+                };
             });
         }
 
@@ -104,12 +123,13 @@
                 })
                 .UseMiddleware(typeof(ErrorHandlingMiddleware))
                 .UseMvc(
-                routes =>
-                {
-                    routes.MapRoute(
-                        name: "default",
-                        template: "{controller=Home}/{action=Index}");
-                });
+                    routes =>
+                    {
+                        routes.MapRoute(
+                            name: "default",
+                            template: "{controller=Home}/{action=Index}");
+                    })
+                .UseRequestLocalization();
 
             //LogService.Info($"CN88 Customer Setting API has been started at {DateTime.Now}");
         }

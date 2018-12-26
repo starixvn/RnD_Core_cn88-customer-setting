@@ -68,16 +68,15 @@
 
             if (query.CustomerLevel.IsMemberLevel())
             {
+                settingItem.UGroup = defaultGroups.FirstOrDefault();
                 settingItem.UGroups = defaultGroups;
             }
 
             if (query.CustomerLevel.IsSuperLevel())
             {
-                var currencies = query.CustomerLevel.IsSuperLevel()
+                settingItem.Currencies = query.CustomerLevel.IsSuperLevel()
                                 ? GetCurrencies()
                                 : Enumerable.Empty<Currency>();
-                settingItem.Currency = currencies.FirstOrDefault();
-                settingItem.Currencies = currencies;
             }
 
             return CreateSettingType(settingItem);
@@ -165,7 +164,7 @@
             var passwordResult = passwordService.ValidateAndHashPassword(
                 settingItem.Password,
                 command.HashKey,
-                command.Setting.CustomerLevel.IsMemberLevel());
+                command.Setting.CustomerLevel);
 
             if (passwordResult.IsNotOk)
             {

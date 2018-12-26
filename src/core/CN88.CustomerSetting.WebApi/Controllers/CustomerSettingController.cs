@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using CN88.CustomerSetting.AppResources;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.Models.Results;
@@ -48,6 +49,10 @@
         [HttpGet]
         public IResult CheckExistedUsername(string username)
             => createCustomerService.IsUsernameExisted(username);
+
+        [HttpGet]
+        public string Test()
+            => Messages.AccessDeniedMsg;
 
         [HttpGet]
         public string GetTemplate([FromQuery]bool isIe8)

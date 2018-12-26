@@ -3,12 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
+    using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.Models.Results;
     using CN88.CustomerSetting.SettingType1.AppResources;
 
     public interface PasswordService
     {
-        IResult ValidateAndHashPassword(string encryptedPassword, string encryptionKey, bool isMemberLevel);
+        IResult ValidateAndHashPassword(string encryptedPassword, string encryptionKey, Level level);
     }
 
     public class PasswordServiceImpl : PasswordService
@@ -21,7 +22,7 @@
         private static readonly Regex MemberPasswordRule = new Regex(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,10}$");
         private static readonly Regex NoWhiteSpace = new Regex(@"^\S*$");
 
-        public IResult ValidateAndHashPassword(string encryptedPassword, string encryptionKey, bool isMemberLevel)
+        public IResult ValidateAndHashPassword(string encryptedPassword, string encryptionKey, Level level)
         {
             if (string.IsNullOrEmpty(encryptedPassword))
             {
@@ -29,7 +30,7 @@
             }
 
             var rawPassword = Decrypt(encryptedPassword, encryptionKey);
-            var validationResult = Validate(rawPassword, isMemberLevel);
+            var validationResult = Validate(rawPassword, level);
 
             return validationResult.IsOk
                 ? Result.CreateSuccessResult(CfsEnCode(rawPassword))
@@ -38,14 +39,16 @@
 
         private Result Validate(
             string password,
-            bool isMemberLevel)
+            Level customerLevel)
         {
-            if (!IsMatchedRules(password, isMemberLevel))
+            if(customerLevel.IsSuperLevel())
             {
-                return Result.CreateErrorResult(Messages.PasswordRequire);
+                return Result.Success;
             }
 
-            return Result.Success;
+            return !IsMatchedRules(password, customerLevel.IsMemberLevel())
+                ? Result.CreateErrorResult(Messages.PasswordRequire)
+                : Result.Success;
         }
 
         /// <summary>
