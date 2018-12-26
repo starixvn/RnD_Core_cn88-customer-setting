@@ -47,12 +47,19 @@
                 return GetCreateNewAccountDetail(query);
             }
 
-            return StubData(query);
+            return GetCustomerAccountdefault(query);
+        }
+
+        private SettingType GetCustomerAccountdefault(CustomerSettingQuery query)
+        {
+            var settingItem = GetAccountDetail(query.CustomerLevel, query.CustomerId, query.ProductId, false);
+
+            return CreateSettingType(settingItem);
         }
 
         private SettingType GetCreateNewAccountDetail(CustomerSettingQuery query)
         {
-            var settingItem = GetDefaultValueForInsertCustomer(query.CustomerLevel, query.UplineId, query.ProductId);
+            var settingItem = GetAccountDetail(query.CustomerLevel, query.UplineId, query.ProductId, true);
             var createCustomerInfo = GetCreateCustomerInfo(query.CustomerLevel, query.UplineId);
 
             settingItem.AvailableCredit = createCustomerInfo.AvailableCredit;
@@ -73,14 +80,17 @@
                 settingItem.Currencies = currencies;
             }
 
-            return new SettingType
+            return CreateSettingType(settingItem);
+        }
+
+        private SettingType CreateSettingType(ISettingItem settingItem)
+            => new SettingType
             {
                 SettingItems = new List<ISettingItem> { settingItem }
             };
-        }
 
-        private AccountDetail GetDefaultValueForInsertCustomer(
-            Level level, int uplineId, int productId)
+        private AccountDetail GetAccountDetail(
+            Level level, int custId, int productId, bool isCreateNew)
         {
             if (level.IsMemberLevel())
             {
@@ -92,21 +102,21 @@
             switch (level.Value)
             {
                 case Level.SuperLevelId:
-                    accountDetail = GetSuperAccountDetail(uplineId, true);
+                    accountDetail = GetSuperAccountDetail(custId, isCreateNew);
                     break;
 
                 case Level.MasterLevelId:
-                    accountDetail = GetMasterAccountDetail(uplineId, true);
+                    accountDetail = GetMasterAccountDetail(custId, isCreateNew);
                     break;
 
                 default:
-                    accountDetail = GetAgentAccountDetail(uplineId, true);
+                    accountDetail = GetAgentAccountDetail(custId, isCreateNew);
                     break;
             }
 
             if (accountDetail == null)
             {
-                throw new InvalidOperationException($"Cannot get default setting for upline {uplineId} to create new downline");
+                throw new InvalidOperationException($"Cannot get default setting for upline {custId} to create new downline");
             }
 
             var settingTypeConfig = GetSettingTypeConfig<AccountDetail>(productId, SettingTypeId).FirstOrDefault();
@@ -143,74 +153,6 @@
                        CurrencyCacheKey,
                        () => DynamicRepository.Fetch<Currency>(new GetCurrencyListCriteria()),
                         new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(0, CurrencyCacheTimeInMinutes, 0)));
-
-        private static SettingType StubData(CustomerSettingQuery query)
-        {
-            AccountDetail ptItem = null;
-            var isCreateNew = query.IsCreateNew;
-
-            switch (query.CustomerLevel.Value)
-            {
-                case Level.SuperLevelId:
-                    ptItem = new SuperAccountDetail
-                    {
-                        MinSuperMinPT = 0,
-                        MaxSuperMinPT = 80,
-                        MinSuperMaxPT = 80,
-                        MaxSuperMaxPT = 90,
-                        SuperMaxPT = isCreateNew ? 0 : 80,
-                        SuperMinPT = isCreateNew ? 0 : 20,
-                    };
-
-                    break;
-
-                case Level.MasterLevelId:
-                    ptItem = new MasterAccountDetail
-                    {
-                        MinSuperPT = 0,
-                        MaxSuperPT = 80,
-                        SuperPT = isCreateNew ? 0 : 10,
-                    };
-
-                    break;
-
-                case Level.AgentLevelId:
-                    ptItem = new AgentAccountDetail
-                    {
-                        MinAllowedPT = 70,
-                        MaxAllowedPT = 10,
-                        MinAgentPT = 0,
-                        MaxAgentPT = 70,
-                        MinMasterPT = 0,
-                        MaxMasterPT = 70,
-                        MasterPT = isCreateNew ? 0 : 40,
-                        AgentPT = isCreateNew ? 0 : 20,
-                    };
-
-                    break;
-            }
-
-            //Username = isCreateNew ? string.Empty : "AccountTest",
-            //        Currency = new Currency
-            //        {
-            //            Id = 1,
-            //            Name = "UUS"
-            //        },
-            //        Credit = isCreateNew ? 0 : 100,
-            //        AvailableCredit = 1000,
-            //        UGroup = query.CustomerLevel.IsMemberLevel() ? "CNA" : null,
-            //        UGroups = query.CustomerLevel.IsMemberLevel() ? new List<string> { "CNA", "CNB", "CNC", "CND" } : null,
-            //        UsernameSuffix = query.CustomerLevel.IsSuperLevel() || !isCreateNew
-            //                    ? Enumerable.Empty<string>()
-            //                    : query.CustomerLevel.IsMemberLevel()
-            //                        ? new List<string> { "2", "B", "E" }
-            //                        : new List<string> { "4", "C" },
-
-            return new SettingType
-            {
-                SettingItems = new List<ISettingItem> { ptItem }
-            };
-        }
 
         public override IDictionary<string, object> GetCreateCustomerParams(
             ISettingContext settingContext,
