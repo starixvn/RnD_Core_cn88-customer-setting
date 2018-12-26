@@ -55,7 +55,7 @@
 
             settingItem.AvailableCredit = createCustomerInfo.AvailableCredit;
             settingItem.UplineUsername = createCustomerInfo.UplineUsername;
-            settingItem.UsernameSuffix = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString());
+            settingItem.UsernameSuffixes = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString());
 
             if (query.CustomerLevel.IsMemberLevel())
             {

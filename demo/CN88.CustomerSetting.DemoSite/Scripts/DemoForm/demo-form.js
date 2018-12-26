@@ -102,7 +102,7 @@ var DemoFrom;
                 .done(function (rawSetting) {
                     //console.log(rawSetting);
                     var setting = JSON.parse(rawSetting);
-                    var newUsername = "SupertestCN88Ricky1d";
+                    var newUsername = "SupertestCN88Ricky1e";
                     if (role === 3) {
                         newUsername = "SupertestCN88Ricky1c001";
                     } else if (role === 2) {

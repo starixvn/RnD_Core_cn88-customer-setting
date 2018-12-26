@@ -79,6 +79,15 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account {0} was created successfully.
+        /// </summary>
+        internal static string CreateSuccessfully {
+            get {
+                return ResourceManager.GetString("CreateSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Customers are not in the same line!.
         /// </summary>
         internal static string CustomersAreNotSameLine {

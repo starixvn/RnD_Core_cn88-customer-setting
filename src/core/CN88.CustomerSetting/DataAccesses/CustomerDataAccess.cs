@@ -1,6 +1,7 @@
 ﻿namespace CN88.CustomerSetting.DataAccesses
 {
     using System.Collections;
+    using CN88.CustomerSetting.AppResources;
     using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.Models.Results;
 
@@ -20,7 +21,14 @@
 
             var result = ExecuteNonQuery(spSettingKey, parameters);
 
-            return new CreateNewResult(result.Code, result.Message, int.Parse(parameters["custId"].ToString()));
+            var newUsername = parameters["username"];
+
+            return new CreateNewResult(
+                result.Code,
+                result.IsOk 
+                    ? string.Format(Messages.CreateSuccessfully, newUsername) 
+                    : result.Message, 
+                int.Parse(parameters["custId"].ToString()));
         }
 
         private string GetSpSettingKey(Level level)

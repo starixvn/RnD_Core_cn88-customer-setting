@@ -27,7 +27,7 @@
 
         public string UGroup { get; set; }
 
-        public IEnumerable<string> UsernameSuffix { get; set; }
+        public IEnumerable<string> UsernameSuffixes { get; set; }
 
         public string UplineUsername { get; set; }
 
