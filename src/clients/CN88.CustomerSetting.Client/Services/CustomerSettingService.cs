@@ -9,6 +9,7 @@
 
     internal class CustomerSettingService : ICustomerSettingService
     {
+        private const string LanguageKey = "language";
         private readonly IRestClient _restClient;
 
         internal CustomerSettingService()
@@ -30,9 +31,16 @@
 
             var request = new RestRequest("/customersetting/query", Method.POST);
 
+            SetLanguage(request, query.Language);
+
             request.AddJsonBody(query);
 
             return _restClient.Execute(request);
+        }
+
+        private void SetLanguage(RestRequest restRequest, string language)
+        {
+            restRequest.AddHeader(LanguageKey, language);
         }
 
         public IRestResponse UpdateCustomerSetting(UpdateSettingRequest update)
@@ -44,6 +52,7 @@
 
             var request = new RestRequest("/customersetting/update/", Method.POST);
 
+            SetLanguage(request, update.Language);
             request.AddJsonBody(update);
             request.Timeout = CN88CustomerSettingConfiguration.Settings.UpdateSettingTimeout;
 
@@ -52,7 +61,6 @@
             return UpdateTimeOutResponse(restReponse);
         }
 
-        
         private IRestResponse UpdateTimeOutResponse(IRestResponse restReponse)
         {
             if (restReponse.StatusCode == 0)
@@ -90,6 +98,7 @@
 
             var request = new RestRequest("/customersetting/create/", Method.POST);
 
+            SetLanguage(request, create.Language);
             request.AddJsonBody(create);
             request.Timeout = CN88CustomerSettingConfiguration.Settings.UpdateSettingTimeout;
 

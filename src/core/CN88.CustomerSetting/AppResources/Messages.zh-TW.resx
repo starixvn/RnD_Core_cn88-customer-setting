@@ -100,4 +100,7 @@
   <data name="AccessDeniedMsg" xml:space="preserve">
     <value>Sorry, You don't have permission to access this page. - zh-tw</value>
   </data>
+  <data name="CreateSuccessfully" xml:space="preserve">
+    <value>Account {0} was created successfully zh-TW</value>
+  </data>
 </root>

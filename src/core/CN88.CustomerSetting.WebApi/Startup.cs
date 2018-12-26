@@ -42,6 +42,8 @@
 
             InitFanexData();
 
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
             services
                 .AddSingleton<IDynamicRepository, DynamicRepository>()
                 .AddSingleton<ICacheService, CacheService>()
@@ -57,22 +59,6 @@
                 .AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "CN88 Customer Setting", Version = "v1" });
-            });
-
-            var supportedCultures = new[] {
-                new CultureInfo("en-US"),
-                new CultureInfo("zh-CN")
-            };
-
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
-                options.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
-                options.RequestCultureProviders = new List<IRequestCultureProvider>
-                {
-                    new QueryStringRequestCultureProvider()
-                };
             });
         }
 
@@ -121,6 +107,7 @@
                 {
                     c.SwaggerEndpoint($"../swagger/v1/swagger.json", "CN88 Customer Setting Docs");
                 })
+                .UseMiddleware(typeof(LocalizationMiddleware))
                 .UseMiddleware(typeof(ErrorHandlingMiddleware))
                 .UseMvc(
                     routes =>
@@ -128,10 +115,7 @@
                         routes.MapRoute(
                             name: "default",
                             template: "{controller=Home}/{action=Index}");
-                    })
-                .UseRequestLocalization();
-
-            //LogService.Info($"CN88 Customer Setting API has been started at {DateTime.Now}");
+                    });
         }
     }
 }
