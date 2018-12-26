@@ -150,6 +150,7 @@
     <Content Include="Views\web.config" />
     <Content Include="Content\site.css.map" />
     <Content Include="Content\site.scss" />
+    <Content Include="deployment.ignore" />
     <None Include="packages.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
