@@ -1,7 +1,6 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Services
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using CN88.CustomerSetting.Models;
@@ -22,6 +21,7 @@
         private const int CurrencyCacheTimeInMinutes = 5;
         private const string CurrencyCacheKey = "CN88.CustomerSetting.CurrencyCacheKey";
         private static readonly List<string> defaultGroups = new List<string> { "CNA", "CNB", "CNC", "CND" };
+        private readonly PasswordService passwordService;
 
         public SettingTypeServiceImpl() :
             this(null, null, null, null)
@@ -31,9 +31,11 @@
             ResourceService resourceService,
             ILogger logger,
             ICacheService cacheService,
-            IDynamicRepository dynamicRepository)
+            IDynamicRepository dynamicRepository,
+            PasswordService passwordService = null)
             : base(resourceService, logger, cacheService, dynamicRepository)
         {
+            this.passwordService = passwordService ?? new PasswordServiceImpl();
         }
 
         public override SettingType GetCustomerSettingType(
@@ -59,7 +61,6 @@
 
             if (query.CustomerLevel.IsMemberLevel())
             {
-                settingItem.UGroup = defaultGroups.FirstOrDefault();
                 settingItem.UGroups = defaultGroups;
             }
 
@@ -81,14 +82,14 @@
         private AccountDetail GetDefaultValueForInsertCustomer(
             Level level, int uplineId, int productId)
         {
-            if(level.IsMemberLevel())
+            if (level.IsMemberLevel())
             {
                 return new AccountDetail();
             }
 
             AccountDetail accountDetail;
 
-            switch(level.Value)
+            switch (level.Value)
             {
                 case Level.SuperLevelId:
                     accountDetail = GetSuperAccountDetail(uplineId, true);
@@ -103,13 +104,13 @@
                     break;
             }
 
-            if(accountDetail == null)
+            if (accountDetail == null)
             {
                 throw new InvalidOperationException($"Cannot get default setting for upline {uplineId} to create new downline");
             }
 
             var settingTypeConfig = GetSettingTypeConfig<AccountDetail>(productId, SettingTypeId).FirstOrDefault();
-            if(settingTypeConfig != null)
+            if (settingTypeConfig != null)
             {
                 accountDetail.IntervalValue = settingTypeConfig.IntervalValue;
             }
@@ -217,7 +218,20 @@
             SettingType settingType)
         {
             var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetail
-                ?? throw new InvalidOperationException("First Setting Item cannot be null");
+                ?? throw new InvalidOperationException("AccountDetail Item cannot be null");
+
+            var passwordResult = passwordService.ValidateAndHashPassword(
+                settingItem.Password,
+                command.HashKey,
+                command.Setting.CustomerLevel.IsMemberLevel());
+
+            if (passwordResult.IsNotOk)
+            {
+                throw new InvalidOperationException(passwordResult.Message);
+            }
+
+            settingItem.Password = passwordResult.Message;
+
             var createNewParams = CreateAddNewParams(settingContext, settingItem);
 
             switch (command.Setting.CustomerLevel.Value)
@@ -338,7 +352,6 @@
                     createNewParams.Add("ugroup", settingItem.UGroup);
                     break;
             }
-
 
             throw new NotImplementedException();
         }

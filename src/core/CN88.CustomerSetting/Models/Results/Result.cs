@@ -61,5 +61,11 @@
 
         public override int GetHashCode()
             => Code.GetHashCode();
+
+        public static Result CreateErrorResult(string message) 
+            => new Result(ResultValues.Error, message);
+
+        public static Result CreateSuccessResult(string message)
+            => new Result(ResultValues.Success, message);
     }
 }

@@ -22,7 +22,7 @@ namespace CN88.CustomerSetting.AppResources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Messages {
+    public class Messages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace CN88.CustomerSetting.AppResources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CN88.CustomerSetting.AppResources.Messages", typeof(Messages).Assembly);
@@ -51,7 +51,7 @@ namespace CN88.CustomerSetting.AppResources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to Sorry, You don&apos;t have permission to access this page..
         /// </summary>
-        internal static string AccessDeniedMsg {
+        public static string AccessDeniedMsg {
             get {
                 return ResourceManager.GetString("AccessDeniedMsg", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to This account was disabled..
         /// </summary>
-        internal static string AccountWasDisabled {
+        public static string AccountWasDisabled {
             get {
                 return ResourceManager.GetString("AccountWasDisabled", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to Account {0} was created successfully.
         /// </summary>
-        internal static string CreateSuccessfully {
+        public static string CreateSuccessfully {
             get {
                 return ResourceManager.GetString("CreateSuccessfully", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to Customers are not in the same line!.
         /// </summary>
-        internal static string CustomersAreNotSameLine {
+        public static string CustomersAreNotSameLine {
             get {
                 return ResourceManager.GetString("CustomersAreNotSameLine", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to Data is not valid..
         /// </summary>
-        internal static string DataIsNotValid {
+        public static string DataIsNotValid {
             get {
                 return ResourceManager.GetString("DataIsNotValid", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to There is no change to update..
         /// </summary>
-        internal static string NoChangeToUpdate {
+        public static string NoChangeToUpdate {
             get {
                 return ResourceManager.GetString("NoChangeToUpdate", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to Unable to load the setting type due to a technical problem. Please try again later or notify system administrator!.
         /// </summary>
-        internal static string SettingTypeError {
+        public static string SettingTypeError {
             get {
                 return ResourceManager.GetString("SettingTypeError", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to Setting Type {0} does not have any setting item..
         /// </summary>
-        internal static string SettingTypeHasNoSettingItem {
+        public static string SettingTypeHasNoSettingItem {
             get {
                 return ResourceManager.GetString("SettingTypeHasNoSettingItem", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to Sport Type or Bet Type is invalid!.
         /// </summary>
-        internal static string SportTypeOrBetTypeIsInvalid {
+        public static string SportTypeOrBetTypeIsInvalid {
             get {
                 return ResourceManager.GetString("SportTypeOrBetTypeIsInvalid", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to Oops... you are here because of a system error, please notify system administrator..
         /// </summary>
-        internal static string SystemError {
+        public static string SystemError {
             get {
                 return ResourceManager.GetString("SystemError", resourceCulture);
             }
@@ -153,7 +153,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to Upline Level cannot be null incase of editting member..
         /// </summary>
-        internal static string UplineLevelCannotBeNullIncaseOfEdittingMember {
+        public static string UplineLevelCannotBeNullIncaseOfEdittingMember {
             get {
                 return ResourceManager.GetString("UplineLevelCannotBeNullIncaseOfEdittingMember", resourceCulture);
             }
@@ -162,7 +162,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to Upline Level is not valid..
         /// </summary>
-        internal static string UplineLevelIsNotValid {
+        public static string UplineLevelIsNotValid {
             get {
                 return ResourceManager.GetString("UplineLevelIsNotValid", resourceCulture);
             }
@@ -171,7 +171,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to Upline Level should be null..
         /// </summary>
-        internal static string UplineLevelShouldBeNull {
+        public static string UplineLevelShouldBeNull {
             get {
                 return ResourceManager.GetString("UplineLevelShouldBeNull", resourceCulture);
             }
@@ -180,7 +180,7 @@ namespace CN88.CustomerSetting.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to You are not authorized on this function!.
         /// </summary>
-        internal static string YouAreNotAuthorized {
+        public static string YouAreNotAuthorized {
             get {
                 return ResourceManager.GetString("YouAreNotAuthorized", resourceCulture);
             }
