@@ -10,6 +10,7 @@
     using CN88.CustomerSetting.Services;
     using CN88.CustomerSetting.SettingType1.Models;
     using CN88.CustomerSetting.SettingType1.Models.Dtos;
+    using CN88.CustomerSetting.SettingType1.Params.Commands;
     using CN88.CustomerSetting.SettingType1.Params.Criteria;
     using Fanex.Caching;
     using Fanex.Data.Repository;
@@ -20,7 +21,7 @@
         private const int SettingTypeId = 1;
         private const int CurrencyCacheTimeInMinutes = 5;
         private const string CurrencyCacheKey = "CN88.CustomerSetting.CurrencyCacheKey";
-        private static readonly List<string> defaultGroups = new List<string> { "CNA", "CNB", "CNC", "CND" };
+        private static readonly List<string> defaultGroups = new List<string> { "cna", "cnb", "cnc", "cnd" };
         private readonly PasswordService passwordService;
 
         public SettingTypeServiceImpl() :
@@ -47,12 +48,24 @@
                 return GetCreateNewAccountDetail(query);
             }
 
-            return GetCustomerAccountdefault(query);
+            return GetAccountDetail(query);
         }
 
-        private SettingType GetCustomerAccountdefault(CustomerSettingQuery query)
+        private SettingType GetAccountDetail(CustomerSettingQuery query)
         {
             var settingItem = GetAccountDetail(query.CustomerLevel, query.CustomerId, query.ProductId, false);
+
+            var customerInfo = DynamicRepository.Get<CustomerInfoDto>(new GetGeneralInfoCriteria(query.CustomerLevel.Value, query.CustomerId));
+
+            settingItem.Username = customerInfo.Username;
+            settingItem.FirstName = customerInfo.FirstName;
+            settingItem.LastName = customerInfo.LastName;
+            settingItem.Phone = customerInfo.Phone;
+            settingItem.MobilePhone = customerInfo.MobilePhone;
+            settingItem.Fax = customerInfo.Fax;
+            settingItem.Currency = new Currency { Name = customerInfo.Currency };
+            settingItem.Credit = customerInfo.Credit;
+            settingItem.AvailableCredit = customerInfo.AvailableCredit;
 
             return CreateSettingType(settingItem);
         }
@@ -254,47 +267,49 @@
             var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetail
                 ?? throw new InvalidOperationException("AccountDetail cannot be null");
 
-            var createNewParams = new Dictionary<string, object>
+            var updateCustomerInfoCommand = new UpdateCustomerInfoCommand
             {
-                { "username", settingItem.Username ?? throw new InvalidOperationException("Username cannot be null") },
-                { "userpwd", settingItem.Password ?? "56E8A2D78170E87C928E480797CC73" },
-                { "firstname", settingItem.FirstName ?? string.Empty },
-                { "credit", settingItem.Credit },
-                { "systemid", settingContext.System },
-                { "ip", settingContext.IP },
-                { "language", settingContext.Language },
-                { "creator", settingContext.Actor.Id }
+                RoleId = customerLevel.Value,
+                Credit = settingItem.Credit,
+                CustId = customerId,
+                Fax = settingItem.Fax,
+                FirstName = settingItem.FirstName,
+                LastName = settingItem.LastName,
+                MobilePhone = settingItem.MobilePhone,
+                Phone = settingItem.Phone
             };
 
-            switch (customerLevel.Value)
+            DynamicRepository.Execute(updateCustomerInfoCommand);
+
+            if(updateCustomerInfoCommand.ErrCode > 0)
             {
-                case Level.SuperLevelId:
-                    createNewParams.Add("site", "CN88");
-                    createNewParams.Add("currency", settingItem.Currency?.Id);
-                    createNewParams.Add("lastname", settingItem.LastName ?? string.Empty);
-                    createNewParams.Add("phone", settingItem.Phone ?? string.Empty);
-                    createNewParams.Add("mobilephone", settingItem.MobilePhone ?? string.Empty);
-                    createNewParams.Add("fax", settingItem.Fax ?? string.Empty);
-                    createNewParams.Add("ptsetting", settingItem.ToXml());
-                    break;
-
-                case Level.MasterLevelId:
-                    createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
-                    createNewParams.Add("ptsetting", settingItem.ToXml());
-                    break;
-
-                case Level.AgentLevelId:
-                    createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
-                    createNewParams.Add("ptsetting", settingItem.ToXml());
-                    break;
-
-                case Level.MemberLevelId:
-                    createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
-                    createNewParams.Add("ugroup", settingItem.UGroup);
-                    break;
+                return new SettingResult(Result.CreateErrorResult(updateCustomerInfoCommand.ErrMsg));
             }
 
-            throw new NotImplementedException();
+            var updatePTSettingCommand = new UpdatePTSettingCommand
+            {
+                RoleId = customerLevel.Value,
+                CustId = customerId,
+                
+                ProductId = productId,
+                PTSetting = settingType.ToXml(),
+
+                IP = settingContext.IP,
+                UserId = settingContext.Actor.Id,
+                Language = settingContext.Language,
+                SubAccountId = settingContext.Actor.SubAccountId,
+                
+            };
+
+            DynamicRepository.Execute(updateCustomerInfoCommand);
+
+            return new SettingResult(
+                updatePTSettingCommand.ErrCode,
+                updatePTSettingCommand.ErrMsg,
+                updatePTSettingCommand.MsgType,
+                customerId,
+                settingType.Id,
+                settingType.Name);
         }
     }
 }

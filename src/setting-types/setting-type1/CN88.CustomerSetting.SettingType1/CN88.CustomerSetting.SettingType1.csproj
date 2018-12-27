@@ -9,10 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataAccesses\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Fanex.Data.Repository" Version="3.0.0" />
     <PackageReference Include="Fanex.Logging" Version="2.0.0" />
   </ItemGroup>

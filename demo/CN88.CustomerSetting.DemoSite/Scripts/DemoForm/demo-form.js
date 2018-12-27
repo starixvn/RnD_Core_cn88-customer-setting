@@ -267,7 +267,7 @@ var DemoFrom;
                     uplineId = 33489350;
                     break;
                 case Role.member:
-                    id = 0;
+                    id = 33489480;
                     name = "SuperTestCNE000100010001";
                     uplineId = 33489365;
                     break;
