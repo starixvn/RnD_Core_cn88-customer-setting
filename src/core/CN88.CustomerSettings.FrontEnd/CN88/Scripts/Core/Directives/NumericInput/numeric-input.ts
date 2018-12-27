@@ -94,7 +94,7 @@ module CustomerSetting {
 
             modelCtrl.$parsers.unshift((viewValue: string) => {
                 var input: HTMLInputElement = <HTMLInputElement>element[0];
-                var value: number = 0;
+                var value: number;
                 var formattedValue: string = viewValue;
                 var caretPosition: number = input.selectionStart;
                 var numberParts: string[] = viewValue ? viewValue.split(".") : [];

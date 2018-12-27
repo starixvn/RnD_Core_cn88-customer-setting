@@ -30550,7 +30550,7 @@ var CustomerSetting;
                 });
                 modelCtrl.$parsers.unshift(function (viewValue) {
                     var input = element[0];
-                    var value = 0;
+                    var value;
                     var formattedValue = viewValue;
                     var caretPosition = input.selectionStart;
                     var numberParts = viewValue ? viewValue.split(".") : [];
@@ -31016,6 +31016,10 @@ var CustomerSetting;
             return true;
         };
         AccountDetail.prototype.validateCredit = function () {
+            if (this.credit === undefined || this.credit === null) {
+                this.validationState = new CustomerSetting.ValidationResult("RequiredField", "credit");
+                return false;
+            }
             if (this.credit > this.availableCredit) {
                 this.validationState = new CustomerSetting.ValidationResult("CreditMustBeLessThanOrEqualTo", "credit", [this.availableCredit]);
                 return false;
@@ -31151,6 +31155,7 @@ var CustomerSetting;
                 this.validationState = new CustomerSetting.ValidationResult("SuperPTMustBeLessThanOrEqualTo", "superPT", [this.maxSuperPT]);
                 return false;
             }
+            return true;
         };
         return MasterAccountDetail;
     }(CustomerSetting.AccountDetail));
@@ -31211,6 +31216,9 @@ var CustomerSetting;
             if (!this.validatePassword()) {
                 return false;
             }
+            if (!this.validateCredit()) {
+                return false;
+            }
             if (!this.validateCurrency()) {
                 return false;
             }
@@ -31226,6 +31234,13 @@ var CustomerSetting;
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
                     return false;
                 }
+            }
+            return true;
+        };
+        SuperAccountDetail.prototype.validateCredit = function () {
+            if (this.credit === undefined || this.credit === null) {
+                this.validationState = new CustomerSetting.ValidationResult("RequiredField", "credit");
+                return false;
             }
             return true;
         };

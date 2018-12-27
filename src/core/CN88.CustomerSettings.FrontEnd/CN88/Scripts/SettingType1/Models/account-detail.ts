@@ -143,6 +143,12 @@ module CustomerSetting {
         }
 
         protected validateCredit(): boolean {
+            if (this.credit === undefined || this.credit === null) {
+                this.validationState = new ValidationResult("RequiredField", "credit");
+
+                return false;
+            }
+
             if (this.credit > this.availableCredit) {
                 this.validationState = new ValidationResult("CreditMustBeLessThanOrEqualTo", "credit", [this.availableCredit]);
 

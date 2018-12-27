@@ -62,6 +62,8 @@ module CustomerSetting {
 
                 return false;
             }
+
+            return true;
         }
     }
 }

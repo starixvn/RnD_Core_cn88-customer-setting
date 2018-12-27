@@ -65,6 +65,10 @@ module CustomerSetting {
                 return false;
             }
 
+            if (!this.validateCredit()) {
+                return false;
+            }
+
             if (!this.validateCurrency()) {
                 return false;
             }
@@ -85,6 +89,16 @@ module CustomerSetting {
 
                     return false;
                 }
+            }
+
+            return true;
+        }
+
+        protected validateCredit(): boolean {
+            if (this.credit === undefined || this.credit === null) {
+                this.validationState = new ValidationResult("RequiredField", "credit");
+
+                return false;
             }
 
             return true;
