@@ -21,6 +21,8 @@
       <Parameters>
         <Parameter Name="IsTest" Value="true" />
       </Parameters>
+      <Mapping DataField="SportType" ObjectProperty="SportTypeId" />
+      <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
     </Setting>
 
     <Setting Key="CS_CustSetting_GeneralInfo_Sel" SpName="CS_CustSetting_GeneralInfo_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />

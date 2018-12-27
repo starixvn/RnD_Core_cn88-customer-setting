@@ -106,7 +106,7 @@
         {
             if (level.IsMemberLevel())
             {
-                return new AccountDetail();
+                return new MemberAccountDetail();
             }
 
             AccountDetail accountDetail;

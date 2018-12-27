@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using CN88.CustomerSetting.Models;
+    using CN88.CustomerSetting.Models.Results;
 
     public class AccountDetail : SettingItemDefault
     {
@@ -34,5 +35,11 @@
         public IEnumerable<string> UGroups { get; set; }
 
         public IEnumerable<Currency> Currencies { get; set; }
+    }
+
+    public class MemberAccountDetail : AccountDetail
+    {
+        public override IResult Validate()
+            => Result.Success;
     }
 }
