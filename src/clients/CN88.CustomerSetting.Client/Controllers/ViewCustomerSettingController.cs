@@ -16,7 +16,6 @@
     public class ViewCustomerSettingController : Controller
     {
         private const string SettingTemplateCachingKey = "CustomerSettingTemplate";
-        private const string SettingTemplateIe8CachingKey = "CustomerSettingIE8Template";
         private const byte CachingHours = 4;
 
         private readonly ICustomerSettingService _customerSettingService;
@@ -127,7 +126,7 @@
         private string ReplaceParameters(string template, SettingFormQuery query)
         {
             string finalTemplate = template;
-            var appConfig = new AppConfiguration(Response.ApplyAppPathModifier(Request.ApplicationPath));
+            var appConfig = new AppConfiguration(Response.ApplyAppPathModifier(Request.ApplicationPath) + "CN88CustomerSetting");
 
             appConfig.Editable = !query.IsReadOnly;
 

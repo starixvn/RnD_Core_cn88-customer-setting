@@ -20,21 +20,22 @@
     {
         private static string CustomerSettingTemplateCache;
         private const string CustomerSettingTemplateFilePath = "/Templates/customer-setting.htm";
-        private static string CustomerSettingTemplateIe8Cache;
-        private const string CustomerSettingTemplateIe8FilePath = "/Templates/customer-setting-ie8.htm";
         private const byte CachingHours = 4;
         private readonly QuerySettingService querySettingService;
         private readonly CreateCustomerService createCustomerService;
         private readonly IHostingEnvironment hostingEnvironment;
+        private readonly UpdateSettingService updateSettingService;
 
         public CustomerSettingController(
             QuerySettingService querySettingService,
             CreateCustomerService createCustomerService,
+            UpdateSettingService updateSettingService,
             IHostingEnvironment hostingEnvironment)
         {
             this.querySettingService = querySettingService;
             this.hostingEnvironment = hostingEnvironment;
             this.createCustomerService = createCustomerService;
+            this.updateSettingService = updateSettingService;
         }
 
         [HttpPost]
@@ -46,41 +47,28 @@
             [ModelBinder(typeof(SettingRequestModelBinder<CreateCustomerRequest>))]CreateCustomerRequest request)
             => createCustomerService.Create(request.GetSettingContext(), request.GetCreateCustomerCommand());
 
+        [HttpPost]
+        public IResult Update(
+            [ModelBinder(typeof(SettingRequestModelBinder<UpdateSettingRequest>))]UpdateSettingRequest request)
+            => updateSettingService.Update(request.GetSettingContext(), request.GetUpdateCustomerSettingCommand());
+
         [HttpGet]
         public IResult CheckExistedUsername(string username)
             => createCustomerService.IsUsernameExisted(username);
 
         [HttpGet]
-        public string Test()
-            => Messages.AccessDeniedMsg;
-
-        [HttpGet]
-        public string GetTemplate([FromQuery]bool isIe8)
+        public string GetTemplate()
         {
             string template = string.Empty;
             string customerSettingTemplatePath = CustomerSettingTemplateFilePath;
 
-            if (isIe8)
-            {
-                customerSettingTemplatePath = CustomerSettingTemplateIe8FilePath;
-            }
-
-            template = isIe8 
-                ? CustomerSettingTemplateIe8Cache
-                : CustomerSettingTemplateCache;
+            template = CustomerSettingTemplateCache;
 
             if (string.IsNullOrEmpty(template))
             {
                 var file = hostingEnvironment.WebRootFileProvider.GetFileInfo(customerSettingTemplatePath);
                 template = System.IO.File.ReadAllText(file.PhysicalPath);
-                if(isIe8)
-                {
-                    CustomerSettingTemplateIe8Cache = template;
-                }
-                else
-                {
-                    CustomerSettingTemplateCache = template;
-                }
+                CustomerSettingTemplateCache = template;
             }
 
             return template;

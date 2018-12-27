@@ -69,12 +69,12 @@ var DemoFrom;
             });
         };
         DemoFormController.prototype.showSetting = function (isCreateNew) {
-            var updateUrl = this.resolveUrl("CN88/CreateCustomer/Create");
+            var updateUrl = this.resolveUrl("CN88CustomerSetting/CreateCustomer/Create");
             var uplineId = this.target.uplineId;
             var role = this.target.role;
             $.ajax({
                 method: "GET",
-                url: this.resolveUrl("CN88/CreateCustomer/CheckExistedUsername"),
+                url: this.resolveUrl("CN88CustomerSetting/CreateCustomer/CheckExistedUsername"),
                 data: {
                     username: "SupertestCN88Ricky1d"
                 }
@@ -82,7 +82,7 @@ var DemoFrom;
 
             $.ajax({
                 method: "GET",
-                url: this.resolveUrl("CN88/CreateCustomer/CheckExistedUsername"),
+                url: this.resolveUrl("CN88CustomerSetting/CreateCustomer/CheckExistedUsername"),
                 data: {
                     username: "SupertestCN88Ricky10d"
                 }
@@ -90,7 +90,7 @@ var DemoFrom;
 
             $.ajax({
                 method: "POST",
-                url: this.resolveUrl("CN88/ViewCustomerSetting/QuerySetting"),
+                url: this.resolveUrl("CN88CustomerSetting/ViewCustomerSetting/QuerySetting"),
                 data: {
                     productId: this.target.productId,
                     customerId: this.target.customerId,
@@ -132,7 +132,7 @@ var DemoFrom;
                 customerLevel: this.target.role,
                 uplineId: this.target.uplineId,
                 isCreateNew: isCreateNew,
-                path: this.resolveUrl("CN88/ViewCustomerSetting"),
+                path: this.resolveUrl("CN88CustomerSetting/ViewCustomerSetting"),
                 frameName: "setting-page"
             };
             if (this.isMultipleUpdates) {

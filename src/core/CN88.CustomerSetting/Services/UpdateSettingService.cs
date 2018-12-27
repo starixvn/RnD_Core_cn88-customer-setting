@@ -19,18 +19,14 @@
 
     public class UpdateSettingServiceImpl : UpdateSettingService
     {
-        private readonly ValidationService validationService;
-        private readonly ILogger logger;
-        private readonly SettingTypeServiceFactory settingTypeServiceFactory;
-
         public UpdateSettingServiceImpl(
             ValidationService validationService,
             ILogger logger,
             SettingTypeServiceFactory settingTypeServiceFactory)
         {
-            this.validationService = validationService;
-            this.logger = logger;
-            this.settingTypeServiceFactory = settingTypeServiceFactory;
+            ValidationService = validationService;
+            Logger = logger;
+            SettingTypeServiceFactory = settingTypeServiceFactory;
         }
 
         protected ValidationService ValidationService { get; }

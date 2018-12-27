@@ -69,18 +69,19 @@
 
         public abstract SettingContext FetchSettingContext();
 
-        public virtual void RegisterRouteConfig(RouteCollection routes)
+        private void RegisterRouteConfig(RouteCollection routes)
         {
             routes.MapRoute(
                 name: "CN88_Setting",
-                url: "CN88/{controller}/{action}/{id}",
+                url: "CN88CustomerSetting/{controller}/{action}/{id}",
                 defaults: new { controller = "ViewCustomerSetting", action = "Index", id = UrlParameter.Optional },
                 namespaces: new string[] { "CN88.CustomerSetting.Client.Controllers" });
         }
 
         private static bool IsCustomerSettingClient(Type type)
         {
-            return typeof(CN88CustomerSettingRegistration).IsAssignableFrom(type) && type.GetConstructor(Type.EmptyTypes) != null;
+            return typeof(CN88CustomerSettingRegistration).IsAssignableFrom(type) 
+                && type.GetConstructor(Type.EmptyTypes) != null;
         }
 
         private static void CheckInitializationState()
