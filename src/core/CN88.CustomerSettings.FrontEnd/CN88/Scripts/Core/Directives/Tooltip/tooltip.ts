@@ -1,5 +1,4 @@
 ﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
-/// <reference path="../../models/enums/notification-type.ts" />
 /// <reference path="../../models/enums/position-model.ts" />
 /// <reference path="../../models/result.ts" />
 /// <reference path="../../resources/resource-service.ts" />

@@ -77,6 +77,7 @@ module CustomerSetting {
 
             if ((this.masterPT + this.agentPT > this.maxAllowedPT) || (this.masterPT + this.agentPT < this.minAllowedPT)) {
                 this.validationState = new ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minAllowedPT, this.maxAllowedPT]);
+                this.validationState.highlightField("agentPT");
 
                 return false;
             }

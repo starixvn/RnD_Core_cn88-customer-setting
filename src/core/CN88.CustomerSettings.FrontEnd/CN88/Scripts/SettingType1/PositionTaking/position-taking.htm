@@ -59,7 +59,8 @@
             <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'agentPT'}}">
-                <percentage-dropdown data-ng-model="accountDetail.agentPT"
+                <percentage-dropdown class="setting-field--{{accountDetail.validationState.affectedFields.agentPT}}"
+                                     data-ng-model="accountDetail.agentPT"
                                      data-min="0"
                                      data-max="accountDetail.maxAgentPT"
                                      data-step="accountDetail.interval"></percentage-dropdown>
