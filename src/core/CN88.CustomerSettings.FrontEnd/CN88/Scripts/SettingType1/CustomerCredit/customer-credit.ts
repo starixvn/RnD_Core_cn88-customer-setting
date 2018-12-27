@@ -1,4 +1,5 @@
 ﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../core/services/setting-types-shared-values-service.ts" />
 /// <reference path="../../core/module-registrater.ts" />
 /// <reference path="../models/account-detail.ts" />
 

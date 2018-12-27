@@ -19,7 +19,6 @@ module CustomerSetting {
         public availableCredit: number;
         public usernameSuffixes: string[];
         public uplineUsername: string;
-        public interval: number;
 
         protected isNew: boolean;
         protected customerLevel: Level;
@@ -50,7 +49,6 @@ module CustomerSetting {
                 this.availableCredit = accountDetail.availableCredit;
                 this.usernameSuffixes = accountDetail.usernameSuffixes;
                 this.uplineUsername = accountDetail.uplineUsername;
-                this.interval = accountDetail.intervalValue;
             }
 
             if (backup) {
@@ -61,7 +59,6 @@ module CustomerSetting {
             this.ignoredProperties = this.ignoredProperties.concat([
                 "usernameSuffixes",
                 "uplineUsername",
-                "interval",
                 "isNew",
                 "customerLevel",
                 "hashKey"]);

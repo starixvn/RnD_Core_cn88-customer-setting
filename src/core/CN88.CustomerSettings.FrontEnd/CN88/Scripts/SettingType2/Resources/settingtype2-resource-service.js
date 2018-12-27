@@ -6,7 +6,9 @@
     var labels = {};
 
     labels["en-us"] = {
-        "AccountDetail": "Account Detail"
+        "CommissionAndBetLimit": "Commission & Bet Limit",
+        "MaxBet": "Max Bet",
+        "MaxPerMatch": "Max per Match"
     };
 
     labels["zh-cn"] = {

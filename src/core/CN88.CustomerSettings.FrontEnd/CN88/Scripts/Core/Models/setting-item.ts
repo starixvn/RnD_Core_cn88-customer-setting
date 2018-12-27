@@ -20,6 +20,7 @@ module CustomerSetting {
         public isLive: boolean;
         public displayOrder: number;
         public layoutType: number;
+        public intervalValue: number;
         public oldSetting: DefaultSettingItem;
         public validationState: ValidationResult;
 
@@ -36,6 +37,7 @@ module CustomerSetting {
                 this.typeName = settingItem.typeName;
                 this.displayOrder = settingItem.childOrder;
                 this.layoutType = settingItem.layoutType;
+                this.intervalValue = settingItem.intervalValue;
 
                 if (settingItem.isLive !== undefined) {
                     this.isLive = settingItem.isLive;
@@ -46,6 +48,9 @@ module CustomerSetting {
             this.ignoredProperties = [
                 "sportTypeName",
                 "betTypeName",
+                "displayOrder",
+                "layoutType",
+                "intervalValue",
                 "oldSetting",
                 "validationState",
                 "ignoredProperties",
@@ -54,9 +59,7 @@ module CustomerSetting {
 
         public isChanged(): boolean {
             return (this.sportTypeId !== this.oldSetting.sportTypeId)
-                || (this.sportTypeName !== this.oldSetting.sportTypeName)
-                || (this.betTypeId !== this.oldSetting.betTypeId)
-                || (this.betTypeName !== this.oldSetting.betTypeName);
+                || (this.betTypeId !== this.oldSetting.betTypeId);
         }
 
         public validate(): boolean {
