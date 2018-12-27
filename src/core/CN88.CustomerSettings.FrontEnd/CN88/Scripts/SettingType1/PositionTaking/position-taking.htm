@@ -7,8 +7,8 @@
     </div>
     <div data-ng-if="customerLevel === avaiCustomerLevels.super">
         <div class="row">
-            <label class="w50-percent">{{::('SuperMinPT' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent"
+            <label class="w40-percent">{{::('SuperMinPT' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superMinPT'}}">
                 <percentage-dropdown data-ng-model="accountDetail.superMinPT"
@@ -18,8 +18,8 @@
             </div>
         </div>
         <div class="row">
-            <label class="w50-percent">{{::('SuperMaxPT' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent"
+            <label class="w40-percent">{{::('SuperMaxPT' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superMaxPT'}}">
                 <percentage-dropdown data-ng-model="accountDetail.superMaxPT"
@@ -31,8 +31,8 @@
     </div>
     <div data-ng-if="customerLevel === avaiCustomerLevels.master">
         <div class="row">
-            <label class="w50-percent">{{::('SuperPT' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent"
+            <label class="w40-percent">{{::('SuperPT' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superPT'}}">
                 <percentage-dropdown data-ng-model="accountDetail.superPT"
@@ -44,8 +44,8 @@
     </div>
     <div data-ng-if="customerLevel === avaiCustomerLevels.agent">
         <div class="row">
-            <label class="w50-percent">{{::('MasterPT' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent"
+            <label class="w40-percent">{{::('MasterPT' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'masterPT'}}">
                 <percentage-dropdown data-ng-model="accountDetail.masterPT"
@@ -55,8 +55,8 @@
             </div>
         </div>
         <div class="row">
-            <label class="w50-percent">{{::('AgentPT' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent"
+            <label class="w40-percent">{{::('AgentPT' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'agentPT'}}">
                 <percentage-dropdown data-ng-model="accountDetail.agentPT"

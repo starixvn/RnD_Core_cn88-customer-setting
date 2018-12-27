@@ -2,11 +2,11 @@
     <div class="sub-header">{{::('Credit' | settingType1Label)}}</div>
     <div data-ng-if="customerLevel === avaiCustomerLevels.super">
         <div class="row">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('Currency' | settingType1Label)}}</span>
                 <span class="required-field-mark" data-ng-if="isNew"> *</span>
             </label>
-            <div class="setting-field-wrapper w50-percent"
+            <div class="setting-field-wrapper w60-percent"
                  data-ng-if="isNew"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'currency'}}">
@@ -14,11 +14,11 @@
                         data-ng-model="accountDetail.currency"
                         data-ng-options="currency.name for currency in accountDetail.currencies track by currency.id"></select>
             </div>
-            <label class="currency" data-ng-if="!isNew">{{accountDetail.currency.name}}</label>
+            <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.currency.name}}</label>
         </div>
         <div class="row">
-            <label class="w50-percent">{{::('Credit' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent"
+            <label class="w40-percent">{{::('Credit' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'credit'}}">
                 <input type="text"
@@ -32,11 +32,11 @@
     </div>
     <div data-ng-if="customerLevel !== avaiCustomerLevels.super">
         <div class="row">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('Credit' | settingType1Label)}}</span>
                 <span class="required-field-mark"> *</span>
             </label>
-            <div class="setting-field-wrapper w50-percent"
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'credit'}}">
                 <input type="text"
@@ -48,8 +48,8 @@
             </div>
         </div>
         <div class="row">
-            <label class="w50-percent">{{::('AvailableCredit' | settingType1Label)}}</label>
-            <label class="w50-percent available-credit">{{accountDetail.availableCredit | formatNumber:2}}</label>
+            <label class="w40-percent">{{::('AvailableCredit' | settingType1Label)}}</label>
+            <label class="w60-percent available-credit">{{accountDetail.availableCredit | formatNumber:2}}</label>
         </div>
     </div>
 </div>

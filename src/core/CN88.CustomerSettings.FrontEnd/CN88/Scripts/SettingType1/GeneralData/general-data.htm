@@ -2,11 +2,11 @@
     <div class="sub-header">{{::('GeneralData' | settingType1Label)}}</div>
     <div data-ng-if="customerLevel === avaiCustomerLevels.super">
         <div class="row">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('Username' | settingType1Label)}}</span>
                 <span class="required-field-mark" data-ng-if="isNew"> *</span>
             </label>
-            <div class="setting-field-wrapper w50-percent"
+            <div class="setting-field-wrapper w60-percent"
                  data-ng-if="isNew"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'username'}}">
@@ -15,14 +15,14 @@
                        class="setting-field setting-field--fullwidth"
                        data-ng-model="accountDetail.username" />
             </div>
-            <label data-ng-if="!isNew">{{accountDetail.username}}</label>
+            <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label>
         </div>
         <div class="row" data-ng-if="isNew">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('Password' | settingType1Label)}}</span>
                 <span class="required-field-mark"> *</span>
             </label>
-            <div class="setting-field-wrapper w50-percent"
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'password'}}">
                 <input type="password"
@@ -32,8 +32,8 @@
             </div>
         </div>
         <div class="row">
-            <label class="w50-percent">{{::('FirstName' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent">
+            <label class="w40-percent">{{::('FirstName' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent">
                 <input type="text"
                        maxlength="50"
                        class="setting-field setting-field--fullwidth"
@@ -41,8 +41,8 @@
             </div>
         </div>
         <div class="row">
-            <label class="w50-percent">{{::('LastName' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent">
+            <label class="w40-percent">{{::('LastName' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent">
                 <input type="text"
                        maxlength="50"
                        class="setting-field setting-field--fullwidth"
@@ -50,8 +50,8 @@
             </div>
         </div>
         <div class="row">
-            <label class="w50-percent">{{::('Phone' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent">
+            <label class="w40-percent">{{::('Phone' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent">
                 <input type="text"
                        maxlength="50"
                        class="setting-field setting-field--fullwidth"
@@ -59,8 +59,8 @@
             </div>
         </div>
         <div class="row">
-            <label class="w50-percent">{{::('MobilePhone' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent">
+            <label class="w40-percent">{{::('MobilePhone' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent">
                 <input type="text"
                        maxlength="50"
                        class="setting-field setting-field--fullwidth"
@@ -68,8 +68,8 @@
             </div>
         </div>
         <div class="row">
-            <label class="w50-percent">{{::('Fax' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent">
+            <label class="w40-percent">{{::('Fax' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent">
                 <input type="text"
                        maxlength="50"
                        class="setting-field setting-field--fullwidth"
@@ -79,19 +79,19 @@
     </div>
     <div data-ng-if="customerLevel === avaiCustomerLevels.master">
         <div class="row">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('Username' | settingType1Label)}}</span>
                 <span class="required-field-mark" data-ng-if="isNew"> *</span>
             </label>
-            <div class="setting-field-wrapper w50-percent" data-ng-if="isNew">
+            <div class="setting-field-wrapper w60-percent" data-ng-if="isNew">
                 <span>{{accountDetail.uplineUsername}}</span>
                 <username-suffix-group></username-suffix-group>
             </div>
-            <label data-ng-if="!isNew">{{accountDetail.username}}</label>
+            <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label>
         </div>
         <div class="row">
-            <label class="w50-percent">{{::('Name' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent">
+            <label class="w40-percent">{{::('Name' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent">
                 <input type="text"
                        maxlength="30"
                        class="setting-field setting-field--fullwidth"
@@ -99,7 +99,7 @@
             </div>
         </div>
         <div class="row" data-ng-if="isNew">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('Password' | settingType1Label)}}</span>
                 <span class="required-field-mark"> *</span>
                 <span data-on-hover="true"
@@ -109,7 +109,7 @@
                     <span class="icon icon--info"></span>
                 </span>
             </label>
-            <div class="setting-field-wrapper w50-percent"
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'password'}}">
                 <input type="password"
@@ -119,11 +119,11 @@
             </div>
         </div>
         <div class="row" data-ng-if="isNew">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('ConfirmPassword' | settingType1Label)}}</span>
                 <span class="required-field-mark"> *</span>
             </label>
-            <div class="setting-field-wrapper w50-percent"
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'confirmPassword'}}">
                 <input type="password"
@@ -135,25 +135,23 @@
     </div>
     <div data-ng-if="customerLevel === avaiCustomerLevels.agent">
         <div class="row" data-ng-if="isNew">
-            <label class="w50-percent">
-                <span>{{::('Master' | settingType1Label)}}</span>
-            </label>
-            <label>{{accountDetail.uplineUsername}}</label>
+            <label class="w40-percent">{{::('Master' | settingType1Label)}}</label>
+            <label class="w60-percent">{{accountDetail.uplineUsername}}</label>
         </div>
         <div class="row">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('Username' | settingType1Label)}}</span>
                 <span class="required-field-mark" data-ng-if="isNew"> *</span>
             </label>
-            <div class="setting-field-wrapper w50-percent" data-ng-if="isNew">
+            <div class="setting-field-wrapper w60-percent" data-ng-if="isNew">
                 <span>{{accountDetail.uplineUsername}}</span>
                 <username-suffix-group></username-suffix-group>
             </div>
             <label data-ng-if="!isNew">{{accountDetail.username}}</label>
         </div>
         <div class="row">
-            <label class="w50-percent">{{::('Name' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent">
+            <label class="w40-percent">{{::('Name' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent">
                 <input type="text"
                        maxlength="30"
                        class="setting-field setting-field--fullwidth"
@@ -161,7 +159,7 @@
             </div>
         </div>
         <div class="row" data-ng-if="isNew">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('Password' | settingType1Label)}}</span>
                 <span class="required-field-mark"> *</span>
                 <span data-on-hover="true"
@@ -171,7 +169,7 @@
                     <span class="icon icon--info"></span>
                 </span>
             </label>
-            <div class="setting-field-wrapper w50-percent"
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'password'}}">
                 <input type="password"
@@ -181,11 +179,11 @@
             </div>
         </div>
         <div class="row" data-ng-if="isNew">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('ConfirmPassword' | settingType1Label)}}</span>
                 <span class="required-field-mark"> *</span>
             </label>
-            <div class="setting-field-wrapper w50-percent"
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'confirmPassword'}}">
                 <input type="password"
@@ -197,24 +195,22 @@
     </div>
     <div data-ng-if="customerLevel === avaiCustomerLevels.member">
         <div class="row" data-ng-if="isNew">
-            <label class="w50-percent">
-                <span>{{::('Agent' | settingType1Label)}}</span>
-            </label>
-            <label>{{accountDetail.uplineUsername}}</label>
+            <label class="w40-percent">{{::('Agent' | settingType1Label)}}</label>
+            <label class="w60-percent">{{accountDetail.uplineUsername}}</label>
         </div>
         <div class="row">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('Username' | settingType1Label)}}</span>
                 <span class="required-field-mark" data-ng-if="isNew"> *</span>
             </label>
-            <div class="setting-field-wrapper w50-percent" data-ng-if="isNew">
+            <div class="setting-field-wrapper w60-percent" data-ng-if="isNew">
                 <span>{{accountDetail.uplineUsername}}</span>
                 <username-suffix-group></username-suffix-group>
             </div>
-            <label data-ng-if="!isNew">{{accountDetail.username}}</label>
+            <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label>
         </div>
         <div class="row">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('SpredGroup' | settingType1Label)}}</span>
                 <span class="required-field-mark" data-ng-if="isNew"> *</span>
                 <span data-on-hover="true"
@@ -224,16 +220,16 @@
                     <span class="icon icon--info"></span>
                 </span>
             </label>
-            <div class="setting-field-wrapper w50-percent" data-ng-if="isNew">
+            <div class="setting-field-wrapper w60-percent" data-ng-if="isNew">
                 <select class="setting-field setting-field--fullwidth"
                         data-ng-model="accountDetail.uGroup"
                         data-ng-options="group for group in accountDetail.uGroups"></select>
             </div>
-            <label data-ng-if="!isNew">{{accountDetail.uGroup}}</label>
+            <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.uGroup}}</label>
         </div>
         <div class="row">
-            <label class="w50-percent">{{::('Name' | settingType1Label)}}</label>
-            <div class="setting-field-wrapper w50-percent">
+            <label class="w40-percent">{{::('Name' | settingType1Label)}}</label>
+            <div class="setting-field-wrapper w60-percent">
                 <input type="text"
                        maxlength="30"
                        class="setting-field setting-field--fullwidth"
@@ -241,7 +237,7 @@
             </div>
         </div>
         <div class="row" data-ng-if="isNew">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('Password' | settingType1Label)}}</span>
                 <span class="required-field-mark"> *</span>
                 <span data-on-hover="true"
@@ -251,7 +247,7 @@
                     <span class="icon icon--info"></span>
                 </span>
             </label>
-            <div class="setting-field-wrapper w50-percent"
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'password'}}">
                 <input type="password"
@@ -261,11 +257,11 @@
             </div>
         </div>
         <div class="row" data-ng-if="isNew">
-            <label class="w50-percent">
+            <label class="w40-percent">
                 <span>{{::('ConfirmPassword' | settingType1Label)}}</span>
                 <span class="required-field-mark"> *</span>
             </label>
-            <div class="setting-field-wrapper w50-percent"
+            <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'confirmPassword'}}">
                 <input type="password"

@@ -873,7 +873,7 @@ select.setting-field {
 
 .setting-type-1 .customer-credit {
   margin-bottom: 15px; }
-  .setting-type-1 .customer-credit .available-credit, .setting-type-1 .customer-credit .currency {
+  .setting-type-1 .customer-credit .available-credit {
     padding-right: 4px;
     text-align: right; }
 
