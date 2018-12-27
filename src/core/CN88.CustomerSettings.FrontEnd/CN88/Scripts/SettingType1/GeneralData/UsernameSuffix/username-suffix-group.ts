@@ -37,7 +37,7 @@ module CustomerSetting {
                     var validatingPath: string = appConfigService.buildPath(UsernameSuffixGroupDirective.validatingUsernamePath);
 
                     $scope.selectedSuffixes[suffixIndex] = selectedSuffix;
-                    $scope.accountDetail.username = $scope.accountDetail.uplineUsername + $scope.selectedSuffixes.join();
+                    $scope.accountDetail.username = $scope.accountDetail.uplineUsername + $scope.selectedSuffixes.join("");
 
                     requestService.get(
                         validatingPath,
