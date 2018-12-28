@@ -18,24 +18,24 @@ module CustomerSetting {
 
         public templateUrl: string = "SubSections/GeneralData/general-data.htm";
 
-        private crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus;
-
-        constructor(crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus) {
-            super();
-
-            this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
-        }
-
         public link: ng.IDirectiveLinkFn = (scope: IGeneralDataScope) => {
             if (scope.isNew && scope.customerLevel === Level.member) {
                 scope.updateSpreadGroup = () => {
                     this.crossingSettingTypesServiceBus.execute(
                         "updateMemberSpreadGroup",
                         {
-                            newUserGroup: (<MemberAccountDetail>scope.accountDetail).uGroup
+                            newMemberSpreadGroup: (<MemberAccountDetail>scope.accountDetail).uGroup
                         });
-                }
+                };
             }
+        };
+
+        private crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus;
+
+        constructor(crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus) {
+            super();
+
+            this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
         }
     }
 

@@ -9,7 +9,7 @@ module CustomerSetting {
     interface ITooltipScope extends ng.IScope {
         tooltipMessage: string;
         tooltipType: string;
-        tooltipPositionModel: PositionModel,
+        tooltipPositionModel: PositionModel;
         onHover: boolean;
         fieldName: string;
         showed: boolean;
@@ -183,7 +183,7 @@ module CustomerSetting {
                 });
 
                 if (resourceService) {
-                    params.unshift(result.message)
+                    params.unshift(result.message);
                     message = resourceService.getFormattedMessage.apply(resourceService, params);
                 }
             }

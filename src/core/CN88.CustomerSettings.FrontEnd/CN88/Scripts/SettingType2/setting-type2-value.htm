@@ -1,0 +1,92 @@
+﻿<div data-ng-if="settingType | editableSettingType">
+    <div class="w50-percent" data-ng-if="customerLevel !== avaiCustomerLevels.member">
+        <div data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
+             data-ng-style="eachGroupStyle"
+             data-ng-repeat="commissionGroup for commissionGroup in item.mappedCommissionGroups">
+            <div class="block__cell setting-field-wrapper"
+                 data-tooltip
+                 data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':('commissionGroups:' + $index)}}">
+                <percentage-dropdown data-ng-if="commissionGroup"
+                                     data-ng-model="commissionGroup.value"
+                                     data-min="commissionGroup.minValue"
+                                     data-max="commissionGroup.maxValue"
+                                     data-step="item.intervalValue"></percentage-dropdown>
+            </div>
+        </div>
+        <div class="block__cell setting-field-wrapper"
+             data-ng-if="item.layoutType === availableLayoutTypes.singleGroup"
+             data-tooltip
+             data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':'commissionGroups:0'}}">
+            <percentage-dropdown data-ng-model="item.mappedCommissionGroups[0].value"
+                                 data-min="item.mappedCommissionGroups[0].minValue"
+                                 data-max="item.mappedCommissionGroups[0].maxValue"
+                                 data-step="item.intervalValue"></percentage-dropdown>
+        </div>
+    </div>
+    <div class="block__cell w50-percent setting-field-wrapper"
+         data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups"
+         data-tooltip
+         data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':('commissionGroups:' + memberSpreadGroupIndex)}}">
+        <percentage-dropdown data-ng-if="item.mappedCommissionGroups[memberSpreadGroupIndex]"
+                             data-ng-model="item.mappedCommissionGroups[memberSpreadGroupIndex].value"
+                             data-min="item.mappedCommissionGroups[memberSpreadGroupIndex].minValue"
+                             data-max="item.mappedCommissionGroups[memberSpreadGroupIndex].maxValue"
+                             data-step="item.intervalValue"></percentage-dropdown>
+    </div>
+    <div class="block__cell w50-percent setting-field-wrapper"
+         data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup"
+         data-tooltip
+         data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':'commissionGroups:0'}}">
+        <percentage-dropdown data-ng-model="item.mappedCommissionGroups[0].value"
+                             data-min="item.mappedCommissionGroups[0].minValue"
+                             data-max="item.mappedCommissionGroups[0].maxValue"
+                             data-step="item.intervalValue"></percentage-dropdown>
+    </div>
+    <div class="w50-percent w50-percent">
+        <div class="block__cell w50-percent setting-field-wrapper"
+             data-tooltip
+             data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':'maxBet'}}">
+            <input type="text"
+                   maxlength="14"
+                   class="setting-field setting-field--number setting-field--has-constraint"
+                   data-numeric-input
+                   data-ng-model="item.maxBet" />
+            <span>[{{item.minMaxBet}}; {{item.maxMaxBet}}]</span>
+        </div>
+        <div class="block__cell block__cell--no-border w50-percent"
+             data-tooltip
+             data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':'maxPerMatch'}}">
+            <input type="text"
+                   maxlength="14"
+                   class="setting-field setting-field--number setting-field--has-constraint"
+                   data-numeric-input
+                   data-ng-model="item.maxPerMatch" />
+            <span>[{{item.minMaxPerMatch}}; {{item.maxMaxPerMatch}}]</span>
+        </div>
+    </div>
+</div>
+<div class="align-center" data-ng-if="!(settingType | editableSettingType)">
+    <div class="w50-percent" data-ng-if="customerLevel !== avaiCustomerLevels.member">
+        <div class="block__cell"
+             data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
+             data-ng-style="eachGroupStyle"
+             data-ng-repeat="commissionGroup for commissionGroup in item.mappedCommissionGroups">
+            {{commissionGroup.value}}
+        </div>
+        <div class="block__cell" data-ng-if="item.layoutType === availableLayoutTypes.singleGroup">
+            {{item.mappedCommissionGroups[0].value}}
+        </div>
+    </div>
+    <div class="block__cell w50-percent"
+         data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups">
+        {{item.mappedCommissionGroups[memberSpreadGroupIndex].value}}
+    </div>
+    <div class="block__cell w50-percent"
+         data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup">
+        {{item.mappedCommissionGroups[0].value}}
+    </div>
+    <div class="w50-percent w50-percent">
+        <div class="block__cell w50-percent">{{item.maxBet}}</div>
+        <div class="block__cell block__cell--no-border w50-percent">{{item.maxPerMatch}}</div>
+    </div>
+</div>

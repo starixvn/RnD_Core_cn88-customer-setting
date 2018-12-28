@@ -61,7 +61,7 @@ module CustomerSetting {
         };
 
         private settingType1ResourceService: SettingType1ResourceService;
-        private settingTypesSharedValuesService: SettingTypesSharedValuesService
+        private settingTypesSharedValuesService: SettingTypesSharedValuesService;
 
         constructor(settingType1ResourceService: SettingType1ResourceService, settingTypesSharedValuesService: SettingTypesSharedValuesService) {
             this.settingType1ResourceService = settingType1ResourceService;

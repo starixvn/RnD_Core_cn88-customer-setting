@@ -2,6 +2,7 @@
 /// <reference path="../../core/models/result.ts" />
 /// <reference path="../../core/models/setting-item.ts" />
 /// <reference path="commission-group.ts" />
+/// <reference path="layout-type.ts" />
 
 module CustomerSetting {
     "use strict";
@@ -15,16 +16,19 @@ module CustomerSetting {
         public minMaxPerMatch: number;
         public maxMaxPerMatch: number;
 
+        public get mappedCommissionGroups(): ICommissionGroup[] {
+            return this.commissionGroupsIndex;
+        }
+
+        private commissionGroupsIndex: ICommissionGroup[];
+
         constructor();
         constructor(settingType2Item: any);
         constructor(settingType2Item: any, backup: boolean)
         constructor(settingType2Item: any, backup: boolean, isNew: boolean)
         constructor(settingType2Item: any, backup: boolean, isNew: boolean, customerLevel: Level)
         constructor(settingType2Item?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null) {
-            super(settingType2Item);
-
-            this.isNew = isNew;
-            this.customerLevel = customerLevel;
+            super(settingType2Item, isNew, customerLevel);
 
             if (settingType2Item) {
                 this.commissionGroups = settingType2Item.commissionGroups;
@@ -39,6 +43,9 @@ module CustomerSetting {
             if (backup) {
                 this.oldSetting = new SettingType2Item(this);
             }
+
+            this.ignoredProperties.push("_mappedCommissionGroups");
+            this.ignoredProperties.push("mappedCommissionGroups");
 
             this.resetValidationState();
         }
@@ -60,6 +67,32 @@ module CustomerSetting {
             this.resetValidationState();
 
             return true;
+        }
+
+        public mapCommissionGroups(allAvailableGroups: string[]): void {
+            this.commissionGroupsIndex = [];
+
+            if (this.commissionGroups || this.commissionGroups.length === 0) {
+                return;
+            }
+
+            if (this.layoutType === LayoutType.singleGroup) {
+                this.mappedCommissionGroups.push(this.commissionGroups[0]);
+
+                return;
+            }
+
+            allAvailableGroups.forEach((groupName: string) => {
+                var matchedCommissionGroups: ICommissionGroup[] = this.commissionGroups.filter((commissionGroup: ICommissionGroup) => {
+                    return groupName === commissionGroup.groupName;
+                });
+
+                if (matchedCommissionGroups && matchedCommissionGroups.length > 0) {
+                    this.mappedCommissionGroups.push(matchedCommissionGroups[0]);
+                } else {
+                    this.mappedCommissionGroups.push(null);
+                }
+            });
         }
     }
 }

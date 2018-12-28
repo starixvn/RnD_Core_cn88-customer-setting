@@ -55,7 +55,10 @@ module CustomerSetting {
             this.resourceService = resourceService;
             this.requestService = requestService;
             this.settingTypesSharedValuesService = settingTypesSharedValuesService;
+
+            /* tslint:disable:no-string-literal */
             this.successfulUpdatingCallback = this.$window.parent["successfulUpdatingCallback"];
+            /* tslint:enable:no-string-literal */
 
             this.systemId = this.parametersService.systemId;
             this.requestService.registerSharedScope(this);

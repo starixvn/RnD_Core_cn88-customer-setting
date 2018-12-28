@@ -6,7 +6,10 @@ module.exports = function (configs) {
     var tslint = require("gulp-tslint");
 
     gulp.task("tslint:check", function () {
-        var sourceDir = path.join(process.cwd(), configs.root, configs.scripts, "**/*.ts");
+        var sourceDir = [
+            path.join(process.cwd(), configs.root, configs.scripts, "**/*.ts"),
+            path.join(process.cwd(), configs.root, configs.scripts, "!Typings/**/*.d.ts")
+        ];
 
         return gulp.src(sourceDir)
                    .pipe(tslint({

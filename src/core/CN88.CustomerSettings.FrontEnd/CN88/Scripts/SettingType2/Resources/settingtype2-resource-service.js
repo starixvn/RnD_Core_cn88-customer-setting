@@ -8,7 +8,8 @@
     labels["en-us"] = {
         "CommissionAndBetLimit": "Commission & Bet Limit",
         "MaxBet": "Max Bet",
-        "MaxPerMatch": "Max per Match"
+        "MaxPerMatch": "Max per Match",
+        "MemberCommission": "Member Commission"
     };
 
     labels["zh-cn"] = {

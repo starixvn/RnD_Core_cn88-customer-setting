@@ -26,7 +26,7 @@ module CustomerSetting {
 
     function SettingType1MessageFilter(settingType1ResourceService: SettingType1ResourceService): Function {
         return (name: string, ...replacements: any[]) => {
-            replacements.unshift(name)
+            replacements.unshift(name);
 
             return settingType1ResourceService.getFormattedMessage.apply(settingType1ResourceService, replacements);
         };

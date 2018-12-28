@@ -13,7 +13,7 @@ module CustomerSetting {
                 max,
                 step,
                 roundingFactor);
-        }
+        };
     }
 
     ModuleRegister.filter("valueRange", ValueRangeFilter);

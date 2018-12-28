@@ -29,8 +29,12 @@ module CustomerSetting {
         protected ignoredProperties: string[];
 
         constructor();
-        constructor(settingItem: any);
-        constructor(settingItem?: any) {
+        constructor(settingItem: any, isNew: boolean);
+        constructor(settingItem: any, isNew: boolean, customerLevel: Level);
+        constructor(settingItem?: any, isNew: boolean = false, customerLevel: Level = null) {
+            this.isNew = isNew;
+            this.customerLevel = customerLevel;
+
             if (settingItem) {
                 this.sportTypeId = settingItem.sportTypeId;
                 this.sportTypeName = settingItem.sportTypeName;

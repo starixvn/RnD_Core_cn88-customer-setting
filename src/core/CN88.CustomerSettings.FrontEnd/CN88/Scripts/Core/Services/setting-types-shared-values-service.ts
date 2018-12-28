@@ -10,7 +10,7 @@ module CustomerSetting {
         public static $inject: string[] = ["parametersService"];
 
         public actorLevel: Level;
-        public customerId: number
+        public customerId: number;
         public uplineId: number;
         public customerLevel: Level;
         public productId: number;

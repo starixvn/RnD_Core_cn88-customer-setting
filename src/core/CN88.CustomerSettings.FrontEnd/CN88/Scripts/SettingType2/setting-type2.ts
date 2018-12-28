@@ -1,0 +1,159 @@
+﻿/// <reference path="../typings/angularjs/angular.d.ts" />
+/// <reference path="../core/directives/defaultsettingtypeblock/default-setting-type-block.ts" />
+/// <reference path="../core/directives/settingtypebase/setting-type-base-directive.ts" />
+/// <reference path="../core/models/enums/level.ts" />
+/// <reference path="../core/models/setting-item.ts" />
+/// <reference path="../core/models/setting-type.ts" />
+/// <reference path="../core/services/crossing-setting-types-service-bus.ts" />
+/// <reference path="../core/services/setting-types-shared-values-service.ts" />
+/// <reference path="../core/module-registrater.ts" />
+/// <reference path="models/commission-group-and-spread-group-map.ts" />
+/// <reference path="models/layout-type.ts" />
+/// <reference path="models/setting-type2-item.ts" />
+/// <reference path="resources/settingtype2-resource-service.ts" />
+
+module CustomerSetting {
+    "use strict";
+
+    interface ISettingType2Scope extends IDefaultSettingTypeDirectiveScope {
+        availableCommissionGroups: string[];
+        availableLayoutTypes: Object;
+        commissionGroupAndSpreadGroupMaps: ICommissionGroupAndSpreadGroupMap[];
+        memberSpreadGroupIndex: number;
+        eachGroupStyle: {};
+    }
+
+    class SettingType2Directive extends SettingTypeBaseDirective {
+        public static $inject: string[] = [
+            "$q",
+            "settingType2ResourceService",
+            "crossingSettingTypesServiceBus"
+        ];
+
+        public templateUrl: string = "setting-type2.htm";
+
+        public link: ng.IDirectiveLinkFn = (scope: ISettingType2Scope) => {
+            scope.headerTemplateUrl = "settingtype2-header.htm";
+            scope.valueTemplateUrl = "settingtype2-value.htm";
+            scope.settingTypeName = this.settingType2ResourceService.getLabel("CommissionAndBetLimit");
+            scope.availableLayoutTypes = LayoutType;
+
+            if (scope.settingType.settingItems && scope.settingType.settingItems.length > 0) {
+                scope.availableCommissionGroups = this.getAllAvailableGroups(scope.settingType.settingItems);
+
+                if (scope.availableCommissionGroups.length > 0) {
+                    scope.settingType.settingItems.forEach((settingItem: ISettingItem) => {
+                        var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
+
+                        settingType2Item.mapCommissionGroups(scope.availableCommissionGroups);
+                    });
+                    scope.eachGroupStyle = {
+                        "min-width": (100 / scope.availableCommissionGroups.length) + "%"
+                    };
+                }
+            }
+
+            if (scope.customerLevel === Level.member) {
+                scope.commissionGroupAndSpreadGroupMaps = this.mapCommissionGroupsAndSpreadGroups(scope.settingType.settingItems);
+
+                this.crossingSettingTypesServiceBus.register("updateMemberSpreadGroup", (sharedData: any) => {
+                    var deferred: ng.IDeferred<void> = this.$q.defer<void>();
+                    var newMemberSpreadGroup: string = sharedData.newMemberSpreadGroup;
+                    var matchedMap: ICommissionGroupAndSpreadGroupMap = scope.commissionGroupAndSpreadGroupMaps.filter((map: ICommissionGroupAndSpreadGroupMap) => {
+                        return map.uGroup === newMemberSpreadGroup;
+                    })[0];
+                    var matchGroupName = matchedMap.groupName;
+
+                    if (matchGroupName) {
+                        scope.memberSpreadGroupIndex = scope.availableCommissionGroups.indexOf(matchGroupName);
+                    } else {
+                        scope.memberSpreadGroupIndex = -1;
+                    }
+
+                    deferred.resolve();
+
+                    return deferred.promise;
+                });
+            }
+        };
+
+        private $q: ng.IQService;
+        private settingType2ResourceService: SettingType2ResourceService;
+        private crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus;
+
+        constructor(
+            $q: ng.IQService,
+            settingType2ResourceService: SettingType2ResourceService,
+            crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus) {
+            super((settingItem: any, backup?: boolean, isNew?: boolean, customerLevel?: Level) => new SettingType2Item(settingItem, backup, isNew, customerLevel));
+
+            this.$q = $q;
+            this.settingType2ResourceService = settingType2ResourceService;
+            this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
+        }
+
+        private getAllAvailableGroups(settingItems: ISettingItem[]): string[] {
+            var allAvailableGroups: string[] = [];
+
+            settingItems.forEach((settingItem: ISettingItem) => {
+                var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
+
+                if (settingType2Item
+                    && settingType2Item.commissionGroups
+                    && settingType2Item.commissionGroups.length > 0) {
+                    settingType2Item.commissionGroups.forEach((commissionGroup: ICommissionGroup) => {
+                        if (commissionGroup.groupId && allAvailableGroups.indexOf(commissionGroup.groupName) < 0) {
+                            allAvailableGroups.push(commissionGroup.groupName);
+                        }
+                    });
+                }
+            });
+
+            if (allAvailableGroups.length > 0) {
+                allAvailableGroups.sort((firstGroupName: string, secondGroupName: string) => {
+                    if (firstGroupName > secondGroupName) {
+                        return 1;
+                    }
+
+                    if (firstGroupName < secondGroupName) {
+                        return -1;
+                    }
+
+                    return 0;
+                });
+            }
+
+            return allAvailableGroups;
+        }
+
+        private mapCommissionGroupsAndSpreadGroups(settingItems: ISettingItem[]): ICommissionGroupAndSpreadGroupMap[] {
+            var maps: ICommissionGroupAndSpreadGroupMap[] = [];
+
+            settingItems.forEach((settingItem: ISettingItem) => {
+                var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
+
+                if (settingType2Item
+                    && settingType2Item.commissionGroups
+                    && settingType2Item.commissionGroups.length > 0) {
+                    settingType2Item.commissionGroups.forEach((commissionGroup: ICommissionGroup) => {
+                        var newMap: ICommissionGroupAndSpreadGroupMap = {
+                            groupName: commissionGroup.groupName,
+                            uGroup: commissionGroup.uGroup
+                        };
+                        var alreadyExisted: boolean = maps.some((existingMap: ICommissionGroupAndSpreadGroupMap) => {
+                            return existingMap.groupName === newMap.groupName && existingMap.uGroup === newMap.uGroup;
+                        });
+
+                        if (commissionGroup.groupId && alreadyExisted) {
+                            maps.push(newMap);
+                        }
+                    });
+                }
+            });
+
+            return maps;
+        }
+    }
+
+    ModuleRegister.directive("settingtype2", SettingType2Directive);
+}

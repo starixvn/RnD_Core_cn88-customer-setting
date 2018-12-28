@@ -5,6 +5,7 @@
         groupId: string;
         groupName: string;
         uGroup: string;
+        minValue: number;
         maxValue: number;
         value: number;
     }

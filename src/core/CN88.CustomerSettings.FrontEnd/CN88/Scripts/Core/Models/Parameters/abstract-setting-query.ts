@@ -5,9 +5,6 @@ module CustomerSetting {
     "use strict";
 
     export class AbstractSettingQuery {
-        private prodId: number;
-        private custLv: Level;
-
         public uplineId: number;
 
         public get productId(): number {
@@ -33,6 +30,9 @@ module CustomerSetting {
 
             this.custLv = level;
         }
+
+        private prodId: number;
+        private custLv: Level;
 
         constructor(productId: number, uplineId: number, customerLevel: Level) {
             this.productId = productId;

@@ -102,7 +102,7 @@ module CustomerSetting {
 
     function MessageFilter(resourceService: ResourceService): Function {
         return (name: string, ...replacements: any[]) => {
-            replacements.unshift(name)
+            replacements.unshift(name);
 
             return resourceService.getFormattedMessage.apply(resourceService, replacements);
         };

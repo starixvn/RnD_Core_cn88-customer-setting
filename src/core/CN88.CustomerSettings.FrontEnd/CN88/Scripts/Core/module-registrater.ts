@@ -1,9 +1,9 @@
 ﻿/// <reference path="../typings/angularjs/angular.d.ts" />
 
+var app: ng.IModule = angular.module("customerSetting", []);
+
 module CustomerSetting {
     "use strict";
-
-    var app: ng.IModule = angular.module("customerSetting", []);
 
     export class ModuleRegister {
         public static controller(name: string, target: Function) {
@@ -37,10 +37,4 @@ module CustomerSetting {
             app.value(name, target);
         }
     }
-
-    app.run(["$http", "appConfigService", ($http: ng.IHttpService, appConfigService: AppConfigService) => {
-        /* tslint:disable:no-string-literal */
-        $http.defaults.headers.common["__RequestVerificationToken"] = appConfigService.requestVerificationToken();
-        /* tslint:enable:no-string-literal */
-    }]);
 }

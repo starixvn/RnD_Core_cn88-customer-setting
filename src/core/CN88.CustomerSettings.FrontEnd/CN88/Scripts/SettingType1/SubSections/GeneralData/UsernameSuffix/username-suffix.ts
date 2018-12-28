@@ -29,7 +29,7 @@ module CustomerSetting {
 
         public controller: any = ["$scope", ($scope: IUsernameSuffixScope) => {
             $scope.range = this.generateSuffixRange();
-            $scope.suffix = $scope.suffix || $scope.range[0];;
+            $scope.suffix = $scope.suffix || $scope.range[0];
             $scope.validateSuffix = () => {
                 $scope.validateUsername($scope.suffixIndex, $scope.suffix);
             };

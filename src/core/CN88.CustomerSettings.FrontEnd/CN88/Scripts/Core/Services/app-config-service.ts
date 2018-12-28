@@ -59,4 +59,10 @@ module CustomerSetting {
     }
 
     ModuleRegister.service("appConfigService", AppConfigService);
+
+    app.run(["$http", "appConfigService", ($http: ng.IHttpService, appConfigService: AppConfigService) => {
+        /* tslint:disable:no-string-literal */
+        $http.defaults.headers.common["__RequestVerificationToken"] = appConfigService.requestVerificationToken();
+        /* tslint:enable:no-string-literal */
+    }]);
 }

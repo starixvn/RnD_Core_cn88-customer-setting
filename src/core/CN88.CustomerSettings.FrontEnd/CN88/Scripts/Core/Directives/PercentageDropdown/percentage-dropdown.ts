@@ -10,7 +10,7 @@ module CustomerSetting {
         min: number;
         max: number;
         step: number;
-        factor: number
+        factor: number;
         range: number[];
     }
 

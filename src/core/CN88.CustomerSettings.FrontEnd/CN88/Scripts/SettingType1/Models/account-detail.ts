@@ -29,10 +29,8 @@ module CustomerSetting {
         constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level)
         constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string)
         constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
-            super(accountDetail);
+            super(accountDetail, isNew, customerLevel);
 
-            this.isNew = isNew;
-            this.customerLevel = customerLevel;
             this.hashKey = hashKey;
 
             if (accountDetail) {
