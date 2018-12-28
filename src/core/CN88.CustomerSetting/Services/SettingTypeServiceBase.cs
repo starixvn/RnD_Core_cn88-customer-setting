@@ -142,8 +142,7 @@
                 settingType.Id,
                 settingType.Name);
 
-        protected IEnumerable<T> GetSettingTypeConfig<T>(int productId, int settingTypeId) 
-            where T : SettingItemDefault
+        protected IEnumerable<T> GetSettingTypeConfig<T>(int productId, int settingTypeId)
             => CacheService.GetOrSet(
                        string.Format(SettingTypeConfigCacheKey, productId, settingTypeId),
                        () => DynamicRepository.Fetch<T>(new GetSettingTypeConfigCriteria(productId, settingTypeId)),

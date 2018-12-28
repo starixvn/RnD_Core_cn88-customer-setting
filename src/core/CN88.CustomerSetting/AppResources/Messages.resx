@@ -124,7 +124,7 @@
     <value>This account was disabled.</value>
   </data>
   <data name="CreateSuccessfully" xml:space="preserve">
-    <value>Account {0} was created successfully</value>
+    <value>Account {0} is created successfully</value>
   </data>
   <data name="CustomersAreNotSameLine" xml:space="preserve">
     <value>Customers are not in the same line!</value>

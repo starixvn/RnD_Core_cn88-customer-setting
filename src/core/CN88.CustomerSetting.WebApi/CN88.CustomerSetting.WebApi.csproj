@@ -30,16 +30,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="App_Data\SettingSPNames\PRO\Fanex.CustomerSetting.SettingType1.xml">
+    <None Update="App_Data\SettingSPNames\PRO\CN88.CustomerSetting.SettingType2.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="App_Data\SettingSPNames\PRO\Fanex.CustomerSetting.xml">
+    <None Update="App_Data\SettingSPNames\PRO\CN88.CustomerSetting.SettingType1.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="App_Data\SettingSPNames\UAT\Fanex.CustomerSetting.SettingType1.xml">
+    <None Update="App_Data\SettingSPNames\PRO\CN88.CustomerSetting.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="App_Data\SettingSPNames\UAT\Fanex.CustomerSetting.xml">
+    <None Update="App_Data\SettingSPNames\UAT\CN88.CustomerSetting.SettingType1.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="App_Data\SettingSPNames\UAT\CN88.CustomerSetting.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

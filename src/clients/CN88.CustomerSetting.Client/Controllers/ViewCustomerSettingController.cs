@@ -32,7 +32,22 @@
         }
 
         [CustomerSettingAuth(IsUpdate = false)]
-        public ContentResult Index(SettingFormQuery query)
+        public ContentResult Update(SettingFormQuery query)
+        {
+            query.IsCreateNew = false;
+
+            return GetSettingPage(query);
+        }
+
+        [CustomerSettingAuth(IsUpdate = false)]
+        public ContentResult Create(SettingFormQuery query)
+        {
+            query.IsCreateNew = true;
+
+            return GetSettingPage(query);
+        }
+
+        private ContentResult GetSettingPage(SettingFormQuery query)
         {
             if (query == null)
             {

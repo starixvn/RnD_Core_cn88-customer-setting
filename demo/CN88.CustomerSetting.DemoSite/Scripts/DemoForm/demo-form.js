@@ -72,58 +72,58 @@ var DemoFrom;
             var updateUrl = this.resolveUrl("CN88CustomerSetting/CreateCustomer/Create");
             var uplineId = this.target.uplineId;
             var role = this.target.role;
-            $.ajax({
-                method: "GET",
-                url: this.resolveUrl("CN88CustomerSetting/CreateCustomer/CheckExistedUsername"),
-                data: {
-                    username: "SupertestCN88Ricky1d"
-                }
-            }).done(function (result) { console.log(result); });
+            //$.ajax({
+            //    method: "GET",
+            //    url: this.resolveUrl("CN88CustomerSetting/CreateCustomer/CheckExistedUsername"),
+            //    data: {
+            //        username: "SupertestCN88Ricky1d"
+            //    }
+            //}).done(function (result) { console.log(result); });
 
-            $.ajax({
-                method: "GET",
-                url: this.resolveUrl("CN88CustomerSetting/CreateCustomer/CheckExistedUsername"),
-                data: {
-                    username: "SupertestCN88Ricky10d"
-                }
-            }).done(function (result) { console.log(result); });
+            //$.ajax({
+            //    method: "GET",
+            //    url: this.resolveUrl("CN88CustomerSetting/CreateCustomer/CheckExistedUsername"),
+            //    data: {
+            //        username: "SupertestCN88Ricky10d"
+            //    }
+            //}).done(function (result) { console.log(result); });
 
-            $.ajax({
-                method: "POST",
-                url: this.resolveUrl("CN88CustomerSetting/ViewCustomerSetting/QuerySetting"),
-                data: {
-                    productId: this.target.productId,
-                    customerId: this.target.customerId,
-                    isCreateNew: isCreateNew,
-                    customerLevel: this.target.role,
-                    uplineId: uplineId
-                }
-            })
-                .done(function (rawSetting) {
-                    //console.log(rawSetting);
-                    var setting = JSON.parse(rawSetting);
-                    var newUsername = "SupertestCN88Ricky1e";
-                    if (role === 3) {
-                        newUsername = "SupertestCN88Ricky1c001";
-                    } else if (role === 2) {
-                        newUsername = "SupertestCN88Ricky1c001001";
-                    }
-                    else if (role === 1) {
-                        newUsername = "SupertestCN88Ricky1c001001002";
-                    }
-                    setting.settingTypes[0].settingItems[0].username = newUsername;
-                    $.ajax({
-                        method: "POST",
-                        url: updateUrl,
-                        data: {
-                            setting: JSON.stringify(setting),
-                            uplineId: uplineId
-                        }
-                    })
-                        .done(function (msg) {
-                            console.log(msg);
-                        });
-                });
+            //$.ajax({
+            //    method: "POST",
+            //    url: this.resolveUrl("CN88CustomerSetting/ViewCustomerSetting/QuerySetting"),
+            //    data: {
+            //        productId: this.target.productId,
+            //        customerId: this.target.customerId,
+            //        isCreateNew: isCreateNew,
+            //        customerLevel: this.target.role,
+            //        uplineId: uplineId
+            //    }
+            //})
+            //    .done(function (rawSetting) {
+            //        //console.log(rawSetting);
+            //        var setting = JSON.parse(rawSetting);
+            //        var newUsername = "SupertestCN88Ricky1e";
+            //        if (role === 3) {
+            //            newUsername = "SupertestCN88Ricky1c001";
+            //        } else if (role === 2) {
+            //            newUsername = "SupertestCN88Ricky1c001001";
+            //        }
+            //        else if (role === 1) {
+            //            newUsername = "SupertestCN88Ricky1c001001002";
+            //        }
+            //        setting.settingTypes[0].settingItems[0].username = newUsername;
+            //        $.ajax({
+            //            method: "POST",
+            //            url: updateUrl,
+            //            data: {
+            //                setting: JSON.stringify(setting),
+            //                uplineId: uplineId
+            //            }
+            //        })
+            //            .done(function (msg) {
+            //                console.log(msg);
+            //            });
+            //    });
 
 
             var params = {
@@ -131,8 +131,9 @@ var DemoFrom;
                 productId: this.target.productId,
                 customerLevel: this.target.role,
                 uplineId: this.target.uplineId,
-                isCreateNew: isCreateNew,
-                path: this.resolveUrl("CN88CustomerSetting/ViewCustomerSetting"),
+                path: isCreateNew
+                    ? this.resolveUrl("CN88CustomerSetting/ViewCustomerSetting/Create")
+                    : this.resolveUrl("CN88CustomerSetting/ViewCustomerSetting/Update"),
                 frameName: "setting-page"
             };
             if (this.isMultipleUpdates) {

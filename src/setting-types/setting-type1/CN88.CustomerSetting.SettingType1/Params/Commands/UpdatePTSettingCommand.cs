@@ -1,5 +1,6 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Params.Commands
 {
+    using Fanex.Data;
     using Fanex.Data.Repository;
 
     public class UpdatePTSettingCommand : NonQueryCommand
@@ -12,6 +13,7 @@
 
         public int ProductId { get; set; }
 
+        [SpParam(Ignored = true)]
         public int SubAccountId { get; set; }
 
         public int UserId { get; set; }

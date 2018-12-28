@@ -7,6 +7,7 @@
     using RestSharp;
     using Services;
 
+    [ValidateAntiForgery]
     public class UpdateCustomerSettingController : Controller
     {
         private readonly ICustomerSettingService _customerSettingService;

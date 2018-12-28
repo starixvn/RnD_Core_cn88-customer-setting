@@ -302,9 +302,7 @@
                 
             };
 
-            DynamicRepository.Execute(updateCustomerInfoCommand);
-
-            
+            DynamicRepository.Execute(updatePTSettingCommand);
 
             return new SettingResult(
                 updatePTSettingCommand.ErrCode,
