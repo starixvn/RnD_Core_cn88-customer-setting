@@ -273,7 +273,7 @@ th {
 
 .setting-field {
   border: 1px solid #cecece;
-  height: 2rem;
+  height: 1.7rem;
   padding: 0 4px; }
   .setting-field:focus {
     border-color: #66afe9; }
@@ -583,7 +583,7 @@ th {
     background-color: #666;
     color: #fff;
     font-weight: bold;
-    line-height: 2.7rem;
+    line-height: 2.3rem;
     padding-left: 8px;
     text-align: left;
     word-wrap: break-word; }
@@ -597,7 +597,7 @@ th {
     border-bottom: 1px solid #cecece;
     background-color: #fae7d3;
     font-weight: bold;
-    line-height: 2.7rem;
+    line-height: 2.3rem;
     padding: 0 3px;
     text-align: left;
     width: 100%; }
@@ -648,14 +648,14 @@ th {
       color: #ff6964;
       font-weight: bold;
       justify-content: center;
-      line-height: 2.64rem;
+      line-height: 2.23rem;
       padding: 0 3px;
       text-align: center;
       width: 100%; }
   .block__cell, .block__lbl, .block__value {
     border-right: 1px solid #cecece;
-    line-height: 2.64rem;
-    min-height: 2.64rem; }
+    line-height: 2.23rem;
+    min-height: 2.23rem; }
     .block__cell--no-border {
       border: none; }
     .block__cell--border-top {
@@ -682,7 +682,7 @@ th {
     overflow: hidden;
     *zoom: 1;
     font-weight: bold;
-    line-height: 2.7rem;
+    line-height: 2.3rem;
     text-align: center;
     width: 100%; }
     .block__lbl-group .block__lbl {
@@ -850,7 +850,7 @@ select.setting-field {
 
 .setting-type-1 .master .sub-header {
   border-color: #276443;
-  color: #97141e; }
+  color: #209656; }
 
 .setting-type-1 .agent .sub-header {
   border-color: #516e8f;
