@@ -59,11 +59,11 @@
                 {
                     var firstSettingItemDto = settingItemDto.First();
                     var firstSettingItemConfig = settingItemConfig.ToList().FirstOrDefault();
-
+                    var live = firstSettingItemConfig.IsLive ? "Live" : "NonLive";
                     settingItems.Add(new CommBetSettingItem
                     {
                         SportTypeName = $"SportTypeName_{firstSettingItemConfig.SportTypeId}",
-                        BetTypeName = $"BetTypeName_{firstSettingItemConfig.BetTypeId}",
+                        BetTypeName = $"BetTypeName_{firstSettingItemConfig.BetTypeId}_{live}",
 
                         LayoutType = firstSettingItemConfig.LayoutType,
                         IntervalValue = firstSettingItemConfig.IntervalValue,
