@@ -126,7 +126,7 @@
         private string ReplaceParameters(string template, SettingFormQuery query)
         {
             string finalTemplate = template;
-            var appConfig = new AppConfiguration(Response.ApplyAppPathModifier(Request.ApplicationPath) + "CN88CustomerSetting");
+            var appConfig = new AppConfiguration(Response.ApplyAppPathModifier($"~/{CN88CustomerSettingRegistration.UrlRootName}"));
 
             appConfig.Editable = !query.IsReadOnly;
 

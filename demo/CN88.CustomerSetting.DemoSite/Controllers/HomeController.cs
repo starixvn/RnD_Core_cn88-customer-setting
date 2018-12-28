@@ -46,7 +46,7 @@
             Session[SessionKeys.SubAccountIdSessionKey] = subAccountId;
             Session[SessionKeys.SystemIdSessionKey] = system;
             Session[SessionKeys.LanguageSessionKey] = language;
-            Session[SessionKeys.HashKeySessionKey] = Encryptor.RandomNumberString(new Random().Next(4, 12));
+            Session[SessionKeys.HashKeySessionKey] = Session.SessionID;
 
             return Json(new
             {

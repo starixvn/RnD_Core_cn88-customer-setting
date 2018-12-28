@@ -12,6 +12,7 @@
     public abstract class CN88CustomerSettingRegistration
     {
         private static CN88CustomerSettingRegistration client;
+        public static string UrlRootName = "CN88CustomerSetting";
 
         internal static SettingContext SettingContext
         {
@@ -73,7 +74,7 @@
         {
             routes.MapRoute(
                 name: "CN88_Setting",
-                url: "CN88CustomerSetting/{controller}/{action}/{id}",
+                url: UrlRootName + "/{controller}/{action}/{id}",
                 defaults: new { controller = "ViewCustomerSetting", action = "Index", id = UrlParameter.Optional },
                 namespaces: new string[] { "CN88.CustomerSetting.Client.Controllers" });
         }
