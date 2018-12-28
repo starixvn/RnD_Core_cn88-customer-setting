@@ -4,6 +4,7 @@
          data-ng-class="{ 'block__header--error': !(settingType | validSettingType) }">
         {{settingTypeName}}
     </div>
+    <div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div>
     <div class="block__item-group"
          data-ng-if="settingType | validSettingType"
          data-ng-repeat="group in sportGroups">
@@ -13,7 +14,6 @@
              data-sport-type="{{group[0].sportTypeId}}">
             {{group[0].sportTypeName}}
         </div>
-        <div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div>
         <div class="block__item"
              data-ng-repeat="item in group"
              data-ng-class="{ 'block__item--last': $last,
@@ -28,11 +28,6 @@
                 {{item | showingName:settingType.settingLevel:productName }}
             </div>
             <div class="block__value" data-ng-include="valueTemplateUrl"></div>
-        </div>
-        <div class="block__item block__item--last block__item--extra"
-             data-ng-if="group.length % 2 === 1 && group.length > 1">
-            <div class="block__lbl"></div>
-            <div class="block__value"></div>
         </div>
     </div>
     <div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">

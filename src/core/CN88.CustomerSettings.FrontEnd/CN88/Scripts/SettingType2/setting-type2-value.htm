@@ -2,7 +2,7 @@
     <div class="w50-percent" data-ng-if="customerLevel !== avaiCustomerLevels.member">
         <div data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
              data-ng-style="eachGroupStyle"
-             data-ng-repeat="commissionGroup for commissionGroup in item.mappedCommissionGroups">
+             data-ng-repeat="commissionGroup in item.mappedCommissionGroups">
             <div class="block__cell setting-field-wrapper"
                  data-tooltip
                  data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':('commissionGroups:' + $index)}}">
@@ -74,7 +74,7 @@
         <div class="block__cell"
              data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
              data-ng-style="eachGroupStyle"
-             data-ng-repeat="commissionGroup for commissionGroup in item.mappedCommissionGroups">
+             data-ng-repeat="commissionGroup in item.mappedCommissionGroups">
             {{commissionGroup.value}}
         </div>
         <div class="block__cell" data-ng-if="item.layoutType === availableLayoutTypes.singleGroup">

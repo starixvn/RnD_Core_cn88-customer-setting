@@ -2,8 +2,8 @@
     "use strict";
 
     export interface ICommissionGroup {
-        groupId: string;
-        groupName: string;
+        id: string;
+        name: string;
         uGroup: string;
         minValue: number;
         maxValue: number;

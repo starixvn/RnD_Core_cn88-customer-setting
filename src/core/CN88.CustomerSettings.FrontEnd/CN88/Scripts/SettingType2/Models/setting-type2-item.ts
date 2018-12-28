@@ -16,11 +16,7 @@ module CustomerSetting {
         public minMaxPerMatch: number;
         public maxMaxPerMatch: number;
 
-        public get mappedCommissionGroups(): ICommissionGroup[] {
-            return this.commissionGroupsIndex;
-        }
-
-        private commissionGroupsIndex: ICommissionGroup[];
+        public mappedCommissionGroups: ICommissionGroup[];
 
         constructor();
         constructor(settingType2Item: any);
@@ -70,9 +66,9 @@ module CustomerSetting {
         }
 
         public mapCommissionGroups(allAvailableGroups: string[]): void {
-            this.commissionGroupsIndex = [];
+            this.mappedCommissionGroups = [];
 
-            if (this.commissionGroups || this.commissionGroups.length === 0) {
+            if (!this.commissionGroups || this.commissionGroups.length === 0) {
                 return;
             }
 
@@ -84,7 +80,7 @@ module CustomerSetting {
 
             allAvailableGroups.forEach((groupName: string) => {
                 var matchedCommissionGroups: ICommissionGroup[] = this.commissionGroups.filter((commissionGroup: ICommissionGroup) => {
-                    return groupName === commissionGroup.groupName;
+                    return groupName === commissionGroup.name;
                 });
 
                 if (matchedCommissionGroups && matchedCommissionGroups.length > 0) {

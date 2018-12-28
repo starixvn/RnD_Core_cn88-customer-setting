@@ -33,8 +33,8 @@ module CustomerSetting {
         public templateUrl: string = "setting-type2.htm";
 
         public link: ng.IDirectiveLinkFn = (scope: ISettingType2Scope) => {
-            scope.headerTemplateUrl = "settingtype2-header.htm";
-            scope.valueTemplateUrl = "settingtype2-value.htm";
+            scope.headerTemplateUrl = "setting-type2-header.htm";
+            scope.valueTemplateUrl = "setting-type2-value.htm";
             scope.settingTypeName = this.settingType2ResourceService.getLabel("CommissionAndBetLimit");
             scope.availableLayoutTypes = LayoutType;
 
@@ -45,7 +45,7 @@ module CustomerSetting {
                     scope.settingType.settingItems.forEach((settingItem: ISettingItem) => {
                         var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
 
-                        settingType2Item.mapCommissionGroups(scope.availableCommissionGroups);
+                        //settingType2Item.mapCommissionGroups(scope.availableCommissionGroups);
                     });
                     scope.eachGroupStyle = {
                         "min-width": (100 / scope.availableCommissionGroups.length) + "%"
@@ -102,8 +102,8 @@ module CustomerSetting {
                     && settingType2Item.commissionGroups
                     && settingType2Item.commissionGroups.length > 0) {
                     settingType2Item.commissionGroups.forEach((commissionGroup: ICommissionGroup) => {
-                        if (commissionGroup.groupId && allAvailableGroups.indexOf(commissionGroup.groupName) < 0) {
-                            allAvailableGroups.push(commissionGroup.groupName);
+                        if (commissionGroup.id && allAvailableGroups.indexOf(commissionGroup.name) < 0) {
+                            allAvailableGroups.push(commissionGroup.name);
                         }
                     });
                 }
@@ -137,14 +137,14 @@ module CustomerSetting {
                     && settingType2Item.commissionGroups.length > 0) {
                     settingType2Item.commissionGroups.forEach((commissionGroup: ICommissionGroup) => {
                         var newMap: ICommissionGroupAndSpreadGroupMap = {
-                            groupName: commissionGroup.groupName,
+                            groupName: commissionGroup.name,
                             uGroup: commissionGroup.uGroup
                         };
                         var alreadyExisted: boolean = maps.some((existingMap: ICommissionGroupAndSpreadGroupMap) => {
                             return existingMap.groupName === newMap.groupName && existingMap.uGroup === newMap.uGroup;
                         });
 
-                        if (commissionGroup.groupId && alreadyExisted) {
+                        if (commissionGroup.id && alreadyExisted) {
                             maps.push(newMap);
                         }
                     });
