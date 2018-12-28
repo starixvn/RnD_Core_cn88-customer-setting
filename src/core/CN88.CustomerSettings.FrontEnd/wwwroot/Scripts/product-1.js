@@ -29334,6 +29334,8 @@ var CustomerSetting;
                 "oldSetting",
                 "validationState",
                 "ignoredProperties",
+                "isNew",
+                "customerLevel",
                 "$$hashKey"];
         }
         DefaultSettingItem.prototype.isChanged = function () {
@@ -30947,8 +30949,6 @@ var CustomerSetting;
             this.ignoredProperties = this.ignoredProperties.concat([
                 "usernameSuffixes",
                 "uplineUsername",
-                "isNew",
-                "customerLevel",
                 "hashKey"]);
             if (!this.isNew) {
                 this.ignoredProperties.push("username");

@@ -24,6 +24,8 @@ module CustomerSetting {
         public oldSetting: DefaultSettingItem;
         public validationState: ValidationResult;
 
+        protected isNew: boolean;
+        protected customerLevel: Level;
         protected ignoredProperties: string[];
 
         constructor();
@@ -54,6 +56,8 @@ module CustomerSetting {
                 "oldSetting",
                 "validationState",
                 "ignoredProperties",
+                "isNew",
+                "customerLevel",
                 "$$hashKey"];
         }
 

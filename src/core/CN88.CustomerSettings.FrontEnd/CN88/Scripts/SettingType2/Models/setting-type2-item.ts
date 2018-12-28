@@ -15,9 +15,6 @@ module CustomerSetting {
         public minMaxPerMatch: number;
         public maxMaxPerMatch: number;
 
-        protected isNew: boolean;
-        protected customerLevel: Level;
-
         constructor();
         constructor(settingType2Item: any);
         constructor(settingType2Item: any, backup: boolean)

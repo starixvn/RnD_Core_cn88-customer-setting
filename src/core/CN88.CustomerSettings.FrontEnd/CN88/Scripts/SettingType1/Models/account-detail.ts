@@ -20,8 +20,6 @@ module CustomerSetting {
         public usernameSuffixes: string[];
         public uplineUsername: string;
 
-        protected isNew: boolean;
-        protected customerLevel: Level;
         protected hashKey: string;
 
         constructor();
@@ -59,8 +57,6 @@ module CustomerSetting {
             this.ignoredProperties = this.ignoredProperties.concat([
                 "usernameSuffixes",
                 "uplineUsername",
-                "isNew",
-                "customerLevel",
                 "hashKey"]);
 
             if (!this.isNew) {
