@@ -34,7 +34,7 @@
 
         public string ToCommXml()
             => string.Join(string.Empty,
-                CommissionGroups.Select(comm => string.Format(CommXmlFormat, base.ToXml(), comm.Id, comm.ValueId)));
+                CommissionGroups.Select(comm => string.Format(CommXmlFormat, base.ToXml(), comm.Id, comm.Value)));
 
         public string ToBetSettingXml() => string.Format(BetSettingXmlFormat, base.ToXml(), MaxBet, MaxPerMatch);
     }

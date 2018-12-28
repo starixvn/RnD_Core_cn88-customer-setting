@@ -81,15 +81,15 @@
                         MaxMaxPerMatch = firstSettingItemDto.MaxMaxPerMatch,
                         MinMaxPerMatch = firstSettingItemDto.MinMaxPerMatch,
 
-                        CommissionGroups = settingItemDto.Select(dto =>
-                        new CommissionGroup
-                        {
-                            Id = dto.GroupId,
-                            Name = dto.GroupName,
-                            MaxValue = dto.MaxComm,
-                            MinValue = dto.MinComm,
-                            Value = dto.Comm
-                        })
+                        CommissionGroups = settingItemDto.Select(
+                            dto => new CommissionGroup
+                            {
+                                Id = dto.GroupId,
+                                Name = dto.GroupName,
+                                MaxValue = dto.MaxComm,
+                                MinValue = dto.MinComm,
+                                Value = dto.Comm
+                            })
                     });
                 }
             }
