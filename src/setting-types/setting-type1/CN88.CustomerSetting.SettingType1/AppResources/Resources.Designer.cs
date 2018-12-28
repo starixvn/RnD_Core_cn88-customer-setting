@@ -22,14 +22,14 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Messages {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Messages() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CN88.CustomerSetting.SettingType1.AppResources.Messages", typeof(Messages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CN88.CustomerSetting.SettingType1.AppResources.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,15 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account Detail.
+        /// </summary>
+        internal static string AccountDetail {
+            get {
+                return ResourceManager.GetString("AccountDetail", resourceCulture);
             }
         }
         
@@ -151,6 +160,15 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         internal static string PasswordWrongRule {
             get {
                 return ResourceManager.GetString("PasswordWrongRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account Detail is updated successfully..
+        /// </summary>
+        internal static string UpdateAccountDetailSuccess {
+            get {
+                return ResourceManager.GetString("UpdateAccountDetailSuccess", resourceCulture);
             }
         }
     }

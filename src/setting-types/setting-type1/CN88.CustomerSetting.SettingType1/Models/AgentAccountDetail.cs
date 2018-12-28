@@ -1,6 +1,6 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Models
 {
-    public class AgentAccountDetail : AccountDetail
+    public class AgentAccountDetail : AccountDetailSettingItem
     {
         private const string PTXmlFormat
             = "<PT {0} MasterPT=\"{1}\" AgentPT=\"{1}\"/>";

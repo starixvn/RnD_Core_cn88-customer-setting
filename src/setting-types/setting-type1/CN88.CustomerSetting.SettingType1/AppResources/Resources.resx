@@ -157,4 +157,10 @@ Notes: your password is cAsE sEnSiTiVe.</value>
   <data name="PasswordRules" xml:space="preserve">
     <value>Password rules</value>
   </data>
+  <data name="AccountDetail" xml:space="preserve">
+    <value>Account Detail</value>
+  </data>
+  <data name="UpdateAccountDetailSuccess" xml:space="preserve">
+    <value>Account Detail is updated successfully.</value>
+  </data>
 </root>

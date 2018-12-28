@@ -26,7 +26,7 @@
         {
             if (string.IsNullOrEmpty(encryptedPassword))
             {
-                return Result.CreateErrorResult(Messages.PasswordCannotBeNullOrEmpty);
+                return Result.CreateErrorResult(Resources.PasswordCannotBeNullOrEmpty);
             }
 
             var rawPassword = Decrypt(encryptedPassword, encryptionKey);
@@ -47,7 +47,7 @@
             }
 
             return !IsMatchedRules(password, customerLevel.IsMemberLevel())
-                ? Result.CreateErrorResult(Messages.PasswordRequire)
+                ? Result.CreateErrorResult(Resources.PasswordRequire)
                 : Result.Success;
         }
 

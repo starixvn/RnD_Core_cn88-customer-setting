@@ -4,7 +4,7 @@
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Results;
 
-    public class AccountDetail : SettingItemDefault
+    public class AccountDetailSettingItem : SettingItemDefault
     {
         public string Username { get; set; }
 
@@ -37,7 +37,7 @@
         public IEnumerable<Currency> Currencies { get; set; }
     }
 
-    public class MemberAccountDetail : AccountDetail
+    public class MemberAccountDetail : AccountDetailSettingItem
     {
         public override IResult Validate()
             => Result.Success;

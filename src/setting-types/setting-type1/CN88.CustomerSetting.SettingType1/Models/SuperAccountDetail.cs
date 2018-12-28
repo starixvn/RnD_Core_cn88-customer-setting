@@ -1,6 +1,6 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Models
 {
-    public class SuperAccountDetail : AccountDetail
+    public class SuperAccountDetail : AccountDetailSettingItem
     {
         private const string PTXmlFormat
             = "<PT {0} MinPT=\"{1}\" MaxPT=\"{2}\" />";

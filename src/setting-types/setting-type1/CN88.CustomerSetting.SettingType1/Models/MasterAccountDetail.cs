@@ -1,6 +1,6 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Models
 {
-    public class MasterAccountDetail : AccountDetail
+    public class MasterAccountDetail : AccountDetailSettingItem
     {
         private const string PTXmlFormat
             = "<PT {0} SuperPT=\"{1}\"/>";

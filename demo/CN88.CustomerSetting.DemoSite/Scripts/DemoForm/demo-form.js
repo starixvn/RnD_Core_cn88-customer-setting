@@ -253,7 +253,7 @@ var DemoFrom;
             var uplineId = 0;
             switch (role) {
                 case Role.super:
-                    id = 0;
+                    id = 33489322;
                     name = "SuperTestCNE";
                     break;
                 case Role.master:
