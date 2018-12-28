@@ -11,7 +11,8 @@
             <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superMinPT'}}">
-                <percentage-dropdown data-ng-model="accountDetail.superMinPT"
+                <percentage-dropdown class="setting-field--fullwidth"
+                                     data-ng-model="accountDetail.superMinPT"
                                      data-min="accountDetail.minSuperMinPT"
                                      data-max="accountDetail.maxSuperMinPT"
                                      data-step="accountDetail.intervalValue"></percentage-dropdown>
@@ -22,7 +23,8 @@
             <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superMaxPT'}}">
-                <percentage-dropdown data-ng-model="accountDetail.superMaxPT"
+                <percentage-dropdown class="setting-field--fullwidth"
+                                     data-ng-model="accountDetail.superMaxPT"
                                      data-min="accountDetail.minSuperMaxPT"
                                      data-max="accountDetail.maxSuperMaxPT"
                                      data-step="accountDetail.intervalValue"></percentage-dropdown>
@@ -35,7 +37,8 @@
             <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superPT'}}">
-                <percentage-dropdown data-ng-model="accountDetail.superPT"
+                <percentage-dropdown class="setting-field--fullwidth"
+                                     data-ng-model="accountDetail.superPT"
                                      data-min="accountDetail.minSuperPT"
                                      data-max="accountDetail.maxSuperPT"
                                      data-step="accountDetail.intervalValue"></percentage-dropdown>
@@ -48,7 +51,8 @@
             <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'masterPT'}}">
-                <percentage-dropdown data-ng-model="accountDetail.masterPT"
+                <percentage-dropdown class="setting-field--fullwidth"
+                                     data-ng-model="accountDetail.masterPT"
                                      data-min="0"
                                      data-max="accountDetail.maxMasterPT"
                                      data-step="accountDetail.intervalValue"></percentage-dropdown>
@@ -59,7 +63,7 @@
             <div class="setting-field-wrapper w60-percent"
                  data-tooltip
                  data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'agentPT'}}">
-                <percentage-dropdown class="setting-field--{{accountDetail.validationState.affectedFields.agentPT}}"
+                <percentage-dropdown class="setting-field--fullwidth setting-field--{{accountDetail.validationState.affectedFields.agentPT}}"
                                      data-ng-model="accountDetail.agentPT"
                                      data-min="0"
                                      data-max="accountDetail.maxAgentPT"
