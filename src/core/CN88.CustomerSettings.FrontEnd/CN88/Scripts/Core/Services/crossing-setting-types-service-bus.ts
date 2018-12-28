@@ -6,13 +6,8 @@
 module CustomerSetting {
     "use strict";
 
-    export interface ISettingTypesSharedData {
-        originalSettingType: SettingType,
-        sharedData: any
-    }
-
     export interface ICrossingSettingTypesPromise {
-        (sharedData: ISettingTypesSharedData): ng.IPromise<void>;
+        (sharedData: any): ng.IPromise<void>;
     }
 
     export class CrossingSettingTypesServiceBus {
@@ -41,7 +36,7 @@ module CustomerSetting {
             }
         }
 
-        public execute(trigger: string, sharedData: ISettingTypesSharedData): ng.IPromise<void> {
+        public execute(trigger: string, sharedData: any): ng.IPromise<void> {
             var deferred: ng.IDeferred<void> = this.$q.defer<void>();
 
             if (sharedData) {

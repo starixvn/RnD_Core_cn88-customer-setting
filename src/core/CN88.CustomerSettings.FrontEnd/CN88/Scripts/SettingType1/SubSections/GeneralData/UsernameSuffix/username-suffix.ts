@@ -1,6 +1,6 @@
-﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
-/// <reference path="../../../core/module-registrater.ts" />
-/// <reference path="../../models/account-detail.ts" />
+﻿/// <reference path="../../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../../core/module-registrater.ts" />
+/// <reference path="../../../models/account-detail.ts" />
 /// <reference path="username-suffix-group.ts" />
 
 module CustomerSetting {
@@ -25,7 +25,7 @@ module CustomerSetting {
             };
         }
 
-        public templateUrl: string = "GeneralData/UsernameSuffix/username-suffix.htm";
+        public templateUrl: string = "SubSections/GeneralData/UsernameSuffix/username-suffix.htm";
 
         public controller: any = ["$scope", ($scope: IUsernameSuffixScope) => {
             $scope.range = this.generateSuffixRange();

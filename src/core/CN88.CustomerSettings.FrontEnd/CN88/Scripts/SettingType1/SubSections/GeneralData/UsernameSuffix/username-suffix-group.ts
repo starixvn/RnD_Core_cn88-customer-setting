@@ -1,9 +1,9 @@
-﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
-/// <reference path="../../../core/models/result.ts" />
-/// <reference path="../../../core/services/app-config-service.ts" />
-/// <reference path="../../../core/services/request-service.ts" />
-/// <reference path="../../../core/module-registrater.ts" />
-/// <reference path="../../models/account-detail.ts" />
+﻿/// <reference path="../../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../../../core/models/result.ts" />
+/// <reference path="../../../../core/services/app-config-service.ts" />
+/// <reference path="../../../../core/services/request-service.ts" />
+/// <reference path="../../../../core/module-registrater.ts" />
+/// <reference path="../../../models/account-detail.ts" />
 
 module CustomerSetting {
     "use strict";
@@ -25,7 +25,7 @@ module CustomerSetting {
 
         public replace: boolean = true;
 
-        public templateUrl: string = "GeneralData/UsernameSuffix/username-suffix-group.htm";
+        public templateUrl: string = "SubSections/GeneralData/UsernameSuffix/username-suffix-group.htm";
 
         public controller: any = [
             "$scope",
