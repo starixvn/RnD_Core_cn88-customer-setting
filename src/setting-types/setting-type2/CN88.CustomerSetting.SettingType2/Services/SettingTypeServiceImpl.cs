@@ -58,13 +58,16 @@
                 if(settingItemDto.Any())
                 {
                     var firstSettingItemDto = settingItemDto.First();
-                    var intervalValue = settingItemConfig.ToList().FirstOrDefault();
+                    var firstSettingItemConfig = settingItemConfig.ToList().FirstOrDefault();
 
                     settingItems.Add(new CommBetSettingItem
                     {
-                        LayoutType = intervalValue.LayoutType,
-                        IntervalValue = intervalValue.IntervalValue,
-                        ChildOrder = intervalValue.ChildOrder,
+                        SportTypeName = $"SportTypeName_{firstSettingItemConfig.SportTypeId}",
+                        BetTypeName = $"BetTypeName_{firstSettingItemConfig.BetTypeId}",
+
+                        LayoutType = firstSettingItemConfig.LayoutType,
+                        IntervalValue = firstSettingItemConfig.IntervalValue,
+                        ChildOrder = firstSettingItemConfig.ChildOrder,
 
                         SportTypeId = firstSettingItemDto.SportTypeId,
                         BetTypeId = firstSettingItemDto.BetTypeId,
