@@ -32,13 +32,13 @@
                 if (!string.IsNullOrWhiteSpace(language))
                 {
                     cultureInfo = new CultureInfo(language);
+
+                    Thread.CurrentThread.CurrentCulture = cultureInfo ?? DefaultCulture;
+                    Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
+
+                    Thread.CurrentThread.CurrentCulture.DateTimeFormat = DefaultCulture.DateTimeFormat;
+                    Thread.CurrentThread.CurrentCulture.NumberFormat = DefaultCulture.NumberFormat;
                 }
-
-                Thread.CurrentThread.CurrentCulture = cultureInfo ?? DefaultCulture;
-                Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
-
-                Thread.CurrentThread.CurrentCulture.DateTimeFormat = DefaultCulture.DateTimeFormat;
-                Thread.CurrentThread.CurrentCulture.NumberFormat = DefaultCulture.NumberFormat;
             }
 
             await next(context);

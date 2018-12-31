@@ -7,10 +7,10 @@
     public class CommBetSettingItem : SettingItemDefault
     {
         private const string CommXmlFormat
-            = "<Comm {0} GroupId=\"{1}\" ValueId=\"{1}\"/>";
+            = "<Comm {0} GroupId=\"{1}\" ValueId=\"{2}\"/>";
 
         private const string BetSettingXmlFormat
-            = "<BetSetting {0} MaxBet=\"{1}\" MaxPerMatch=\"{1}\"/>";
+            = "<BetSetting {0} MaxBet=\"{1}\" MaxPerMatch=\"{2}\"/>";
 
         public IEnumerable<CommissionGroup> CommissionGroups { get; set; }
 
@@ -32,9 +32,19 @@
 
         public decimal MaxDiscount { get; set; }
 
-        public string ToCommXml()
+        public string ToCommXml(IEnumerable<CommTemplate> commTemplates)
             => string.Join(string.Empty,
-                CommissionGroups.Select(comm => string.Format(CommXmlFormat, base.ToXml(), comm.Id, comm.Value)));
+                        CommissionGroups.Select(comm => 
+                                string.Format(
+                                    CommXmlFormat, 
+                                    base.ToXml(), 
+                                    comm.Id, 
+                                    GetCommValueId(comm.Value, commTemplates))));
+
+        private int? GetCommValueId(decimal value, IEnumerable<CommTemplate> commTemplates)
+            => commTemplates
+                    .FirstOrDefault(commTemplate => commTemplate.Value == value)?
+                    .Id;
 
         public string ToBetSettingXml() => string.Format(BetSettingXmlFormat, base.ToXml(), MaxBet, MaxPerMatch);
     }

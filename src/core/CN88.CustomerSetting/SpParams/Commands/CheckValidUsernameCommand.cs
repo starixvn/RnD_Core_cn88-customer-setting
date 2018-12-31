@@ -1,13 +1,15 @@
 ﻿namespace CN88.CustomerSetting.SpParams.Commands
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using Fanex.Data.Repository;
 
     public class CheckValidUsernameCommand : NonQueryCommand
     {
-        public string Username { get; set; }
+        public CheckValidUsernameCommand(string username)
+        {
+            Username = username;
+        }
+
+        public string Username { get; }
 
         public bool IsExists { get; set; }
 

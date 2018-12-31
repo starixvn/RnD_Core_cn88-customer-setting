@@ -4,6 +4,7 @@
     using System.IO;
     using System.Net;
     using System.Threading.Tasks;
+    using CN88.CustomerSetting.Models.Results;
     using Fanex.Logging;
     using Fanex.Logging.Extensions.AspNetCore;
     using Microsoft.AspNetCore.Http;
@@ -37,7 +38,7 @@
         {
             const HttpStatusCode code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
-            var result = JsonConvert.SerializeObject(new { error = exception.Message });
+            var result = JsonConvert.SerializeObject(Result.CreateErrorResult(exception.Message));
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);

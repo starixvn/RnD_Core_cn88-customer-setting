@@ -46,7 +46,7 @@
         {
             if (query.IsCreateNew)
             {
-                return GetCreateNewAccountDetail(query);
+                return GetDefaultSettingForCreateNew(query);
             }
 
             return GetAccountDetail(query);
@@ -54,9 +54,14 @@
 
         private SettingType GetAccountDetail(CustomerSettingQuery query)
         {
-            var settingItem = GetAccountDetail(query.CustomerLevel, query.CustomerId, query.ProductId, false);
+            var settingItem = GetAccountDetailSettingItem(query.CustomerLevel, query.CustomerId, query.ProductId, false);
 
             var customerInfo = DynamicRepository.Get<CustomerInfoDto>(new GetGeneralInfoCriteria(query.CustomerLevel.Value, query.CustomerId));
+
+            if(customerInfo == null)
+            {
+                throw new InvalidOperationException($"Not found customer id {query.CustomerId} level {query.CustomerLevel.DisplayName}");
+            }
 
             settingItem.Username = customerInfo.Username;
             settingItem.FirstName = customerInfo.FirstName;
@@ -71,26 +76,22 @@
             return CreateSettingType(settingItem);
         }
 
-        private SettingType GetCreateNewAccountDetail(CustomerSettingQuery query)
+        private SettingType GetDefaultSettingForCreateNew(CustomerSettingQuery query)
         {
-            var settingItem = GetAccountDetail(query.CustomerLevel, query.UplineId, query.ProductId, true);
-            var createCustomerInfo = GetCreateCustomerInfo(query.CustomerLevel, query.UplineId);
+            var settingItem = GetAccountDetailSettingItem(query.CustomerLevel, query.UplineId, query.ProductId, true);
+            var createCustomerInfo = GetDefaultCreateCustomerInfo(query.CustomerLevel, query.UplineId);
 
             settingItem.AvailableCredit = createCustomerInfo.AvailableCredit;
             settingItem.UplineUsername = createCustomerInfo.UplineUsername;
             settingItem.UsernameSuffixes = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString());
+            settingItem.Currencies = query.CustomerLevel.IsSuperLevel()
+                                ? GetCurrencies()
+                                : Enumerable.Empty<Currency>();
 
             if (query.CustomerLevel.IsMemberLevel())
             {
                 settingItem.UGroup = defaultGroups.FirstOrDefault();
                 settingItem.UGroups = defaultGroups;
-            }
-
-            if (query.CustomerLevel.IsSuperLevel())
-            {
-                settingItem.Currencies = query.CustomerLevel.IsSuperLevel()
-                                ? GetCurrencies()
-                                : Enumerable.Empty<Currency>();
             }
 
             return CreateSettingType(settingItem);
@@ -102,7 +103,7 @@
                 SettingItems = new List<ISettingItem> { settingItem }
             };
 
-        private AccountDetailSettingItem GetAccountDetail(
+        private AccountDetailSettingItem GetAccountDetailSettingItem(
             Level level, int custId, int productId, bool isCreateNew)
         {
             if (level.IsMemberLevel())
@@ -110,35 +111,44 @@
                 return new MemberAccountDetail();
             }
 
-            AccountDetailSettingItem accountDetail;
+            var settingItem = GetAccountDetailSettingItem(level, custId, isCreateNew);
+            var settingTypeConfig = GetSettingTypeConfig<AccountDetailSettingItem>(productId, SettingTypeId).FirstOrDefault();
+            if (settingTypeConfig != null)
+            {
+                settingItem.IntervalValue = settingTypeConfig.IntervalValue;
+            }
+
+            return settingItem;
+        }
+
+        private AccountDetailSettingItem GetAccountDetailSettingItem(
+            Level level,
+            int custId,
+            bool isCreateNew)
+        {
+            AccountDetailSettingItem settingItem;
 
             switch (level.Value)
             {
                 case Level.SuperLevelId:
-                    accountDetail = GetSuperAccountDetail(custId, isCreateNew);
+                    settingItem = GetSuperAccountDetail(custId, isCreateNew);
                     break;
 
                 case Level.MasterLevelId:
-                    accountDetail = GetMasterAccountDetail(custId, isCreateNew);
+                    settingItem = GetMasterAccountDetail(custId, isCreateNew);
                     break;
 
                 default:
-                    accountDetail = GetAgentAccountDetail(custId, isCreateNew);
+                    settingItem = GetAgentAccountDetail(custId, isCreateNew);
                     break;
             }
 
-            if (accountDetail == null)
+            if (settingItem == null)
             {
                 throw new InvalidOperationException($"Cannot get default setting for upline {custId} to create new downline");
             }
 
-            var settingTypeConfig = GetSettingTypeConfig<AccountDetailSettingItem>(productId, SettingTypeId).FirstOrDefault();
-            if (settingTypeConfig != null)
-            {
-                accountDetail.IntervalValue = settingTypeConfig.IntervalValue;
-            }
-
-            return accountDetail;
+            return settingItem;
         }
 
         private AccountDetailSettingItem GetSuperAccountDetail(int custId, bool isCreateNew)
@@ -156,7 +166,7 @@
                 ? DynamicRepository.Get<AgentAccountDetail>(new GetDefaultPTSettingCriteria(Level.Agent.Value, custId))
                 : DynamicRepository.Get<AgentAccountDetail>(new GetPTSettingCriteria(Level.Agent.Value, custId));
 
-        private CreateCustomerInfoDto GetCreateCustomerInfo(Level level, int uplineId)
+        private CreateCustomerInfoDto GetDefaultCreateCustomerInfo(Level level, int uplineId)
             => level.IsNotSuperLevel()
                 ? DynamicRepository.Get<CreateCustomerInfoDto>(new GetInsertCustomerInfoCriteria(level.Value, uplineId))
                 : new CreateCustomerInfoDto();
@@ -167,7 +177,7 @@
                        () => DynamicRepository.Fetch<Currency>(new GetCurrencyListCriteria()),
                         new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(0, CurrencyCacheTimeInMinutes, 0)));
 
-        public override IDictionary<string, object> GetCreateCustomerParams(
+        public override IDictionary<string, object> BuildCreateCustomerParams(
             ISettingContext settingContext,
             CreateCustomerCommand command,
             SettingType settingType)
@@ -175,6 +185,30 @@
             var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem
                 ?? throw new InvalidOperationException("AccountDetail Item cannot be null");
 
+            settingItem.Password = ValidateAndEncodePassword(command, settingItem);
+
+            var createNewParams = BuildCreateNewParams(settingContext, settingItem);
+
+            switch (command.Setting.CustomerLevel.Value)
+            {
+                case Level.SuperLevelId:
+                    return AddParamsForAddNewSuper(settingItem, createNewParams);
+
+                case Level.MasterLevelId:
+                    return AddParamsForAddNewMaster(settingContext, command, settingItem, createNewParams);
+
+                case Level.AgentLevelId:
+                    return AddParamsForAddNewAgent(settingContext, command, settingItem, createNewParams);
+
+                default:
+                    return AddParamsForAddNewMember(settingContext, command, settingItem, createNewParams);
+            }
+        }
+
+        private string ValidateAndEncodePassword(
+            CreateCustomerCommand command,
+            AccountDetailSettingItem settingItem)
+        {
             var passwordResult = passwordService.ValidateAndHashPassword(
                 settingItem.Password,
                 command.HashKey,
@@ -185,38 +219,16 @@
                 throw new InvalidOperationException(passwordResult.Message);
             }
 
-            settingItem.Password = passwordResult.Message;
-
-            var createNewParams = CreateAddNewParams(settingContext, settingItem);
-
-            switch (command.Setting.CustomerLevel.Value)
-            {
-                case Level.SuperLevelId:
-                    AddParamsForAddNewSuper(settingItem, createNewParams);
-                    break;
-
-                case Level.MasterLevelId:
-                    AddParamsForAddNewMaster(settingContext, command, settingItem, createNewParams);
-                    break;
-
-                case Level.AgentLevelId:
-                    AddParamsForAddNewAgent(settingContext, command, settingItem, createNewParams);
-                    break;
-
-                case Level.MemberLevelId:
-                    AddParamsForAddNewMember(settingContext, command, settingItem, createNewParams);
-                    break;
-            }
-
-            return createNewParams;
+            return passwordResult.Message;
         }
 
-        private static Dictionary<string, object> CreateAddNewParams(ISettingContext settingContext, AccountDetailSettingItem settingItem)
-        {
-            return new Dictionary<string, object>
+        private static Dictionary<string, object> BuildCreateNewParams(
+            ISettingContext settingContext,
+            AccountDetailSettingItem settingItem)
+            => new Dictionary<string, object>
             {
                 { "username", settingItem.Username ?? throw new InvalidOperationException("Username cannot be null") },
-                { "userpwd", settingItem.Password ?? "56E8A2D78170E87C928E480797CC73" },
+                { "userpwd", settingItem.Password ?? throw new InvalidOperationException(Resources.PasswordCannotBeNullOrEmpty) },
                 { "firstname", settingItem.FirstName ?? string.Empty },
                 { "credit", settingItem.Credit },
                 { "systemid", settingContext.System },
@@ -224,30 +236,49 @@
                 { "language", settingContext.Language },
                 { "creator", settingContext.Actor.Id }
             };
-        }
 
-        private static void AddParamsForAddNewMember(ISettingContext settingContext, CreateCustomerCommand command, AccountDetailSettingItem settingItem, Dictionary<string, object> createNewParams)
+        private static Dictionary<string, object> AddParamsForAddNewMember(
+            ISettingContext settingContext,
+            CreateCustomerCommand command,
+            AccountDetailSettingItem settingItem,
+            Dictionary<string, object> createNewParams)
         {
             createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
             createNewParams.Add("recommend", command.UplineId);
             createNewParams.Add("ugroup", settingItem.UGroup);
+
+            return createNewParams;
         }
 
-        private static void AddParamsForAddNewAgent(ISettingContext settingContext, CreateCustomerCommand command, AccountDetailSettingItem settingItem, Dictionary<string, object> createNewParams)
+        private static Dictionary<string, object> AddParamsForAddNewAgent(
+            ISettingContext settingContext,
+            CreateCustomerCommand command,
+            AccountDetailSettingItem settingItem,
+            Dictionary<string, object> createNewParams)
         {
             createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
             createNewParams.Add("mrecommend", command.UplineId);
             createNewParams.Add("ptsetting", settingItem.ToXml());
+
+            return createNewParams;
         }
 
-        private static void AddParamsForAddNewMaster(ISettingContext settingContext, CreateCustomerCommand command, AccountDetailSettingItem settingItem, Dictionary<string, object> createNewParams)
+        private static Dictionary<string, object> AddParamsForAddNewMaster(
+            ISettingContext settingContext,
+            CreateCustomerCommand command,
+            AccountDetailSettingItem settingItem,
+            Dictionary<string, object> createNewParams)
         {
             createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
             createNewParams.Add("srecommend", command.UplineId);
             createNewParams.Add("ptsetting", settingItem.ToXml());
+
+            return createNewParams;
         }
 
-        private static void AddParamsForAddNewSuper(AccountDetailSettingItem settingItem, Dictionary<string, object> createNewParams)
+        private static Dictionary<string, object> AddParamsForAddNewSuper(
+            AccountDetailSettingItem settingItem,
+            Dictionary<string, object> createNewParams)
         {
             createNewParams.Add("site", "CN88");
             createNewParams.Add("currency", settingItem.Currency?.Id);
@@ -256,23 +287,68 @@
             createNewParams.Add("mobilephone", settingItem.MobilePhone ?? string.Empty);
             createNewParams.Add("fax", settingItem.Fax ?? string.Empty);
             createNewParams.Add("ptsetting", settingItem.ToXml());
+
+            return createNewParams;
         }
 
         public override SettingResult UpdateCustomerSettingType(
             ISettingContext settingContext,
-            int customerId,
-            Level customerLevel,
-            byte productId,
+            UpdateCustomerSettingCommand command,
             SettingType settingType)
         {
             var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem
                 ?? throw new InvalidOperationException("AccountDetail cannot be null");
 
+            var updateCustomerInfoResult = UpdateCustomerInfo(command, settingItem);
+            if (updateCustomerInfoResult.IsFailed)
+            {
+                return updateCustomerInfoResult;
+            }
+
+            return UpdatePTSetting(settingContext, command, settingType);
+        }
+
+        private SettingResult UpdatePTSetting(
+            ISettingContext settingContext,
+            UpdateCustomerSettingCommand command,
+            SettingType settingType)
+        {
+            var updatePTSettingCommand = new UpdatePTSettingCommand
+            {
+                RoleId = command.Setting.CustomerLevel.Value,
+                CustId = command.Setting.CustomerId,
+
+                ProductId = command.Setting.ProductId,
+                PTSetting = settingType.ToXml(),
+
+                IP = settingContext.IP,
+                UserId = settingContext.Actor.Id,
+                Language = settingContext.Language,
+                SubAccountId = settingContext.Actor.SubAccountId,
+            };
+
+            DynamicRepository.Execute(updatePTSettingCommand);
+
+            return new SettingResult(
+                updatePTSettingCommand.ErrCode,
+                updatePTSettingCommand.ErrCode == Result.Success.Code
+                    ? Resources.UpdateAccountDetailSuccess
+                    : updatePTSettingCommand.ErrMsg,
+                updatePTSettingCommand.MsgType,
+                command.Setting.CustomerId,
+                settingType.Id,
+                settingType.Name);
+        }
+
+        private SettingResult UpdateCustomerInfo(
+            UpdateCustomerSettingCommand command,
+            AccountDetailSettingItem settingItem)
+        {
             var updateCustomerInfoCommand = new UpdateCustomerInfoCommand
             {
-                RoleId = customerLevel.Value,
+                RoleId = command.Setting.CustomerLevel.Value,
                 Credit = settingItem.Credit,
-                CustId = customerId,
+                CustId = command.Setting.CustomerId,
                 Fax = settingItem.Fax,
                 FirstName = settingItem.FirstName,
                 LastName = settingItem.LastName,
@@ -282,37 +358,9 @@
 
             DynamicRepository.Execute(updateCustomerInfoCommand);
 
-            if(updateCustomerInfoCommand.ErrCode > 0)
-            {
-                return new SettingResult(Result.CreateErrorResult(updateCustomerInfoCommand.ErrMsg));
-            }
-
-            var updatePTSettingCommand = new UpdatePTSettingCommand
-            {
-                RoleId = customerLevel.Value,
-                CustId = customerId,
-                
-                ProductId = productId,
-                PTSetting = settingType.ToXml(),
-
-                IP = settingContext.IP,
-                UserId = settingContext.Actor.Id,
-                Language = settingContext.Language,
-                SubAccountId = settingContext.Actor.SubAccountId,
-                
-            };
-
-            DynamicRepository.Execute(updatePTSettingCommand);
-
-            return new SettingResult(
-                updatePTSettingCommand.ErrCode,
-                updatePTSettingCommand.ErrCode == Result.Success.Code 
-                    ? Resources.UpdateAccountDetailSuccess
-                    : updatePTSettingCommand.ErrMsg,
-                updatePTSettingCommand.MsgType,
-                customerId,
-                settingType.Id,
-                settingType.Name);
+            return updateCustomerInfoCommand.ErrCode > 0
+                ? new SettingResult(Result.CreateErrorResult(updateCustomerInfoCommand.ErrMsg))
+                : new SettingResult(Result.CreateSuccessResult(updateCustomerInfoCommand.ErrMsg));
         }
     }
 }

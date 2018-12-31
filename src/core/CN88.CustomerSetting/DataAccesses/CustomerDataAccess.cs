@@ -7,12 +7,12 @@
 
     public interface CustomerDataAccess
     {
-        CreateNewResult InsertCustomer(Level level, Hashtable parameters);
+        CreateNewResult CreateNewCustomer(Level level, Hashtable parameters);
     }
 
     public class CustomerDataAccessImpl : BaseDataAccess, CustomerDataAccess
     {
-        public CreateNewResult InsertCustomer(Level level, Hashtable parameters)
+        public CreateNewResult CreateNewCustomer(Level level, Hashtable parameters)
         {
             var spSettingKey = GetSpSettingKey(level);
             parameters.Add("custId", 0);

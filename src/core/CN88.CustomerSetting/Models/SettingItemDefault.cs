@@ -33,6 +33,6 @@
             : Result.Success;
 
         public virtual string ToXml()
-            => string.Format(SportTypeBetTypeXmlFormat, SportTypeId, BetTypeId, IsLive);
+            => string.Format(SportTypeBetTypeXmlFormat, SportTypeId, BetTypeId, IsLive ? "1" : "0");
     }
 }

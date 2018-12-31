@@ -72,11 +72,9 @@
             return restReponse;
         }
 
-        public IRestResponse QueryCustomerSettingTemplate(bool isIe8)
+        public IRestResponse QueryCustomerSettingTemplate()
         {
             IRestRequest request = new RestRequest("/customersetting/gettemplate", Method.GET);
-
-            request.AddParameter("isIe8", isIe8);
 
             return _restClient.Execute(request);
         }

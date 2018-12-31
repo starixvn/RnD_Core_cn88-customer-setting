@@ -117,25 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PasswordRequire" xml:space="preserve">
-    <value>Password must be at least 8 characters without white-space and contain at least 3 of the following:
-
-  • Uppercase letter [A-Z] 
-  • Lowercase letter [a-z] 
-  • Numeric [0-9] 
-  • Special character (!,@,#,etc..)
-
-For example: 59D7!4$h, 493abcDE
-Notes: your password is cAsE sEnSiTiVe</value>
-  </data>
-  <data name="PasswordWrongRule" xml:space="preserve">
-    <value>Your password does not meet the minimum security requirement.</value>
-  </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
-  </data>
-  <data name="PasswordCannotBeNullOrEmpty" xml:space="preserve">
-    <value>Password cannot be null or empty</value>
   </data>
   <data name="PasswordHint01" xml:space="preserve">
     <value>Password must be at least 8 characters without white-space and contain at least 3 of the following:</value>
@@ -162,5 +145,22 @@ Notes: your password is cAsE sEnSiTiVe.</value>
   </data>
   <data name="UpdateAccountDetailSuccess" xml:space="preserve">
     <value>Account Detail is updated successfully.</value>
+  </data>
+  <data name="PasswordRequire" xml:space="preserve">
+    <value>Password must be at least 8 characters without white-space and contain at least 3 of the following:
+
+  • Uppercase letter [A-Z] 
+  • Lowercase letter [a-z] 
+  • Numeric [0-9] 
+  • Special character (!,@,#,etc..)
+
+For example: 59D7!4$h, 493abcDE
+Notes: your password is cAsE sEnSiTiVe</value>
+  </data>
+  <data name="PasswordWrongRule" xml:space="preserve">
+    <value>Your password does not meet the minimum security requirement.</value>
+  </data>
+  <data name="PasswordCannotBeNullOrEmpty" xml:space="preserve">
+    <value>Sorry, password cannot be empty!!!</value>
   </data>
 </root>

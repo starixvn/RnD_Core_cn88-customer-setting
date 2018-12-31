@@ -108,7 +108,7 @@
 
         private string BuildTemplate()
         {
-            IRestResponse response = _customerSettingService.QueryCustomerSettingTemplate(false);
+            IRestResponse response = _customerSettingService.QueryCustomerSettingTemplate();
             bool isDebug = HttpContext.IsDebuggingEnabled;
             string cdn = RandomHelper.GetRandomUri(CN88CustomerSettingConfiguration.Settings.CdnUris);
 

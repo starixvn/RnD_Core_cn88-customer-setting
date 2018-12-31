@@ -19,6 +19,13 @@
 
     public class QuerySettingServiceImpl : QuerySettingService
     {
+
+        private readonly ValidationService validationService;
+        private readonly ProductService productService;
+        private readonly ILogger logger;
+        private readonly SettingTypeServiceFactory settingTypeServiceFactory;
+        private readonly IDynamicRepository dynamicRepository;
+
         public QuerySettingServiceImpl(
             ValidationService validationService,
             IDynamicRepository dynamicRepository,
@@ -26,18 +33,18 @@
             ProductService productService,
             SettingTypeServiceFactory settingTypeServiceFactory)
         {
-            ValidationService = validationService;
-            DynamicRepository = dynamicRepository;
-            Logger = logger;
-            ProductService = productService;
-            SettingTypeServiceFactory = settingTypeServiceFactory;
+            this.validationService = validationService;
+            this.dynamicRepository = dynamicRepository;
+            this.logger = logger;
+            this.productService = productService;
+            this.settingTypeServiceFactory = settingTypeServiceFactory;
         }
 
         public ISetting GetCustomerSetting(ISettingContext settingContext, CustomerSettingQuery query)
         {
             Validate(settingContext, query);
 
-            var product = ProductService.GetProduct(settingContext, query.ProductId, settingContext.System);
+            var product = productService.GetProduct(settingContext, query.ProductId, settingContext.System);
             var customerSettingTypes = GetCustomerSettingTypes(settingContext, query, product.SettingTypes);
 
             var setting = new Setting(
@@ -50,16 +57,6 @@
             return setting;
         }
 
-        protected ValidationService ValidationService { get; }
-
-        protected ProductService ProductService { get; }
-
-        protected ILogger Logger { get; }
-
-        protected SettingTypeServiceFactory SettingTypeServiceFactory { get; }
-
-        protected IDynamicRepository DynamicRepository { get; }
-
         protected virtual void Validate(ISettingContext settingContext, CustomerSettingQuery query)
         {
             if (query == null)
@@ -67,11 +64,11 @@
                 throw new ArgumentNullException(nameof(query));
             }
 
-            var validationResult = ValidationService.ValidateQuerySettingAction(settingContext, query);
+            var result = validationService.ValidateQuerySettingAction(settingContext, query);
 
-            if (validationResult.IsNotOk)
+            if (result.IsNotOk)
             {
-                throw new AccessViolationException(validationResult.Message);
+                throw new AccessViolationException(result.Message);
             }
         }
 
@@ -105,7 +102,7 @@
 
             try
             {
-                var settingTypeService = SettingTypeServiceFactory.GetInstance(productSettingType);
+                var settingTypeService = settingTypeServiceFactory.GetInstance(productSettingType);
 
                 customerSettingType = settingTypeService.GetCustomerSettingType(settingContext, query);
                 customerSettingType.Id = productSettingType.Id;
@@ -140,7 +137,7 @@
             exception.SetCustomerInfo(query.CustomerId, query.CustomerLevel);
             exception.SetProductInfo(query.ProductId, productSettingType);
 
-            Logger.Error(exception.Message, exception);
+            logger.Error(exception.Message, exception);
         }
     }
 }

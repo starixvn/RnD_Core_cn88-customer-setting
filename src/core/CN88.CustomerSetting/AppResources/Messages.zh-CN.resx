@@ -103,4 +103,22 @@
   <data name="CreateSuccessfully" xml:space="preserve">
     <value>Account {0} was created successfully zh-CN</value>
   </data>
+  <data name="SystemError" xml:space="preserve">
+    <value>哎哟..因为系统故障所以您会身在此处，请向管理层联系吧</value>
+  </data>
+  <data name="YouAreNotAuthorized" xml:space="preserve">
+    <value>您没有使用此功能的权限</value>
+  </data>
+  <data name="SettingTypeError" xml:space="preserve">
+    <value>由于技术故障导致加载设置类型失败。请稍后再试或联系系统管理员！</value>
+  </data>
+  <data name="NoChangeToUpdate" xml:space="preserve">
+    <value>没有任何的变化更新。</value>
+  </data>
+  <data name="AccountWasDisabled" xml:space="preserve">
+    <value>这个帐号禁用</value>
+  </data>
+  <data name="CustomersAreNotSameLine" xml:space="preserve">
+    <value>会员不同线！</value>
+  </data>
 </root>

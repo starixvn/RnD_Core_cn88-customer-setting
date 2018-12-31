@@ -19,22 +19,19 @@
 
     public class UpdateSettingServiceImpl : UpdateSettingService
     {
+        private readonly ValidationService validationService;
+        private readonly ILogger logger;
+        private readonly SettingTypeServiceFactory settingTypeServiceFactory;
+
         public UpdateSettingServiceImpl(
             ValidationService validationService,
             ILogger logger,
             SettingTypeServiceFactory settingTypeServiceFactory)
         {
-            ValidationService = validationService;
-            Logger = logger;
-            SettingTypeServiceFactory = settingTypeServiceFactory;
+            this.validationService = validationService;
+            this.logger = logger;
+            this.settingTypeServiceFactory = settingTypeServiceFactory;
         }
-
-        protected ValidationService ValidationService { get; }
-
-        protected ILogger Logger { get; }
-
-        protected SettingTypeServiceFactory SettingTypeServiceFactory { get; }
-
         public virtual IResult Update(
             ISettingContext settingContext,
             UpdateCustomerSettingCommand command)
@@ -54,18 +51,13 @@
         protected virtual IResult Validate(
             ISettingContext settingContext,
             UpdateCustomerSettingCommand command)
-        {
-            return ValidationService.ValidateUpdateSettingAction(settingContext, command);
-        }
+            => validationService.ValidateUpdateSettingAction(settingContext, command);
 
         protected virtual IEnumerable<SettingResult> UpdateCustomerSettingTypes(
             ISettingContext settingContext,
             UpdateCustomerSettingCommand command)
         {
             var settingTypes = command.Setting.SettingTypes;
-            var customerId = command.Setting.CustomerId;
-            var customerLevel = command.Setting.CustomerLevel;
-            var productId = command.Setting.ProductId;
             var settingTypeResults = new List<SettingResult>();
 
             Parallel.ForEach(
@@ -74,10 +66,8 @@
                 {
                     var updateSettingTypeResult = UpdateCustomerSettingType(
                     settingContext,
-                    customerId,
-                    customerLevel,
-                    settingType,
-                    productId);
+                    command,
+                    settingType);
 
                     settingTypeResults.Add(updateSettingTypeResult);
                 });
@@ -87,33 +77,33 @@
 
         protected virtual SettingResult UpdateCustomerSettingType(
             ISettingContext settingContext,
-            int customerId,
-            Level customerLevel,
-            SettingType settingType,
-            byte productId)
+            UpdateCustomerSettingCommand command,
+            SettingType settingType)
         {
+            var setting = command?.Setting;
+
             try
             {
                 CheckSettingTypeIsValid(settingType);
 
-                var settingTypeService = SettingTypeServiceFactory.GetInstance(settingType);
-                var settingResult = settingTypeService.UpdateCustomerSettingType(settingContext, customerId, customerLevel, productId, settingType);
+                var settingTypeService = settingTypeServiceFactory.GetInstance(settingType);
+                var settingResult = settingTypeService.UpdateCustomerSettingType(settingContext, command, settingType);
 
                 return settingResult;
             }
             catch (CustomerSettingException customerSettingException)
             {
-                WriteLog(settingContext, customerId, customerLevel, productId, settingType, customerSettingException);
+                WriteLog(settingContext, setting, settingType, customerSettingException);
 
-                return new SettingResult(Result.AccessDenied.Code, customerSettingException.OriginalMessage, 0, customerId, settingType.Id, settingType.Name);
+                return new SettingResult(Result.AccessDenied.Code, customerSettingException.OriginalMessage, 0, setting.CustomerId, settingType.Id, settingType.Name);
             }
             catch (Exception ex)
             {
-                WriteLog(settingContext, customerId, customerLevel, productId, settingType, new CustomerSettingException(ex.Message, ex));
+                WriteLog(settingContext, setting, settingType, new CustomerSettingException(ex.Message, ex));
 
                 return new SettingResult(
                     Result.SystemError,
-                    customerId,
+                    setting.CustomerId,
                     settingType.Id,
                     settingType.Name);
             }
@@ -131,17 +121,15 @@
 
         protected virtual void WriteLog(
             ISettingContext settingContext,
-            int customerId,
-            Level customerLevel,
-            byte productId,
+            ISetting setting,
             SettingType customerSettingType,
             CustomerSettingException ex)
         {
             ex.SetSettingContextInfo("Update Setting", settingContext);
-            ex.SetCustomerInfo(customerId, customerLevel);
-            ex.SetProductInfo(productId, customerSettingType);
+            ex.SetCustomerInfo(setting.CustomerId, setting.CustomerLevel);
+            ex.SetProductInfo(setting.ProductId, customerSettingType);
 
-            Logger.Error(ex.Message, ex);
+            logger.Error(ex.Message, ex);
         }
     }
 }

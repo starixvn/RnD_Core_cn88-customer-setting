@@ -1,8 +1,6 @@
 ﻿namespace CN88.CustomerSetting.WebApi
 {
     using System;
-    using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using CN88.CustomerSetting.DataAccesses;
     using CN88.CustomerSetting.Services;
@@ -17,7 +15,6 @@
     using Fanex.Logging.Sentry.RavenClient;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Localization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -55,7 +52,6 @@
                 .AddSingleton<QuerySettingService, QuerySettingServiceImpl>()
                 .AddSingleton<SettingTypeServiceFactory, SettingTypeServiceFactoryImpl>()
                 .AddSingleton<CustomerDataAccess, CustomerDataAccessImpl>()
-                .AddSingleton<IValidationDataAccess, ValidationDataAccess>()
                 .AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "CN88 Customer Setting", Version = "v1" });

@@ -1,14 +1,8 @@
 ﻿namespace CN88.CustomerSetting.WebApi.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using CN88.CustomerSetting.AppResources;
     using CN88.CustomerSetting.Models;
-    using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.Models.Results;
     using CN88.CustomerSetting.Services;
-    using CN88.CustomerSetting.SettingType1.Models;
     using CN88.CustomerSetting.WebApi.Models.Binders;
     using CN88.CustomerSetting.WebApi.Models.Requests;
     using Microsoft.AspNetCore.Hosting;
@@ -18,8 +12,8 @@
     [ApiController]
     public class CustomerSettingController : Controller
     {
-        private static string CustomerSettingTemplateCache;
-        private const string CustomerSettingTemplateFilePath = "/Templates/customer-setting.htm";
+        private static string TemplateCached;
+        private const string TemplateFilePath = "/Templates/customer-setting.htm";
         private const byte CachingHours = 4;
         private readonly QuerySettingService querySettingService;
         private readonly CreateCustomerService createCustomerService;
@@ -59,16 +53,14 @@
         [HttpGet]
         public string GetTemplate()
         {
-            string template = string.Empty;
-            string customerSettingTemplatePath = CustomerSettingTemplateFilePath;
-
-            template = CustomerSettingTemplateCache;
+            string template = TemplateCached;
+            string templatePath = TemplateFilePath;
 
             if (string.IsNullOrEmpty(template))
             {
-                var file = hostingEnvironment.WebRootFileProvider.GetFileInfo(customerSettingTemplatePath);
+                var file = hostingEnvironment.WebRootFileProvider.GetFileInfo(templatePath);
                 template = System.IO.File.ReadAllText(file.PhysicalPath);
-                CustomerSettingTemplateCache = template;
+                TemplateCached = template;
             }
 
             return template;

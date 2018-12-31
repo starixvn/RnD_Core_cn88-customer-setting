@@ -1,11 +1,8 @@
 ﻿namespace CN88.CustomerSetting.SettingType2.Params.Criteria
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using Fanex.Data.Repository;
 
-    public class GetCreateNewCommBetSettingCriteria : CriteriaBase
+    public class GetCommBetSettingCriteria : CriteriaBase
     {
         public int RoleId { get; set; }
 

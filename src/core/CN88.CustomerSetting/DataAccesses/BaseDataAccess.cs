@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections;
-    using CN88.CustomerSetting.Models.Enumerations;
-    using CN88.CustomerSetting.Models.Requests;
     using CN88.CustomerSetting.Models.Results;
     using Fanex.Data;
 
@@ -21,8 +19,8 @@
 
         protected IResult GetResult(Hashtable param)
         {
-            if (param == null 
-                || !param.ContainsKey("errcode") 
+            if (param == null
+                || !param.ContainsKey("errcode")
                 || !param.ContainsKey("errmsg"))
             {
                 throw new ArgumentException(
@@ -40,23 +38,6 @@
             }
 
             return new Result(errorCode, errMsg);
-        }
-
-        protected Hashtable GetSPParamsForGettingSettingType(CustomerSettingQuery querySettingParam, byte settingType)
-        {
-            if (querySettingParam == null)
-            {
-                throw new ArgumentNullException(nameof(querySettingParam), "querySettingParam cannot be null.");
-            }
-
-            var param = new Hashtable
-            {
-                { "custid", querySettingParam.CustomerId },
-                { "productid", querySettingParam.ProductId },
-                { "settingtype", settingType }
-            };
-
-            return param;
         }
     }
 }

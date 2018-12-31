@@ -1,7 +1,6 @@
 ﻿namespace CN88.CustomerSetting.Services
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using CN88.CustomerSetting.Exceptions;
@@ -23,12 +22,10 @@
 
         SettingResult UpdateCustomerSettingType(
             ISettingContext settingContext,
-            int customerId,
-            Level customerLevel,
-            byte productId,
+            UpdateCustomerSettingCommand command,
             SettingType settingType);
 
-        IDictionary<string, object> GetCreateCustomerParams(
+        IDictionary<string, object> BuildCreateCustomerParams(
             ISettingContext settingContext,
             CreateCustomerCommand command,
             SettingType settingType);
@@ -154,9 +151,7 @@
 
         public abstract SettingResult UpdateCustomerSettingType(
             ISettingContext settingContext,
-            int customerId,
-            Level customerLevel,
-            byte productId,
+            UpdateCustomerSettingCommand command,
             SettingType settingType);
 
         private void WriteLog(
@@ -175,6 +170,6 @@
             Logger.Error(customerSettingException.Message, customerSettingException);
         }
 
-        public abstract IDictionary<string, object> GetCreateCustomerParams(ISettingContext settingContext, CreateCustomerCommand command, SettingType settingType);
+        public abstract IDictionary<string, object> BuildCreateCustomerParams(ISettingContext settingContext, CreateCustomerCommand command, SettingType settingType);
     }
 }

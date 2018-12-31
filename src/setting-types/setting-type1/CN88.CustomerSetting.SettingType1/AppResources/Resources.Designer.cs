@@ -79,7 +79,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password cannot be null or empty.
+        ///   Looks up a localized string similar to Sorry, password cannot be empty!!!.
         /// </summary>
         internal static string PasswordCannotBeNullOrEmpty {
             get {

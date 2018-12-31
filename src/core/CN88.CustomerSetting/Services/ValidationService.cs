@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using CN88.CustomerSetting.AppResources;
-    using CN88.CustomerSetting.DataAccesses;
     using CN88.CustomerSetting.Exceptions;
     using CN88.CustomerSetting.SpParams.Criteria;
     using Fanex.Data.Repository;
@@ -27,18 +26,15 @@
     public class ValidationServiceImpl : ValidationService
     {
         private readonly ProductService productService;
-        private readonly IValidationDataAccess validationDataAccess;
         private readonly IDynamicRepository dynamicRepository;
         private readonly ILogger logger;
 
         public ValidationServiceImpl(
             ProductService productService,
-            IValidationDataAccess validationDataAccess,
             IDynamicRepository dynamicRepository,
             ILogger logger)
         {
             this.productService = productService;
-            this.validationDataAccess = validationDataAccess;
             this.dynamicRepository = dynamicRepository;
             this.logger = logger;
         }
@@ -214,9 +210,13 @@
             }
         }
 
-        private void CheckCustomerSettingTypesIsValidWithProductProfile(ISettingContext settingContext, byte productId, IEnumerable<SettingType> customerSettingTypes)
+        private void CheckCustomerSettingTypesIsValidWithProductProfile(
+            ISettingContext settingContext,
+            byte productId,
+            IEnumerable<SettingType> customerSettingTypes)
         {
-            var productSettingTypes = productService.GetProductSettingTypes(productId, settingContext.System)
+            var productSettingTypes = productService
+                .GetProductSettingTypes(productId, settingContext.System)
                 .Where(product => product.DisplayMode == DisplayModes.Editable);
 
             foreach (var customerSettingType in customerSettingTypes)
@@ -253,7 +253,7 @@
         }
 
         public IResult ValidateCreateCustomerAction(
-            ISettingContext settingContext, 
+            ISettingContext settingContext,
             CreateCustomerCommand command)
         {
             var actorLevel = settingContext.Actor.Level;
@@ -266,7 +266,7 @@
             {
                 CheckQueryPermission(settingContext, customerId, customerLevel, productId, true, command.UplineId);
 
-                //CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes);
+                CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes);
 
                 //CheckUpdatableCustomerSettingTypes(actorLevel, customerLevel, settingTypes);
             }

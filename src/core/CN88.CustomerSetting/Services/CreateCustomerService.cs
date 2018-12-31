@@ -61,65 +61,68 @@
 
             try
             {
-                var product = productService.GetProduct(settingContext, command.Setting.ProductId, settingContext.System);
-                var insertCustomerParams = new Dictionary<string, object>();
+                var createNewParams = GetCreateNewCustomerParams(settingContext, command);
 
-                var settingTypes = command.Setting.SettingTypes;
-                var setting = command.Setting;
-
-                foreach (var settingType in settingTypes)
-                {
-                    var settingTypeService = settingTypeServiceFactory.GetInstance(settingType);
-
-                    var insertSettingTypeParams = settingTypeService.GetCreateCustomerParams(
-                        settingContext,
-                        command,
-                        settingType);
-
-                    insertCustomerParams = insertCustomerParams
-                                                .Concat(insertSettingTypeParams)
-                                                .ToDictionary(pair => pair.Key, pair => pair.Value);
-                }
-
-                return customerDataAccess.InsertCustomer(
-                    setting.CustomerLevel,
-                    new Hashtable(insertCustomerParams, StringComparer.OrdinalIgnoreCase));
+                return customerDataAccess.CreateNewCustomer(
+                    command.Setting.CustomerLevel,
+                    new Hashtable(createNewParams, StringComparer.OrdinalIgnoreCase));
             }
             catch (Exception ex)
             {
-                var setting = command.Setting;
-                WriteLog(settingContext, setting.CustomerId, setting.CustomerLevel, setting.ProductId, new CustomerSettingException(ex.Message, ex));
+                WriteLog(settingContext, command.Setting, new CustomerSettingException(ex.Message, ex));
 
                 return Result.CreateErrorResult(ex.Message);
             }
         }
 
+        private Dictionary<string, object> GetCreateNewCustomerParams(
+            ISettingContext settingContext, 
+            CreateCustomerCommand command)
+        {
+            var createNewParams = new Dictionary<string, object>();
+            var settingTypes = command.Setting.SettingTypes;
+
+            foreach (var settingType in settingTypes)
+            {
+                var settingTypeService = settingTypeServiceFactory.GetInstance(settingType);
+
+                var insertSettingTypeParams = settingTypeService.BuildCreateCustomerParams(
+                    settingContext,
+                    command,
+                    settingType);
+
+                createNewParams = createNewParams
+                                            .Concat(insertSettingTypeParams)
+                                            .ToDictionary(pair => pair.Key, pair => pair.Value);
+            }
+
+            return createNewParams;
+        }
+
         public IResult IsUsernameExisted(string username)
         {
-            var command = new CheckValidUsernameCommand { Username = username };
+            var command = new CheckValidUsernameCommand(username);
 
             dynamicRepository.Execute(command);
 
-            return new Result(command.IsExists ? 1 : 0);
+            return command.IsExists
+                ? Result.CreateErrorResult(string.Empty)
+                : Result.CreateSuccessResult(string.Empty);
         }
 
         protected virtual IResult Validate(
            ISettingContext settingContext,
            CreateCustomerCommand command)
-        {
-            return validationService.ValidateCreateCustomerAction(settingContext, command);
-        }
+            => validationService.ValidateCreateCustomerAction(settingContext, command);
 
         protected virtual void WriteLog(
             ISettingContext settingContext,
-            int customerId,
-            Level customerLevel,
-            byte productId,
+            ISetting setting,
             CustomerSettingException ex)
         {
             ex.SetSettingContextInfo("Create Customer", settingContext);
-            ex.SetCustomerInfo(customerId, customerLevel);
-            ex.SetProductInfo(productId);
+            ex.SetCustomerInfo(setting.CustomerId, setting.CustomerLevel);
+            ex.SetProductInfo(setting.ProductId);
 
             logger.Error(ex.Message, ex);
         }
