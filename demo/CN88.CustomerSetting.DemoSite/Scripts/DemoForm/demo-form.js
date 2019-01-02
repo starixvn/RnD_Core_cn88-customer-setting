@@ -133,7 +133,7 @@ var DemoFrom;
                 uplineId: this.target.uplineId,
                 path: isCreateNew
                     ? this.resolveUrl("CN88CustomerSetting/ViewCustomerSetting/Create")
-                    : this.resolveUrl("CN88CustomerSetting/ViewCustomerSetting/Update"),
+                    : this.resolveUrl("CN88CustomerSetting/ViewCustomerSetting"),
                 frameName: "setting-page"
             };
             if (this.isMultipleUpdates) {

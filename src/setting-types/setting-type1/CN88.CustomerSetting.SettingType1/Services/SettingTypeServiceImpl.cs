@@ -189,16 +189,21 @@
 
             var createNewParams = BuildCreateNewParams(settingContext, settingItem);
 
+            if (command.Setting.CustomerLevel.IsNotMemberLevel())
+            {
+                createNewParams.Add("ptsetting", settingType.ToXml());
+            }
+
             switch (command.Setting.CustomerLevel.Value)
             {
                 case Level.SuperLevelId:
                     return AddParamsForAddNewSuper(settingItem, createNewParams);
 
                 case Level.MasterLevelId:
-                    return AddParamsForAddNewMaster(settingContext, command, settingItem, createNewParams);
+                    return AddParamsForAddNewMaster(settingContext, command, createNewParams);
 
                 case Level.AgentLevelId:
-                    return AddParamsForAddNewAgent(settingContext, command, settingItem, createNewParams);
+                    return AddParamsForAddNewAgent(settingContext, command, createNewParams);
 
                 default:
                     return AddParamsForAddNewMember(settingContext, command, settingItem, createNewParams);
@@ -253,12 +258,10 @@
         private static Dictionary<string, object> AddParamsForAddNewAgent(
             ISettingContext settingContext,
             CreateCustomerCommand command,
-            AccountDetailSettingItem settingItem,
             Dictionary<string, object> createNewParams)
         {
             createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
             createNewParams.Add("mrecommend", command.UplineId);
-            createNewParams.Add("ptsetting", settingItem.ToXml());
 
             return createNewParams;
         }
@@ -266,12 +269,10 @@
         private static Dictionary<string, object> AddParamsForAddNewMaster(
             ISettingContext settingContext,
             CreateCustomerCommand command,
-            AccountDetailSettingItem settingItem,
             Dictionary<string, object> createNewParams)
         {
             createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
             createNewParams.Add("srecommend", command.UplineId);
-            createNewParams.Add("ptsetting", settingItem.ToXml());
 
             return createNewParams;
         }
@@ -286,7 +287,6 @@
             createNewParams.Add("phone", settingItem.Phone ?? string.Empty);
             createNewParams.Add("mobilephone", settingItem.MobilePhone ?? string.Empty);
             createNewParams.Add("fax", settingItem.Fax ?? string.Empty);
-            createNewParams.Add("ptsetting", settingItem.ToXml());
 
             return createNewParams;
         }

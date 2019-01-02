@@ -32,7 +32,7 @@
         }
 
         [CustomerSettingAuth(IsUpdate = false)]
-        public ContentResult Update(SettingFormQuery query)
+        public ContentResult Edit(SettingFormQuery query)
         {
             query.IsCreateNew = false;
 
