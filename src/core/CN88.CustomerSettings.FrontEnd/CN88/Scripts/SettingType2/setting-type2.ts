@@ -23,6 +23,7 @@ module CustomerSetting {
     class SettingType2Directive extends DefaultSettingTypeGroupingDirective {
         public static $inject: string[] = [
             "$q",
+            "$timeout",
             "settingType2ResourceService",
             "crossingSettingTypesServiceBus",
             "appConfigService",
@@ -60,8 +61,11 @@ module CustomerSetting {
                     var deferred: ng.IDeferred<void> = this.$q.defer<void>();
                     var newMemberGroupName: string = sharedData.newMemberGroup;
 
-                    scope.memberSpreadGroupIndex = scope.availableCommissionGroups.indexOf(newMemberGroupName);
-                    deferred.resolve();
+                    this.$timeout(() => {
+                        scope.memberSpreadGroupIndex = scope.availableCommissionGroups.indexOf(newMemberGroupName);
+
+                        deferred.resolve();
+                    });
 
                     return deferred.promise;
                 });
@@ -69,11 +73,13 @@ module CustomerSetting {
         };
 
         private $q: ng.IQService;
+        private $timeout: ng.ITimeoutService;
         private settingType2ResourceService: SettingType2ResourceService;
         private crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus;
 
         constructor(
             $q: ng.IQService,
+            $timeout: ng.ITimeoutService,
             settingType2ResourceService: SettingType2ResourceService,
             crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus,
             appConfigService: AppConfigService,
@@ -84,6 +90,7 @@ module CustomerSetting {
                 (settingItem: any, backup?: boolean, isNew?: boolean, customerLevel?: Level) => new SettingType2Item(settingItem, backup, isNew, customerLevel));
 
             this.$q = $q;
+            this.$timeout = $timeout;
             this.settingType2ResourceService = settingType2ResourceService;
             this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
         }

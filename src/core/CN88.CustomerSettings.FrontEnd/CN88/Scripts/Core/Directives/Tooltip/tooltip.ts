@@ -154,6 +154,7 @@ module CustomerSetting {
                     "left": left + "px",
                     "visibility": "visible"
                 });
+                this.$window.scrollTo(left, top);
             });
         }
     }

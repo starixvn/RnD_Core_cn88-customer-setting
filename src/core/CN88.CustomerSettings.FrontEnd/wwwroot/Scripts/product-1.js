@@ -30615,9 +30615,11 @@ var CustomerSetting;
             this.templateUrl = "Directives/PercentageDropdown/percentage-dropdown.htm";
             this.restrict = "E";
             this.controller = ["$scope", "valueRangeService", function ($scope, valueRangeService) {
-                    $scope.factor = $scope.factor || 100;
-                    $scope.step = $scope.step || 1;
-                    $scope.range = valueRangeService.generateRanges($scope.value, $scope.min, $scope.max, $scope.step, $scope.factor);
+                    $scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
+                        $scope.factor = $scope.factor || 100;
+                        $scope.step = $scope.step || 1;
+                        $scope.range = valueRangeService.generateRanges($scope.value, $scope.min, $scope.max, $scope.step, $scope.factor);
+                    });
                 }];
         }
         Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
@@ -30852,6 +30854,7 @@ var CustomerSetting;
                     "left": left + "px",
                     "visibility": "visible"
                 });
+                _this.$window.scrollTo(left, top);
             });
         };
         TooltipDirective.$inject = ["$window", "$compile", "$timeout", "$templateCache", "$rootScope"];
@@ -31810,7 +31813,7 @@ var CustomerSetting;
     "use strict";
     var SettingType2Directive = (function (_super) {
         __extends(SettingType2Directive, _super);
-        function SettingType2Directive($q, settingType2ResourceService, crossingSettingTypesServiceBus, appConfigService, settingTypesSharedValuesService) {
+        function SettingType2Directive($q, $timeout, settingType2ResourceService, crossingSettingTypesServiceBus, appConfigService, settingTypesSharedValuesService) {
             var _this = this;
             _super.call(this, appConfigService, settingTypesSharedValuesService, function (settingItem, backup, isNew, customerLevel) { return new CustomerSetting.SettingType2Item(settingItem, backup, isNew, customerLevel); });
             this.link = function (scope) {
@@ -31837,13 +31840,16 @@ var CustomerSetting;
                     _this.crossingSettingTypesServiceBus.register("updateMemberSpreadGroup", function (sharedData) {
                         var deferred = _this.$q.defer();
                         var newMemberGroupName = sharedData.newMemberGroup;
-                        scope.memberSpreadGroupIndex = scope.availableCommissionGroups.indexOf(newMemberGroupName);
-                        deferred.resolve();
+                        _this.$timeout(function () {
+                            scope.memberSpreadGroupIndex = scope.availableCommissionGroups.indexOf(newMemberGroupName);
+                            deferred.resolve();
+                        });
                         return deferred.promise;
                     });
                 }
             };
             this.$q = $q;
+            this.$timeout = $timeout;
             this.settingType2ResourceService = settingType2ResourceService;
             this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
         }
@@ -31876,6 +31882,7 @@ var CustomerSetting;
         };
         SettingType2Directive.$inject = [
             "$q",
+            "$timeout",
             "settingType2ResourceService",
             "crossingSettingTypesServiceBus",
             "appConfigService",
