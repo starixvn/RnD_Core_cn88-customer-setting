@@ -32,8 +32,6 @@ module CustomerSetting {
                 } else {
                     scope.sportGroups = <DefaultSettingItem[][]>[scope.settingType.settingItems];
                 }
-
-                //this.reorderBetTypesOfSports(scope.sportGroups);
             }
         }
 
@@ -62,22 +60,6 @@ module CustomerSetting {
             }
 
             return result;
-        }
-
-        protected reorderBetTypesOfSports(originalSportGroups: DefaultSettingItem[][]): void {
-            originalSportGroups.forEach((group: DefaultSettingItem[]) => {
-                group.sort((firstSettingItem: DefaultSettingItem, secondSettingItem: DefaultSettingItem) => {
-                    if (firstSettingItem.displayOrder > secondSettingItem.displayOrder) {
-                        return 1;
-                    }
-
-                    if (firstSettingItem.displayOrder < secondSettingItem.displayOrder) {
-                        return -1;
-                    }
-
-                    return 0;
-                });
-            });
         }
     }
 }

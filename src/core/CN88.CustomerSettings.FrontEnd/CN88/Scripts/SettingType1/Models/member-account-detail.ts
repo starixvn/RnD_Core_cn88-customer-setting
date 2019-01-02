@@ -5,8 +5,8 @@ module CustomerSetting {
     "use strict";
 
     export class MemberAccountDetail extends AccountDetail {
-        public uGroup: string;
-        public uGroups: string[];
+        public spreadGroup: ISpreadGroup;
+        public spreadGroups: ISpreadGroup[];
 
         constructor();
         constructor(accountDetail: any);
@@ -18,18 +18,18 @@ module CustomerSetting {
             if (accountDetail) {
                 super(accountDetail, backup, isNew, customerLevel, hashKey);
 
-                this.uGroup = accountDetail.uGroup;
-                this.uGroups = accountDetail.uGroups;
+                this.spreadGroup = accountDetail.spreadGroup;
+                this.spreadGroups = accountDetail.spreadGroups;
             }
 
             if (backup) {
                 this.oldSetting = new MemberAccountDetail(this);
             }
 
-            this.ignoredProperties.push("uGroups");
+            this.ignoredProperties.push("spreadGroups");
 
             if (!this.isNew) {
-                this.ignoredProperties.push("uGroup");
+                this.ignoredProperties.push("spreadGroup");
             }
         }
 
@@ -37,7 +37,7 @@ module CustomerSetting {
             var isChanged: boolean = super.isChanged();
             var oldSetting: MemberAccountDetail = <MemberAccountDetail>this.oldSetting;
 
-            return isChanged || this.uGroup !== oldSetting.uGroup;
+            return isChanged || this.spreadGroup.uGroup !== oldSetting.spreadGroup.uGroup;
         }
 
         public validate(): boolean {
@@ -46,8 +46,8 @@ module CustomerSetting {
             }
 
             if (this.isNew) {
-                if (!this.uGroup || this.uGroup.length === 0) {
-                    this.validationState = new ValidationResult("RequiredField", "uGroup");
+                if (!this.spreadGroup) {
+                    this.validationState = new ValidationResult("RequiredField", "spreadGroup");
 
                     return false;
                 }

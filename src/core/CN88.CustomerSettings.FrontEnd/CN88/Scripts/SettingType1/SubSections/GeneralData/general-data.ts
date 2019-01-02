@@ -24,7 +24,7 @@ module CustomerSetting {
                     this.crossingSettingTypesServiceBus.execute(
                         "updateMemberSpreadGroup",
                         {
-                            newMemberSpreadGroup: (<MemberAccountDetail>scope.accountDetail).uGroup
+                            newMemberGroup: (<MemberAccountDetail>scope.accountDetail).spreadGroup.groupName
                         });
                 };
             }

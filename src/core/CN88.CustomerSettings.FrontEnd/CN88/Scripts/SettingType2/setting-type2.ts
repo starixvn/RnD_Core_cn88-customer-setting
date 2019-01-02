@@ -6,7 +6,6 @@
 /// <reference path="../core/services/crossing-setting-types-service-bus.ts" />
 /// <reference path="../core/services/setting-types-shared-values-service.ts" />
 /// <reference path="../core/module-registrater.ts" />
-/// <reference path="models/commission-group-and-spread-group-map.ts" />
 /// <reference path="models/layout-type.ts" />
 /// <reference path="models/setting-type2-item.ts" />
 /// <reference path="resources/settingtype2-resource-service.ts" />
@@ -17,7 +16,6 @@ module CustomerSetting {
     interface ISettingType2Scope extends IDefaultSettingTypeDirectiveScope {
         availableCommissionGroups: string[];
         availableLayoutTypes: Object;
-        commissionGroupAndSpreadGroupMaps: ICommissionGroupAndSpreadGroupMap[];
         memberSpreadGroupIndex: number;
         eachGroupStyle: {};
     }
@@ -56,25 +54,12 @@ module CustomerSetting {
 
             if (scope.customerLevel === Level.member) {
                 scope.memberSpreadGroupIndex = 0;
-                scope.commissionGroupAndSpreadGroupMaps = this.mapCommissionGroupsAndSpreadGroups(scope.settingType.settingItems);
 
                 this.crossingSettingTypesServiceBus.register("updateMemberSpreadGroup", (sharedData: any) => {
                     var deferred: ng.IDeferred<void> = this.$q.defer<void>();
-                    var newMemberSpreadGroup: string = sharedData.newMemberSpreadGroup;
-                    var matchedMap: ICommissionGroupAndSpreadGroupMap = scope.commissionGroupAndSpreadGroupMaps.filter((map: ICommissionGroupAndSpreadGroupMap) => {
-                        return map.uGroup === newMemberSpreadGroup;
-                    })[0];
+                    var newMemberGroupName: string = sharedData.newMemberGroup;
 
-                    if (matchedMap) {
-                        var matchGroupName = matchedMap.groupName;
-
-                        if (matchGroupName) {
-                            scope.memberSpreadGroupIndex = scope.availableCommissionGroups.indexOf(matchGroupName);
-                        } else {
-                            scope.memberSpreadGroupIndex = -1;
-                        }
-                    }
-
+                    scope.memberSpreadGroupIndex = scope.availableCommissionGroups.indexOf(newMemberGroupName);
                     deferred.resolve();
 
                     return deferred.promise;
@@ -131,34 +116,6 @@ module CustomerSetting {
             }
 
             return allAvailableGroups;
-        }
-
-        private mapCommissionGroupsAndSpreadGroups(settingItems: ISettingItem[]): ICommissionGroupAndSpreadGroupMap[] {
-            var maps: ICommissionGroupAndSpreadGroupMap[] = [];
-
-            settingItems.forEach((settingItem: ISettingItem) => {
-                var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
-
-                if (settingType2Item
-                    && settingType2Item.commissionGroups
-                    && settingType2Item.commissionGroups.length > 0) {
-                    settingType2Item.commissionGroups.forEach((commissionGroup: ICommissionGroup) => {
-                        var newMap: ICommissionGroupAndSpreadGroupMap = {
-                            groupName: commissionGroup.name,
-                            uGroup: commissionGroup.uGroup
-                        };
-                        var alreadyExisted: boolean = maps.some((existingMap: ICommissionGroupAndSpreadGroupMap) => {
-                            return existingMap.groupName === newMap.groupName && existingMap.uGroup === newMap.uGroup;
-                        });
-
-                        if (commissionGroup.id && alreadyExisted) {
-                            maps.push(newMap);
-                        }
-                    });
-                }
-            });
-
-            return maps;
         }
     }
 

@@ -222,11 +222,11 @@
             </label>
             <div class="setting-field-wrapper w60-percent" data-ng-if="isNew">
                 <select class="setting-field setting-field--fullwidth"
-                        data-ng-model="accountDetail.uGroup"
-                        data-ng-options="group for group in accountDetail.uGroups"
+                        data-ng-model="accountDetail.spreadGroup"
+                        data-ng-options="spreadGroup.uGroup as spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups"
                         data-ng-change="updateSpreadGroup()"></select>
             </div>
-            <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.uGroup}}</label>
+            <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label>
         </div>
         <div class="row">
             <label class="w40-percent">{{::('Name' | settingType1Label)}}</label>
