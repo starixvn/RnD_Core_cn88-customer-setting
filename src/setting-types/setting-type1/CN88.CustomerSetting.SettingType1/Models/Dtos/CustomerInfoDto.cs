@@ -19,5 +19,7 @@
         public decimal Credit { get; set; }
 
         public decimal AvailableCredit { get; set; }
+
+        public string UGroup { get; set; }
     }
 }

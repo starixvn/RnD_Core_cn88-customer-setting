@@ -74,6 +74,14 @@
             settingItem.Credit = customerInfo.Credit;
             settingItem.AvailableCredit = customerInfo.AvailableCredit;
 
+            if(query.CustomerLevel.IsMemberLevel()
+                && !string.IsNullOrEmpty(customerInfo.UGroup))
+            {
+                settingItem.SpreadGroup = GetSpreadGroups()
+                    .FirstOrDefault(group => 
+                        string.Compare(customerInfo.UGroup, group.UGroup, true) == 0);
+            }
+
             return CreateSettingType(settingItem);
         }
 
