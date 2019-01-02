@@ -231,12 +231,12 @@ var DemoFrom;
                     subAccId = 111;
                     break;
                 case Role.super:
-                    actorId = 33489322;
+                    actorId = 33554188;
                     name = "SuperTestCNE";
                     subAccId = 3;
                     break;
                 case Role.master:
-                    actorId = 33489350;
+                    actorId = 33554190;
                     name = "SuperTestCNE0001";
                     subAccId = 728497;
                     break;
@@ -254,23 +254,23 @@ var DemoFrom;
             var uplineId = 0;
             switch (role) {
                 case Role.super:
-                    id = 33489322;
+                    id = 33554188;
                     name = "SuperTestCNE";
                     break;
                 case Role.master:
-                    id = 33489350;
+                    id = 33554190;
                     name = "SuperTestCNE0001";
-                    uplineId = 33489322;
+                    uplineId = 33554188;
                     break;
                 case Role.agent:
-                    id = 33489365;
+                    id = 33554194;
                     name = "SuperTestCNE00010001";
-                    uplineId = 33489350;
+                    uplineId = 33554190;
                     break;
                 case Role.member:
-                    id = 33489480;
+                    id = 33554195;
                     name = "SuperTestCNE000100010001";
-                    uplineId = 33489365;
+                    uplineId = 33554194;
                     break;
             }
             return this.createSingleTarget(id, name, role, uplineId);

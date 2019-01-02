@@ -6,9 +6,6 @@
       <Mapping DataField="currency" ObjectProperty="Name" />
     </Setting>
     <Setting Key="CS_CustomerIns_Sel" SpName="CS_CustomerIns_GeneralInfo_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600">
-      <!--<Parameters>
-        <Parameter Name="IsTest" Value="true" />
-      </Parameters>-->
     </Setting>
     <Setting Key="CS_PTSetting_CustomerIns_Sel" SpName="CS_CustomerIns_PTSetting_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600">
       <Parameters>
@@ -25,9 +22,15 @@
       <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
     </Setting>
 
-    <Setting Key="CS_CustSetting_GeneralInfo_Sel" SpName="CS_CustSetting_GeneralInfo_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />
-    <Setting Key="CS_CustSetting_GeneralInfo_Upd" SpName="CS_CustSetting_GeneralInfo_Upd" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />
-    <Setting Key="CS_CustSetting_PTSetting_Upd" SpName="CS_CustSetting_PTSetting_Upd" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />
+    <Setting Key="CS_CustSetting_GeneralInfo_Sel" SpName="CS_CustSetting_GeneralInfo_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600">
+    </Setting>
+    <Setting Key="CS_CustSetting_GeneralInfo_Upd" SpName="CS_CustSetting_GeneralInfo_Upd" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600">
+    </Setting>
+    <Setting Key="CS_CustSetting_PTSetting_Upd" SpName="CS_CustSetting_PTSetting_Upd" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" >
+      <Parameters>
+        <Parameter Name="IsTest" Value="true" />
+      </Parameters>
+    </Setting>
 
   </Function>
 </Functions>

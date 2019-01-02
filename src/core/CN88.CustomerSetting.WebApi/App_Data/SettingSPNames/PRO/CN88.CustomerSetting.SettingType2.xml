@@ -7,14 +7,21 @@
       </Parameters>
       <Mapping DataField="SportType" ObjectProperty="SportTypeId" />
       <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
-      <Mapping DataField="MaxCom" ObjectProperty="MaxComm" />
     </Setting>
     <Setting Key="CS_CommTemplateSel" SpName="CS_CommTemplateSel" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" >
       <Mapping DataField="ValueId" ObjectProperty="Id" />
     </Setting>
 
-    <Setting Key="CS_CustSetting_BetSetting_Upd" SpName="CS_CustSetting_BetSetting_Upd" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />
-    <Setting Key="CS_CustSetting_Comm_Upd" SpName="CS_CustSetting_Comm_Upd" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" />
+    <Setting Key="CS_CustSetting_BetSetting_Upd" SpName="CS_CustSetting_BetSetting_Upd" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" >
+      <Parameters>
+        <Parameter Name="IsTest" Value="true" />
+      </Parameters>
+    </Setting>
+    <Setting Key="CS_CustSetting_Comm_Upd" SpName="CS_CustSetting_Comm_Upd" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600" >
+      <Parameters>
+        <Parameter Name="IsTest" Value="true" />
+      </Parameters>
+    </Setting>
 
   </Function>
 </Functions>
