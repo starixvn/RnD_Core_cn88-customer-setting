@@ -6,11 +6,15 @@
             {{settingTypeName}}
         </div>
         <div class="col" data-ng-if="settingType | validSettingType">
-            <general-data data-account-detail="settingType.settingItems[0]"></general-data>
+            <general-data data-account-detail="settingType.settingItems[0]"
+                          data-editable="editable"></general-data>
         </div>
         <div class="col" data-ng-if="settingType | validSettingType">
-            <customer-credit data-account-detail="settingType.settingItems[0]"></customer-credit>
-            <position-taking data-ng-if="customerLevel !== avaiCustomerLevels.member" data-account-detail="settingType.settingItems[0]"></position-taking>
+            <customer-credit data-account-detail="settingType.settingItems[0]"
+                             data-editable="editable"></customer-credit>
+            <position-taking data-ng-if="customerLevel !== avaiCustomerLevels.member"
+                             data-account-detail="settingType.settingItems[0]"
+                             data-editable="editable"></position-taking>
         </div>
         <div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">
             {{settingType.settingItems[0].errorMessage}}

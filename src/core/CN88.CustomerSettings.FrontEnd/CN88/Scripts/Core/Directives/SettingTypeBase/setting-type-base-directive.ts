@@ -1,7 +1,9 @@
 ﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../models/enums/display-mode.ts" />
 /// <reference path="../../models/enums/level.ts" />
 /// <reference path="../../models/setting-item.ts" />
 /// <reference path="../../models/setting-type.ts" />
+/// <reference path="../../services/app-config-service.ts" />
 /// <reference path="../../services/setting-types-shared-values-service.ts" />
 
 module CustomerSetting {
@@ -21,6 +23,7 @@ module CustomerSetting {
         settingType: SettingType;
         settingTypeName: string;
         isNew: boolean;
+        editable: boolean;
         avaiCustomerLevels: Object;
     }
 
@@ -45,6 +48,7 @@ module CustomerSetting {
             scope.productId = this.settingTypesSharedValuesService.productId;
             scope.productName = this.settingTypesSharedValuesService.productName;
             scope.isNew = this.settingTypesSharedValuesService.isNew;
+            scope.editable = this.appConfigService.canUpdate() && scope.settingType.displayMode === DisplayMode.editable;
             scope.avaiCustomerLevels = Level;
 
             if (this.instantiateSettingItem) {
@@ -70,12 +74,14 @@ module CustomerSetting {
             }
         }
 
-        protected instantiateSettingItem: INewSettingItem;
+        protected appConfigService: AppConfigService;
         protected settingTypesSharedValuesService: SettingTypesSharedValuesService;
+        protected instantiateSettingItem: INewSettingItem;
 
-        constructor(settingTypesSharedValuesService: SettingTypesSharedValuesService, instantiateSettingItem: INewSettingItem) {
-            this.instantiateSettingItem = instantiateSettingItem;
+        constructor(appConfigService: AppConfigService, settingTypesSharedValuesService: SettingTypesSharedValuesService, instantiateSettingItem: INewSettingItem) {
+            this.appConfigService = appConfigService;
             this.settingTypesSharedValuesService = settingTypesSharedValuesService;
+            this.instantiateSettingItem = instantiateSettingItem;
         }
     }
 }

@@ -10,6 +10,7 @@ module CustomerSetting {
         customerLevel: Level;
         accountDetail: AccountDetail;
         isNew: boolean;
+        editable: boolean;
         avaiCustomerLevels: Object;
     }
 
@@ -18,7 +19,8 @@ module CustomerSetting {
 
         public get scope(): any {
             return {
-                accountDetail: "="
+                accountDetail: "=",
+                editable: "="
             };
         }
 

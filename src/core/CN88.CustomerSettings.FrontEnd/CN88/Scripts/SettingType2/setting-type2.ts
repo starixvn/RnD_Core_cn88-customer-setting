@@ -24,8 +24,9 @@ module CustomerSetting {
         public static $inject: string[] = [
             "$q",
             "settingType2ResourceService",
-            "settingTypesSharedValuesService",
-            "crossingSettingTypesServiceBus"
+            "crossingSettingTypesServiceBus",
+            "appConfigService",
+            "settingTypesSharedValuesService"
         ];
 
         public link: ng.IDirectiveLinkFn = (scope: ISettingType2Scope) => {
@@ -74,9 +75,12 @@ module CustomerSetting {
         constructor(
             $q: ng.IQService,
             settingType2ResourceService: SettingType2ResourceService,
-            settingTypesSharedValuesService: SettingTypesSharedValuesService,
-            crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus) {
-            super(settingTypesSharedValuesService,
+            crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus,
+            appConfigService: AppConfigService,
+            settingTypesSharedValuesService: SettingTypesSharedValuesService) {
+            super(
+                appConfigService,
+                settingTypesSharedValuesService,
                 (settingItem: any, backup?: boolean, isNew?: boolean, customerLevel?: Level) => new SettingType2Item(settingItem, backup, isNew, customerLevel));
 
             this.$q = $q;

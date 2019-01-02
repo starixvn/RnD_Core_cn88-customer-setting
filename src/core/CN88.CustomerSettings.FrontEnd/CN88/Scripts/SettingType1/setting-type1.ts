@@ -14,6 +14,7 @@ module CustomerSetting {
     class SettingType1Directive extends SettingTypeBaseDirective {
         public static $inject: string[] = [
             "settingType1ResourceService",
+            "appConfigService",
             "settingTypesSharedValuesService"
         ];
 
@@ -46,8 +47,11 @@ module CustomerSetting {
 
         private settingType1ResourceService: SettingType1ResourceService;
 
-        constructor(settingType1ResourceService: SettingType1ResourceService, settingTypesSharedValuesService: SettingTypesSharedValuesService) {
-            super(settingTypesSharedValuesService, null);
+        constructor(
+            settingType1ResourceService: SettingType1ResourceService,
+            appConfigService: AppConfigService,
+            settingTypesSharedValuesService: SettingTypesSharedValuesService) {
+            super(appConfigService, settingTypesSharedValuesService, null);
 
             this.settingType1ResourceService = settingType1ResourceService;
         }
