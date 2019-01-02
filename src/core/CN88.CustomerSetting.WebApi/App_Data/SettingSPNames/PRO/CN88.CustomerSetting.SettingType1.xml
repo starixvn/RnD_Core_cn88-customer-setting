@@ -31,6 +31,8 @@
         <Parameter Name="IsTest" Value="true" />
       </Parameters>
     </Setting>
+    <Setting Key="CS_SpreadGroupSel" SpName="CS_SpreadGroupSel" DbName="DBACC.bodb02.bodbAdminNet" Plain="0" TimeOut="600">
+    </Setting>
 
   </Function>
 </Functions>

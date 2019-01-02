@@ -22,7 +22,8 @@
         private const int SettingTypeId = 1;
         private const int CurrencyCacheTimeInMinutes = 5;
         private const string CurrencyCacheKey = "CN88.CustomerSetting.CurrencyCacheKey";
-        private static readonly List<string> defaultGroups = new List<string> { "cna", "cnb", "cnc", "cnd" };
+        private const int SpreadGroupCacheTimeInHours = 5;
+        private const string SpreadGroupCacheKey = "CN88.CustomerSetting.SpreadGroupCacheKey";
         private readonly PasswordService passwordService;
 
         public SettingTypeServiceImpl() :
@@ -90,8 +91,8 @@
 
             if (query.CustomerLevel.IsMemberLevel())
             {
-                settingItem.UGroup = defaultGroups.FirstOrDefault();
-                settingItem.UGroups = defaultGroups;
+                settingItem.SpreadGroups = GetSpreadGroups();
+                settingItem.SpreadGroup = settingItem.SpreadGroups.FirstOrDefault();
             }
 
             return CreateSettingType(settingItem);
@@ -177,6 +178,12 @@
                        () => DynamicRepository.Fetch<Currency>(new GetCurrencyListCriteria()),
                         new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(0, CurrencyCacheTimeInMinutes, 0)));
 
+        private IEnumerable<SpreadGroup> GetSpreadGroups()
+            => CacheService.GetOrSet(
+                       SpreadGroupCacheKey,
+                       () => DynamicRepository.Fetch<SpreadGroup>(new GetSpreadGroupCriteria()),
+                        new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(SpreadGroupCacheTimeInHours, 0, 0)));
+
         public override IDictionary<string, object> BuildCreateCustomerParams(
             ISettingContext settingContext,
             CreateCustomerCommand command,
@@ -250,7 +257,7 @@
         {
             createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
             createNewParams.Add("recommend", command.UplineId);
-            createNewParams.Add("ugroup", settingItem.UGroup);
+            createNewParams.Add("ugroup", settingItem.SpreadGroup.UGroup);
 
             return createNewParams;
         }

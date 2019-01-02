@@ -10,8 +10,6 @@
 
         public string Name { get; set; }
 
-        public string UGroup { get; set; }
-
         public decimal Value { get; set; }
     }
 }

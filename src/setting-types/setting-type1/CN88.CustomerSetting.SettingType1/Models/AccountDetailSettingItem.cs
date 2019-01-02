@@ -26,13 +26,13 @@
 
         public decimal AvailableCredit { get; set; }
 
-        public string UGroup { get; set; }
+        public SpreadGroup SpreadGroup { get; set; }
 
         public IEnumerable<string> UsernameSuffixes { get; set; }
 
         public string UplineUsername { get; set; }
 
-        public IEnumerable<string> UGroups { get; set; }
+        public IEnumerable<SpreadGroup> SpreadGroups { get; set; }
 
         public IEnumerable<Currency> Currencies { get; set; }
     }
