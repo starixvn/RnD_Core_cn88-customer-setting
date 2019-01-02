@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../core/models/result.ts" />
 /// <reference path="account-detail.ts" />
+/// <reference path="spread-group.ts" />
 
 module CustomerSetting {
     "use strict";

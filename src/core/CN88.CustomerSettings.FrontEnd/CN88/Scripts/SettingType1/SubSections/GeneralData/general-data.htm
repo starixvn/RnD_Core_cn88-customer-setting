@@ -223,7 +223,7 @@
             <div class="setting-field-wrapper w60-percent" data-ng-if="isNew">
                 <select class="setting-field setting-field--fullwidth"
                         data-ng-model="accountDetail.spreadGroup"
-                        data-ng-options="spreadGroup.uGroup as spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups"
+                        data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup"
                         data-ng-change="updateSpreadGroup()"></select>
             </div>
             <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label>
