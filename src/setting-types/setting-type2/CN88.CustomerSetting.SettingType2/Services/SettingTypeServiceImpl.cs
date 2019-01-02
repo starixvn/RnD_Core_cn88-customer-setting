@@ -84,7 +84,7 @@
                 BetTypeName = Resources.ResourceManager.GetString($"BetTypeName_{firstSettingItemConfig.BetTypeId}_{isLive}"),
 
                 LayoutType = firstSettingItemConfig.LayoutType,
-                IntervalValue = firstSettingItemConfig.IntervalValue,
+                IntervalValue = firstSettingItemConfig.IntervalValuePercent,
                 ChildOrder = firstSettingItemConfig.ChildOrder,
 
                 SportTypeId = firstSettingItemDto.SportTypeId,
@@ -104,9 +104,9 @@
                     {
                         Id = dto.GroupId,
                         Name = dto.GroupName,
-                        MaxValue = dto.MaxComm,
-                        MinValue = dto.MinComm,
-                        Value = dto.Comm
+                        MaxValue = dto.MaxCommPercent,
+                        MinValue = dto.MinCommPercent,
+                        Value = dto.CommPercent
                     })
             };
         }

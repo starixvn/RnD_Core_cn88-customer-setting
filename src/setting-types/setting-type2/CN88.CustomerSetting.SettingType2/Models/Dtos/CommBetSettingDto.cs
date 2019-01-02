@@ -18,8 +18,14 @@
 
         public decimal MinComm { get; set; }
 
+        public decimal MinCommPercent => MinComm * 100;
+
         public decimal MaxComm { get; set; }
 
+        public decimal MaxCommPercent => MaxComm * 100;
+
         public decimal Comm { get; set; }
+
+        public decimal CommPercent => Comm * 100;
     }
 }

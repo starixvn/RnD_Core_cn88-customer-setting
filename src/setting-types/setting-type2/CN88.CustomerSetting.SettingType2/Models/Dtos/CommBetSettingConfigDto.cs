@@ -12,6 +12,8 @@
 
         public decimal IntervalValue { get; set; }
 
+        public decimal IntervalValuePercent => IntervalValue * 100;
+
         public int ChildOrder { get; set; }
 
         public int LayoutType { get; set; }

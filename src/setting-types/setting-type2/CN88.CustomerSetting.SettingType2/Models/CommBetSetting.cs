@@ -20,12 +20,7 @@
                     string.Empty,
                     SettingItems
                         .Cast<CommBetSettingItem>()
-                        .Select(settingItem =>
-                        {
-
-
-                            return settingItem.ToCommXml(commTemplates);
-                        })));
+                        .Select(settingItem => settingItem.ToCommXml(commTemplates))));
         }
 
         public string ToBetSettingXml()

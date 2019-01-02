@@ -39,7 +39,7 @@
                                     CommXmlFormat, 
                                     base.ToXml(), 
                                     comm.Id, 
-                                    GetCommValueId(comm.Value, commTemplates))));
+                                    GetCommValueId(comm.Value > 0 ? comm.Value/100 : 0, commTemplates))));
 
         private int? GetCommValueId(decimal value, IEnumerable<CommTemplate> commTemplates)
             => commTemplates
