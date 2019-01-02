@@ -33,7 +33,7 @@ module CustomerSetting {
         }
 
         public controller: any = ["$scope", "valueRangeService", ($scope: IPercentageDropdownScope, valueRangeService: ValueRangeService) => {
-            $scope.factor = $scope.factor || 1;
+            $scope.factor = $scope.factor || 100;
             $scope.step = $scope.step || 1;
             $scope.range = valueRangeService.generateRanges(
                 $scope.value,

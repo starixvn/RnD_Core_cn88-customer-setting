@@ -10,16 +10,15 @@ module CustomerSetting {
             var ranges: number[] = [];
             var finalMin = Math.max(0, min);
             var finalMax = Math.max(0, max);
-            var currentValue: number;
 
             if (value > finalMax) {
                 ranges.push(value);
             }
 
             while (finalMax >= finalMin) {
-                currentValue = Math.round(finalMax * roundingFactor) / roundingFactor;
-                ranges.push(currentValue);
+                ranges.push(finalMax);
                 finalMax -= step;
+                finalMax = Math.round(finalMax * roundingFactor) / roundingFactor;
             }
 
             if (value < finalMin) {
