@@ -9,11 +9,17 @@
     using Fanex.Logging.Extensions.AspNetCore;
     using Microsoft.AspNetCore.Http;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
 
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate next;
         private readonly ILogger logger;
+        private static JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
+        };
+
 
         public ErrorHandlingMiddleware(RequestDelegate next, ILogger logger)
         {
@@ -38,7 +44,7 @@
         {
             const HttpStatusCode code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
-            var result = JsonConvert.SerializeObject(Result.CreateErrorResult(exception.Message));
+            var result = JsonConvert.SerializeObject(Result.CreateErrorResult(exception.Message), serializerSettings);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);

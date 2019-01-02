@@ -6,6 +6,8 @@
 
     public class CommBetSettingItem : SettingItemDefault
     {
+        private const int OneHundredPercent = 100;
+
         private const string CommXmlFormat
             = "<Comm {0} GroupId=\"{1}\" ValueId=\"{2}\"/>";
 
@@ -39,13 +41,21 @@
                                     CommXmlFormat, 
                                     base.ToXml(), 
                                     comm.Id, 
-                                    GetCommValueId(comm.Value > 0 ? comm.Value/100 : 0, commTemplates))));
+                                    GetCommValueId(comm.Value > 0 
+                                        ? comm.Value/OneHundredPercent 
+                                        : 0, 
+                                        commTemplates))));
 
         private int? GetCommValueId(decimal value, IEnumerable<CommTemplate> commTemplates)
             => commTemplates
                     .FirstOrDefault(commTemplate => commTemplate.Value == value)?
                     .Id;
 
-        public string ToBetSettingXml() => string.Format(BetSettingXmlFormat, base.ToXml(), MaxBet, MaxPerMatch);
+        public string ToBetSettingXml() 
+            => string.Format(
+                BetSettingXmlFormat, 
+                base.ToXml(), 
+                MaxBet, 
+                MaxPerMatch);
     }
 }

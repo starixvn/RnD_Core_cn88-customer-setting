@@ -2,6 +2,8 @@
 {
     public class CommBetSettingDto : CommBetSettingConfigDto
     {
+        private const int OneHundredPercent = 100;
+
         public string GroupName { get; set; }
 
         public decimal MaxMaxBet { get; set; }
@@ -18,14 +20,14 @@
 
         public decimal MinComm { get; set; }
 
-        public decimal MinCommPercent => MinComm * 100;
+        public decimal MinCommPercent => MinComm * OneHundredPercent;
 
         public decimal MaxComm { get; set; }
 
-        public decimal MaxCommPercent => MaxComm * 100;
+        public decimal MaxCommPercent => MaxComm * OneHundredPercent;
 
         public decimal Comm { get; set; }
 
-        public decimal CommPercent => Comm * 100;
+        public decimal CommPercent => Comm * OneHundredPercent;
     }
 }
