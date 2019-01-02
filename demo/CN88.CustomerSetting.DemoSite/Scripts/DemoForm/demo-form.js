@@ -258,19 +258,19 @@ var DemoFrom;
                     name = "SuperTestCNE";
                     break;
                 case Role.master:
-                    id = 33554190;
+                    id = 33554200;
                     name = "SuperTestCNE0001";
                     uplineId = 33554188;
                     break;
                 case Role.agent:
-                    id = 33554194;
+                    id = 33554203;
                     name = "SuperTestCNE00010001";
-                    uplineId = 33554190;
+                    uplineId = 33554200;
                     break;
                 case Role.member:
-                    id = 33554195;
+                    id = 33554204;
                     name = "SuperTestCNE000100010001";
-                    uplineId = 33554194;
+                    uplineId = 33554203;
                     break;
             }
             return this.createSingleTarget(id, name, role, uplineId);
