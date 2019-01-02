@@ -33,7 +33,7 @@ module CustomerSetting {
             "appConfigService",
             ($scope: IUsernameSuffixGroupScope, requestService: RequestService, appConfigService: AppConfigService) => {
                 $scope.selectedSuffixes = $scope.accountDetail.usernameSuffixes.slice();
-                $scope.accountDetail.username = $scope.accountDetail.uplineUsername + $scope.selectedSuffixes.join();
+                $scope.accountDetail.username = $scope.accountDetail.uplineUsername + $scope.selectedSuffixes.join("");
 
                 $scope.validateUsername = (suffixIndex: number, selectedSuffix: string) => {
                     var validatingPath: string = appConfigService.buildPath(UsernameSuffixGroupDirective.validatingUsernamePath);

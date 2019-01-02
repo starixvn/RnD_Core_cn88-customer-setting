@@ -163,8 +163,8 @@ module CustomerSetting {
                 return false;
             }
 
-            if (this.superMaxPT > this.maxSuperMinPT) {
-                this.validationState = new ValidationResult("SuperMaxPTMustLessThanOrEqualTo", "superMaxPT", [this.maxSuperMinPT]);
+            if (this.superMaxPT > this.maxSuperMaxPT) {
+                this.validationState = new ValidationResult("SuperMaxPTMustBeLessThanOrEqualTo", "superMaxPT", [this.maxSuperMaxPT]);
 
                 return false;
             }

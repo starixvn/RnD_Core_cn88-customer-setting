@@ -33,46 +33,49 @@ module CustomerSetting {
             };
         }
 
-        public controller: any = [
-            "$scope",
-            "settingTypesSharedValuesService",
-            ($scope: ISettingTypeDirectiveSharedScope, settingTypesSharedValuesService: SettingTypesSharedValuesService) => {
-                $scope.actorLevel = settingTypesSharedValuesService.actorLevel;
-                $scope.customerId = settingTypesSharedValuesService.customerId;
-                $scope.uplineId = settingTypesSharedValuesService.uplineId;
-                $scope.customerLevel = settingTypesSharedValuesService.customerLevel;
-                $scope.productId = settingTypesSharedValuesService.productId;
-                $scope.productName = settingTypesSharedValuesService.productName;
-                $scope.isNew = settingTypesSharedValuesService.isNew;
-                $scope.avaiCustomerLevels = Level;
+        public link: ng.IDirectiveLinkFn = (scope: ISettingTypeDirectiveSharedScope) => {
+            this.linkInternal(scope);
+        };
 
-                $scope.$watch("settingType", (settingType: SettingType) => {
-                    if (settingType && angular.isArray(settingType.settingItems)) {
-                        if (settingType.isError) {
-                            if (settingType.settingItems.length > 0) {
-                                settingType.settingItems[0] = new ErrorSettingItem(settingType.settingItems[0]);
-                            }
-                        } else {
-                            settingType.settingItems.forEach((item: any, index: number) => {
-                                if (item) {
-                                    settingType.settingItems[index] = this.instantiateSettingItem(
-                                        item,
-                                        true,
-                                        $scope.isNew,
-                                        $scope.customerLevel,
-                                        $scope.uplineId,
-                                        settingType.extraData);
-                                }
-                            });
+        protected linkInternal(scope: ISettingTypeDirectiveSharedScope): void {
+            scope.actorLevel = this.settingTypesSharedValuesService.actorLevel;
+            scope.customerId = this.settingTypesSharedValuesService.customerId;
+            scope.uplineId = this.settingTypesSharedValuesService.uplineId;
+            scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
+            scope.productId = this.settingTypesSharedValuesService.productId;
+            scope.productName = this.settingTypesSharedValuesService.productName;
+            scope.isNew = this.settingTypesSharedValuesService.isNew;
+            scope.avaiCustomerLevels = Level;
+
+            if (this.instantiateSettingItem) {
+                if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
+                    if (scope.settingType.isError) {
+                        if (scope.settingType.settingItems.length > 0) {
+                            scope.settingType.settingItems[0] = new ErrorSettingItem(scope.settingType.settingItems[0]);
                         }
+                    } else {
+                        scope.settingType.settingItems.forEach((item: any, index: number) => {
+                            if (item) {
+                                scope.settingType.settingItems[index] = this.instantiateSettingItem(
+                                    item,
+                                    true,
+                                    scope.isNew,
+                                    scope.customerLevel,
+                                    scope.uplineId,
+                                    scope.settingType.extraData);
+                            }
+                        });
                     }
-                });
-            }];
+                }
+            }
+        }
 
-        private instantiateSettingItem: INewSettingItem;
+        protected instantiateSettingItem: INewSettingItem;
+        protected settingTypesSharedValuesService: SettingTypesSharedValuesService;
 
-        constructor(instantiateSettingItem: INewSettingItem) {
+        constructor(settingTypesSharedValuesService: SettingTypesSharedValuesService, instantiateSettingItem: INewSettingItem) {
             this.instantiateSettingItem = instantiateSettingItem;
+            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
         }
     }
 }

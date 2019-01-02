@@ -279,11 +279,11 @@ th {
     border-color: #66afe9; }
   .setting-field--fullwidth {
     width: 100%; }
-  .setting-field--error {
+  .setting-field--error, .setting-field--error:focus {
     border-color: #e9322d; }
-  .setting-field--warning {
+  .setting-field--warning, .setting-field--warning:focus {
     border-color: #c93; }
-  .setting-field--success {
+  .setting-field--success, .setting-field--success:focus {
     border-color: #14b22a; }
   .setting-field--has-constraint {
     width: 50%; }

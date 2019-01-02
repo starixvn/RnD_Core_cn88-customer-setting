@@ -11,27 +11,31 @@ module CustomerSetting {
         sportGroups: DefaultSettingItem[][];
         headerTemplateUrl: string;
         valueTemplateUrl: string;
+        cssClass: string
     }
 
-    export class DefaultSettingTypeGroupingDirective implements ng.IDirective {
-        public replace: boolean = true;
+    export class DefaultSettingTypeGroupingDirective extends SettingTypeBaseDirective {
         public templateUrl: string = "Directives/DefaultSettingTypeBlock/default-setting-type-block.htm";
 
-        public controller: any = ["$scope", ($scope: IDefaultSettingTypeDirectiveScope) => {
-            $scope.avaiSettingLevels = SettingLevel;
+        public link: ng.IDirectiveLinkFn = (scope: IDefaultSettingTypeDirectiveScope) => {
+            this.linkInternal(scope);
+        };
 
-            $scope.$watch("settingType", (settingType: SettingType) => {
-                if (settingType && angular.isArray(settingType.settingItems)) {
-                    if (settingType.settingLevel === SettingLevel.sportTypeBetType) {
-                        $scope.sportGroups = this.groupSettingItemsBySportType(settingType.settingItems);
-                    } else {
-                        $scope.sportGroups = <DefaultSettingItem[][]>[settingType.settingItems];
-                    }
+        protected linkInternal(scope: IDefaultSettingTypeDirectiveScope): void {
+            super.linkInternal(scope);
 
-                    this.reorderBetTypesOfSports($scope.sportGroups);
+            scope.avaiSettingLevels = SettingLevel;
+
+            if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
+                if (scope.settingType.settingLevel === SettingLevel.sportTypeBetType) {
+                    scope.sportGroups = this.groupSettingItemsBySportType(scope.settingType.settingItems);
+                } else {
+                    scope.sportGroups = <DefaultSettingItem[][]>[scope.settingType.settingItems];
                 }
-            });
-        }];
+
+                //this.reorderBetTypesOfSports(scope.sportGroups);
+            }
+        }
 
         protected groupSettingItemsBySportType(settingItems: ISettingItem[]): DefaultSettingItem[][] {
             var currentSportTypeId: number = -1;
@@ -76,6 +80,4 @@ module CustomerSetting {
             });
         }
     }
-
-    ModuleRegister.directive("defaultSettingTypeGrouping", DefaultSettingTypeGroupingDirective);
 }

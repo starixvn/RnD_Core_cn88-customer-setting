@@ -1,6 +1,5 @@
 ﻿/// <reference path="../typings/angularjs/angular.d.ts" />
 /// <reference path="../core/directives/defaultsettingtypeblock/default-setting-type-block.ts" />
-/// <reference path="../core/directives/settingtypebase/setting-type-base-directive.ts" />
 /// <reference path="../core/models/enums/level.ts" />
 /// <reference path="../core/models/setting-item.ts" />
 /// <reference path="../core/models/setting-type.ts" />
@@ -23,18 +22,20 @@ module CustomerSetting {
         eachGroupStyle: {};
     }
 
-    class SettingType2Directive extends SettingTypeBaseDirective {
+    class SettingType2Directive extends DefaultSettingTypeGroupingDirective {
         public static $inject: string[] = [
             "$q",
             "settingType2ResourceService",
+            "settingTypesSharedValuesService",
             "crossingSettingTypesServiceBus"
         ];
 
-        public templateUrl: string = "setting-type2.htm";
-
         public link: ng.IDirectiveLinkFn = (scope: ISettingType2Scope) => {
+            this.linkInternal(scope);
+
             scope.headerTemplateUrl = "setting-type2-header.htm";
             scope.valueTemplateUrl = "setting-type2-value.htm";
+            scope.cssClass = "full-width";
             scope.settingTypeName = this.settingType2ResourceService.getLabel("CommissionAndBetLimit");
             scope.availableLayoutTypes = LayoutType;
 
@@ -45,7 +46,7 @@ module CustomerSetting {
                     scope.settingType.settingItems.forEach((settingItem: ISettingItem) => {
                         var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
 
-                        //settingType2Item.mapCommissionGroups(scope.availableCommissionGroups);
+                        settingType2Item.mapCommissionGroups(scope.availableCommissionGroups);
                     });
                     scope.eachGroupStyle = {
                         "min-width": (100 / scope.availableCommissionGroups.length) + "%"
@@ -54,6 +55,7 @@ module CustomerSetting {
             }
 
             if (scope.customerLevel === Level.member) {
+                scope.memberSpreadGroupIndex = 0;
                 scope.commissionGroupAndSpreadGroupMaps = this.mapCommissionGroupsAndSpreadGroups(scope.settingType.settingItems);
 
                 this.crossingSettingTypesServiceBus.register("updateMemberSpreadGroup", (sharedData: any) => {
@@ -62,12 +64,15 @@ module CustomerSetting {
                     var matchedMap: ICommissionGroupAndSpreadGroupMap = scope.commissionGroupAndSpreadGroupMaps.filter((map: ICommissionGroupAndSpreadGroupMap) => {
                         return map.uGroup === newMemberSpreadGroup;
                     })[0];
-                    var matchGroupName = matchedMap.groupName;
 
-                    if (matchGroupName) {
-                        scope.memberSpreadGroupIndex = scope.availableCommissionGroups.indexOf(matchGroupName);
-                    } else {
-                        scope.memberSpreadGroupIndex = -1;
+                    if (matchedMap) {
+                        var matchGroupName = matchedMap.groupName;
+
+                        if (matchGroupName) {
+                            scope.memberSpreadGroupIndex = scope.availableCommissionGroups.indexOf(matchGroupName);
+                        } else {
+                            scope.memberSpreadGroupIndex = -1;
+                        }
                     }
 
                     deferred.resolve();
@@ -84,8 +89,10 @@ module CustomerSetting {
         constructor(
             $q: ng.IQService,
             settingType2ResourceService: SettingType2ResourceService,
+            settingTypesSharedValuesService: SettingTypesSharedValuesService,
             crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus) {
-            super((settingItem: any, backup?: boolean, isNew?: boolean, customerLevel?: Level) => new SettingType2Item(settingItem, backup, isNew, customerLevel));
+            super(settingTypesSharedValuesService,
+                (settingItem: any, backup?: boolean, isNew?: boolean, customerLevel?: Level) => new SettingType2Item(settingItem, backup, isNew, customerLevel));
 
             this.$q = $q;
             this.settingType2ResourceService = settingType2ResourceService;

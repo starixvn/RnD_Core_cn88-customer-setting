@@ -103,7 +103,7 @@ module CustomerSetting {
         private calculateTooltipPosition(wrappedElement: ng.IAugmentedJQuery, positionModel: PositionModel): void {
             var children = wrappedElement.children();
 
-            if (!children || children.length !== 2) {
+            if (!children || children.length < 2) {
                 return;
             }
 

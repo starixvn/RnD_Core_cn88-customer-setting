@@ -11,6 +11,7 @@ module CustomerSetting {
         max: number;
         step: number;
         factor: number;
+        precision: number;
         range: number[];
     }
 
@@ -26,7 +27,8 @@ module CustomerSetting {
                 min: "=",
                 max: "=",
                 step: "=",
-                factor: "="
+                factor: "=",
+                precision: "="
             };
         }
 

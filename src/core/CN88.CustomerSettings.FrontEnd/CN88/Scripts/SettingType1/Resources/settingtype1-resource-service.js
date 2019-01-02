@@ -68,7 +68,7 @@
         "SuperPTMustBeLessThanOrEqualTo": "Super PT must be less than or equal to {0}.",
         "MasterPTMustBeLessThanOrEqualTo": "Master PT must be greater than or equal to {0}.",
         "AgentPTMustBeLessThanOrEqualTo": "Agent PT must be less than or equal to {0}.",
-        "TotalPTMustBeInRange": "Total Position Taking must be between {0} and {1}. Please try again.",
+        "TotalPTMustBeInRange": "Total Position Taking must be between {0}% and {1}%. Please try again.",
         "CreditMustBeLessThanOrEqualTo": "Credit must be less than or equal to {0}.",
         "InvalidCurrency": "Invalid currency."
     };

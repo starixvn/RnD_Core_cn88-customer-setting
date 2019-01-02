@@ -8,21 +8,21 @@ module CustomerSetting {
     export class ValueRangeService {
         public generateRanges(value: number, min: number, max: number, step: number, roundingFactor: number): number[] {
             var ranges: number[] = [];
+            var finalMin = Math.max(0, min);
+            var finalMax = Math.max(0, max);
+            var currentValue: number;
 
-            min = Math.max(0, min);
-            max = Math.max(0, max);
-
-            if (value > max) {
+            if (value > finalMax) {
                 ranges.push(value);
             }
 
-            while (max >= min) {
-                ranges.push(max);
-                max -= step;
-                max = Math.round(max * roundingFactor) / roundingFactor;
+            while (finalMax >= finalMin) {
+                currentValue = Math.round(finalMax * roundingFactor) / roundingFactor;
+                ranges.push(currentValue);
+                finalMax -= step;
             }
 
-            if (value < min) {
+            if (value < finalMin) {
                 ranges.push(value);
             }
 

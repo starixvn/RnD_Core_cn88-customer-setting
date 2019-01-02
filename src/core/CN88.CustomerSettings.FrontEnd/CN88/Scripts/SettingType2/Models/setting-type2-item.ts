@@ -60,7 +60,57 @@ module CustomerSetting {
         }
 
         public validate(): boolean {
+            if (!this.validateCommission()) {
+                return false;
+            }
+
+            if (!this.validateBetLimit()) {
+                return false;
+            }
+
             this.resetValidationState();
+
+            return true;
+        }
+
+        private validateCommission(): boolean {
+            this.mappedCommissionGroups.forEach((commissionGroup: ICommissionGroup, index: number) => {
+                if (commissionGroup.value > commissionGroup.maxValue || commissionGroup.value < commissionGroup.minValue) {
+                    this.validationState = new ValidationResult("CommissionIsOutOfRange", "commissionGroups:" + index);
+
+                    return false;
+                }
+            });
+
+            return true;
+        }
+
+        private validateBetLimit(): boolean {
+            if (this.maxBet < this.minMaxBet) {
+                this.validationState = new ValidationResult("MaxBetMustBeGreaterThanOrEqualTo", "maxBet", [this.minMaxBet]);
+
+                return false;
+            }
+
+            if (this.maxPerMatch < this.minMaxPerMatch) {
+                this.validationState = new ValidationResult("MaxPerMatchMustBeGreaterThanOrEqualTo", "maxPerMatch", [this.minMaxPerMatch]);
+
+                return false;
+            }
+
+            if (this.customerLevel !== Level.super) {
+                if (this.maxBet > this.maxMaxBet) {
+                    this.validationState = new ValidationResult("MaxBetMustBeLessThanOrEqualTo", "maxBet", [this.maxMaxBet]);
+
+                    return false;
+                }
+
+                if (this.maxPerMatch > this.maxMaxPerMatch) {
+                    this.validationState = new ValidationResult("MaxPerMatchMustBeLessThanOrEqualTo", "maxPerMatch", [this.maxMaxPerMatch]);
+
+                    return false;
+                }
+            }
 
             return true;
         }

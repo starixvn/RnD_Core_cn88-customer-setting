@@ -11,61 +11,45 @@
 module CustomerSetting {
     "use strict";
 
-    class SettingType1Directive implements ng.IDirective {
+    class SettingType1Directive extends SettingTypeBaseDirective {
         public static $inject: string[] = [
             "settingType1ResourceService",
             "settingTypesSharedValuesService"
         ];
 
-        public replace: boolean = true;
-
-        public get scope(): any {
-            return {
-                settingType: "="
-            };
-        }
-
         public templateUrl: string = "setting-type1.htm";
 
         public link: ng.IDirectiveLinkFn = (scope: ISettingTypeDirectiveSharedScope) => {
-            scope.settingTypeName = this.settingType1ResourceService.getLabel("AccountDetail");
-            scope.actorLevel = this.settingTypesSharedValuesService.actorLevel;
-            scope.customerId = this.settingTypesSharedValuesService.customerId;
-            scope.uplineId = this.settingTypesSharedValuesService.uplineId;
-            scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
-            scope.productId = this.settingTypesSharedValuesService.productId;
-            scope.productName = this.settingTypesSharedValuesService.productName;
-            scope.isNew = this.settingTypesSharedValuesService.isNew;
-            scope.avaiCustomerLevels = Level;
+            this.linkInternal(scope);
 
-            scope.$watch("settingType", (settingType: SettingType) => {
-                if (settingType && angular.isArray(settingType.settingItems)) {
-                    if (settingType.isError) {
-                        if (settingType.settingItems.length > 0) {
-                            settingType.settingItems[0] = new ErrorSettingItem(settingType.settingItems[0]);
-                        }
-                    } else {
-                        settingType.settingItems.forEach((item: any, index: number) => {
-                            if (item) {
-                                settingType.settingItems[index] = SettingType1Item.factory(
-                                    item,
-                                    true,
-                                    scope.isNew,
-                                    scope.customerLevel,
-                                    this.settingTypesSharedValuesService.hashKey);
-                            }
-                        });
+            scope.settingTypeName = this.settingType1ResourceService.getLabel("AccountDetail");
+
+            if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
+                if (scope.settingType.isError) {
+                    if (scope.settingType.settingItems.length > 0) {
+                        scope.settingType.settingItems[0] = new ErrorSettingItem(scope.settingType.settingItems[0]);
                     }
+                } else {
+                    scope.settingType.settingItems.forEach((item: any, index: number) => {
+                        if (item) {
+                            scope.settingType.settingItems[index] = SettingType1Item.factory(
+                                item,
+                                true,
+                                scope.isNew,
+                                scope.customerLevel,
+                                this.settingTypesSharedValuesService.hashKey);
+                        }
+                    });
                 }
-            });
+            }
         };
 
         private settingType1ResourceService: SettingType1ResourceService;
-        private settingTypesSharedValuesService: SettingTypesSharedValuesService;
 
         constructor(settingType1ResourceService: SettingType1ResourceService, settingTypesSharedValuesService: SettingTypesSharedValuesService) {
+            super(settingTypesSharedValuesService, null);
+
             this.settingType1ResourceService = settingType1ResourceService;
-            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
         }
     }
 

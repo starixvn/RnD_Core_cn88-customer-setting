@@ -8,10 +8,10 @@ module CustomerSetting {
         var defaultPrecision: number = 0;
         var numberFilter = $filter("number");
 
-        return (value: number, factor: number = defaultPrecision) => {
-            factor = factor || (value.toString().indexOf(".") > 0 ? defaultPrecision : 0);
+        return (value: number, precision: number = defaultPrecision) => {
+            precision = precision || (value.toString().indexOf(".") > 0 ? defaultPrecision : 0);
 
-            return numberFilter(value, factor) + "%";
+            return numberFilter(value, precision) + "%";
         };
     }
 

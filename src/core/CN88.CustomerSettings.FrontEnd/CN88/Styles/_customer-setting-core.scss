@@ -21,15 +21,15 @@
         width: 100%;
     }
 
-    &--error {
+    &--error, &--error:focus {
         border-color: $field-error-border-color;
     }
 
-    &--warning {
+    &--warning, &--warning:focus {
         border-color: $field-warning-border-color;
     }
 
-    &--success {
+    &--success, &--success:focus {
         border-color: $field-success-border-color;
     }
 
