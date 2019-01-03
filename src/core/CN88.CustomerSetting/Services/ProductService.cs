@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using CN88.CustomerSetting.Models.Constants;
     using CN88.CustomerSetting.SpParams.Criteria;
     using Fanex.Caching;
@@ -11,13 +12,13 @@
 
     public interface ProductService
     {
-        IEnumerable<SettingType> GetProductSettingTypes(byte productId, byte systemId);
+        Task<IEnumerable<SettingType>> GetProductSettingTypes(byte productId, byte systemId);
 
-        SettingType GetProductSettingType(byte productId, short settingTypeId, byte systemId);
+        Task<SettingType> GetProductSettingType(byte productId, short settingTypeId, byte systemId);
 
-        IEnumerable<Product> GetAllProducts();
+        Task<IEnumerable<Product>> GetAllProducts();
 
-        Product GetProduct(ISettingContext settingContext, byte productId, byte systemId);
+        Task<Product> GetProduct(ISettingContext settingContext, byte productId, byte systemId);
     }
 
     public class ProductServiceImpl : ProductService
@@ -40,9 +41,9 @@
             this.resourceService = resourceService;
         }
 
-        public IEnumerable<SettingType> GetProductSettingTypes(byte productId, byte systemId)
+        public async Task<IEnumerable<SettingType>> GetProductSettingTypes(byte productId, byte systemId)
         {
-            var settingTypes = cachingService.GetOrSet(
+            var settingTypes = await cachingService.GetOrSetAsync(
                    string.Format(SettingTypesCacheKey, productId, systemId),
                    () =>
                    {
@@ -58,9 +59,9 @@
             return settingTypes;
         }
 
-        public SettingType GetProductSettingType(byte productId, short settingTypeId, byte systemId)
+        public async Task<SettingType> GetProductSettingType(byte productId, short settingTypeId, byte systemId)
         {
-            var productSettingTypes = GetProductSettingTypes(productId, systemId);
+            var productSettingTypes = await GetProductSettingTypes(productId, systemId);
 
             if (productSettingTypes == null)
             {
@@ -70,9 +71,9 @@
             return productSettingTypes.FirstOrDefault(settingType => settingType.Id == settingTypeId);
         }
 
-        public IEnumerable<Product> GetAllProducts()
+        public async Task<IEnumerable<Product>> GetAllProducts()
         {
-            var products = cachingService.GetOrSet(
+            var products = await cachingService.GetOrSetAsync(
                   AllProductNamesCacheKey,
                   () =>
                   {
@@ -85,9 +86,9 @@
             return products;
         }
 
-        public Product GetProduct(ISettingContext settingContext, byte productId, byte systemId)
+        public async Task<Product> GetProduct(ISettingContext settingContext, byte productId, byte systemId)
         {
-            var productSettingTypes = GetProductSettingTypes(productId, systemId)
+            var productSettingTypes = (await GetProductSettingTypes(productId, systemId))
                .Where(product => product.DisplayMode != DisplayModes.Hidden);
             var productName = resourceService.GetProductName(productId, settingContext.Language);
 

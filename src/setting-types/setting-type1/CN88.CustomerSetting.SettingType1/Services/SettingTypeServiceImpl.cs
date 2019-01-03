@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.Models.Requests;
@@ -41,23 +42,23 @@
             this.passwordService = passwordService ?? new PasswordServiceImpl();
         }
 
-        public override SettingType GetCustomerSettingType(
+        public override async Task<SettingType> GetCustomerSettingType(
             ISettingContext settingContext,
             CustomerSettingQuery query)
         {
             if (query.IsCreateNew)
             {
-                return GetDefaultSettingForCreateNew(query);
+                return await GetDefaultSettingForCreateNew(query);
             }
 
-            return GetAccountDetail(query);
+            return await GetAccountDetail(query);
         }
 
-        private SettingType GetAccountDetail(CustomerSettingQuery query)
+        private async Task<SettingType> GetAccountDetail(CustomerSettingQuery query)
         {
-            var settingItem = GetAccountDetailSettingItem(query.CustomerLevel, query.CustomerId, query.ProductId, false);
+            var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.CustomerId, query.ProductId, false);
 
-            var customerInfo = DynamicRepository.Get<CustomerInfoDto>(new GetGeneralInfoCriteria(query.CustomerLevel.Value, query.CustomerId));
+            var customerInfo = await DynamicRepository.GetAsync<CustomerInfoDto>(new GetGeneralInfoCriteria(query.CustomerLevel.Value, query.CustomerId));
 
             if(customerInfo == null)
             {
@@ -85,10 +86,10 @@
             return CreateSettingType(settingItem);
         }
 
-        private SettingType GetDefaultSettingForCreateNew(CustomerSettingQuery query)
+        private async Task<SettingType> GetDefaultSettingForCreateNew(CustomerSettingQuery query)
         {
-            var settingItem = GetAccountDetailSettingItem(query.CustomerLevel, query.UplineId, query.ProductId, true);
-            var createCustomerInfo = GetDefaultCreateCustomerInfo(query.CustomerLevel, query.UplineId);
+            var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.UplineId, query.ProductId, true);
+            var createCustomerInfo = await GetDefaultCreateCustomerInfo(query.CustomerLevel, query.UplineId);
 
             settingItem.AvailableCredit = createCustomerInfo.AvailableCredit;
             settingItem.UplineUsername = createCustomerInfo.UplineUsername;
@@ -112,7 +113,7 @@
                 SettingItems = new List<ISettingItem> { settingItem }
             };
 
-        private AccountDetailSettingItem GetAccountDetailSettingItem(
+        private async Task<AccountDetailSettingItem> GetAccountDetailSettingItem(
             Level level, int custId, int productId, bool isCreateNew)
         {
             if (level.IsMemberLevel())
@@ -120,8 +121,8 @@
                 return new MemberAccountDetail();
             }
 
-            var settingItem = GetAccountDetailSettingItem(level, custId, isCreateNew);
-            var settingTypeConfig = GetSettingTypeConfig<AccountDetailSettingItem>(productId, SettingTypeId).FirstOrDefault();
+            var settingItem = await GetAccountDetailSettingItem(level, custId, isCreateNew);
+            var settingTypeConfig = (await GetSettingTypeConfig<AccountDetailSettingItem>(productId, SettingTypeId)).FirstOrDefault();
             if (settingTypeConfig != null)
             {
                 settingItem.IntervalValue = settingTypeConfig.IntervalValue;
@@ -130,7 +131,7 @@
             return settingItem;
         }
 
-        private AccountDetailSettingItem GetAccountDetailSettingItem(
+        private async Task<AccountDetailSettingItem> GetAccountDetailSettingItem(
             Level level,
             int custId,
             bool isCreateNew)
@@ -140,15 +141,15 @@
             switch (level.Value)
             {
                 case Level.SuperLevelId:
-                    settingItem = GetSuperAccountDetail(custId, isCreateNew);
+                    settingItem = await GetSuperAccountDetail(custId, isCreateNew);
                     break;
 
                 case Level.MasterLevelId:
-                    settingItem = GetMasterAccountDetail(custId, isCreateNew);
+                    settingItem = await GetMasterAccountDetail(custId, isCreateNew);
                     break;
 
                 default:
-                    settingItem = GetAgentAccountDetail(custId, isCreateNew);
+                    settingItem = await GetAgentAccountDetail(custId, isCreateNew);
                     break;
             }
 
@@ -160,18 +161,18 @@
             return settingItem;
         }
 
-        private AccountDetailSettingItem GetSuperAccountDetail(int custId, bool isCreateNew)
-            => DynamicRepository.Get<SuperAccountDetail>(new GetPTSettingCriteria(Level.Super.Value, custId, isCreateNew));
+        private async Task<AccountDetailSettingItem> GetSuperAccountDetail(int custId, bool isCreateNew)
+            => await DynamicRepository.GetAsync<SuperAccountDetail>(new GetPTSettingCriteria(Level.Super.Value, custId, isCreateNew));
 
-        private AccountDetailSettingItem GetMasterAccountDetail(int custId, bool isCreateNew)
-            => DynamicRepository.Get<MasterAccountDetail>(new GetPTSettingCriteria(Level.Master.Value, custId, isCreateNew));
+        private async Task<AccountDetailSettingItem> GetMasterAccountDetail(int custId, bool isCreateNew)
+            => await DynamicRepository.GetAsync<MasterAccountDetail>(new GetPTSettingCriteria(Level.Master.Value, custId, isCreateNew));
 
-        private AccountDetailSettingItem GetAgentAccountDetail(int custId, bool isCreateNew)
-            => DynamicRepository.Get<AgentAccountDetail>(new GetPTSettingCriteria(Level.Agent.Value, custId, isCreateNew));
+        private async Task<AccountDetailSettingItem> GetAgentAccountDetail(int custId, bool isCreateNew)
+            => await DynamicRepository.GetAsync<AgentAccountDetail>(new GetPTSettingCriteria(Level.Agent.Value, custId, isCreateNew));
 
-        private CreateCustomerInfoDto GetDefaultCreateCustomerInfo(Level level, int uplineId)
+        private async Task<CreateCustomerInfoDto> GetDefaultCreateCustomerInfo(Level level, int uplineId)
             => level.IsNotSuperLevel()
-                ? DynamicRepository.Get<CreateCustomerInfoDto>(new GetCustomerInfoForCreateCriteria(level.Value, uplineId))
+                ? await DynamicRepository.GetAsync<CreateCustomerInfoDto>(new GetCustomerInfoForCreateCriteria(level.Value, uplineId))
                 : new CreateCustomerInfoDto();
 
         private IEnumerable<Currency> GetCurrencies()
@@ -300,7 +301,7 @@
             return createNewParams;
         }
 
-        public override SettingResult UpdateCustomerSettingType(
+        public override async Task<SettingResult> UpdateCustomerSettingType(
             ISettingContext settingContext,
             UpdateCustomerSettingCommand command,
             SettingType settingType)
@@ -308,16 +309,16 @@
             var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem
                 ?? throw new InvalidOperationException("AccountDetail cannot be null");
 
-            var updateCustomerInfoResult = UpdateCustomerInfo(command, settingItem);
+            var updateCustomerInfoResult = await UpdateCustomerInfo(command, settingItem);
             if (updateCustomerInfoResult.IsFailed)
             {
                 return updateCustomerInfoResult;
             }
 
-            return UpdatePTSetting(settingContext, command, settingType);
+            return await UpdatePTSetting(settingContext, command, settingType);
         }
 
-        private SettingResult UpdatePTSetting(
+        private async Task<SettingResult> UpdatePTSetting(
             ISettingContext settingContext,
             UpdateCustomerSettingCommand command,
             SettingType settingType)
@@ -336,7 +337,7 @@
                 SubAccountId = settingContext.Actor.SubAccountId,
             };
 
-            DynamicRepository.Execute(updatePTSettingCommand);
+            await DynamicRepository.ExecuteAsync(updatePTSettingCommand);
 
             return new SettingResult(
                 updatePTSettingCommand.ErrCode,
@@ -349,7 +350,7 @@
                 settingType.Name);
         }
 
-        private SettingResult UpdateCustomerInfo(
+        private async Task<SettingResult> UpdateCustomerInfo(
             UpdateCustomerSettingCommand command,
             AccountDetailSettingItem settingItem)
         {
@@ -365,7 +366,7 @@
                 Phone = settingItem.Phone
             };
 
-            DynamicRepository.Execute(updateCustomerInfoCommand);
+            await DynamicRepository.ExecuteAsync(updateCustomerInfoCommand);
 
             return updateCustomerInfoCommand.ErrCode > 0
                 ? new SettingResult(Result.CreateErrorResult(updateCustomerInfoCommand.ErrMsg))

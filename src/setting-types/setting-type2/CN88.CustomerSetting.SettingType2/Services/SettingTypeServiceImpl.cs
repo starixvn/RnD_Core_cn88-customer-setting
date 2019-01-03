@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Requests;
     using CN88.CustomerSetting.Models.Results;
@@ -31,11 +32,11 @@
             this.dynamicRepository = dynamicRepository ?? new DynamicRepository();
         }
 
-        public override SettingType GetCustomerSettingType(
+        public override async Task<SettingType> GetCustomerSettingType(
             ISettingContext settingContext,
             CustomerSettingQuery query)
         {
-            var settingTypeConfig = GetSettingTypeConfig<CommBetSettingConfigDto>(query.ProductId, SettingTypeId)
+            var settingTypeConfig = (await GetSettingTypeConfig<CommBetSettingConfigDto>(query.ProductId, SettingTypeId))
                                     .GroupBy(config => new { config.SportTypeId, config.BetTypeId, config.IsLive});
 
             var commBetSettingDtoList = GetCommBetSettingDtoList(query);
@@ -127,7 +128,7 @@
             };
         }
 
-        public override SettingResult UpdateCustomerSettingType(
+        public override async Task<SettingResult> UpdateCustomerSettingType(
             ISettingContext settingContext,
             UpdateCustomerSettingCommand command,
             SettingType settingType)
@@ -135,7 +136,7 @@
             var commBetSetting = settingType as CommBetSetting
                 ?? throw new InvalidOperationException("CommBetSetting data is not valid");
 
-            var updateCommResult = UpdateCommSetting(settingContext, command.Setting, commBetSetting);
+            var updateCommResult = await UpdateCommSetting(settingContext, command.Setting, commBetSetting);
 
             if (updateCommResult.IsFailed)
             {
@@ -152,7 +153,7 @@
                 updateCommResult);
         }
 
-        private SettingResult UpdateCommSetting(
+        private async Task<SettingResult> UpdateCommSetting(
             ISettingContext settingContext,
             ISetting setting,
             CommBetSetting settingType)
@@ -171,7 +172,7 @@
                 SubAccountId = settingContext.Actor.SubAccountId,
             };
 
-            DynamicRepository.Execute(command);
+            await DynamicRepository.ExecuteAsync(command);
 
             return new SettingResult(
                 command.ErrCode,
@@ -182,7 +183,7 @@
                 settingType.Name);
         }
 
-        private SettingResult UpdateBetSetting(
+        private async Task<SettingResult> UpdateBetSetting(
             ISettingContext settingContext,
             ISetting setting,
             CommBetSetting settingType)
@@ -201,7 +202,7 @@
                 SubAccountId = settingContext.Actor.SubAccountId,
             };
 
-            DynamicRepository.Execute(command);
+            await DynamicRepository.ExecuteAsync(command);
 
             return new SettingResult(
                 command.ErrCode,

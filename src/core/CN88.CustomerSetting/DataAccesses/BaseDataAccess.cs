@@ -2,16 +2,17 @@
 {
     using System;
     using System.Collections;
+    using System.Threading.Tasks;
     using CN88.CustomerSetting.Models.Results;
     using Fanex.Data;
 
     public class BaseDataAccess
     {
-        protected IResult ExecuteNonQuery(string settingKey, Hashtable storedProcedureParam)
+        protected async Task<IResult> ExecuteNonQuery(string settingKey, Hashtable storedProcedureParam)
         {
             using (var objectDb = new ObjectDb(settingKey))
             {
-                objectDb.ExecuteNonQuery(storedProcedureParam);
+                await objectDb.ExecuteNonQueryAsync(storedProcedureParam);
 
                 return GetResult(storedProcedureParam);
             }

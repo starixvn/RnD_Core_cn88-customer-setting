@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using CN88.CustomerSetting.DataAccesses;
     using CN88.CustomerSetting.Exceptions;
     using CN88.CustomerSetting.Models;
@@ -16,11 +17,11 @@
 
     public interface CreateCustomerService
     {
-        IResult Create(
+        Task<IResult> Create(
             ISettingContext settingContext,
             CreateCustomerCommand command);
 
-        IResult IsUsernameExisted(string username);
+        Task<IResult> IsUsernameExisted(string username);
     }
 
     public class CreateCustomerServiceImpl : CreateCustomerService
@@ -48,11 +49,11 @@
             this.logger = logger;
         }
 
-        public IResult Create(
+        public async Task<IResult> Create(
             ISettingContext settingContext,
             CreateCustomerCommand command)
         {
-            var validationResult = Validate(settingContext, command);
+            var validationResult = await Validate(settingContext, command);
 
             if (validationResult.IsNotOk)
             {
@@ -63,7 +64,7 @@
             {
                 var createNewParams = GetCreateNewCustomerParams(settingContext, command);
 
-                return customerDataAccess.CreateNewCustomer(
+                return await customerDataAccess.CreateNewCustomer(
                     command.Setting.CustomerLevel,
                     new Hashtable(createNewParams, StringComparer.OrdinalIgnoreCase));
             }
@@ -99,21 +100,21 @@
             return createNewParams;
         }
 
-        public IResult IsUsernameExisted(string username)
+        public async Task<IResult> IsUsernameExisted(string username)
         {
             var command = new CheckValidUsernameCommand(username);
 
-            dynamicRepository.Execute(command);
+            await dynamicRepository.ExecuteAsync(command);
 
             return command.IsExists
                 ? Result.CreateErrorResult(string.Empty)
                 : Result.CreateSuccessResult(string.Empty);
         }
 
-        protected virtual IResult Validate(
+        protected virtual async Task<IResult> Validate(
            ISettingContext settingContext,
            CreateCustomerCommand command)
-            => validationService.ValidateCreateCustomerAction(settingContext, command);
+            => await validationService.ValidateCreateCustomerAction(settingContext, command);
 
         protected virtual void WriteLog(
             ISettingContext settingContext,

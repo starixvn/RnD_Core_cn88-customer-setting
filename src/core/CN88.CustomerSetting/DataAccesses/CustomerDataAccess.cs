@@ -1,25 +1,26 @@
 ﻿namespace CN88.CustomerSetting.DataAccesses
 {
     using System.Collections;
+    using System.Threading.Tasks;
     using CN88.CustomerSetting.AppResources;
     using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.Models.Results;
 
     public interface CustomerDataAccess
     {
-        CreateNewResult CreateNewCustomer(Level level, Hashtable parameters);
+        Task<CreateNewResult> CreateNewCustomer(Level level, Hashtable parameters);
     }
 
     public class CustomerDataAccessImpl : BaseDataAccess, CustomerDataAccess
     {
-        public CreateNewResult CreateNewCustomer(Level level, Hashtable parameters)
+        public async Task<CreateNewResult> CreateNewCustomer(Level level, Hashtable parameters)
         {
             var spSettingKey = GetSpSettingKey(level);
             parameters.Add("custId", 0);
             parameters.Add("errcode", 0);
             parameters.Add("errmsg", string.Empty);
 
-            var result = ExecuteNonQuery(spSettingKey, parameters);
+            var result = await ExecuteNonQuery(spSettingKey, parameters);
 
             var newUsername = parameters["username"];
 

@@ -1,5 +1,6 @@
 ﻿namespace CN88.CustomerSetting.WebApi.Controllers
 {
+    using System.Threading.Tasks;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Results;
     using CN88.CustomerSetting.Services;
@@ -33,21 +34,21 @@
         }
 
         [HttpPost]
-        public ISetting Query([FromBody]QuerySettingRequest request)
+        public Task<ISetting> Query([FromBody]QuerySettingRequest request)
             => querySettingService.GetCustomerSetting(request.GetSettingContext(), request.GetCustomerSettingQuery());
 
         [HttpPost]
-        public IResult Create(
+        public Task<IResult> Create(
             [ModelBinder(typeof(SettingRequestModelBinder<CreateCustomerRequest>))]CreateCustomerRequest request)
             => createCustomerService.Create(request.GetSettingContext(), request.GetCreateCustomerCommand());
 
         [HttpPost]
-        public IResult Update(
+        public Task<IResult> Update(
             [ModelBinder(typeof(SettingRequestModelBinder<UpdateSettingRequest>))]UpdateSettingRequest request)
             => updateSettingService.Update(request.GetSettingContext(), request.GetUpdateCustomerSettingCommand());
 
         [HttpGet]
-        public IResult CheckExistedUsername(string username)
+        public Task<IResult> CheckExistedUsername(string username)
             => createCustomerService.IsUsernameExisted(username);
 
         [HttpGet]

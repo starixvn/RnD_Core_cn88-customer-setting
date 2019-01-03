@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using CN88.CustomerSetting.AppResources;
     using CN88.CustomerSetting.Exceptions;
     using CN88.CustomerSetting.SpParams.Criteria;
@@ -16,11 +17,11 @@
 
     public interface ValidationService
     {
-        IResult ValidateQuerySettingAction(ISettingContext settingContext, CustomerSettingQuery query);
+        Task<IResult> ValidateQuerySettingAction(ISettingContext settingContext, CustomerSettingQuery query);
 
-        IResult ValidateUpdateSettingAction(ISettingContext settingContext, UpdateCustomerSettingCommand command);
+        Task<IResult> ValidateUpdateSettingAction(ISettingContext settingContext, UpdateCustomerSettingCommand command);
 
-        IResult ValidateCreateCustomerAction(ISettingContext settingContext, CreateCustomerCommand command);
+        Task<IResult> ValidateCreateCustomerAction(ISettingContext settingContext, CreateCustomerCommand command);
     }
 
     public class ValidationServiceImpl : ValidationService
@@ -45,7 +46,7 @@
         /// </summary>
         /// <param name="query">Query information for querying customer setting.</param>
         /// <returns>Query action is valid or not.</returns>
-        public virtual IResult ValidateQuerySettingAction(
+        public virtual async Task<IResult> ValidateQuerySettingAction(
             ISettingContext settingContext,
             CustomerSettingQuery query)
         {
@@ -61,19 +62,19 @@
 
             try
             {
-                CheckActorStatus(actor);
+                await CheckActorStatus(actor);
 
                 if (query.IsNotCreateNew)
                 {
-                    CheckCustomerLevel(customerId, customerLevel);
+                    await CheckCustomerLevel(customerId, customerLevel);
 
                     CheckActorAndCustomerLevelsConstrain(actor, customerLevel);
 
-                    CheckBelonging(actor, customerId);
+                    await CheckBelonging(actor, customerId);
                 }
                 else
                 {
-                    CheckBelonging(actor, uplineId);
+                    await CheckBelonging(actor, uplineId);
                 }
             }
             catch (CustomerSettingException customerSettingException)
@@ -86,9 +87,9 @@
             return Result.Success;
         }
 
-        private void CheckActorStatus(User actor)
+        private async Task CheckActorStatus(User actor)
         {
-            var enabledStatus = dynamicRepository.Get<bool>(new ActorStatusQueryCriteria
+            var enabledStatus = await dynamicRepository.GetAsync<bool>(new ActorStatusQueryCriteria
             {
                 CustId = actor.Id
             });
@@ -111,11 +112,11 @@
             }
         }
 
-        private void CheckBelonging(User actor, int customerId)
+        private async Task CheckBelonging(User actor, int customerId)
         {
             if (actor.IsNotCompany && actor.Id != customerId)
             {
-                var isBelonging = dynamicRepository.Get<bool>(new CheckBelongingCriteria
+                var isBelonging = await dynamicRepository.GetAsync<bool>(new CheckBelongingCriteria
                 {
                     ActorId = actor.Id,
                     CustomerId = customerId
@@ -133,9 +134,9 @@
         /// </summary>
         /// <param name="customerId"></param>
         /// <param name="customerLevel"></param>
-        private void CheckCustomerLevel(int customerId, Level customerLevel)
+        private async Task CheckCustomerLevel(int customerId, Level customerLevel)
         {
-            var actualCustomerLevel = dynamicRepository.Get<byte>(new CustomerLevelQueryCriteria
+            var actualCustomerLevel = await dynamicRepository.GetAsync<byte>(new CustomerLevelQueryCriteria
             {
                 CustId = customerId
             });
@@ -165,7 +166,7 @@
         /// </summary>
         /// <param name="command">Customer setting information to update to database.</param>
         /// <returns>Customer setting is valid for update to database or not.</returns>
-        public virtual IResult ValidateUpdateSettingAction(
+        public virtual async Task<IResult> ValidateUpdateSettingAction(
             ISettingContext settingContext,
             UpdateCustomerSettingCommand command)
         {
@@ -177,9 +178,9 @@
 
             try
             {
-                CheckQueryPermission(settingContext, customerId, customerLevel, productId, false, 0);
+                await CheckQueryPermission(settingContext, customerId, customerLevel, productId, false, 0);
 
-                CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes);
+                await CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes);
 
                 CheckUpdatableCustomerSettingTypes(actorLevel, customerLevel, settingTypes);
             }
@@ -193,7 +194,7 @@
             return Result.Success;
         }
 
-        private void CheckQueryPermission(
+        private async Task CheckQueryPermission(
             ISettingContext settingContext,
             int customerId,
             Level customerLevel,
@@ -202,7 +203,7 @@
             int uplineId)
         {
             var querySettingParam = new CustomerSettingQuery(isCreateNew, customerId, customerLevel.Value, productId, uplineId);
-            var result = ValidateQuerySettingAction(settingContext, querySettingParam);
+            var result = await ValidateQuerySettingAction(settingContext, querySettingParam);
 
             if (result.IsNotOk)
             {
@@ -210,13 +211,13 @@
             }
         }
 
-        private void CheckCustomerSettingTypesIsValidWithProductProfile(
+        private async Task CheckCustomerSettingTypesIsValidWithProductProfile(
             ISettingContext settingContext,
             byte productId,
             IEnumerable<SettingType> customerSettingTypes)
         {
-            var productSettingTypes = productService
-                .GetProductSettingTypes(productId, settingContext.System)
+            var productSettingTypes = (await productService
+                .GetProductSettingTypes(productId, settingContext.System))
                 .Where(product => product.DisplayMode == DisplayModes.Editable);
 
             foreach (var customerSettingType in customerSettingTypes)
@@ -252,7 +253,7 @@
             logger.Warn(ex.Message, ex);
         }
 
-        public IResult ValidateCreateCustomerAction(
+        public async Task<IResult> ValidateCreateCustomerAction(
             ISettingContext settingContext,
             CreateCustomerCommand command)
         {
@@ -264,9 +265,9 @@
 
             try
             {
-                CheckQueryPermission(settingContext, customerId, customerLevel, productId, true, command.UplineId);
+                await CheckQueryPermission(settingContext, customerId, customerLevel, productId, true, command.UplineId);
 
-                CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes);
+                await CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes);
 
                 //CheckUpdatableCustomerSettingTypes(actorLevel, customerLevel, settingTypes);
             }

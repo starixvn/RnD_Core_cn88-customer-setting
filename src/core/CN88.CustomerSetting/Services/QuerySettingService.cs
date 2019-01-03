@@ -14,7 +14,7 @@
 
     public interface QuerySettingService
     {
-        ISetting GetCustomerSetting(ISettingContext settingContext, CustomerSettingQuery query);
+        Task<ISetting> GetCustomerSetting(ISettingContext settingContext, CustomerSettingQuery query);
     }
 
     public class QuerySettingServiceImpl : QuerySettingService
@@ -40,12 +40,12 @@
             this.settingTypeServiceFactory = settingTypeServiceFactory;
         }
 
-        public ISetting GetCustomerSetting(ISettingContext settingContext, CustomerSettingQuery query)
+        public async Task<ISetting> GetCustomerSetting(ISettingContext settingContext, CustomerSettingQuery query)
         {
             Validate(settingContext, query);
 
-            var product = productService.GetProduct(settingContext, query.ProductId, settingContext.System);
-            var customerSettingTypes = GetCustomerSettingTypes(settingContext, query, product.SettingTypes);
+            var product = await productService.GetProduct(settingContext, query.ProductId, settingContext.System);
+            var customerSettingTypes = await GetCustomerSettingTypes(settingContext, query, product.SettingTypes);
 
             var setting = new Setting(
                 query.CustomerId,
@@ -57,14 +57,14 @@
             return setting;
         }
 
-        protected virtual void Validate(ISettingContext settingContext, CustomerSettingQuery query)
+        protected virtual async Task Validate(ISettingContext settingContext, CustomerSettingQuery query)
         {
             if (query == null)
             {
                 throw new ArgumentNullException(nameof(query));
             }
 
-            var result = validationService.ValidateQuerySettingAction(settingContext, query);
+            var result = await validationService.ValidateQuerySettingAction(settingContext, query);
 
             if (result.IsNotOk)
             {
@@ -72,28 +72,21 @@
             }
         }
 
-        protected virtual IList<SettingType> GetCustomerSettingTypes(
+        protected virtual async Task<IList<SettingType>> GetCustomerSettingTypes(
             ISettingContext settingContext,
             CustomerSettingQuery query, 
             IEnumerable<SettingType> productSettingTypes)
         {
-            var customerSettingTypes = new ConcurrentBag<SettingType>();
-
-            Parallel.ForEach(
-                productSettingTypes,
-                productSettingType =>
-                {
-                    SettingType customerSettingType = GetCustomerSettingType(settingContext, query, productSettingType);
-
-                    customerSettingTypes.Add(customerSettingType);
-                });
+            var customerSettingTypes = await Task.WhenAll(
+                productSettingTypes.Select(
+                    productSettingType => GetCustomerSettingType(settingContext, query, productSettingType)));
 
             return customerSettingTypes
                 .OrderBy(settingType => settingType.DisplayOrder)
                 .ToList();
         }
 
-        protected virtual SettingType GetCustomerSettingType(
+        protected virtual async Task<SettingType> GetCustomerSettingType(
             ISettingContext settingContext,
             CustomerSettingQuery query, 
             SettingType productSettingType)
@@ -104,7 +97,7 @@
             {
                 var settingTypeService = settingTypeServiceFactory.GetInstance(productSettingType);
 
-                customerSettingType = settingTypeService.GetCustomerSettingType(settingContext, query);
+                customerSettingType = await settingTypeService.GetCustomerSettingType(settingContext, query);
                 customerSettingType.Id = productSettingType.Id;
                 customerSettingType.SettingLevel = productSettingType.SettingLevel;
                 customerSettingType.DisplayOrder = productSettingType.DisplayOrder;

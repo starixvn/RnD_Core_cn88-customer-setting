@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using CN88.CustomerSetting.Exceptions;
     using CN88.CustomerSetting.SpParams.Criteria;
     using Fanex.Caching;
@@ -16,11 +17,11 @@
 
     public interface SettingTypeService
     {
-        SettingType GetCustomerSettingType(
+        Task<SettingType> GetCustomerSettingType(
             ISettingContext settingContext,
             CustomerSettingQuery query);
 
-        SettingResult UpdateCustomerSettingType(
+        Task<SettingResult> UpdateCustomerSettingType(
             ISettingContext settingContext,
             UpdateCustomerSettingCommand command,
             SettingType settingType);
@@ -139,17 +140,17 @@
                 settingType.Id,
                 settingType.Name);
 
-        protected IEnumerable<T> GetSettingTypeConfig<T>(int productId, int settingTypeId)
-            => CacheService.GetOrSet(
+        protected async Task<IEnumerable<T>> GetSettingTypeConfig<T>(int productId, int settingTypeId)
+            => await CacheService.GetOrSetAsync(
                        string.Format(SettingTypeConfigCacheKey, productId, settingTypeId),
                        () => DynamicRepository.Fetch<T>(new GetSettingTypeConfigCriteria(productId, settingTypeId)),
                         new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(SettingTypeConfigCacheTimeInHours, 0, 0)));
 
-        public abstract SettingType GetCustomerSettingType(
+        public abstract Task<SettingType> GetCustomerSettingType(
             ISettingContext settingContext,
             CustomerSettingQuery query);
 
-        public abstract SettingResult UpdateCustomerSettingType(
+        public abstract Task<SettingResult> UpdateCustomerSettingType(
             ISettingContext settingContext,
             UpdateCustomerSettingCommand command,
             SettingType settingType);
