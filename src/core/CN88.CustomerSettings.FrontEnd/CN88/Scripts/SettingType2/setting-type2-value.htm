@@ -4,8 +4,7 @@
              data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
              data-ng-style="eachGroupStyle"
              data-ng-repeat="commissionGroup in item.mappedCommissionGroups"
-             data-tooltip
-             data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':('commissionGroups:' + $index)}}">
+             data-tooltip="{{item.validationState | tooltipMessage:'settingType2ResourceService':('commissionGroups:' + $index)}}">
             <percentage-dropdown data-ng-if="commissionGroup"
                                  data-ng-model="commissionGroup.value"
                                  data-min="commissionGroup.minValue"
@@ -15,8 +14,7 @@
         </div>
         <div class="block__cell setting-field-wrapper w100-percent"
              data-ng-if="item.layoutType === availableLayoutTypes.singleGroup"
-             data-tooltip
-             data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':'commissionGroups:0'}}">
+             data-tooltip="{{item.validationState | tooltipMessage:'settingType2ResourceService':'commissionGroups:0'}}">
             <percentage-dropdown data-ng-model="item.mappedCommissionGroups[0].value"
                                  data-min="item.mappedCommissionGroups[0].minValue"
                                  data-max="item.mappedCommissionGroups[0].maxValue"
@@ -26,8 +24,7 @@
     </div>
     <div class="block__cell setting-field-wrapper w50-percent"
          data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups"
-         data-tooltip
-         data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':('commissionGroups:' + memberSpreadGroupIndex)}}">
+         data-tooltip="{{item.validationState | tooltipMessage:'settingType2ResourceService':('commissionGroups:' + memberSpreadGroupIndex)}}">
         <percentage-dropdown data-ng-if="item.mappedCommissionGroups[memberSpreadGroupIndex]"
                              data-ng-model="item.mappedCommissionGroups[memberSpreadGroupIndex].value"
                              data-min="item.mappedCommissionGroups[memberSpreadGroupIndex].minValue"
@@ -37,8 +34,7 @@
     </div>
     <div class="block__cell w50-percent setting-field-wrapper align-center"
          data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup"
-         data-tooltip
-         data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':'commissionGroups:0'}}">
+         data-tooltip="{{item.validationState | tooltipMessage:'settingType2ResourceService':'commissionGroups:0'}}">
         <percentage-dropdown data-ng-model="item.mappedCommissionGroups[0].value"
                              data-min="item.mappedCommissionGroups[0].minValue"
                              data-max="item.mappedCommissionGroups[0].maxValue"
@@ -48,8 +44,7 @@
     <div class="block__cell-wrapper w50-percent">
         <div class="block__cell setting-field-wrapper w50-percent"
              data-ng-class="{'align-center': (customerLevel === avaiCustomerLevels.super) && (item.minMaxBet === 0) && (item.maxMaxBet === 0)}"
-             data-tooltip
-             data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':'maxBet'}}">
+             data-tooltip="{{item.validationState | tooltipMessage:'settingType2ResourceService':'maxBet'}}">
             <input type="text"
                    maxlength="14"
                    class="setting-field setting-field--number setting-field--has-constraint"
@@ -60,8 +55,7 @@
         </div>
         <div class="block__cell block__cell--no-border setting-field-wrapper w50-percent"
              data-ng-class="{'align-center': (customerLevel === avaiCustomerLevels.super) && (item.minMaxPerMatch === 0) && (item.maxMaxPerMatch === 0)}"
-             data-tooltip
-             data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':'maxPerMatch'}}">
+             data-tooltip="{{item.validationState | tooltipMessage:'settingType2ResourceService':'maxPerMatch'}}">
             <input type="text"
                    maxlength="14"
                    class="setting-field setting-field--number setting-field--has-constraint"

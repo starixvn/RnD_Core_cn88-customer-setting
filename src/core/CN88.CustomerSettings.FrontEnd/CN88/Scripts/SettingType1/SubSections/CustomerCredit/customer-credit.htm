@@ -9,8 +9,7 @@
                 </label>
                 <div class="setting-field-wrapper w60-percent"
                      data-ng-if="isNew"
-                     data-tooltip
-                     data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'currency'}}">
+                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'currency'}}">
                     <select class="setting-field setting-field--fullwidth"
                             data-ng-model="accountDetail.currency"
                             data-ng-options="currency.name for currency in accountDetail.currencies track by currency.id"></select>
@@ -20,8 +19,7 @@
             <div class="row">
                 <label class="w40-percent">{{::('Credit' | settingType1Label)}}</label>
                 <div class="setting-field-wrapper w60-percent"
-                     data-tooltip
-                     data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'credit'}}">
+                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'credit'}}">
                     <input type="text"
                            maxlength="14"
                            class="setting-field setting-field--fullwidth setting-field--number"
@@ -37,8 +35,7 @@
                     <span class="required-field-mark"> *</span>
                 </label>
                 <div class="setting-field-wrapper w60-percent"
-                     data-tooltip
-                     data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'credit'}}">
+                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'credit'}}">
                     <input type="text"
                            maxlength="14"
                            class="setting-field setting-field--fullwidth setting-field--number"

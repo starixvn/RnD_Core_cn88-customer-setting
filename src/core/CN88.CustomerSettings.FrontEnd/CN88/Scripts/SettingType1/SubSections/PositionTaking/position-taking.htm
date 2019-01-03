@@ -10,8 +10,7 @@
             <div class="row">
                 <label class="w40-percent">{{::('SuperMinPT' | settingType1Label)}}</label>
                 <div class="setting-field-wrapper w60-percent"
-                     data-tooltip
-                     data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superMinPT'}}">
+                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superMinPT'}}">
                     <percentage-dropdown class="setting-field--fullwidth"
                                          data-ng-model="accountDetail.superMinPT"
                                          data-min="accountDetail.minSuperMinPT"
@@ -22,8 +21,7 @@
             <div class="row">
                 <label class="w40-percent">{{::('SuperMaxPT' | settingType1Label)}}</label>
                 <div class="setting-field-wrapper w60-percent"
-                     data-tooltip
-                     data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superMaxPT'}}">
+                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superMaxPT'}}">
                     <percentage-dropdown class="setting-field--fullwidth"
                                          data-ng-model="accountDetail.superMaxPT"
                                          data-min="accountDetail.minSuperMaxPT"
@@ -36,8 +34,7 @@
             <div class="row">
                 <label class="w40-percent">{{::('SuperPT' | settingType1Label)}}</label>
                 <div class="setting-field-wrapper w60-percent"
-                     data-tooltip
-                     data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superPT'}}">
+                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'superPT'}}">
                     <percentage-dropdown class="setting-field--fullwidth"
                                          data-ng-model="accountDetail.superPT"
                                          data-min="accountDetail.minSuperPT"
@@ -50,8 +47,7 @@
             <div class="row">
                 <label class="w40-percent">{{::('MasterPT' | settingType1Label)}}</label>
                 <div class="setting-field-wrapper w60-percent"
-                     data-tooltip
-                     data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'masterPT'}}">
+                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'masterPT'}}">
                     <percentage-dropdown class="setting-field--fullwidth"
                                          data-ng-model="accountDetail.masterPT"
                                          data-min="0"
@@ -62,8 +58,7 @@
             <div class="row">
                 <label class="w40-percent">{{::('AgentPT' | settingType1Label)}}</label>
                 <div class="setting-field-wrapper w60-percent"
-                     data-tooltip
-                     data-tooltip-message="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'agentPT'}}">
+                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'agentPT'}}">
                     <percentage-dropdown class="setting-field--fullwidth setting-field--{{accountDetail.validationState.affectedFields.agentPT}}"
                                          data-ng-model="accountDetail.agentPT"
                                          data-min="0"

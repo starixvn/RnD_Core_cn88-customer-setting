@@ -11,7 +11,6 @@ module CustomerSetting {
         tooltipType: string;
         tooltipPositionModel: PositionModel;
         onHover: boolean;
-        fieldName: string;
         showed: boolean;
     }
 
@@ -23,11 +22,10 @@ module CustomerSetting {
 
         public get scope(): any {
             return {
-                tooltipMessage: "@",
+                tooltipMessage: "@tooltip",
                 tooltipType: "@",
                 tooltipPositionModel: "@",
-                onHover: "@",
-                fieldName: "@"
+                onHover: "@"
             };
         }
 
@@ -40,7 +38,7 @@ module CustomerSetting {
 
             var debounceResize: any = debounce(() => {
                 if (scope.tooltipMessage) {
-                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel);
+                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel, scope.onHover);
                 }
             }, 100);
 
@@ -50,7 +48,7 @@ module CustomerSetting {
                 element.on("mouseenter", () => {
                     scope.showed = true;
                     scope.$apply();
-                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel);
+                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel, scope.onHover);
                 });
 
                 element.on("mouseleave", () => {
@@ -66,7 +64,7 @@ module CustomerSetting {
 
             scope.$watch("tooltipMessage", () => {
                 if (scope.tooltipMessage) {
-                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel);
+                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel, scope.onHover);
                     target.addClass("setting-field--" + scope.tooltipType);
                 } else {
                     target.removeClass("setting-field--" + scope.tooltipType);
@@ -76,7 +74,7 @@ module CustomerSetting {
             angular.element(this.$window).on("resize", debounceResize);
             this.$rootScope.$on("page-height-changed", () => {
                 if (scope.tooltipMessage) {
-                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel);
+                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel, scope.onHover);
                 }
             });
         };
@@ -100,7 +98,7 @@ module CustomerSetting {
             this.$rootScope = $rootScope;
         }
 
-        private calculateTooltipPosition(wrappedElement: ng.IAugmentedJQuery, positionModel: PositionModel): void {
+        private calculateTooltipPosition(wrappedElement: ng.IAugmentedJQuery, positionModel: PositionModel, onHover: boolean): void {
             var children = wrappedElement.children();
 
             if (!children || children.length < 2) {
@@ -154,7 +152,10 @@ module CustomerSetting {
                     "left": left + "px",
                     "visibility": "visible"
                 });
-                this.$window.scrollTo(left, top);
+
+                if (!onHover) {
+                    this.$window.scrollTo(left, top);
+                }
             });
         }
     }
