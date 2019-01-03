@@ -219,6 +219,10 @@ module CustomerSetting {
             this.fieldName = fieldName;
             this.msgParams = msgParams;
             this.affectedFields = {};
+
+            if (fieldName) {
+                this.affectedFields[fieldName] = "error";
+            }
         }
 
         public highlightField(fieldName: string): void {

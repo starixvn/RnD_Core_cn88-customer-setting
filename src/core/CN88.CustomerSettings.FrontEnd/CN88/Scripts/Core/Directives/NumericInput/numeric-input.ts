@@ -22,6 +22,7 @@ module CustomerSetting {
 
         public link: ng.IDirectiveLinkFn = (scope: INumericInputScope, originalElement: ng.IAugmentedJQuery) => {
             var element: ng.IAugmentedJQuery = angular.element(originalElement[0]);
+            var maxLength: number = parseInt(element.attr("maxlength"));
             var modelCtrl: any = element.controller("ngModel");
 
             scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
@@ -35,6 +36,10 @@ module CustomerSetting {
 
             element.on("focusout", () => {
                 element.data("focused", false);
+
+                if (scope.precision > 0) {
+                    element.val(this.$filter("number")(modelCtrl.$modelValue, scope.precision));
+                }
             });
 
             element.on("mouseup", () => {
@@ -45,7 +50,7 @@ module CustomerSetting {
                 }
             });
 
-            element.on("keydown", function (event: JQueryEventObject) {
+            element.on("keydown", (event: JQueryEventObject) => {
                 var value: string = element.val();
                 var dotPistion = value.indexOf(".");
                 var numberParts: string[] = value.split(".");
@@ -85,6 +90,14 @@ module CustomerSetting {
                     event.preventDefault();
 
                     return;
+                }
+
+                if (modelCtrl.$modelValue && dotPistion < 0) {
+                    if (this.$filter("number")(modelCtrl.$modelValue, scope.precision).length >= maxLength) {
+                        event.preventDefault();
+
+                        return;
+                    }
                 }
             });
 

@@ -44,6 +44,12 @@ module CustomerSetting {
         protected settingTypesSharedValuesService: SettingTypesSharedValuesService;
         protected instantiateSettingItem: INewSettingItem;
 
+        constructor(appConfigService: AppConfigService, settingTypesSharedValuesService: SettingTypesSharedValuesService, instantiateSettingItem: INewSettingItem) {
+            this.appConfigService = appConfigService;
+            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
+            this.instantiateSettingItem = instantiateSettingItem;
+        }
+
         protected linkInternal(scope: ISettingTypeDirectiveSharedScope): void {
             scope.actorLevel = this.settingTypesSharedValuesService.actorLevel;
             scope.customerId = this.settingTypesSharedValuesService.customerId;
@@ -76,12 +82,6 @@ module CustomerSetting {
                     }
                 }
             }
-        }
-
-        constructor(appConfigService: AppConfigService, settingTypesSharedValuesService: SettingTypesSharedValuesService, instantiateSettingItem: INewSettingItem) {
-            this.appConfigService = appConfigService;
-            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
-            this.instantiateSettingItem = instantiateSettingItem;
         }
     }
 }

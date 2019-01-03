@@ -295,6 +295,8 @@ th {
     .setting-field--checkfield__check-ctrl {
       position: relative;
       top: 3px; }
+  .setting-field--constraint {
+    padding-left: 5px; }
 
 select.setting-field {
   padding: 0; }
@@ -979,5 +981,6 @@ select.setting-field {
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
-  display: flex;
-  justify-content: center; }
+  display: flex; }
+  .setting-type-2 .block__cell.align-center, .setting-type-2 .align-center.block__lbl, .setting-type-2 .align-center.block__value {
+    justify-content: center; }

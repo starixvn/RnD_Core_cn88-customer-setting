@@ -9,7 +9,10 @@
             display: -moz-box;
             display: -ms-flexbox;
             display: flex;
-            justify-content: center;
+
+            &.align-center {
+                justify-content: center;
+            }
         }
     }
 }

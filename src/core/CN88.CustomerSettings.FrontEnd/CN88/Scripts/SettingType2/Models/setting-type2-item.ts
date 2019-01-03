@@ -17,6 +17,7 @@ module CustomerSetting {
         public maxMaxPerMatch: number;
 
         public mappedCommissionGroups: ICommissionGroup[];
+        public memberSpreadGroupIndex: number;
 
         constructor();
         constructor(settingType2Item: any);
@@ -36,12 +37,16 @@ module CustomerSetting {
                 this.maxMaxPerMatch = settingType2Item.maxMaxPerMatch;
             }
 
+            if (this.customerLevel === Level.member) {
+                this.memberSpreadGroupIndex = 0;
+            }
+
             if (backup) {
                 this.oldSetting = new SettingType2Item(this);
             }
 
-            this.ignoredProperties.push("_mappedCommissionGroups");
             this.ignoredProperties.push("mappedCommissionGroups");
+            this.ignoredProperties.push("memberSpreadGroupIndex");
 
             this.resetValidationState();
         }
@@ -57,6 +62,20 @@ module CustomerSetting {
                 || commisisonGroupChanged
                 || this.maxBet !== oldSetting.maxBet
                 || this.maxPerMatch !== oldSetting.maxPerMatch;
+        }
+
+        public toJson(): any {
+            var json: any = super.toJson();
+
+            if (this.isNew && this.customerLevel === Level.member) {
+                if (this.layoutType === LayoutType.multipleGroups) {
+                    json.commissionGroups = [this.mappedCommissionGroups[this.memberSpreadGroupIndex]];
+                } else {
+                    json.commissionGroups = [this.mappedCommissionGroups[0]];
+                }
+            }
+
+            return json;
         }
 
         public mapCommissionGroups(allAvailableGroups: string[]): void {
