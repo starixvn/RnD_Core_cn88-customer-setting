@@ -254,23 +254,23 @@ var DemoFrom;
             var uplineId = 0;
             switch (role) {
                 case Role.super:
-                    id = 33554188;
+                    id = 33554341;
                     name = "SuperTestCNE";
                     break;
                 case Role.master:
-                    id = 33554200;
+                    id = 33554342;
                     name = "SuperTestCNE0001";
-                    uplineId = 33554188;
+                    uplineId = 33554341;
                     break;
                 case Role.agent:
-                    id = 33554203;
+                    id = 33554343;
                     name = "SuperTestCNE00010001";
-                    uplineId = 33554200;
+                    uplineId = 33554342;
                     break;
                 case Role.member:
-                    id = 33554204;
+                    id = 33554344;
                     name = "SuperTestCNE000100010001";
-                    uplineId = 33554203;
+                    uplineId = 33554343;
                     break;
             }
             return this.createSingleTarget(id, name, role, uplineId);
