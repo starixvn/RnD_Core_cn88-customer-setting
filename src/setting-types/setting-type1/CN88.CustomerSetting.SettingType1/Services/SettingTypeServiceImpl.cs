@@ -57,13 +57,8 @@
         private async Task<SettingType> GetAccountDetail(CustomerSettingQuery query)
         {
             var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.CustomerId, query.ProductId, false);
-
-            var customerInfo = await DynamicRepository.GetAsync<CustomerInfoDto>(new GetGeneralInfoCriteria(query.CustomerLevel.Value, query.CustomerId));
-
-            if(customerInfo == null)
-            {
-                throw new InvalidOperationException($"Not found customer id {query.CustomerId} level {query.CustomerLevel.DisplayName}");
-            }
+            var customerInfo = (await DynamicRepository.GetAsync<CustomerInfoDto>(new GetGeneralInfoCriteria(query.CustomerLevel.Value, query.CustomerId)))
+                ?? throw new InvalidOperationException($"Not found customer id {query.CustomerId} level {query.CustomerLevel.DisplayName}"); ;
 
             settingItem.Username = customerInfo.Username;
             settingItem.FirstName = customerInfo.FirstName;
@@ -78,7 +73,7 @@
             if(query.CustomerLevel.IsMemberLevel()
                 && !string.IsNullOrEmpty(customerInfo.UGroup))
             {
-                settingItem.SpreadGroup = GetSpreadGroups()
+                settingItem.SpreadGroup = (await GetSpreadGroups())
                     .FirstOrDefault(group => 
                         string.Compare(customerInfo.UGroup, group.UGroup, true) == 0);
             }
@@ -95,12 +90,12 @@
             settingItem.UplineUsername = createCustomerInfo.UplineUsername;
             settingItem.UsernameSuffixes = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString());
             settingItem.Currencies = query.CustomerLevel.IsSuperLevel()
-                                ? GetCurrencies()
+                                ? await GetCurrencies()
                                 : Enumerable.Empty<Currency>();
 
             if (query.CustomerLevel.IsMemberLevel())
             {
-                settingItem.SpreadGroups = GetSpreadGroups();
+                settingItem.SpreadGroups = await GetSpreadGroups();
                 settingItem.SpreadGroup = settingItem.SpreadGroups.FirstOrDefault();
             }
 
@@ -153,12 +148,8 @@
                     break;
             }
 
-            if (settingItem == null)
-            {
-                throw new InvalidOperationException($"Cannot get default setting for upline {custId} to create new downline");
-            }
-
-            return settingItem;
+            return settingItem
+                ?? throw new InvalidOperationException($"Cannot get default setting for upline {custId} to create new downline");
         }
 
         private async Task<AccountDetailSettingItem> GetSuperAccountDetail(int custId, bool isCreateNew)
@@ -175,14 +166,14 @@
                 ? await DynamicRepository.GetAsync<CreateCustomerInfoDto>(new GetCustomerInfoForCreateCriteria(level.Value, uplineId))
                 : new CreateCustomerInfoDto();
 
-        private IEnumerable<Currency> GetCurrencies()
-            => CacheService.GetOrSet(
+        private async Task<IEnumerable<Currency>> GetCurrencies()
+            => await CacheService.GetOrSetAsync(
                        CurrencyCacheKey,
                        () => DynamicRepository.Fetch<Currency>(new GetCurrencyListCriteria()),
                         new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(0, CurrencyCacheTimeInMinutes, 0)));
 
-        private IEnumerable<SpreadGroup> GetSpreadGroups()
-            => CacheService.GetOrSet(
+        private async Task<IEnumerable<SpreadGroup>> GetSpreadGroups()
+            => await CacheService.GetOrSetAsync(
                        SpreadGroupCacheKey,
                        () => DynamicRepository.Fetch<SpreadGroup>(new GetSpreadGroupCriteria()),
                         new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(SpreadGroupCacheTimeInHours, 0, 0)));

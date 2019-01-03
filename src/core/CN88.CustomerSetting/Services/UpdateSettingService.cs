@@ -44,7 +44,7 @@
                 return validationResult;
             }
 
-            IResult result = new UpdateSettingResult(await UpdateCustomerSettingTypes(settingContext, command));
+            var result = new UpdateSettingResult(await UpdateCustomerSettingTypes(settingContext, command));
 
             return result;
         }

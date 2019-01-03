@@ -39,13 +39,13 @@
             var settingTypeConfig = (await GetSettingTypeConfig<CommBetSettingConfigDto>(query.ProductId, SettingTypeId))
                                     .GroupBy(config => new { config.SportTypeId, config.BetTypeId, config.IsLive});
 
-            var commBetSettingDtoList = GetCommBetSettingDtoList(query);
+            var commBetSettingDtoList = await GetCommBetSettingDtoList(query);
             var settingItems = new List<CommBetSettingItem>();
 
             foreach (var settingItemConfig in settingTypeConfig)
             {
-                var settingItemDto = commBetSettingDtoList.Where( item => 
-                            item.SportTypeId == settingItemConfig.Key.SportTypeId
+                var settingItemDto = commBetSettingDtoList.Where(
+                    item => item.SportTypeId == settingItemConfig.Key.SportTypeId
                             && item.BetTypeId == settingItemConfig.Key.BetTypeId
                             && item.IsLive == settingItemConfig.Key.IsLive);
 
@@ -63,8 +63,8 @@
             };
         }
 
-        private IEnumerable<CommBetSettingDto> GetCommBetSettingDtoList(CustomerSettingQuery query)
-            => dynamicRepository.Fetch<CommBetSettingDto>(
+        private async Task<IEnumerable<CommBetSettingDto>> GetCommBetSettingDtoList(CustomerSettingQuery query)
+            => await dynamicRepository.FetchAsync<CommBetSettingDto>(
                 new GetCommBetSettingCriteria
                 {
                     IsCreateNew = query.IsCreateNew,
@@ -123,7 +123,7 @@
 
             return new Dictionary<string, object>
             {
-                { "commsetting", commBetSetting.ToCommXml(GetCommTemplateSetting()) },
+                { "commsetting", commBetSetting.ToCommXml(GetCommTemplateSetting().GetAwaiter().GetResult(), command.Setting.CustomerLevel) },
                 { "betsetting", commBetSetting.ToBetSettingXml() },
             };
         }
@@ -143,7 +143,7 @@
                 return updateCommResult;
             }
 
-            var updateBetSettingResult = UpdateBetSetting(settingContext, command.Setting, commBetSetting);
+            var updateBetSettingResult = await UpdateBetSetting(settingContext, command.Setting, commBetSetting);
 
             return new SettingResult(
                 updateCommResult.Code,
@@ -164,7 +164,7 @@
                 CustId = setting.CustomerId,
 
                 ProductId = setting.ProductId,
-                Comm = settingType.ToCommXml(GetCommTemplateSetting()),
+                Comm = settingType.ToCommXml(await GetCommTemplateSetting(), setting.CustomerLevel),
 
                 IP = settingContext.IP,
                 UserId = settingContext.Actor.Id,
@@ -213,8 +213,8 @@
                 settingType.Name);
         }
 
-        private IEnumerable<CommTemplate> GetCommTemplateSetting()
-            => CacheService.GetOrSet(
+        private async Task<IEnumerable<CommTemplate>> GetCommTemplateSetting()
+            => await CacheService.GetOrSetAsync(
                        CommTemplateCacheKey,
                        () => DynamicRepository.Fetch<CommTemplate>(new GetCommTemplateCriteria()),
                         new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(CommTemplateCacheInHours, 0, 0)));

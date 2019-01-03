@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Collections.Generic;
     using CN88.CustomerSetting.Models;
+    using CN88.CustomerSetting.Models.Enumerations;
 
     public class CommBetSettingItem : SettingItemDefault
     {
@@ -10,6 +11,9 @@
 
         private const string CommXmlFormat
             = "<Comm {0} GroupId=\"{1}\" ValueId=\"{2}\"/>";
+
+        private const string MemberCommXmlFormat
+            = "<Comm {0} ValueId=\"{1}\"/>";
 
         private const string BetSettingXmlFormat
             = "<BetSetting {0} MaxBet=\"{1}\" MaxPerMatch=\"{2}\"/>";
@@ -34,28 +38,42 @@
 
         public decimal MaxDiscount { get; set; }
 
-        public string ToCommXml(IEnumerable<CommTemplate> commTemplates)
-            => string.Join(string.Empty,
-                        CommissionGroups.Select(comm => 
-                                string.Format(
-                                    CommXmlFormat, 
-                                    base.ToXml(), 
-                                    comm.Id, 
-                                    GetCommValueId(comm.Value > 0 
-                                        ? comm.Value/OneHundredPercent 
-                                        : 0, 
-                                        commTemplates))));
+        public string ToCommXml(IEnumerable<CommTemplate> commTemplates, Level level)
+            => level.IsMemberLevel() 
+                ? string.Join(string.Empty,
+                        CommissionGroups.Select(comm =>
+                                FormatMemberComXml(commTemplates, comm)))
+                : string.Join(string.Empty,
+                        CommissionGroups.Select(comm =>
+                                FormatComXml(commTemplates, comm)));
+
+        private string FormatMemberComXml(IEnumerable<CommTemplate> commTemplates, CommissionGroup comm)
+            => string.Format(MemberCommXmlFormat,
+                base.ToXml(),
+                GetCommValueId(comm.Value > 0
+                    ? comm.Value / OneHundredPercent
+                    : 0,
+                    commTemplates));
+
+        private string FormatComXml(IEnumerable<CommTemplate> commTemplates, CommissionGroup comm)
+            => string.Format(CommXmlFormat,
+                base.ToXml(),
+                comm.Id,
+                GetCommValueId(comm.Value > 0
+                    ? comm.Value / OneHundredPercent
+                    : 0,
+                    commTemplates));
 
         private int? GetCommValueId(decimal value, IEnumerable<CommTemplate> commTemplates)
             => commTemplates
                     .FirstOrDefault(commTemplate => commTemplate.Value == value)?
                     .Id;
 
-        public string ToBetSettingXml() 
+        public string ToBetSettingXml()
             => string.Format(
-                BetSettingXmlFormat, 
-                base.ToXml(), 
-                MaxBet, 
+                BetSettingXmlFormat,
+                base.ToXml(),
+                MaxBet,
                 MaxPerMatch);
     }
 }

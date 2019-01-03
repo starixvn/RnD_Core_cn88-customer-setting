@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using CN88.CustomerSetting.Models;
+    using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.SettingType2.AppResources;
 
     public class CommBetSetting : SettingType
@@ -12,16 +13,14 @@
             Name = Resources.CommBetLimit;
         }
 
-        public string ToCommXml(IEnumerable<CommTemplate> commTemplates)
-        {
-            return string.Format(
+        public string ToCommXml(IEnumerable<CommTemplate> commTemplates, Level level)
+            => string.Format(
                 SettingTypeXmlFormat,
                 string.Join(
                     string.Empty,
                     SettingItems
                         .Cast<CommBetSettingItem>()
-                        .Select(settingItem => settingItem.ToCommXml(commTemplates))));
-        }
+                        .Select(settingItem => settingItem.ToCommXml(commTemplates, level))));
 
         public string ToBetSettingXml()
             => string.Format(
