@@ -59,6 +59,32 @@ module CustomerSetting {
                 || this.maxPerMatch !== oldSetting.maxPerMatch;
         }
 
+        public mapCommissionGroups(allAvailableGroups: string[]): void {
+            this.mappedCommissionGroups = [];
+
+            if (!this.commissionGroups || this.commissionGroups.length === 0) {
+                return;
+            }
+
+            if (this.layoutType === LayoutType.singleGroup) {
+                this.mappedCommissionGroups.push(this.commissionGroups[0]);
+
+                return;
+            }
+
+            allAvailableGroups.forEach((groupName: string) => {
+                var matchedCommissionGroups: ICommissionGroup[] = this.commissionGroups.filter((commissionGroup: ICommissionGroup) => {
+                    return groupName === commissionGroup.name;
+                });
+
+                if (matchedCommissionGroups && matchedCommissionGroups.length > 0) {
+                    this.mappedCommissionGroups.push(matchedCommissionGroups[0]);
+                } else {
+                    this.mappedCommissionGroups.push(null);
+                }
+            });
+        }
+
         public validate(): boolean {
             if (!this.validateCommission()) {
                 return false;
@@ -113,32 +139,6 @@ module CustomerSetting {
             }
 
             return true;
-        }
-
-        public mapCommissionGroups(allAvailableGroups: string[]): void {
-            this.mappedCommissionGroups = [];
-
-            if (!this.commissionGroups || this.commissionGroups.length === 0) {
-                return;
-            }
-
-            if (this.layoutType === LayoutType.singleGroup) {
-                this.mappedCommissionGroups.push(this.commissionGroups[0]);
-
-                return;
-            }
-
-            allAvailableGroups.forEach((groupName: string) => {
-                var matchedCommissionGroups: ICommissionGroup[] = this.commissionGroups.filter((commissionGroup: ICommissionGroup) => {
-                    return groupName === commissionGroup.name;
-                });
-
-                if (matchedCommissionGroups && matchedCommissionGroups.length > 0) {
-                    this.mappedCommissionGroups.push(matchedCommissionGroups[0]);
-                } else {
-                    this.mappedCommissionGroups.push(null);
-                }
-            });
         }
     }
 }

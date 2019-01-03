@@ -11,7 +11,7 @@ module CustomerSetting {
         sportGroups: DefaultSettingItem[][];
         headerTemplateUrl: string;
         valueTemplateUrl: string;
-        cssClass: string
+        cssClass: string;
     }
 
     export class DefaultSettingTypeGroupingDirective extends SettingTypeBaseDirective {

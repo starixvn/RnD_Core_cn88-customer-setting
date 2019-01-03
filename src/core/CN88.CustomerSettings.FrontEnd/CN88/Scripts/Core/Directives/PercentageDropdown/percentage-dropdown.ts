@@ -27,15 +27,14 @@ module CustomerSetting {
                 min: "=",
                 max: "=",
                 step: "=",
-                factor: "=",
                 precision: "="
             };
         }
 
         public controller: any = ["$scope", "valueRangeService", ($scope: IPercentageDropdownScope, valueRangeService: ValueRangeService) => {
             $scope.$watchGroup(["value", "min", "max", "step", "factor"], () => {
-
-                $scope.factor = $scope.factor || 100;
+                $scope.precision = $scope.precision || 1;
+                $scope.factor = Math.pow(10, $scope.precision);
                 $scope.step = $scope.step || 1;
                 $scope.range = valueRangeService.generateRanges(
                     $scope.value,

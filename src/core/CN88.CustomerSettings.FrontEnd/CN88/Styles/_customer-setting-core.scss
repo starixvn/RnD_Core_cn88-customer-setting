@@ -52,6 +52,10 @@
     }
 }
 
+select.setting-field {
+    padding: 0;
+}
+
 .required-field-mark {
     color: $error-color;
 }
@@ -635,6 +639,14 @@
         &--border-top {
             @include border(top);
         }
+    }
+
+    &__cell-wrapper {
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        height: 100%;
     }
 
     &__lbl {

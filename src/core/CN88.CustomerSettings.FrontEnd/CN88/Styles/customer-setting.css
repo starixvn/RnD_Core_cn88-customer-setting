@@ -296,6 +296,9 @@ th {
       position: relative;
       top: 3px; }
 
+select.setting-field {
+  padding: 0; }
+
 .required-field-mark {
   color: #e9322d; }
 
@@ -660,6 +663,12 @@ th {
       border: none; }
     .block__cell--border-top {
       border-top: 1px solid #cecece; }
+  .block__cell-wrapper {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 100%; }
   .block__lbl {
     width: 40%;
     align-items: center;
@@ -889,3 +898,86 @@ select.setting-field {
 
 .setting-type-1 .icon--invalid-username {
   background-position: -3px -87px; }
+
+/*
+ * A partial implementation of the Ruby list functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/lists.rb
+ */
+/*
+ * A partial implementation of the Ruby constants functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/constants.rb
+ */
+/*
+ * A partial implementation of the Ruby display functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/core/lib/compass/core/sass_extensions/functions/display.rb
+ */
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+  display: none !important; }
+
+.w16-percent, .w20-percent, .w25-percent, .w28-percent, .w30-percent, .w33-percent, .w40-percent, .w42-percent, .w50-percent, .w60-percent, .w80-percent, .w100-percent, .block__item, .block__item--full-width, .block__item--full-width .block__lbl,
+.block__item--full-width .block__lbl--white, .block__item--full-width .block__value, .block__lbl, .block__value, .full-width .block__item, .full-width .block__lbl,
+.full-width .block__lbl--white, .full-width .block__value, .setting-type-1 .col {
+  float: left; }
+
+.w16-percent {
+  width: 16% !important; }
+
+.w20-percent {
+  width: 20% !important; }
+
+.w25-percent {
+  width: 25% !important; }
+
+.w28-percent {
+  width: 28% !important; }
+
+.w30-percent {
+  width: 30% !important; }
+
+.w33-percent {
+  width: 33% !important; }
+  .w33-percent--last {
+    width: 34% !important; }
+
+.w40-percent {
+  width: 40% !important; }
+
+.w42-percent {
+  width: 42% !important; }
+
+.w50-percent {
+  width: 50% !important; }
+
+.w60-percent {
+  width: 60% !important; }
+
+.w80-percent {
+  width: 80% !important; }
+
+.w100-percent {
+  width: 100% !important; }
+
+.align-center {
+  text-align: center; }
+
+.align-left {
+  text-align: left; }
+
+.align-right {
+  text-align: right; }
+
+.red-text {
+  color: #e9322d; }
+
+.setting-type-2 .block__cell, .setting-type-2 .block__lbl, .setting-type-2 .block__value {
+  align-items: center;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center; }

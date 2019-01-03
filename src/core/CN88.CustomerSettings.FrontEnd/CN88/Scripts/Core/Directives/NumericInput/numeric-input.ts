@@ -16,7 +16,7 @@ module CustomerSetting {
 
         public get scope(): any {
             return {
-                precision: "="
+                precision: "=?numericInput"
             };
         }
 

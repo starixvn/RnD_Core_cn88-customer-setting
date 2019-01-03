@@ -1,4 +1,4 @@
-﻿<div class="block {{cssClass}}" data-ng-show="settingType" data-ng-class="{ 'block--error': !(settingType | validSettingType) }">
+﻿<div class="block setting-type-{{settingType.id}} {{cssClass}}" data-ng-show="settingType" data-ng-class="{ 'block--error': !(settingType | validSettingType) }">
     <div class="block__header"
          data-setting-type="{{settingType.id}}"
          data-ng-class="{ 'block__header--error': !(settingType | validSettingType) }">

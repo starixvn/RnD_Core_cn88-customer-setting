@@ -1,6 +1,6 @@
-﻿<div data-ng-if="editable">
-    <div class="w50-percent" data-ng-if="customerLevel !== avaiCustomerLevels.member">
-        <div class="block__cell setting-field-wrapper align-center"
+﻿<div class="block__cell-wrapper" data-ng-if="editable">
+    <div class="block__cell-wrapper w50-percent" data-ng-if="customerLevel !== avaiCustomerLevels.member">
+        <div class="block__cell setting-field-wrapper"
              data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
              data-ng-style="eachGroupStyle"
              data-ng-repeat="commissionGroup in item.mappedCommissionGroups"
@@ -13,7 +13,7 @@
                                  data-step="item.intervalValue"
                                  data-precision="2"></percentage-dropdown>
         </div>
-        <div class="block__cell w100-percent setting-field-wrapper align-center"
+        <div class="block__cell setting-field-wrapper w100-percent"
              data-ng-if="item.layoutType === availableLayoutTypes.singleGroup"
              data-tooltip
              data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':'commissionGroups:0'}}">
@@ -24,7 +24,7 @@
                                  data-precision="2"></percentage-dropdown>
         </div>
     </div>
-    <div class="block__cell w50-percent setting-field-wrapper align-center"
+    <div class="block__cell setting-field-wrapper w50-percent"
          data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups"
          data-tooltip
          data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':('commissionGroups:' + memberSpreadGroupIndex)}}">
@@ -45,8 +45,8 @@
                              data-step="item.intervalValue"
                              data-precision="2"></percentage-dropdown>
     </div>
-    <div class="w50-percent w50-percent">
-        <div class="block__cell w50-percent setting-field-wrapper"
+    <div class="block__cell-wrapper w50-percent">
+        <div class="block__cell setting-field-wrapper w50-percent"
              data-ng-class="{'align-center': (customerLevel === avaiCustomerLevels.super) && (item.minMaxBet === 0) && (item.maxMaxBet === 0)}"
              data-tooltip
              data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':'maxBet'}}">
@@ -58,7 +58,7 @@
             <span data-ng-if="(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxBet > 0)">[{{item.minMaxBet | formatNumber}}; {{item.maxMaxBet | formatNumber}}]</span>
             <span data-ng-if="(customerLevel === avaiCustomerLevels.super) && (item.minMaxBet > 0) && (item.maxMaxBet === 0)">>={{item.minMaxBet | formatNumber}}</span>
         </div>
-        <div class="block__cell block__cell--no-border w50-percent setting-field-wrapper"
+        <div class="block__cell block__cell--no-border setting-field-wrapper w50-percent"
              data-ng-class="{'align-center': (customerLevel === avaiCustomerLevels.super) && (item.minMaxPerMatch === 0) && (item.maxMaxPerMatch === 0)}"
              data-tooltip
              data-tooltip-message="{{item.validationState | tooltipMessage:'settingType2ResourceService':'maxPerMatch'}}">
@@ -72,8 +72,8 @@
         </div>
     </div>
 </div>
-<div class="align-center" data-ng-if="!editable">
-    <div class="w50-percent" data-ng-if="customerLevel !== avaiCustomerLevels.member">
+<div class="block__cell-wrapper" data-ng-if="!editable">
+    <div class="block__cell-wrapper w50-percent" data-ng-if="customerLevel !== avaiCustomerLevels.member">
         <div class="block__cell"
              data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
              data-ng-style="eachGroupStyle"

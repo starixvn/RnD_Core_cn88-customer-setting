@@ -1,0 +1,15 @@
+﻿@import "../other";
+@import "../variables";
+
+.setting-type-2 {
+    .block {
+        &__cell {
+            align-items: center;
+            display: -webkit-box;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: flex;
+            justify-content: center;
+        }
+    }
+}
