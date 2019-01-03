@@ -66,6 +66,7 @@
             => dynamicRepository.Fetch<CommBetSettingDto>(
                 new GetCommBetSettingCriteria
                 {
+                    IsCreateNew = query.IsCreateNew,
                     CustId = query.IsCreateNew ? query.UplineId : query.CustomerId,
                     RoleId = query.CustomerLevel.Value
                 });

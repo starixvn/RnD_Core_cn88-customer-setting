@@ -2,9 +2,9 @@
 {
     using Fanex.Data.Repository;
 
-    public class GetInsertCustomerInfoCriteria : CriteriaBase
+    public class GetCustomerInfoForCreateCriteria : CriteriaBase
     {
-        public GetInsertCustomerInfoCriteria(byte levelId, int custId)
+        public GetCustomerInfoForCreateCriteria(byte levelId, int custId)
         {
             RoleId = levelId;
             CustId = custId;

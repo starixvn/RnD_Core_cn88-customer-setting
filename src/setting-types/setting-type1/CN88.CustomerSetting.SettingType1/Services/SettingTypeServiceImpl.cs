@@ -161,23 +161,17 @@
         }
 
         private AccountDetailSettingItem GetSuperAccountDetail(int custId, bool isCreateNew)
-            => isCreateNew
-                ? DynamicRepository.Get<SuperAccountDetail>(new GetDefaultPTSettingCriteria(Level.Super.Value, custId))
-                : DynamicRepository.Get<SuperAccountDetail>(new GetPTSettingCriteria(Level.Super.Value, custId));
+            => DynamicRepository.Get<SuperAccountDetail>(new GetPTSettingCriteria(Level.Super.Value, custId, isCreateNew));
 
         private AccountDetailSettingItem GetMasterAccountDetail(int custId, bool isCreateNew)
-            => isCreateNew
-                ? DynamicRepository.Get<MasterAccountDetail>(new GetDefaultPTSettingCriteria(Level.Master.Value, custId))
-                : DynamicRepository.Get<MasterAccountDetail>(new GetPTSettingCriteria(Level.Master.Value, custId));
+            => DynamicRepository.Get<MasterAccountDetail>(new GetPTSettingCriteria(Level.Master.Value, custId, isCreateNew));
 
         private AccountDetailSettingItem GetAgentAccountDetail(int custId, bool isCreateNew)
-            => isCreateNew
-                ? DynamicRepository.Get<AgentAccountDetail>(new GetDefaultPTSettingCriteria(Level.Agent.Value, custId))
-                : DynamicRepository.Get<AgentAccountDetail>(new GetPTSettingCriteria(Level.Agent.Value, custId));
+            => DynamicRepository.Get<AgentAccountDetail>(new GetPTSettingCriteria(Level.Agent.Value, custId, isCreateNew));
 
         private CreateCustomerInfoDto GetDefaultCreateCustomerInfo(Level level, int uplineId)
             => level.IsNotSuperLevel()
-                ? DynamicRepository.Get<CreateCustomerInfoDto>(new GetInsertCustomerInfoCriteria(level.Value, uplineId))
+                ? DynamicRepository.Get<CreateCustomerInfoDto>(new GetCustomerInfoForCreateCriteria(level.Value, uplineId))
                 : new CreateCustomerInfoDto();
 
         private IEnumerable<Currency> GetCurrencies()

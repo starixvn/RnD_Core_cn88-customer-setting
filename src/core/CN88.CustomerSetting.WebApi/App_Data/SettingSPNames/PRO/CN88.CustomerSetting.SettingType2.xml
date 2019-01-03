@@ -1,7 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Functions SiteId="68" SiteName="DCS">
   <Function Name="Comm_BetSetting">
-    <Setting Key="CS_CustSetting_CommBetSetting_Sel" SpName="CS_CustomerIns_CommBetSetting_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600">
+    <Setting Key="CS_CustomerIns_CommBetSetting_Sel" SpName="CS_CustomerIns_CommBetSetting_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600">
+      <Parameters>
+        <Parameter Name="IsTest" Value="true" />
+      </Parameters>
+      <Mapping DataField="SportType" ObjectProperty="SportTypeId" />
+      <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
+    </Setting>
+    <Setting Key="CS_CustSetting_CommBetSetting_Sel" SpName="CS_CustSetting_CommBetSetting_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600">
       <Parameters>
         <Parameter Name="IsTest" Value="true" />
       </Parameters>
