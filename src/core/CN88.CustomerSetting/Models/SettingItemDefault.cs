@@ -29,7 +29,7 @@
 
         public virtual IResult Validate()
             => SportTypeId <= 0 || BetTypeId <= 0
-            ? new Result(Constants.ResultValues.DataIsNotValid, AppResources.Messages.SportTypeOrBetTypeIsInvalid)
+            ? new Result(Constants.ResultValues.DataIsNotValid, AppResources.Resources.SportTypeOrBetTypeIsInvalid)
             : Result.Success;
 
         public virtual string ToXml()

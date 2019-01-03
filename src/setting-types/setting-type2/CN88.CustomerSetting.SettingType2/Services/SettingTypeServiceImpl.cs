@@ -51,7 +51,7 @@
 
                 if (settingItemDto.Any())
                 {
-                    var settingItem = BuildSettingItem(settingItemDto, settingItemConfig);
+                    var settingItem = BuildSettingItem(settingItemDto, settingItemConfig, settingContext.Language);
 
                     settingItems.Add(settingItem);
                 }
@@ -72,9 +72,10 @@
                     RoleId = query.CustomerLevel.Value
                 });
 
-        private static CommBetSettingItem BuildSettingItem(
+        private CommBetSettingItem BuildSettingItem(
             IEnumerable<CommBetSettingDto> settingItemDto,
-            IEnumerable<CommBetSettingConfigDto> settingItemConfig)
+            IEnumerable<CommBetSettingConfigDto> settingItemConfig,
+            string language)
         {
             var firstSettingItemDto = settingItemDto.First();
             var firstSettingItemConfig = settingItemConfig.ToList().FirstOrDefault();
@@ -82,7 +83,7 @@
 
             return new CommBetSettingItem
             {
-                SportTypeName = Resources.ResourceManager.GetString($"SportTypeName_{firstSettingItemConfig.SportTypeId}"),
+                SportTypeName = ResourceService.GetSportTypeName(firstSettingItemConfig.SportTypeId, language),
                 BetTypeName = Resources.ResourceManager.GetString($"BetTypeName_{firstSettingItemConfig.BetTypeId}_{isLive}"),
 
                 LayoutType = firstSettingItemConfig.LayoutType,

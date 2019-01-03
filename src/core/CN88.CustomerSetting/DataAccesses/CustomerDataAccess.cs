@@ -27,7 +27,7 @@
             return new CreateNewResult(
                 result.Code,
                 result.IsOk 
-                    ? string.Format(Messages.CreateSuccessfully, newUsername) 
+                    ? string.Format(Resources.CreateSuccessfully, newUsername) 
                     : result.Message, 
                 int.Parse(parameters["custId"].ToString()));
         }

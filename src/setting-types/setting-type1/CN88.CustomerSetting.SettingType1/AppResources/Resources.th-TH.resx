@@ -158,4 +158,55 @@
   <data name="PasswordCannotBeNullOrEmpty" xml:space="preserve">
     <value>ขอโทษค่ะ คุณต้องใส่รหัสผ่านด้วย</value>
   </data>
+  <data name="Msg_20001" xml:space="preserve">
+    <value>ค่าความเสี่ยงไม่ถูกต้อง</value>
+  </data>
+  <data name="Msg_20019" xml:space="preserve">
+    <value>การตั้งค่ามาสเตอร์ต่างๆ ที่มีอยู่ก่อนแล้วเกินกว่าการตั้งค่าความเสี่ยงสูงสุดอันใหม่ของซูเปอร์</value>
+  </data>
+  <data name="Msg_20020" xml:space="preserve">
+    <value>การตั้งค่าเมมเบอร์ต่างๆ ที่มีอยู่ก่อนแล้วเกินกว่าการตั้งค่าความเสี่ยงสูงสุดอันใหม่ของซูเปอร์</value>
+  </data>
+  <data name="Msg_20021" xml:space="preserve">
+    <value>การตั้งค่ามาสเตอร์ต่างๆ ที่มีอยู่ก่อนแล้วเกินกว่าการตั้งค่าความเสี่ยงสูงสุดอันใหม่ของมาสเตอร์</value>
+  </data>
+  <data name="Msg_20022" xml:space="preserve">
+    <value>การตั้งค่าเมมเบอร์ต่างๆ ที่มีอยู่ก่อนแล้วเกินกว่าการตั้งค่าความเสี่ยงสูงสุดอันใหม่ของมาสเตอร์</value>
+  </data>
+  <data name="Msg_20023" xml:space="preserve">
+    <value>การตั้งค่าเอเจนท์ต่างๆ ที่มีอยู่ก่อนแล้วเกินกว่าการตั้งค่าความเสี่ยงสูงสุดอันใหม่ของเอเจนท์</value>
+  </data>
+  <data name="Msg_20024" xml:space="preserve">
+    <value>การตั้งค่าเมมเบอร์ต่างๆ ที่มีอยู่ก่อนแล้วเกินกว่าการตั้งค่าความเสี่ยงสูงสุดอันใหม่ของเอเจนท์</value>
+  </data>
+  <data name="Msg_20025" xml:space="preserve">
+    <value>ค่าความเสี่ยงขัดกับการตั้งค่าค่าความเสี่ยงขั้นต่ำ/ขั้นสูงสุดของทางต้นสาย</value>
+  </data>
+  <data name="Msg_20026" xml:space="preserve">
+    <value>การตั้งค่าเอเจนท์ต่างๆ ที่มีอยู่ก่อนแล้วเกินกว่าการตั้งค่าความเสี่ยงสูงสุดอันใหม่ของมาสเตอร์</value>
+  </data>
+  <data name="Msg_20027" xml:space="preserve">
+    <value>ค่าความเสี่ยงขัดกับการตั้งค่าค่าความเสี่ยงขั้นสูงสุดของมาสเตอร์ ที่ทางบริษัทตั้งค่าไว้</value>
+  </data>
+  <data name="Msg_20028" xml:space="preserve">
+    <value>ค่าความเสี่ยงขัดกับการตั้งค่าค่าความเสี่ยงขั้นสูงสุดของซูเปอร์</value>
+  </data>
+  <data name="Msg_20029" xml:space="preserve">
+    <value>ค่าความเสี่ยงขัดกับการตั้งค่าความเสี่ยงขั้นต่ำของซูเปอร์</value>
+  </data>
+  <data name="Msg_20030" xml:space="preserve">
+    <value>ค่าความเสี่ยงของเอเจนท์ขัดกับการตั้งค่าค่าความเสี่ยงขั้นสูงสุดของมาสเตอร์</value>
+  </data>
+  <data name="Msg_20031" xml:space="preserve">
+    <value>ค่าความเสี่ยงขัดกับการตั้งค่าค่าความเสี่ยงขั้นสูงสุดของมาสเตอร์</value>
+  </data>
+  <data name="Msg_20032" xml:space="preserve">
+    <value>ค่าความเสี่ยงขัดกับการตั้งค่าความเสี่ยงขั้นต่ำของมาสเตอร์</value>
+  </data>
+  <data name="Msg_20033" xml:space="preserve">
+    <value>ค่าความเสี่ยงขัดกับการตั้งค่าความเสี่ยงขั้นต่ำสุด/สูงสุดของเอเจนท์</value>
+  </data>
+  <data name="Msg_20034" xml:space="preserve">
+    <value>ค่าความเสี่ยงขัดกับการตั้งค่าค่าความเสี่ยงขั้นสูงสุดของเอเจนท์</value>
+  </data>
 </root>

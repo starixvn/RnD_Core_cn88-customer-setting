@@ -163,4 +163,55 @@ Notes: your password is cAsE sEnSiTiVe</value>
   <data name="PasswordCannotBeNullOrEmpty" xml:space="preserve">
     <value>Sorry, password cannot be empty!!!</value>
   </data>
+  <data name="Msg_20001" xml:space="preserve">
+    <value>Invalid position taking.</value>
+  </data>
+  <data name="Msg_20019" xml:space="preserve">
+    <value>Existing masters exceed new Super Max PT.</value>
+  </data>
+  <data name="Msg_20020" xml:space="preserve">
+    <value>Existing members exceed new Super Max PT.</value>
+  </data>
+  <data name="Msg_20021" xml:space="preserve">
+    <value>Existing masters exceed new Master Max PT.</value>
+  </data>
+  <data name="Msg_20022" xml:space="preserve">
+    <value>Existing members exceed new Master Max PT.</value>
+  </data>
+  <data name="Msg_20023" xml:space="preserve">
+    <value>Existing agents exceed new Agent Max PT.</value>
+  </data>
+  <data name="Msg_20024" xml:space="preserve">
+    <value>Existing members exceed new Agent Max PT.</value>
+  </data>
+  <data name="Msg_20025" xml:space="preserve">
+    <value>The position taking violates Upline Min/Max PT.</value>
+  </data>
+  <data name="Msg_20026" xml:space="preserve">
+    <value>Existing agents exceed new Master Max PT.</value>
+  </data>
+  <data name="Msg_20027" xml:space="preserve">
+    <value>The position taking violates Master Max PT set by company.</value>
+  </data>
+  <data name="Msg_20028" xml:space="preserve">
+    <value>The position taking violates Super Max PT.</value>
+  </data>
+  <data name="Msg_20029" xml:space="preserve">
+    <value>The position taking violates Super Min PT.</value>
+  </data>
+  <data name="Msg_20030" xml:space="preserve">
+    <value>The Agent Min PT violates Master Max PT.</value>
+  </data>
+  <data name="Msg_20031" xml:space="preserve">
+    <value>The position taking violates Master Max PT.</value>
+  </data>
+  <data name="Msg_20032" xml:space="preserve">
+    <value>The position taking violates Master Min PT.</value>
+  </data>
+  <data name="Msg_20033" xml:space="preserve">
+    <value>The position taking violates Agent Min/Max PT.</value>
+  </data>
+  <data name="Msg_20034" xml:space="preserve">
+    <value>The position taking violates Agent Max PT.</value>
+  </data>
 </root>

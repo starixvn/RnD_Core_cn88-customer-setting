@@ -25,10 +25,11 @@
         private const string CurrencyCacheKey = "CN88.CustomerSetting.CurrencyCacheKey";
         private const int SpreadGroupCacheTimeInHours = 5;
         private const string SpreadGroupCacheKey = "CN88.CustomerSetting.SpreadGroupCacheKey";
+
         private readonly PasswordService passwordService;
 
         public SettingTypeServiceImpl() :
-            this(null, null, null, null)
+            this(null, null, null, null, null)
         { }
 
         internal SettingTypeServiceImpl(
@@ -36,10 +37,12 @@
             ILogger logger,
             ICacheService cacheService,
             IDynamicRepository dynamicRepository,
+            MessageService messageService,
             PasswordService passwordService = null)
             : base(resourceService, logger, cacheService, dynamicRepository)
         {
             this.passwordService = passwordService ?? new PasswordServiceImpl();
+            MessageService = messageService ?? new MessageServiceImpl(ResourceService);
         }
 
         public override async Task<SettingType> GetCustomerSettingType(
@@ -330,15 +333,19 @@
 
             await DynamicRepository.ExecuteAsync(updatePTSettingCommand);
 
-            return new SettingResult(
+            var settingResult = new SettingResult(
                 updatePTSettingCommand.ErrCode,
-                updatePTSettingCommand.ErrCode == Result.Success.Code
-                    ? Resources.UpdateAccountDetailSuccess
-                    : updatePTSettingCommand.ErrMsg,
+                updatePTSettingCommand.ErrMsg,
                 updatePTSettingCommand.MsgType,
                 command.Setting.CustomerId,
                 settingType.Id,
                 settingType.Name);
+
+            return TranslateUpdateResultMessage(
+                settingResult, 
+                Resources.UpdateAccountDetailSuccess, 
+                settingType.SettingLevel, 
+                settingContext.Language);
         }
 
         private async Task<SettingResult> UpdateCustomerInfo(

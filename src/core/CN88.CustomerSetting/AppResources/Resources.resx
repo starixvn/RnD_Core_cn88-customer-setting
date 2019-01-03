@@ -159,4 +159,7 @@
   <data name="YouAreNotAuthorized" xml:space="preserve">
     <value>You are not authorized on this function!</value>
   </data>
+  <data name="SportTypeName_9999" xml:space="preserve">
+    <value>All Sports</value>
+  </data>
 </root>

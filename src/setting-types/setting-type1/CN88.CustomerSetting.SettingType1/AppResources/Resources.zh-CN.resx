@@ -157,4 +157,55 @@
   <data name="PasswordCannotBeNullOrEmpty" xml:space="preserve">
     <value>密码不能留空</value>
   </data>
+  <data name="Msg_20001" xml:space="preserve">
+    <value>占成无效</value>
+  </data>
+  <data name="Msg_20019" xml:space="preserve">
+    <value>現有总代理超過新增超级总代理的最高占成。</value>
+  </data>
+  <data name="Msg_20020" xml:space="preserve">
+    <value>現有会员超過新增超级总代理的最高占成。</value>
+  </data>
+  <data name="Msg_20021" xml:space="preserve">
+    <value>現有总代理超過新增总代理的最高占成。</value>
+  </data>
+  <data name="Msg_20022" xml:space="preserve">
+    <value>現有会员超過新增总代理的最高占成。</value>
+  </data>
+  <data name="Msg_20023" xml:space="preserve">
+    <value>現有代理超過新增代理的最高占成。</value>
+  </data>
+  <data name="Msg_20024" xml:space="preserve">
+    <value>現有会员超過新增代理的最高占成。</value>
+  </data>
+  <data name="Msg_20025" xml:space="preserve">
+    <value>此占成违反上线的最低/最高占成.</value>
+  </data>
+  <data name="Msg_20026" xml:space="preserve">
+    <value>現有代理超過新增总代理的最高占成。</value>
+  </data>
+  <data name="Msg_20027" xml:space="preserve">
+    <value>此占成违反公司设置于总代理的最高占成。</value>
+  </data>
+  <data name="Msg_20028" xml:space="preserve">
+    <value>此占成违反超级总代理的最高占成。</value>
+  </data>
+  <data name="Msg_20029" xml:space="preserve">
+    <value>此占成违反超级总代理的最低占成。</value>
+  </data>
+  <data name="Msg_20030" xml:space="preserve">
+    <value>此代理最低占成违反总代理的最高占成。</value>
+  </data>
+  <data name="Msg_20031" xml:space="preserve">
+    <value>此占成违反总代理的最高占成。</value>
+  </data>
+  <data name="Msg_20032" xml:space="preserve">
+    <value>此占成违反总代理的最低占成。</value>
+  </data>
+  <data name="Msg_20033" xml:space="preserve">
+    <value>此占成违反代理的最低/最高占成。</value>
+  </data>
+  <data name="Msg_20034" xml:space="preserve">
+    <value>此占成违反代理的最高占成。</value>
+  </data>
 </root>

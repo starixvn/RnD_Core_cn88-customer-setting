@@ -13,6 +13,7 @@
     using Fanex.Logging.Extensions.AspNetCore;
     using Fanex.Logging.Extensions.Database;
     using Fanex.Logging.Sentry.RavenClient;
+    using Fanex.RemotingRef;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -52,10 +53,13 @@
                 .AddSingleton<QuerySettingService, QuerySettingServiceImpl>()
                 .AddSingleton<SettingTypeServiceFactory, SettingTypeServiceFactoryImpl>()
                 .AddSingleton<CustomerDataAccess, CustomerDataAccessImpl>()
+                .AddSingleton<IRemotingRefService, RemotingRefService>()
                 .AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "CN88 Customer Setting", Version = "v1" });
             });
+
+            InitRemotingRef();
         }
 
         private void InitFanexData()
@@ -88,6 +92,16 @@
                 .UseConfig(new LoggingConfiguration()
                 .GetHttpHeaderInfo()
                 .UseGetDbExceptionInfo(DatabaseInfoGetters.GetDbExceptionInfo));
+        }
+
+        private void InitRemotingRef()
+        {
+            RefDataTypeContainer
+                .ConnectTo(new Uri(Configuration["RemotingRef:Url"]))
+                .FromApplication(Configuration["RemotingRef:SiteName"])
+                .Register(RefDataType.BetTypeName, new RefDataTypeHandlerOptions { SlidingTimeout = TimeSpan.MaxValue })
+                .Register(RefDataType.SportName, new RefDataTypeHandlerOptions { SlidingTimeout = TimeSpan.MaxValue })
+                .Register(RefDataType.RefResource, new RefDataTypeHandlerOptions { SlidingTimeout = TimeSpan.MaxValue });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -9,6 +9,7 @@
     using Fanex.Caching;
     using Fanex.Data.Repository;
     using Fanex.Logging;
+    using Fanex.RemotingRef;
     using Models;
     using Models.Constants;
     using Models.Enumerations;
@@ -48,7 +49,7 @@
             ICacheService cacheService,
             IDynamicRepository dynamicRepository)
         {
-            ResourceService = resourceService ?? new ResourceServiceImpl();
+            ResourceService = resourceService ?? new ResourceServiceImpl(new RemotingRefService());
             Logger = logger ?? LogService.LoggerInstance;
             CacheService = cacheService ?? new CacheService();
             DynamicRepository = dynamicRepository ?? new DynamicRepository();

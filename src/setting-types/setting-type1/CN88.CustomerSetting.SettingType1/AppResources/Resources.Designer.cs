@@ -70,6 +70,159 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid position taking..
+        /// </summary>
+        internal static string Msg_20001 {
+            get {
+                return ResourceManager.GetString("Msg_20001", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Existing masters exceed new Super Max PT..
+        /// </summary>
+        internal static string Msg_20019 {
+            get {
+                return ResourceManager.GetString("Msg_20019", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Existing members exceed new Super Max PT..
+        /// </summary>
+        internal static string Msg_20020 {
+            get {
+                return ResourceManager.GetString("Msg_20020", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Existing masters exceed new Master Max PT..
+        /// </summary>
+        internal static string Msg_20021 {
+            get {
+                return ResourceManager.GetString("Msg_20021", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Existing members exceed new Master Max PT..
+        /// </summary>
+        internal static string Msg_20022 {
+            get {
+                return ResourceManager.GetString("Msg_20022", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Existing agents exceed new Agent Max PT..
+        /// </summary>
+        internal static string Msg_20023 {
+            get {
+                return ResourceManager.GetString("Msg_20023", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Existing members exceed new Agent Max PT..
+        /// </summary>
+        internal static string Msg_20024 {
+            get {
+                return ResourceManager.GetString("Msg_20024", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The position taking violates Upline Min/Max PT..
+        /// </summary>
+        internal static string Msg_20025 {
+            get {
+                return ResourceManager.GetString("Msg_20025", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Existing agents exceed new Master Max PT..
+        /// </summary>
+        internal static string Msg_20026 {
+            get {
+                return ResourceManager.GetString("Msg_20026", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The position taking violates Master Max PT set by company..
+        /// </summary>
+        internal static string Msg_20027 {
+            get {
+                return ResourceManager.GetString("Msg_20027", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The position taking violates Super Max PT..
+        /// </summary>
+        internal static string Msg_20028 {
+            get {
+                return ResourceManager.GetString("Msg_20028", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The position taking violates Super Min PT..
+        /// </summary>
+        internal static string Msg_20029 {
+            get {
+                return ResourceManager.GetString("Msg_20029", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Agent Min PT violates Master Max PT..
+        /// </summary>
+        internal static string Msg_20030 {
+            get {
+                return ResourceManager.GetString("Msg_20030", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The position taking violates Master Max PT..
+        /// </summary>
+        internal static string Msg_20031 {
+            get {
+                return ResourceManager.GetString("Msg_20031", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The position taking violates Master Min PT..
+        /// </summary>
+        internal static string Msg_20032 {
+            get {
+                return ResourceManager.GetString("Msg_20032", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The position taking violates Agent Min/Max PT..
+        /// </summary>
+        internal static string Msg_20033 {
+            get {
+                return ResourceManager.GetString("Msg_20033", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The position taking violates Agent Max PT..
+        /// </summary>
+        internal static string Msg_20034 {
+            get {
+                return ResourceManager.GetString("Msg_20034", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         internal static string Password {

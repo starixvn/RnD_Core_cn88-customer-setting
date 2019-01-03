@@ -43,7 +43,7 @@
 
             if (simpleMessage != null)
             {
-                mainMessage = GetMessage(AppResources.Messages.ResourceManager, simpleMessage.MessageId);
+                mainMessage = GetMessage(AppResources.Resources.ResourceManager, simpleMessage.MessageId);
             }
 
             return new MessageContent(mainMessage);

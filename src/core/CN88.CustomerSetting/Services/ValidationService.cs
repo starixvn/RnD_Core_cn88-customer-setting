@@ -96,7 +96,7 @@
 
             if (!enabledStatus)
             {
-                throw new CustomerSettingException(Messages.AccountWasDisabled);
+                throw new CustomerSettingException(Resources.AccountWasDisabled);
             }
         }
 
@@ -124,7 +124,7 @@
 
                 if (!isBelonging)
                 {
-                    throw new CustomerSettingException(Messages.CustomersAreNotSameLine);
+                    throw new CustomerSettingException(Resources.CustomersAreNotSameLine);
                 }
             }
         }
