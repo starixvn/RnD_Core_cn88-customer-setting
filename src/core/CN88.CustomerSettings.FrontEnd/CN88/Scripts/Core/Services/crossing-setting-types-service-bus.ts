@@ -1,6 +1,5 @@
 ﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
 /// <reference path="../models/key-value-pair.ts" />
-/// <reference path="../models/setting-type.ts" />
 /// <reference path="../module-registrater.ts" />
 
 module CustomerSetting {

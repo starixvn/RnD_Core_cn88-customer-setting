@@ -72,11 +72,7 @@ module CustomerSetting {
             });
 
             angular.element(this.$window).on("resize", debounceResize);
-            this.$rootScope.$on("page-height-changed", () => {
-                if (scope.tooltipMessage) {
-                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel, scope.onHover);
-                }
-            });
+            this.$rootScope.$on("page-height-changed", debounceResize);
         };
 
         private $window: ng.IWindowService;

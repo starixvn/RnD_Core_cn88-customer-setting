@@ -1,7 +1,6 @@
 ﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
 /// <reference path="../../../core/models/enums/level.ts" />
 /// <reference path="../../../core/services/crossing-setting-types-service-bus.ts" />
-/// <reference path="../../../core/services/setting-types-shared-values-service.ts" />
 /// <reference path="../../../core/module-registrater.ts" />
 /// <reference path="../../models/member-account-detail.ts" />
 /// <reference path="../sub-section-base.ts" />
@@ -14,11 +13,13 @@ module CustomerSetting {
     }
 
     class GeneralDataDirective extends SubSectionBaseDirective {
-        public static $inject: string[] = ["crossingSettingTypesServiceBus"];
+        public static $inject: string[] = ["settingTypesSharedValuesService", "crossingSettingTypesServiceBus"];
 
         public templateUrl: string = "SubSections/GeneralData/general-data.htm";
 
         public link: ng.IDirectiveLinkFn = (scope: IGeneralDataScope) => {
+            this.linkInternal(scope);
+
             if (scope.isNew && scope.customerLevel === Level.member) {
                 scope.updateSpreadGroup = () => {
                     this.crossingSettingTypesServiceBus.execute(
@@ -32,8 +33,8 @@ module CustomerSetting {
 
         private crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus;
 
-        constructor(crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus) {
-            super();
+        constructor(settingTypesSharedValuesService: SettingTypesSharedValuesService, crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus) {
+            super(settingTypesSharedValuesService);
 
             this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
         }

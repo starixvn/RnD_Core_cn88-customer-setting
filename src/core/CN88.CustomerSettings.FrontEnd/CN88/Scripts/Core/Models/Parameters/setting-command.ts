@@ -1,8 +1,6 @@
 ﻿/// <reference path="../enums/level.ts" />
-/// <reference path="../exceptions.ts" />
 /// <reference path="../result.ts" />
 /// <reference path="../setting.ts" />
-/// <reference path="abstract-setting-query.ts" />
 
 module CustomerSetting {
     "use strict";

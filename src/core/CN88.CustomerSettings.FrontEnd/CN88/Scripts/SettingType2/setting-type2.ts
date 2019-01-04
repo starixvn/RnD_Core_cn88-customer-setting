@@ -3,6 +3,7 @@
 /// <reference path="../core/models/enums/level.ts" />
 /// <reference path="../core/models/setting-item.ts" />
 /// <reference path="../core/models/setting-type.ts" />
+/// <reference path="../core/services/app-config-service.ts" />
 /// <reference path="../core/services/crossing-setting-types-service-bus.ts" />
 /// <reference path="../core/services/setting-types-shared-values-service.ts" />
 /// <reference path="../core/module-registrater.ts" />

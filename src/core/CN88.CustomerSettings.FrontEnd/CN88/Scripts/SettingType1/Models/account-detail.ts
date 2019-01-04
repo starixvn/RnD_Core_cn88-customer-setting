@@ -53,6 +53,7 @@ module CustomerSetting {
 
             this.resetValidationState();
             this.ignoredProperties = this.ignoredProperties.concat([
+                "confirmPassword",
                 "usernameSuffixes",
                 "uplineUsername",
                 "hashKey"]);

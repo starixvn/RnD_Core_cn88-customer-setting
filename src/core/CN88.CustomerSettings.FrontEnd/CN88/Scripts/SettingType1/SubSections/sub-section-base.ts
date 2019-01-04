@@ -1,7 +1,7 @@
 ﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
 /// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/services/setting-types-shared-values-service.ts" />
-/// <reference path="../models/setting-type1-item.ts" />
+/// <reference path="../models/account-detail.ts" />
 
 module CustomerSetting {
     "use strict";
@@ -15,6 +15,8 @@ module CustomerSetting {
     }
 
     export class SubSectionBaseDirective implements ng.IDirective {
+        public static $inject: string[] = ["settingTypesSharedValuesService"];
+
         public replace: boolean = true;
 
         public get scope(): any {
@@ -24,13 +26,20 @@ module CustomerSetting {
             };
         }
 
-        public controller: any = [
-            "$scope",
-            "settingTypesSharedValuesService",
-            ($scope: ISubSectionsSharedScopeScope, settingTypesSharedValuesService: SettingTypesSharedValuesService) => {
-                $scope.customerLevel = settingTypesSharedValuesService.customerLevel;
-                $scope.isNew = settingTypesSharedValuesService.isNew;
-                $scope.avaiCustomerLevels = Level;
-            }];
+        public link: ng.IDirectiveLinkFn = (scope: ISubSectionsSharedScopeScope) => {
+            this.linkInternal(scope);
+        };
+
+        private settingTypesSharedValuesService: SettingTypesSharedValuesService;
+
+        constructor(settingTypesSharedValuesService: SettingTypesSharedValuesService) {
+            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
+        }
+
+        protected linkInternal(scope: ISubSectionsSharedScopeScope): void {
+            scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
+            scope.isNew = this.settingTypesSharedValuesService.isNew;
+            scope.avaiCustomerLevels = Level;
+        }
     }
 }

@@ -9,13 +9,21 @@ module CustomerSetting {
     }
 
     class BlockUiDirective implements ng.IDirective {
+        public static $inject: string[] = ["blockUiService"];
+
         public replace: boolean = true;
 
         public templateUrl: string = "Directives/BlockUI/block-ui.htm";
 
-        public controller: any = ["$scope", "blockUiService", ($scope: IBlockUiDirectiveScope, blockUiService: BlockUiService) => {
-            blockUiService.setup($scope);
-        }];
+        public link: ng.IDirectiveLinkFn = (scope: IBlockUiDirectiveScope) => {
+            this.blockUiService.setup(scope);
+        };
+
+        private blockUiService: BlockUiService;
+
+        constructor(blockUiService: BlockUiService) {
+            this.blockUiService = blockUiService;
+        }
     }
 
     ModuleRegister.directive("blockUi", BlockUiDirective);

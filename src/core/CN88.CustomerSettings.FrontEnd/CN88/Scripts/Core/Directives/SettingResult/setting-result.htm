@@ -4,12 +4,10 @@
         <div class="msg__content">{{result.message}}</div>
     </div>
     <div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults">
-        <div class="msg__customer-name"
-             data-ng-if="subResult.customerName">
+        <div class="msg__customer-name" data-ng-if="subResult.customerName">
             {{subResult.customerName}}
         </div>
-        <div class="msg msg--{{subResult.msgTypeName}}"
-             data-ng-if="!subResult.settingResults">
+        <div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults">
             <div class="icon msg__icon"></div>
             <div class="msg__content">{{subResult.message}}</div>
         </div>

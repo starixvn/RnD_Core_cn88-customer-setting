@@ -22,7 +22,7 @@ module CustomerSetting {
 
         public link: ng.IDirectiveLinkFn = (scope: INumericInputScope, originalElement: ng.IAugmentedJQuery) => {
             var element: ng.IAugmentedJQuery = angular.element(originalElement[0]);
-            var maxLength: number = parseInt(element.attr("maxlength"));
+            var maxLength: number = parseInt(element.attr("maxlength"), 10);
             var modelCtrl: any = element.controller("ngModel");
 
             scope.precision = scope.precision || NumericInputDirective.defaultPrecision;

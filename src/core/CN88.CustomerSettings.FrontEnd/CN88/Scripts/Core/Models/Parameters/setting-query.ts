@@ -1,5 +1,4 @@
 ﻿/// <reference path="../enums/level.ts" />
-/// <reference path="../exceptions.ts" />
 /// <reference path="abstract-setting-query.ts" />
 
 module CustomerSetting {

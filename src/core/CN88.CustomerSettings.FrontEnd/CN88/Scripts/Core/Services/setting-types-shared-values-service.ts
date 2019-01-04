@@ -1,4 +1,5 @@
 ﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
+/// <reference path="../models/enums/level.ts" />
 /// <reference path="../models/setting.ts" />
 /// <reference path="../module-registrater.ts" />
 /// <reference path="parameters-service.ts" />

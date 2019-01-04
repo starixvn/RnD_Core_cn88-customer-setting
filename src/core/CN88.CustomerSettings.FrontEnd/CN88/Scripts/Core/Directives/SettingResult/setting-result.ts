@@ -10,6 +10,8 @@ module CustomerSetting {
     }
 
     class SettingResultDirective implements ng.IDirective {
+        public static $inject: string[] = ["$rootScope", "$window"];
+
         public replace: boolean = true;
 
         public get scope(): any {
@@ -20,15 +22,23 @@ module CustomerSetting {
 
         public templateUrl: string = "Directives/SettingResult/setting-result.htm";
 
-        public controller: any = ["$rootScope", "$scope", "$window", ($rootScope: ng.IRootScopeService, $scope: ISettingResultScope, $window: ng.IWindowService) => {
-            $scope.$watch("result", (result: UpdatingSettingResult) => {
-                $rootScope.$emit("page-height-changed");
+        public link: ng.IDirectiveLinkFn = (scope: ISettingResultScope) => {
+            scope.$watch("result", (result: UpdatingSettingResult) => {
+                this.$rootScope.$emit("page-height-changed");
 
                 if (result) {
-                    $window.scrollTo(0, 0);
+                    this.$window.scrollTo(0, 0);
                 }
             });
-        }];
+        };
+
+        private $rootScope: ng.IRootScopeService;
+        private $window: ng.IWindowService;
+
+        constructor($rootScope: ng.IRootScopeService, $window: ng.IWindowService) {
+            this.$rootScope = $rootScope;
+            this.$window = $window;
+        }
     }
 
     ModuleRegister.directive("settingResult", SettingResultDirective);

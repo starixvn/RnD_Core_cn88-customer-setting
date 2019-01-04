@@ -1,4 +1,5 @@
-﻿/// <reference path="../../core/models/result.ts" />
+﻿/// <reference path="../../core/models/enums/level.ts" />
+/// <reference path="../../core/models/result.ts" />
 /// <reference path="account-detail.ts" />
 /// <reference path="currency.ts" />
 

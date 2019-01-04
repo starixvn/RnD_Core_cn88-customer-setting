@@ -1,6 +1,4 @@
-﻿/// <reference path="../../core/models/result.ts" />
-
-module CustomerSetting {
+﻿module CustomerSetting {
     "use strict";
 
     export interface ISpreadGroup {

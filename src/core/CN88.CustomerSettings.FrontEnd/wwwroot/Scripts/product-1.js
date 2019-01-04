@@ -28945,6 +28945,19 @@ String.prototype.hash = function () {
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
+    (function (Level) {
+        Level[Level["company"] = 5] = "company";
+        Level[Level["super"] = 4] = "super";
+        Level[Level["master"] = 3] = "master";
+        Level[Level["agent"] = 2] = "agent";
+        Level[Level["member"] = 1] = "member";
+    })(CustomerSetting.Level || (CustomerSetting.Level = {}));
+    var Level = CustomerSetting.Level;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
     (function (MessageType) {
         MessageType[MessageType["success"] = 0] = "success";
         MessageType[MessageType["warning"] = 1] = "warning";
@@ -29286,19 +29299,6 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    (function (Level) {
-        Level[Level["company"] = 5] = "company";
-        Level[Level["super"] = 4] = "super";
-        Level[Level["master"] = 3] = "master";
-        Level[Level["agent"] = 2] = "agent";
-        Level[Level["member"] = 1] = "member";
-    })(CustomerSetting.Level || (CustomerSetting.Level = {}));
-    var Level = CustomerSetting.Level;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
     var KeyValuePair = (function () {
         function KeyValuePair(key, value) {
             this.key = key;
@@ -29590,6 +29590,28 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
+    var SettingCommand = (function () {
+        function SettingCommand(uplineId, setting) {
+            this.uplineId = uplineId;
+            this.setting = setting;
+        }
+        SettingCommand.prototype.validate = function () {
+            return CustomerSetting.Result.normal;
+        };
+        SettingCommand.prototype.toJson = function () {
+            return {
+                uplineId: this.uplineId,
+                setting: JSON.stringify(this.setting.toJson())
+            };
+        };
+        return SettingCommand;
+    }());
+    CustomerSetting.SettingCommand = SettingCommand;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
     var AbstractSettingQuery = (function () {
         function AbstractSettingQuery(productId, uplineId, customerLevel) {
             this.productId = productId;
@@ -29625,28 +29647,6 @@ var CustomerSetting;
         return AbstractSettingQuery;
     }());
     CustomerSetting.AbstractSettingQuery = AbstractSettingQuery;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var SettingCommand = (function () {
-        function SettingCommand(uplineId, setting) {
-            this.uplineId = uplineId;
-            this.setting = setting;
-        }
-        SettingCommand.prototype.validate = function () {
-            return CustomerSetting.Result.normal;
-        };
-        SettingCommand.prototype.toJson = function () {
-            return {
-                uplineId: this.uplineId,
-                setting: JSON.stringify(this.setting.toJson())
-            };
-        };
-        return SettingCommand;
-    }());
-    CustomerSetting.SettingCommand = SettingCommand;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
@@ -29964,13 +29964,16 @@ var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
     var BlockUiDirective = (function () {
-        function BlockUiDirective() {
+        function BlockUiDirective(blockUiService) {
+            var _this = this;
             this.replace = true;
             this.templateUrl = "Directives/BlockUI/block-ui.htm";
-            this.controller = ["$scope", "blockUiService", function ($scope, blockUiService) {
-                    blockUiService.setup($scope);
-                }];
+            this.link = function (scope) {
+                _this.blockUiService.setup(scope);
+            };
+            this.blockUiService = blockUiService;
         }
+        BlockUiDirective.$inject = ["blockUiService"];
         return BlockUiDirective;
     }());
     CustomerSetting.ModuleRegister.directive("blockUi", BlockUiDirective);
@@ -30510,7 +30513,7 @@ var CustomerSetting;
             this.restrict = "A";
             this.link = function (scope, originalElement) {
                 var element = angular.element(originalElement[0]);
-                var maxLength = parseInt(element.attr("maxlength"));
+                var maxLength = parseInt(element.attr("maxlength"), 10);
                 var modelCtrl = element.controller("ngModel");
                 scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
                 element.on("focus", function () {
@@ -30622,6 +30625,40 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
+    var SettingResultDirective = (function () {
+        function SettingResultDirective($rootScope, $window) {
+            var _this = this;
+            this.replace = true;
+            this.templateUrl = "Directives/SettingResult/setting-result.htm";
+            this.link = function (scope) {
+                scope.$watch("result", function (result) {
+                    _this.$rootScope.$emit("page-height-changed");
+                    if (result) {
+                        _this.$window.scrollTo(0, 0);
+                    }
+                });
+            };
+            this.$rootScope = $rootScope;
+            this.$window = $window;
+        }
+        Object.defineProperty(SettingResultDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    result: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingResultDirective.$inject = ["$rootScope", "$window"];
+        return SettingResultDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
     var PercentageDropdownDirective = (function () {
         function PercentageDropdownDirective() {
             this.replace = true;
@@ -30652,118 +30689,6 @@ var CustomerSetting;
         return PercentageDropdownDirective;
     }());
     CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    (function (PositionModel) {
-        PositionModel[PositionModel["relative"] = 1] = "relative";
-        PositionModel[PositionModel["absolute"] = 2] = "absolute";
-        PositionModel[PositionModel["fixed"] = 3] = "fixed";
-    })(CustomerSetting.PositionModel || (CustomerSetting.PositionModel = {}));
-    var PositionModel = CustomerSetting.PositionModel;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var SettingItemValidatorDirective = (function () {
-        function SettingItemValidatorDirective($compile, $injector, $filter) {
-            var _this = this;
-            this.restrict = "A";
-            this.priority = 100;
-            this.link = function (scope, element) {
-                var settingField = angular.element(element[0].getElementsByClassName("setting-field")[0]);
-                var ngChangeOnElement = settingField.attr("data-ng-change") || settingField.attr("ng-change");
-                if (!ngChangeOnElement) {
-                    settingField.attr("data-ng-change", "resetValidationState()");
-                }
-                else {
-                    settingField.attr("data-ng-change", ngChangeOnElement + ";resetValidationState();");
-                }
-                scope.$watch("configuration.settingItem.validationState", function (validationState) {
-                    scope.errorMessage = _this.getErrorMessage(scope.configuration.settingItem.validationState, scope.configuration.resourceServiceName, scope.configuration.customFilterName, scope.configuration.fieldName);
-                });
-                scope.resetValidationState = function () {
-                    scope.configuration.settingItem.resetValidationState();
-                };
-                element.attr("data-tooltip", "errorMessage");
-                _this.$compile(element)(scope);
-            };
-            this.$compile = $compile;
-            this.$injector = $injector;
-            this.$filter = $filter;
-        }
-        Object.defineProperty(SettingItemValidatorDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    configuration: "=settingItemValidator"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingItemValidatorDirective.prototype.getErrorMessage = function (validationResult, resourceServiceName, customFilterName, fieldName) {
-            var _this = this;
-            var message = null;
-            if (validationResult
-                && validationResult.message
-                && (!fieldName || (fieldName && fieldName === validationResult.fieldName))) {
-                var resourceService = this.$injector.get(resourceServiceName);
-                var params = (validationResult.msgParams || []).map(function (param) {
-                    if (typeof param === "number") {
-                        var value = _this.$filter("number")(param);
-                        if (customFilterName) {
-                            value = _this.$filter(customFilterName)(value);
-                        }
-                        return value;
-                    }
-                    else {
-                        return param;
-                    }
-                });
-                if (resourceService) {
-                    params.unshift(validationResult.message);
-                    message = resourceService.getFormattedMessage.apply(resourceService, params);
-                }
-            }
-            return message;
-        };
-        SettingItemValidatorDirective.$inject = ["$compile", "$injector", "$filter"];
-        return SettingItemValidatorDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingItemValidator", SettingItemValidatorDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var SettingResultDirective = (function () {
-        function SettingResultDirective() {
-            this.replace = true;
-            this.templateUrl = "Directives/SettingResult/setting-result.htm";
-            this.controller = ["$rootScope", "$scope", "$window", function ($rootScope, $scope, $window) {
-                    $scope.$watch("result", function (result) {
-                        $rootScope.$emit("page-height-changed");
-                        if (result) {
-                            $window.scrollTo(0, 0);
-                        }
-                    });
-                }];
-        }
-        Object.defineProperty(SettingResultDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    result: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return SettingResultDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -30829,6 +30754,17 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
+    (function (PositionModel) {
+        PositionModel[PositionModel["relative"] = 1] = "relative";
+        PositionModel[PositionModel["absolute"] = 2] = "absolute";
+        PositionModel[PositionModel["fixed"] = 3] = "fixed";
+    })(CustomerSetting.PositionModel || (CustomerSetting.PositionModel = {}));
+    var PositionModel = CustomerSetting.PositionModel;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
     var TooltipDirective = (function () {
         function TooltipDirective($window, $compile, $timeout, $templateCache, $rootScope) {
             var _this = this;
@@ -30871,11 +30807,7 @@ var CustomerSetting;
                     }
                 });
                 angular.element(_this.$window).on("resize", debounceResize);
-                _this.$rootScope.$on("page-height-changed", function () {
-                    if (scope.tooltipMessage) {
-                        _this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel, scope.onHover);
-                    }
-                });
+                _this.$rootScope.$on("page-height-changed", debounceResize);
             };
             this.$window = $window;
             this.$compile = $compile;
@@ -30981,17 +30913,6 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    (function (ActionType) {
-        ActionType[ActionType["query"] = 0] = "query";
-        ActionType[ActionType["update"] = 1] = "update";
-        ActionType[ActionType["multipleUpdate"] = 2] = "multipleUpdate";
-    })(CustomerSetting.ActionType || (CustomerSetting.ActionType = {}));
-    var ActionType = CustomerSetting.ActionType;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
     (function (System) {
         System[System["nap"] = 1] = "nap";
         System[System["alpha"] = 2] = "alpha";
@@ -31035,6 +30956,7 @@ var CustomerSetting;
             }
             this.resetValidationState();
             this.ignoredProperties = this.ignoredProperties.concat([
+                "confirmPassword",
                 "usernameSuffixes",
                 "uplineUsername",
                 "hashKey"]);
@@ -31123,28 +31045,28 @@ var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
     var UsernameSuffixGroupDirective = (function () {
-        function UsernameSuffixGroupDirective() {
+        function UsernameSuffixGroupDirective(requestService, appConfigService) {
+            var _this = this;
             this.replace = true;
             this.templateUrl = "SubSections/GeneralData/UsernameSuffix/username-suffix-group.htm";
-            this.controller = [
-                "$scope",
-                "requestService",
-                "appConfigService",
-                function ($scope, requestService, appConfigService) {
-                    $scope.selectedSuffixes = $scope.accountDetail.usernameSuffixes.slice();
-                    $scope.accountDetail.username = $scope.accountDetail.uplineUsername + $scope.selectedSuffixes.join("");
-                    $scope.validateUsername = function (suffixIndex, selectedSuffix) {
-                        var validatingPath = appConfigService.buildPath(UsernameSuffixGroupDirective.validatingUsernamePath);
-                        $scope.selectedSuffixes[suffixIndex] = selectedSuffix;
-                        $scope.accountDetail.username = $scope.accountDetail.uplineUsername + $scope.selectedSuffixes.join("");
-                        requestService.get(validatingPath, { username: $scope.accountDetail.username }, function (response) {
-                            var validatingResult = new CustomerSetting.Result(response.data.code, response.data.message, response.data.msgType);
-                            $scope.isValid = validatingResult.isSuccessful;
-                            $scope.isChanged = true;
-                        });
-                    };
-                }];
+            this.link = function (scope) {
+                scope.selectedSuffixes = scope.accountDetail.usernameSuffixes.slice();
+                scope.accountDetail.username = scope.accountDetail.uplineUsername + scope.selectedSuffixes.join("");
+                scope.validateUsername = function (suffixIndex, selectedSuffix) {
+                    var validatingPath = _this.appConfigService.buildPath(UsernameSuffixGroupDirective.validatingUsernamePath);
+                    scope.selectedSuffixes[suffixIndex] = selectedSuffix;
+                    scope.accountDetail.username = scope.accountDetail.uplineUsername + scope.selectedSuffixes.join("");
+                    _this.requestService.get(validatingPath, { username: scope.accountDetail.username }, function (response) {
+                        var validatingResult = new CustomerSetting.Result(response.data.code, response.data.message, response.data.msgType);
+                        scope.isValid = validatingResult.isSuccessful;
+                        scope.isChanged = true;
+                    });
+                };
+            };
+            this.requestService = requestService;
+            this.appConfigService = appConfigService;
         }
+        UsernameSuffixGroupDirective.$inject = ["requestService", "appConfigService"];
         UsernameSuffixGroupDirective.validatingUsernamePath = "CreateCustomer/CheckExistedUsername";
         return UsernameSuffixGroupDirective;
     }());
@@ -31159,13 +31081,13 @@ var CustomerSetting;
             var _this = this;
             this.replace = true;
             this.templateUrl = "SubSections/GeneralData/UsernameSuffix/username-suffix.htm";
-            this.controller = ["$scope", function ($scope) {
-                    $scope.range = _this.generateSuffixRange();
-                    $scope.suffix = $scope.suffix || $scope.range[0];
-                    $scope.validateSuffix = function () {
-                        $scope.validateUsername($scope.suffixIndex, $scope.suffix);
-                    };
-                }];
+            this.link = function (scope) {
+                scope.range = _this.generateSuffixRange();
+                scope.suffix = scope.suffix || scope.range[0];
+                scope.validateSuffix = function () {
+                    scope.validateUsername(scope.suffixIndex, scope.suffix);
+                };
+            };
         }
         Object.defineProperty(UsernameSuffixDirective.prototype, "scope", {
             get: function () {
@@ -31629,16 +31551,13 @@ var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
     var SubSectionBaseDirective = (function () {
-        function SubSectionBaseDirective() {
+        function SubSectionBaseDirective(settingTypesSharedValuesService) {
+            var _this = this;
             this.replace = true;
-            this.controller = [
-                "$scope",
-                "settingTypesSharedValuesService",
-                function ($scope, settingTypesSharedValuesService) {
-                    $scope.customerLevel = settingTypesSharedValuesService.customerLevel;
-                    $scope.isNew = settingTypesSharedValuesService.isNew;
-                    $scope.avaiCustomerLevels = CustomerSetting.Level;
-                }];
+            this.link = function (scope) {
+                _this.linkInternal(scope);
+            };
+            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
         }
         Object.defineProperty(SubSectionBaseDirective.prototype, "scope", {
             get: function () {
@@ -31650,6 +31569,12 @@ var CustomerSetting;
             enumerable: true,
             configurable: true
         });
+        SubSectionBaseDirective.prototype.linkInternal = function (scope) {
+            scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
+            scope.isNew = this.settingTypesSharedValuesService.isNew;
+            scope.avaiCustomerLevels = CustomerSetting.Level;
+        };
+        SubSectionBaseDirective.$inject = ["settingTypesSharedValuesService"];
         return SubSectionBaseDirective;
     }());
     CustomerSetting.SubSectionBaseDirective = SubSectionBaseDirective;
@@ -31684,11 +31609,12 @@ var CustomerSetting;
     "use strict";
     var GeneralDataDirective = (function (_super) {
         __extends(GeneralDataDirective, _super);
-        function GeneralDataDirective(crossingSettingTypesServiceBus) {
+        function GeneralDataDirective(settingTypesSharedValuesService, crossingSettingTypesServiceBus) {
             var _this = this;
-            _super.call(this);
+            _super.call(this, settingTypesSharedValuesService);
             this.templateUrl = "SubSections/GeneralData/general-data.htm";
             this.link = function (scope) {
+                _this.linkInternal(scope);
                 if (scope.isNew && scope.customerLevel === CustomerSetting.Level.member) {
                     scope.updateSpreadGroup = function () {
                         _this.crossingSettingTypesServiceBus.execute("updateMemberSpreadGroup", {
@@ -31699,7 +31625,7 @@ var CustomerSetting;
             };
             this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
         }
-        GeneralDataDirective.$inject = ["crossingSettingTypesServiceBus"];
+        GeneralDataDirective.$inject = ["settingTypesSharedValuesService", "crossingSettingTypesServiceBus"];
         return GeneralDataDirective;
     }(CustomerSetting.SubSectionBaseDirective));
     CustomerSetting.ModuleRegister.directive("generalData", GeneralDataDirective);
@@ -31994,8 +31920,8 @@ var CustomerSetting;
 
 angular.module("customerSetting").run(["$templateCache", function($templateCache) {$templateCache.put("Directives/BlockUI/block-ui.htm","<div class=\"block-ui-overlay\" data-ng-show=\"isLoading\"><div class=\"block-ui-loading\" data-ng-show=\"isLoading\"></div></div>");
 $templateCache.put("Directives/DefaultSettingTypeBlock/default-setting-type-block.htm","<div class=\"block setting-type-{{settingType.id}} {{cssClass}}\" data-ng-show=\"settingType\" data-ng-class=\"{ \'block--error\': !(settingType | validSettingType) }\"><div class=\"block__header\" data-setting-type=\"{{settingType.id}}\" data-ng-class=\"{ \'block__header--error\': !(settingType | validSettingType) }\">{{settingTypeName}}</div><div class=\"block__lbl-group\" data-ng-include=\"headerTemplateUrl\"></div><div class=\"block__item-group\" data-ng-if=\"settingType | validSettingType\" data-ng-repeat=\"group in sportGroups\"><div class=\"block__sub-header\" data-ng-if=\"settingType.settingLevel === avaiSettingLevels.sportTypeBetType\" data-ng-class=\"{ \'block__sub-header--border-top\': ($index > 0) }\" data-sport-type=\"{{group[0].sportTypeId}}\">{{group[0].sportTypeName}}</div><div class=\"block__item\" data-ng-repeat=\"item in group\" data-ng-class=\"{ \'block__item--last\': $last, \'block__item--near-last\': $index === group.length - 2 && $index % 2 === 0, \'block__item--before-extra-item\': $last && group.length % 2 === 1 && group.length > 1, \'block__item--odd\': $odd, \'block__item--full-width\': group.length === 1 }\"><div class=\"block__lbl\" data-product=\"{{productId}}\" data-sport-type=\"{{item.sportTypeId}}\" data-bet-type=\"{{item.betTypeId}}\">{{item | showingName:settingType.settingLevel:productName }}</div><div class=\"block__value\" data-ng-include=\"valueTemplateUrl\"></div></div></div><div class=\"block__item block__item--error\" data-ng-if=\"!(settingType | validSettingType)\">{{sportGroups[0][0].errorMessage}}</div></div>");
-$templateCache.put("Directives/PercentageDropdown/percentage-dropdown.htm","<select class=\"setting-field\" data-ng-options=\"item as (item | formatPercentage:precision) for item in range\"></select>");
 $templateCache.put("Directives/SettingResult/setting-result.htm","<div data-ng-show=\"result\"><div class=\"msg msg--{{result.msgTypeName}}\" data-ng-if=\"!result.subResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\">{{result.message}}</div></div><div data-ng-if=\"result.subResults\" data-ng-repeat=\"subResult in result.subResults\"><div class=\"msg__customer-name\" data-ng-if=\"subResult.customerName\">{{subResult.customerName}}</div><div class=\"msg msg--{{subResult.msgTypeName}}\" data-ng-if=\"!subResult.settingResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\">{{subResult.message}}</div></div><div class=\"msg msg--{{settingResult.msgTypeName}}\" data-ng-if=\"subResult.settingResults\" data-ng-repeat=\"settingResult in subResult.settingResults\"><div class=\"icon msg__icon\"></div><div class=\"msg__content\"><div class=\"msg__main-message\">{{settingResult.message}}</div><div class=\"msg__sub-message\" data-ng-if=\"settingResult.messages\" data-ng-repeat=\"message in settingResult.messages\">{{message}}</div></div></div></div></div>");
+$templateCache.put("Directives/PercentageDropdown/percentage-dropdown.htm","<select class=\"setting-field\" data-ng-options=\"item as (item | formatPercentage:precision) for item in range\"></select>");
 $templateCache.put("Directives/Tooltip/tooltip.htm","<div class=\"tooltip tooltip--{{tooltipType}}\" data-ng-if=\"tooltipMessage && showed\"><div class=\"tooltip__content\" data-ng-bind-html=\"tooltipMessage | unsafe\"></div></div>");
 $templateCache.put("SubSections/GeneralData/UsernameSuffix/username-suffix-group.htm","<div class=\"username-selection\"><username-suffix data-ng-repeat=\"suffix in accountDetail.usernameSuffixes track by $index\" data-suffix-index=\"$index\" data-suffix=\"suffix\" data-validate-username=\"validateUsername\"></username-suffix><span class=\"icon icon--valid-username\" data-ng-if=\"isChanged && isValid\"></span> <span class=\"icon icon--invalid-username\" data-ng-if=\"isChanged && !isValid\"></span></div>");
 $templateCache.put("SubSections/GeneralData/UsernameSuffix/username-suffix.htm","<select class=\"setting-field\" data-ng-model=\"suffix\" data-ng-options=\"item as item for item in range\" data-ng-change=\"validateSuffix()\"></select>");

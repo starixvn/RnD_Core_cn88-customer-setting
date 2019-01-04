@@ -1,6 +1,7 @@
 ﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
 /// <reference path="../../models/enums/display-mode.ts" />
 /// <reference path="../../models/enums/level.ts" />
+/// <reference path="../../models/key-value-pair.ts" />
 /// <reference path="../../models/setting-item.ts" />
 /// <reference path="../../models/setting-type.ts" />
 /// <reference path="../../services/app-config-service.ts" />
@@ -44,7 +45,10 @@ module CustomerSetting {
         protected settingTypesSharedValuesService: SettingTypesSharedValuesService;
         protected instantiateSettingItem: INewSettingItem;
 
-        constructor(appConfigService: AppConfigService, settingTypesSharedValuesService: SettingTypesSharedValuesService, instantiateSettingItem: INewSettingItem) {
+        constructor(
+            appConfigService: AppConfigService,
+            settingTypesSharedValuesService: SettingTypesSharedValuesService,
+            instantiateSettingItem: INewSettingItem) {
             this.appConfigService = appConfigService;
             this.settingTypesSharedValuesService = settingTypesSharedValuesService;
             this.instantiateSettingItem = instantiateSettingItem;

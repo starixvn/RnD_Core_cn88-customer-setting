@@ -27,13 +27,13 @@ module CustomerSetting {
 
         public templateUrl: string = "SubSections/GeneralData/UsernameSuffix/username-suffix.htm";
 
-        public controller: any = ["$scope", ($scope: IUsernameSuffixScope) => {
-            $scope.range = this.generateSuffixRange();
-            $scope.suffix = $scope.suffix || $scope.range[0];
-            $scope.validateSuffix = () => {
-                $scope.validateUsername($scope.suffixIndex, $scope.suffix);
+        public link: ng.IDirectiveLinkFn = (scope: IUsernameSuffixScope) => {
+            scope.range = this.generateSuffixRange();
+            scope.suffix = scope.suffix || scope.range[0];
+            scope.validateSuffix = () => {
+                scope.validateUsername(scope.suffixIndex, scope.suffix);
             };
-        }];
+        };
 
         private generateSuffixRange(): string[] {
             var numeberRange: string[] = this.generateCharacterRange("0", "9");
