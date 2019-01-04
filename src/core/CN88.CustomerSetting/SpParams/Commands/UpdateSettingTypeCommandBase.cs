@@ -11,14 +11,12 @@
 
         public int ProductId { get; set; }
 
-        [SpParam(Ignored = true)]
+        [SpParam(SqlParamName = "subaccid")]
         public int SubAccountId { get; set; }
 
         public int UserId { get; set; }
 
         public string IP { get; set; }
-
-        public string Language { get; set; }
 
         public int ErrCode { get; set; }
 
@@ -31,7 +29,6 @@
                 && CustId > 0
                 && UserId > 0
                 && ProductId > 0
-                && !string.IsNullOrWhiteSpace(IP)
-                && !string.IsNullOrWhiteSpace(Language);
+                && !string.IsNullOrWhiteSpace(IP);
     }
 }

@@ -12,7 +12,7 @@
         public override string ToString(ResourceService resourceService, string language, byte settingLevel)
         {
             return string.Format(
-                "{0}: {2}",
+                "{0}: {1}",
                 base.ToString(resourceService, language, settingLevel),
                 MinPT);
         }

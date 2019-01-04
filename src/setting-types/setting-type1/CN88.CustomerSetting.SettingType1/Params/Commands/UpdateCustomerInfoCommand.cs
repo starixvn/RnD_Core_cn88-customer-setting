@@ -20,6 +20,8 @@
 
         public decimal Credit { get; set; }
 
+        public string Language { get; set; }
+
         public int ErrCode { get; set; }
 
         public string ErrMsg { get; set; }

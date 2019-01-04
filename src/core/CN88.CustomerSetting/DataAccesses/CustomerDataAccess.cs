@@ -18,6 +18,8 @@
             var spSettingKey = GetSpSettingKey(level);
             parameters.Add("custId", 0);
             parameters.Add("errcode", 0);
+            parameters.Add("errsettingtype", 0);
+            parameters.Add("msgtype", 0);
             parameters.Add("errmsg", string.Empty);
 
             var result = await ExecuteNonQuery(spSettingKey, parameters);
@@ -29,7 +31,9 @@
                 result.IsOk 
                     ? string.Format(Resources.CreateSuccessfully, newUsername) 
                     : result.Message, 
-                int.Parse(parameters["custId"].ToString()));
+                int.Parse(parameters["custId"].ToString()),
+                int.Parse(parameters["errsettingtype"].ToString()),
+                int.Parse(parameters["msgtype"].ToString()));
         }
 
         private string GetSpSettingKey(Level level)

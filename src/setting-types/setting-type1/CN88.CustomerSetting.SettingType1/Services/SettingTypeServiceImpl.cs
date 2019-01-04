@@ -152,7 +152,7 @@
             }
 
             return settingItem
-                ?? throw new InvalidOperationException($"Cannot get default setting for upline {custId} to create new downline");
+                ?? throw new InvalidOperationException($"Cannot get default setting to create new downline");
         }
 
         private async Task<AccountDetailSettingItem> GetSuperAccountDetail(int custId, bool isCreateNew)
@@ -242,7 +242,7 @@
                 { "credit", settingItem.Credit },
                 { "systemid", settingContext.System },
                 { "ip", settingContext.IP },
-                { "language", settingContext.Language },
+                { "language", LanguageNameConverter.GetLanguageKey(settingContext.Language) },
                 { "creator", settingContext.Actor.Id }
             };
 
@@ -303,7 +303,7 @@
             var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem
                 ?? throw new InvalidOperationException("AccountDetail cannot be null");
 
-            var updateCustomerInfoResult = await UpdateCustomerInfo(command, settingItem);
+            var updateCustomerInfoResult = await UpdateCustomerInfo(command, settingItem, settingContext.Language);
             if (updateCustomerInfoResult.IsFailed)
             {
                 return updateCustomerInfoResult;
@@ -327,7 +327,6 @@
 
                 IP = settingContext.IP,
                 UserId = settingContext.Actor.Id,
-                Language = settingContext.Language,
                 SubAccountId = settingContext.Actor.SubAccountId,
             };
 
@@ -341,7 +340,7 @@
                 settingType.Id,
                 settingType.Name);
 
-            return TranslateUpdateResultMessage(
+            return TranslateResultMessage(
                 settingResult, 
                 Resources.UpdateAccountDetailSuccess, 
                 settingType.SettingLevel, 
@@ -350,7 +349,8 @@
 
         private async Task<SettingResult> UpdateCustomerInfo(
             UpdateCustomerSettingCommand command,
-            AccountDetailSettingItem settingItem)
+            AccountDetailSettingItem settingItem,
+            string language)
         {
             var updateCustomerInfoCommand = new UpdateCustomerInfoCommand
             {
@@ -361,7 +361,8 @@
                 FirstName = settingItem.FirstName,
                 LastName = settingItem.LastName,
                 MobilePhone = settingItem.MobilePhone,
-                Phone = settingItem.Phone
+                Phone = settingItem.Phone,
+                Language = LanguageNameConverter.GetLanguageKey(language)
             };
 
             await DynamicRepository.ExecuteAsync(updateCustomerInfoCommand);

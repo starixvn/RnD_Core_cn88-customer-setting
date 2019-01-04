@@ -3,7 +3,6 @@
     using System;
     using System.Xml.Serialization;
     using CN88.CustomerSetting.Models.Enumerations;
-    using Enumerations;
     using Services;
 
     public class DefaultSubMessage : ISubMessage

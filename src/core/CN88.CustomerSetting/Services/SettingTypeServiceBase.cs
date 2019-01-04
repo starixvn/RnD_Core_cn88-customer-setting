@@ -31,6 +31,12 @@
             ISettingContext settingContext,
             CreateCustomerCommand command,
             SettingType settingType);
+
+        SettingResult TranslateResultMessage(
+                    SettingResult result,
+                    string updateSuccessfulMessage,
+                    byte settingLevel,
+                    string language);
     }
 
     public abstract class SettingTypeServiceBase : SettingTypeService
@@ -75,7 +81,7 @@
         /// <param name="settingLevel">The setting level for displaying message.</param>
         /// <param name="language">The language for globalization.</param>
         /// <returns>Result is processed.</returns>
-        protected SettingResult TranslateUpdateResultMessage(
+        public virtual SettingResult TranslateResultMessage(
                     SettingResult result,
                     string updateSuccessfulMessage,
                     byte settingLevel,
@@ -90,12 +96,10 @@
             {
                 return new SettingResult(ResultValues.Success, updateSuccessfulMessage, result);
             }
-            else
-            {
-                var messageContent = MessageService.TranslateMessage(result.MsgType, result.Message, settingLevel, language);
 
-                return new SettingResult(result, messageContent.MainMessage, messageContent.SubMessages);
-            }
+            var messageContent = MessageService.TranslateMessage(result.MsgType, result.Message, settingLevel, language);
+
+            return new SettingResult(result, messageContent.MainMessage, messageContent.SubMessages);
         }
 
         /// <summary>

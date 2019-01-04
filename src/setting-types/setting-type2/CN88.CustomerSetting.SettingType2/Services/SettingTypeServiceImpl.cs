@@ -169,7 +169,6 @@
 
                 IP = settingContext.IP,
                 UserId = settingContext.Actor.Id,
-                Language = settingContext.Language,
                 SubAccountId = settingContext.Actor.SubAccountId,
             };
 
@@ -199,7 +198,6 @@
 
                 IP = settingContext.IP,
                 UserId = settingContext.Actor.Id,
-                Language = settingContext.Language,
                 SubAccountId = settingContext.Actor.SubAccountId,
             };
 

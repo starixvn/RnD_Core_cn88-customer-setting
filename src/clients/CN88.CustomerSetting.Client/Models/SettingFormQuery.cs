@@ -38,7 +38,7 @@
             properties.Add(string.Format("\"uplineId\": {0},", UplineId));
             properties.Add(string.Format("\"isCreateNew\": {0},", IsCreateNew.ToString().ToLowerInvariant()));
 
-            properties.Add(string.Format("\"customerId\": {0}", CustomerId));
+            properties.Add(string.Format("\"customerId\": {0}", CustomerId.HasValue ? CustomerId.Value : 0));
 
             properties.Add("}");
 

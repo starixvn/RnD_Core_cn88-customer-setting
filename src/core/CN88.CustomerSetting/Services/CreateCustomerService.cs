@@ -64,9 +64,17 @@
             {
                 var createNewParams = GetCreateNewCustomerParams(settingContext, command);
 
-                return await customerDataAccess.CreateNewCustomer(
+                var result = await customerDataAccess.CreateNewCustomer(
                     command.Setting.CustomerLevel,
                     new Hashtable(createNewParams, StringComparer.OrdinalIgnoreCase));
+
+                if(result.IsFailed
+                    && result.SettingTypeId > 0)
+                {
+                    return BuildSettingTypeResult(settingContext, command, result);
+                }
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -74,6 +82,30 @@
 
                 return Result.CreateErrorResult(ex.Message);
             }
+        }
+
+        private IResult BuildSettingTypeResult(ISettingContext settingContext, CreateCustomerCommand command, CreateNewResult result)
+        {
+            var settingType = command.Setting.SettingTypes.FirstOrDefault(st => st.Id == result.SettingTypeId);
+
+            if(settingType == null)
+            {
+                return result;
+            }
+
+            var settingTypeService = settingTypeServiceFactory.GetInstance(settingType);
+
+            return settingTypeService.TranslateResultMessage(
+                new SettingResult(
+                    result.Code, 
+                    result.Message, 
+                    result.MsgType, 
+                    command.Setting.CustomerId, 
+                    settingType.Id, 
+                    settingType.Name),
+                string.Empty,
+                settingType.SettingLevel,
+                settingContext.Language);
         }
 
         private Dictionary<string, object> GetCreateNewCustomerParams(
