@@ -11,10 +11,10 @@ $sub-header-border-agent-color: #516e8f;
 .setting-type-1 {
     .col {
         @include col(50%, true);
-        padding: 15px 5% 15px 30px;
+        padding: 15px 3% 15px 30px;
 
         &--last {
-            padding-left: 5%;
+            padding-left: 3%;
             padding-right: 30px;
         }
     }

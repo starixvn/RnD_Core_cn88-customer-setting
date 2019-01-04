@@ -3,6 +3,7 @@
 
 html {
     @include box-sizing(border-box);
+    background-color: $default-background-color;
     font-size: $font-size-root;
     -ms-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;
@@ -20,8 +21,8 @@ html {
 }
 
 body {
-    background-color: $default-bg;
     color: $text-color;
+    padding-top: 12px;
 
     font: {
         family: $font-family;

@@ -9,7 +9,7 @@
             <general-data data-account-detail="settingType.settingItems[0]"
                           data-editable="editable"></general-data>
         </div>
-        <div class="col" data-ng-if="settingType | validSettingType">
+        <div class="col col--last" data-ng-if="settingType | validSettingType">
             <customer-credit data-account-detail="settingType.settingItems[0]"
                              data-editable="editable"></customer-credit>
             <position-taking data-ng-if="customerLevel !== avaiCustomerLevels.member"
