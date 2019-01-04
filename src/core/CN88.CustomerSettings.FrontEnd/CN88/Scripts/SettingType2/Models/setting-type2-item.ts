@@ -131,6 +131,18 @@ module CustomerSetting {
         }
 
         private validateBetLimit(): boolean {
+            if (this.maxBet === undefined || this.maxBet === null) {
+                this.validationState = new ValidationResult("RequiredField", "maxBet");
+
+                return false;
+            }
+
+            if (this.maxPerMatch === undefined || this.maxPerMatch === null) {
+                this.validationState = new ValidationResult("RequiredField", "maxPerMatch");
+
+                return false;
+            }
+
             if (this.maxBet < this.minMaxBet) {
                 this.validationState = new ValidationResult("MaxBetMustBeGreaterThanOrEqualTo", "maxBet", [this.minMaxBet]);
 

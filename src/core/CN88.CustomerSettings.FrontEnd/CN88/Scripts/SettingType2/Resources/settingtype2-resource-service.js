@@ -33,6 +33,7 @@
     var messages = {};
 
     messages["en-us"] = {
+        "RequiredField": "This field is required.",
         "CommissionIsOutOfRange": "Commission is out of range.",
         "MaxBetMustBeGreaterThanOrEqualTo": "Max Bet must be greater than or equal to {0}.",
         "MaxBetMustBeLessThanOrEqualTo": "Max Bet must be less than or equal to {0}.",

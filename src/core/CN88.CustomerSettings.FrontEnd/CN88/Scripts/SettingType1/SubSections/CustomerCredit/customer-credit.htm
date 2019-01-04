@@ -7,7 +7,7 @@
                     <span>{{::('Currency' | settingType1Label)}}</span>
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
                 </label>
-                <div class="setting-field-wrapper w60-percent"
+                <div class="w60-percent"
                      data-ng-if="isNew"
                      data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'currency'}}">
                     <select class="setting-field setting-field--fullwidth"
@@ -17,8 +17,11 @@
                 <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.currency.name}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('Credit' | settingType1Label)}}</label>
-                <div class="setting-field-wrapper w60-percent"
+                <label class="w40-percent">
+                    <span>{{::('Credit' | settingType1Label)}}</span>
+                    <span class="required-field-mark" data-ng-if="isNew"> *</span>
+                </label>
+                <div class="w60-percent"
                      data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'credit'}}">
                     <input type="text"
                            maxlength="17"
@@ -34,7 +37,7 @@
                     <span>{{::('Credit' | settingType1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
-                <div class="setting-field-wrapper w60-percent"
+                <div class="w60-percent"
                      data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'credit'}}">
                     <input type="text"
                            maxlength="17"

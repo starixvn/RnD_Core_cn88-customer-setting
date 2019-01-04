@@ -45,6 +45,8 @@ module CustomerSetting {
             scope.tooltipType = scope.tooltipType || "error";
 
             if (scope.onHover) {
+                tooltip.addClass("tooltip--on-hover");
+
                 element.on("mouseenter", () => {
                     scope.showed = true;
                     scope.$apply();

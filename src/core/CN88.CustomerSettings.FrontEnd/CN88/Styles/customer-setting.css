@@ -266,11 +266,6 @@ th {
 .red-text {
   color: #e9322d; }
 
-.setting-field-wrapper,
-.text-field-wrapper {
-  display: inline-block;
-  padding: 0 3px; }
-
 .setting-field {
   border: 1px solid #cecece;
   height: 1.7rem;
@@ -296,6 +291,7 @@ th {
       position: relative;
       top: 3px; }
   .setting-field--constraint {
+    line-height: 1.5rem;
     padding-left: 5px; }
 
 select.setting-field {
@@ -358,6 +354,7 @@ select.setting-field {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
     opacity: 1;
     color: #333;
+    line-height: 1.5rem;
     margin-bottom: 12px;
     max-width: 300px;
     padding: 4px 8px;
@@ -411,6 +408,8 @@ select.setting-field {
       border-top-color: #cecece; }
     .tooltip--info .tooltip__content:before {
       border-top-color: #666; }
+  .tooltip--on-hover {
+    z-index: 2; }
 
 .tooltip--right .tooltip__content {
   margin-bottom: 0;
@@ -659,12 +658,20 @@ select.setting-field {
       width: 100%; }
   .block__cell, .block__lbl, .block__value {
     border-right: 1px solid #cecece;
+    align-items: center;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
     line-height: 2.23rem;
-    min-height: 2.23rem; }
+    min-height: 2.23rem;
+    padding: 0 3px; }
     .block__cell--no-border {
       border: none; }
     .block__cell--border-top {
       border-top: 1px solid #cecece; }
+    .block__cell.align-center, .align-center.block__lbl, .align-center.block__value {
+      justify-content: center; }
   .block__cell-wrapper {
     display: -webkit-box;
     display: -moz-box;
@@ -867,9 +874,6 @@ select.setting-field {
   border-color: #516e8f;
   color: #2267b6; }
 
-.setting-type-1 .setting-field-wrapper {
-  padding: 0; }
-
 .setting-type-1 .general-data .password-rule {
   text-align: left; }
   .setting-type-1 .general-data .password-rule .note {
@@ -900,87 +904,3 @@ select.setting-field {
 
 .setting-type-1 .icon--invalid-username {
   background-position: -3px -87px; }
-
-/*
- * A partial implementation of the Ruby list functions from Compass:
- * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/lists.rb
- */
-/*
- * A partial implementation of the Ruby constants functions from Compass:
- * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/constants.rb
- */
-/*
- * A partial implementation of the Ruby display functions from Compass:
- * https://github.com/Compass/compass/blob/stable/core/lib/compass/core/sass_extensions/functions/display.rb
- */
-[ng\:cloak],
-[ng-cloak],
-[data-ng-cloak],
-[x-ng-cloak],
-.ng-cloak,
-.x-ng-cloak {
-  display: none !important; }
-
-.w16-percent, .w20-percent, .w25-percent, .w28-percent, .w30-percent, .w33-percent, .w40-percent, .w42-percent, .w50-percent, .w60-percent, .w80-percent, .w100-percent, .block__item, .block__item--full-width, .block__item--full-width .block__lbl,
-.block__item--full-width .block__lbl--white, .block__item--full-width .block__value, .block__lbl, .block__value, .full-width .block__item, .full-width .block__lbl,
-.full-width .block__lbl--white, .full-width .block__value, .setting-type-1 .col {
-  float: left; }
-
-.w16-percent {
-  width: 16% !important; }
-
-.w20-percent {
-  width: 20% !important; }
-
-.w25-percent {
-  width: 25% !important; }
-
-.w28-percent {
-  width: 28% !important; }
-
-.w30-percent {
-  width: 30% !important; }
-
-.w33-percent {
-  width: 33% !important; }
-  .w33-percent--last {
-    width: 34% !important; }
-
-.w40-percent {
-  width: 40% !important; }
-
-.w42-percent {
-  width: 42% !important; }
-
-.w50-percent {
-  width: 50% !important; }
-
-.w60-percent {
-  width: 60% !important; }
-
-.w80-percent {
-  width: 80% !important; }
-
-.w100-percent {
-  width: 100% !important; }
-
-.align-center {
-  text-align: center; }
-
-.align-left {
-  text-align: left; }
-
-.align-right {
-  text-align: right; }
-
-.red-text {
-  color: #e9322d; }
-
-.setting-type-2 .block__cell, .setting-type-2 .block__lbl, .setting-type-2 .block__value {
-  align-items: center;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: flex; }
-  .setting-type-2 .block__cell.align-center, .setting-type-2 .align-center.block__lbl, .setting-type-2 .align-center.block__value {
-    justify-content: center; }

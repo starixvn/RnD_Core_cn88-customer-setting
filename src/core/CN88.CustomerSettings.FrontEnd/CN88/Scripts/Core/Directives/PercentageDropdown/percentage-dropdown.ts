@@ -12,10 +12,13 @@ module CustomerSetting {
         step: number;
         factor: number;
         precision: number;
+        autoRefresh: boolean;
         range: number[];
     }
 
     class PercentageDropdownDirective implements ng.IDirective {
+        public static $inject: string[] = ["valueRangeService"];
+
         public replace: boolean = true;
         public templateUrl: string = "Directives/PercentageDropdown/percentage-dropdown.htm";
 
@@ -27,23 +30,38 @@ module CustomerSetting {
                 min: "=",
                 max: "=",
                 step: "=",
-                precision: "="
+                precision: "=",
+                autoRefresh: "="
             };
         }
 
-        public controller: any = ["$scope", "valueRangeService", ($scope: IPercentageDropdownScope, valueRangeService: ValueRangeService) => {
-            $scope.$watchGroup(["value", "min", "max", "step", "factor"], () => {
-                $scope.precision = $scope.precision || 1;
-                $scope.factor = Math.pow(10, $scope.precision);
-                $scope.step = $scope.step || 1;
-                $scope.range = valueRangeService.generateRanges(
-                    $scope.value,
-                    $scope.min,
-                    $scope.max,
-                    $scope.step,
-                    $scope.factor);
-            });
-        }];
+        public link: ng.IDirectiveLinkFn = (scope: IPercentageDropdownScope) => {
+            if (scope.autoRefresh) {
+                scope.$watchGroup(["value", "min", "max", "step", "factor"], () => {
+                    this.initializeRange(scope);
+                });
+            } else {
+                this.initializeRange(scope);
+            }
+        };
+
+        private valueRangeService: ValueRangeService;
+
+        constructor(valueRangeService: ValueRangeService) {
+            this.valueRangeService = valueRangeService;
+        }
+
+        private initializeRange(scope: IPercentageDropdownScope): void {
+            scope.precision = scope.precision || 0;
+            scope.factor = Math.pow(10, scope.precision);
+            scope.step = scope.step || 1;
+            scope.range = this.valueRangeService.generateRanges(
+                scope.value,
+                scope.min,
+                scope.max,
+                scope.step,
+                scope.factor);
+        }
     }
 
     ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
