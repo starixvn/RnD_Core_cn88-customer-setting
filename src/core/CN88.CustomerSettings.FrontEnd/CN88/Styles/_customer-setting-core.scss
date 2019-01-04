@@ -510,6 +510,12 @@ select.setting-field {
             background-position: -3px -24px;
         }
     }
+
+    &--info {
+        .msg__icon {
+            background-position: -3px -3px;
+        }
+    }
 }
 
 .block {

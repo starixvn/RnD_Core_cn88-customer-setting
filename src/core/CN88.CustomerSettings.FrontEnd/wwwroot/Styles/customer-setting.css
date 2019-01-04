@@ -574,6 +574,8 @@ select.setting-field {
     color: #fe0000; }
     .msg--error .msg__icon {
       background-position: -3px -24px; }
+  .msg--info .msg__icon {
+    background-position: -3px -3px; }
 
 .block {
   border: 1px solid #cecece;

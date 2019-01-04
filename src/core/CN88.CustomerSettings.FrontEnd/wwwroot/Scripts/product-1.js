@@ -28962,6 +28962,7 @@ var CustomerSetting;
         MessageType[MessageType["success"] = 0] = "success";
         MessageType[MessageType["warning"] = 1] = "warning";
         MessageType[MessageType["error"] = 2] = "error";
+        MessageType[MessageType["info"] = 4] = "info";
     })(CustomerSetting.MessageType || (CustomerSetting.MessageType = {}));
     var MessageType = CustomerSetting.MessageType;
 })(CustomerSetting || (CustomerSetting = {}));
@@ -29135,6 +29136,17 @@ var CustomerSetting;
             enumerable: true,
             configurable: true
         });
+        Result.detechMsgType = function (result) {
+            if (result.isSuccessful) {
+                return CustomerSetting.MessageType.success;
+            }
+            else if (result.msgType !== 0) {
+                return CustomerSetting.MessageType.error;
+            }
+            else {
+                return CustomerSetting.MessageType.warning;
+            }
+        };
         return Result;
     }());
     CustomerSetting.Result = Result;
@@ -29155,7 +29167,7 @@ var CustomerSetting;
                 this.customerId = settingResult.customerId;
                 this.customerName = settingResult.customerName;
                 this.settingResults = new Array();
-                this.settingResults.push(new SettingResult(settingResult.code, settingResult.message, this.detechMsgType(settingResult), settingResult.settingTypeId, settingResult.settingTypeName, settingResult.subMessages));
+                this.settingResults.push(new SettingResult(settingResult.code, settingResult.message, Result.detechMsgType(settingResult), settingResult.settingTypeId, settingResult.settingTypeName, settingResult.subMessages));
             }
         }
         Object.defineProperty(CustomerSettingResult.prototype, "isSuccessful", {
@@ -29170,7 +29182,7 @@ var CustomerSetting;
         });
         CustomerSettingResult.prototype.pushSettingResult = function (settingResult) {
             if (settingResult) {
-                this.settingResults.push(new SettingResult(settingResult.code, settingResult.message, this.detechMsgType(settingResult), settingResult.settingTypeId, settingResult.settingTypeName, settingResult.subMessages));
+                this.settingResults.push(new SettingResult(settingResult.code, settingResult.message, Result.detechMsgType(settingResult), settingResult.settingTypeId, settingResult.settingTypeName, settingResult.subMessages));
             }
         };
         CustomerSettingResult.prototype.removeSuccessResults = function () {
@@ -29200,17 +29212,6 @@ var CustomerSetting;
             });
             this.settingResults = uniquedResults;
         };
-        CustomerSettingResult.prototype.detechMsgType = function (settingResult) {
-            if (settingResult.isSuccessful) {
-                return CustomerSetting.MessageType.success;
-            }
-            else if (settingResult.msgType !== 0) {
-                return CustomerSetting.MessageType.error;
-            }
-            else {
-                return CustomerSetting.MessageType.warning;
-            }
-        };
         return CustomerSettingResult;
     }());
     CustomerSetting.CustomerSettingResult = CustomerSettingResult;
@@ -29219,7 +29220,7 @@ var CustomerSetting;
         function UpdatingSettingResult(result) {
             var _this = this;
             if (result) {
-                _super.call(this, result.code, result.message, result.msgType);
+                _super.call(this, result.code, result.message, Result.detechMsgType(result));
                 if (result.isFailed) {
                     this.isFailed = result.isFailed;
                 }

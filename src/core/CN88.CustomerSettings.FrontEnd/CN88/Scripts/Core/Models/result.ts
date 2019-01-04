@@ -49,6 +49,16 @@ module CustomerSetting {
                 this.msgType = MessageType.success;
             }
         }
+
+        public static detechMsgType(result: any): MessageType {
+            if (result.isSuccessful) {
+                return MessageType.success;
+            } else if (result.msgType !== 0) {
+                return MessageType.error;
+            } else {
+                return MessageType.warning;
+            }
+        }
     }
 
     export class SettingResult extends Result {
@@ -90,7 +100,7 @@ module CustomerSetting {
                 this.settingResults.push(new SettingResult(
                     settingResult.code,
                     settingResult.message,
-                    this.detechMsgType(settingResult),
+                    Result.detechMsgType(settingResult),
                     settingResult.settingTypeId,
                     settingResult.settingTypeName,
                     settingResult.subMessages));
@@ -102,7 +112,7 @@ module CustomerSetting {
                 this.settingResults.push(new SettingResult(
                     settingResult.code,
                     settingResult.message,
-                    this.detechMsgType(settingResult),
+                    Result.detechMsgType(settingResult),
                     settingResult.settingTypeId,
                     settingResult.settingTypeName,
                     settingResult.subMessages));
@@ -140,16 +150,6 @@ module CustomerSetting {
 
             this.settingResults = uniquedResults;
         }
-
-        private detechMsgType(settingResult: any): MessageType {
-            if (settingResult.isSuccessful) {
-                return MessageType.success;
-            } else if (settingResult.msgType !== 0) {
-                return MessageType.error;
-            } else {
-                return MessageType.warning;
-            }
-        }
     }
 
     export class UpdatingSettingResult extends Result {
@@ -170,7 +170,7 @@ module CustomerSetting {
 
         constructor(result: any) {
             if (result) {
-                super(result.code, result.message, result.msgType);
+                super(result.code, result.message, Result.detechMsgType(result));
 
                 if (result.isFailed) {
                     this.isFailed = result.isFailed;
