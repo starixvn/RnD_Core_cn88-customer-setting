@@ -540,6 +540,8 @@ select.setting-field {
   height: 20px;
   vertical-align: middle;
   width: 20px; }
+  .icon--command {
+    cursor: pointer; }
   .icon--info {
     background-position: -3px -3px; }
 

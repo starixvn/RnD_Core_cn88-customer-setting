@@ -456,6 +456,10 @@ select.setting-field {
     vertical-align: middle;
     width: 20px;
 
+    &--command {
+        cursor: pointer;
+    }
+
     &--info {
         background-position: -3px -3px;
     }
