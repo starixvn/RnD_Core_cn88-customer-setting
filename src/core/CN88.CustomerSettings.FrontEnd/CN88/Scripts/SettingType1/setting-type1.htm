@@ -1,5 +1,9 @@
 ﻿<div class="setting-type-1">
-    <div class="block {{avaiCustomerLevels[actorLevel]}}" data-ng-show="settingType" data-ng-class="{ 'block--error': !(settingType | validSettingType) }">
+    <div class="block {{avaiCustomerLevels[actorLevel]}}"
+         data-ng-show="settingType"
+         data-ng-class="{ 'block--error': !(settingType | validSettingType) }"
+         data-setting-field-group="settingType.settingItems[0]"
+         data-resource-service-name="settingType1ResourceService">
         <div class="block__header"
              data-setting-type="{{settingType.id}}"
              data-ng-class="{ 'block__header--error': !(settingType | validSettingType) }">

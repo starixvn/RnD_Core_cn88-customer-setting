@@ -1,21 +1,24 @@
-﻿<div class="block__cell-wrapper" data-ng-if="editable">
+﻿<div class="block__cell-wrapper"
+     data-ng-if="editable"
+     data-setting-field-group="item"
+     data-resource-service-name="settingType2ResourceService">
     <div class="block__cell-wrapper w50-percent" data-ng-if="customerLevel !== avaiCustomerLevels.member">
         <div class="block__cell align-center"
              data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
              data-ng-style="eachGroupStyle"
-             data-ng-repeat="commissionGroup in item.mappedCommissionGroups"
-             data-tooltip="{{item.validationState | tooltipMessage:'settingType2ResourceService':('commissionGroups:' + $index)}}">
+             data-ng-repeat="commissionGroup in item.mappedCommissionGroups">
             <percentage-dropdown data-ng-if="commissionGroup"
                                  data-ng-model="commissionGroup.value"
+                                 data-setting-field="{{'commissionGroups-' + $index}}"
                                  data-min="commissionGroup.minValue"
                                  data-max="commissionGroup.maxValue"
                                  data-step="item.intervalValue"
                                  data-precision="2"></percentage-dropdown>
         </div>
         <div class="block__cell align-center w100-percent"
-             data-ng-if="item.layoutType === availableLayoutTypes.singleGroup"
-             data-tooltip="{{item.validationState | tooltipMessage:'settingType2ResourceService':'commissionGroups:0'}}">
+             data-ng-if="item.layoutType === availableLayoutTypes.singleGroup">
             <percentage-dropdown data-ng-model="item.mappedCommissionGroups[0].value"
+                                 data-setting-field="commissionGroups-0"
                                  data-min="item.mappedCommissionGroups[0].minValue"
                                  data-max="item.mappedCommissionGroups[0].maxValue"
                                  data-step="item.intervalValue"
@@ -23,10 +26,10 @@
         </div>
     </div>
     <div class="block__cell align-center w50-percent"
-         data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups"
-         data-tooltip="{{item.validationState | tooltipMessage:'settingType2ResourceService':('commissionGroups:' + item.memberSpreadGroupIndex)}}">
+         data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups">
         <percentage-dropdown data-ng-if="item.mappedCommissionGroups[item.memberSpreadGroupIndex]"
                              data-ng-model="item.mappedCommissionGroups[item.memberSpreadGroupIndex].value"
+                             data-setting-field="{{'commissionGroups-' + item.memberSpreadGroupIndex}}"
                              data-min="item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue"
                              data-max="item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue"
                              data-step="item.intervalValue"
@@ -34,9 +37,9 @@
                              data-auto-refresh="true"></percentage-dropdown>
     </div>
     <div class="block__cell w50-percent align-center"
-         data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup"
-         data-tooltip="{{item.validationState | tooltipMessage:'settingType2ResourceService':'commissionGroups:0'}}">
+         data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup">
         <percentage-dropdown data-ng-model="item.mappedCommissionGroups[0].value"
+                             data-setting-field="commissionGroups-0"
                              data-min="item.mappedCommissionGroups[0].minValue"
                              data-max="item.mappedCommissionGroups[0].maxValue"
                              data-step="item.intervalValue"
@@ -44,24 +47,24 @@
     </div>
     <div class="block__cell-wrapper w50-percent">
         <div class="block__cell w50-percent"
-             data-ng-class="{'align-center': (customerLevel === avaiCustomerLevels.super) && (item.minMaxBet === 0) && (item.maxMaxBet === 0)}"
-             data-tooltip="{{item.validationState | tooltipMessage:'settingType2ResourceService':'maxBet'}}">
+             data-ng-class="{'align-center': (customerLevel === avaiCustomerLevels.super) && (item.minMaxBet === 0) && (item.maxMaxBet === 0)}">
             <input type="text"
                    maxlength="14"
                    class="setting-field setting-field--number setting-field--has-constraint"
                    data-numeric-input
-                   data-ng-model="item.maxBet" />
+                   data-ng-model="item.maxBet"
+                   data-setting-field="maxBet" />
             <span class="setting-field--constraint" data-ng-if="(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxBet > 0)">[{{item.minMaxBet | formatNumber}}; {{item.maxMaxBet | formatNumber}}]</span>
             <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && (item.minMaxBet > 0) && (item.maxMaxBet === 0)">>={{item.minMaxBet | formatNumber}}</span>
         </div>
         <div class="block__cell block__cell--no-border w50-percent"
-             data-ng-class="{'align-center': (customerLevel === avaiCustomerLevels.super) && (item.minMaxPerMatch === 0) && (item.maxMaxPerMatch === 0)}"
-             data-tooltip="{{item.validationState | tooltipMessage:'settingType2ResourceService':'maxPerMatch'}}">
+             data-ng-class="{'align-center': (customerLevel === avaiCustomerLevels.super) && (item.minMaxPerMatch === 0) && (item.maxMaxPerMatch === 0)}">
             <input type="text"
                    maxlength="14"
                    class="setting-field setting-field--number setting-field--has-constraint"
                    data-numeric-input
-                   data-ng-model="item.maxPerMatch" />
+                   data-ng-model="item.maxPerMatch"
+                   data-setting-field="maxPerMatch" />
             <span class="setting-field--constraint" data-ng-if="(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxPerMatch > 0)">[{{item.minMaxPerMatch | formatNumber}}; {{item.maxMaxPerMatch | formatNumber}}]</span>
             <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && (item.minMaxPerMatch > 0) && (item.maxMaxPerMatch === 0)">>={{item.minMaxPerMatch | formatNumber}}</span>
         </div>

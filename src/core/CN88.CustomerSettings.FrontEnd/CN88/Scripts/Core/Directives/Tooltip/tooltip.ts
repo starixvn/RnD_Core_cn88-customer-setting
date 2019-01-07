@@ -10,8 +10,10 @@ module CustomerSetting {
         tooltipMessage: string;
         tooltipType: string;
         tooltipPositionModel: PositionModel;
-        onHover: boolean;
-        showed: boolean;
+        target: ng.IAugmentedJQuery;
+        innerTooltip: boolean;
+        manual: boolean;
+        beingShowed: boolean;
     }
 
     class TooltipDirective implements ng.IDirective {
@@ -25,51 +27,64 @@ module CustomerSetting {
                 tooltipMessage: "@tooltip",
                 tooltipType: "@",
                 tooltipPositionModel: "@",
-                onHover: "@"
+                innerTooltip: "@",
+                manual: "@"
             };
         }
 
-        public link: ng.IDirectiveLinkFn = (scope: ITooltipScope, wrappedElement: ng.IAugmentedJQuery) => {
-            var element: ng.IAugmentedJQuery = angular.element(wrappedElement);
-            var target: ng.IAugmentedJQuery = angular.element(element.children()[0]);
+        public controller: any = ["$scope", function ($scope: ITooltipScope) {
+            this.showTooltipAt = (tooltipMessage: string, target: ng.IAugmentedJQuery) => {
+                $scope.tooltipMessage = tooltipMessage;
+                $scope.target = target;
+            };
+        }];
 
+        public link: ng.IDirectiveLinkFn = (scope: ITooltipScope, element: ng.IAugmentedJQuery) => {
             var template: {} = this.$templateCache.get("Directives/Tooltip/tooltip.htm");
             var tooltip: ng.IAugmentedJQuery = angular.element(template);
 
             var debounceResize: any = debounce(() => {
                 if (scope.tooltipMessage) {
-                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel, scope.onHover);
+                    this.calculateTooltipPosition(scope.target, tooltip, scope.tooltipPositionModel);
                 }
             }, 100);
 
-            scope.tooltipType = scope.tooltipType || "error";
+            scope.tooltipType = scope.tooltipType || "info";
+            scope.target = element;
 
-            if (scope.onHover) {
+            if (scope.manual) {
+                scope.beingShowed = true;
+            } else {
                 tooltip.addClass("tooltip--on-hover");
 
-                element.on("mouseenter", () => {
-                    scope.showed = true;
-                    scope.$apply();
-                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel, scope.onHover);
+                scope.target.on("mouseenter", () => {
+                    if(!scope.beingShowed) {
+                        scope.beingShowed = true;
+                        tooltip.css({ "left": "0px", "visibility": "hidden" });
+                        scope.$apply();
+                        this.calculateTooltipPosition(scope.target, tooltip, scope.tooltipPositionModel);
+                    }
                 });
 
-                element.on("mouseleave", () => {
-                    scope.showed = false;
-                    scope.$apply();
+                scope.target.on("mouseleave", () => {
+                    if (scope.beingShowed) {
+                        scope.beingShowed = false;
+                        scope.$apply();
+                    }
                 });
-            } else {
-                scope.showed = true;
             }
 
             this.$compile(tooltip)(scope);
-            wrappedElement.prepend(tooltip);
+
+            if (scope.innerTooltip) {
+                element.prepend(tooltip);
+            } else {
+                element.parent().prepend(tooltip);
+            }
 
             scope.$watch("tooltipMessage", () => {
                 if (scope.tooltipMessage) {
-                    this.calculateTooltipPosition(wrappedElement, scope.tooltipPositionModel, scope.onHover);
-                    target.addClass("setting-field--" + scope.tooltipType);
-                } else {
-                    target.removeClass("setting-field--" + scope.tooltipType);
+                    this.calculateTooltipPosition(scope.target, tooltip, scope.tooltipPositionModel);
                 }
             });
 
@@ -96,17 +111,15 @@ module CustomerSetting {
             this.$rootScope = $rootScope;
         }
 
-        private calculateTooltipPosition(wrappedElement: ng.IAugmentedJQuery, positionModel: PositionModel, onHover: boolean): void {
-            var children = wrappedElement.children();
-
-            if (!children || children.length < 2) {
+        private calculateTooltipPosition(
+            target: ng.IAugmentedJQuery,
+            tooltip: ng.IAugmentedJQuery,
+            positionModel: PositionModel): void {
+            if (!target || target.length === 0 || !tooltip || tooltip.length === 0) {
                 return;
             }
 
             this.$timeout(() => {
-                var tooltip: ng.IAugmentedJQuery = angular.element(children[0]);
-                var target: ng.IAugmentedJQuery = angular.element(children[1]);
-
                 tooltip.removeClass("tooltip--right tooltip--left");
                 tooltip.css({ "left": "0px", "visibility": "hidden" });
 
@@ -150,48 +163,9 @@ module CustomerSetting {
                     "left": left + "px",
                     "visibility": "visible"
                 });
-
-                if (!onHover) {
-                    this.$window.scrollTo(left, top);
-                }
             });
         }
     }
 
     ModuleRegister.directive("tooltip", TooltipDirective);
-
-    function TooltipMessage($injector: ng.auto.IInjectorService, $filter: ng.IFilterService): Function {
-        return (result: ValidationResult, resourceServiceName: string, fieldName: string, customFilterName: string = null) => {
-            var message: string = null;
-
-            if (result
-                && result.message
-                && (!fieldName || (fieldName && fieldName === result.fieldName))) {
-                var resourceService: ResourceService = $injector.get<ResourceService>(resourceServiceName);
-                var params: string[] = (result.msgParams || []).map((param: any) => {
-                    if (typeof param === "number") {
-                        var value = $filter("number")(param);
-
-                        if (customFilterName) {
-                            value = $filter(customFilterName)(value);
-                        }
-
-                        return value;
-                    } else {
-                        return param;
-                    }
-                });
-
-                if (resourceService) {
-                    params.unshift(result.message);
-                    message = resourceService.getFormattedMessage.apply(resourceService, params);
-                }
-            }
-
-            return message;
-        };
-    }
-
-    TooltipMessage.$inject = ["$injector", "$filter"];
-    ModuleRegister.filter("tooltipMessage", TooltipMessage);
 }

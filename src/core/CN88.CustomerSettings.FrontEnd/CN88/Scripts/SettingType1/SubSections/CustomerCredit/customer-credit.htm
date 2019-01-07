@@ -7,12 +7,11 @@
                     <span>{{::('Currency' | settingType1Label)}}</span>
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
                 </label>
-                <div class="w60-percent"
-                     data-ng-if="isNew"
-                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'currency'}}">
+                <div class="w60-percent" data-ng-if="isNew">
                     <select class="setting-field setting-field--fullwidth"
                             data-ng-model="accountDetail.currency"
-                            data-ng-options="currency.name for currency in accountDetail.currencies track by currency.id"></select>
+                            data-ng-options="currency.name for currency in accountDetail.currencies track by currency.id"
+                            data-setting-field="currency"></select>
                 </div>
                 <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.currency.name}}</label>
             </div>
@@ -21,13 +20,13 @@
                     <span>{{::('Credit' | settingType1Label)}}</span>
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
                 </label>
-                <div class="w60-percent"
-                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'credit'}}">
+                <div class="w60-percent">
                     <input type="text"
                            maxlength="17"
                            class="setting-field setting-field--fullwidth setting-field--number"
                            data-numeric-input="2"
-                           data-ng-model="accountDetail.credit" />
+                           data-ng-model="accountDetail.credit"
+                           data-setting-field="credit" />
                 </div>
             </div>
         </div>
@@ -37,13 +36,13 @@
                     <span>{{::('Credit' | settingType1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
-                <div class="w60-percent"
-                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'credit'}}">
+                <div class="w60-percent">
                     <input type="text"
                            maxlength="17"
                            class="setting-field setting-field--fullwidth setting-field--number"
                            data-numeric-input="2"
-                           data-ng-model="accountDetail.credit" />
+                           data-ng-model="accountDetail.credit"
+                           data-setting-field="credit" />
                 </div>
             </div>
             <div class="row">

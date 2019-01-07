@@ -121,7 +121,7 @@ module CustomerSetting {
         private validateCommission(): boolean {
             this.mappedCommissionGroups.forEach((commissionGroup: ICommissionGroup, index: number) => {
                 if (commissionGroup.value > commissionGroup.maxValue || commissionGroup.value < commissionGroup.minValue) {
-                    this.validationState = new ValidationResult("CommissionIsOutOfRange", "commissionGroups:" + index);
+                    this.validationState = new ValidationResult("CommissionIsOutOfRange", "commissionGroups-" + index);
 
                     return false;
                 }

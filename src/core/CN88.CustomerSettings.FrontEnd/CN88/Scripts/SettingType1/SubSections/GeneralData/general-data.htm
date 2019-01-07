@@ -7,13 +7,12 @@
                     <span>{{::('Username' | settingType1Label)}}</span>
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
                 </label>
-                <div class="w60-percent"
-                     data-ng-if="isNew"
-                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'username'}}">
+                <div class="w60-percent" data-ng-if="isNew">
                     <input type="text"
                            maxlength="30"
                            class="setting-field setting-field--fullwidth"
-                           data-ng-model="accountDetail.username" />
+                           data-ng-model="accountDetail.username"
+                           data-setting-field="username" />
                 </div>
                 <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label>
             </div>
@@ -22,12 +21,12 @@
                     <span>{{::('Password' | settingType1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
-                <div class="w60-percent"
-                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'password'}}">
+                <div class="w60-percent">
                     <input type="password"
                            maxlength="30"
                            class="setting-field setting-field--fullwidth"
-                           data-ng-model="accountDetail.password" />
+                           data-ng-model="accountDetail.password"
+                           data-setting-field="password" />
                 </div>
             </div>
             <div class="row">
@@ -101,18 +100,16 @@
                 <label class="w40-percent">
                     <span>{{::('Password' | settingType1Label)}}</span>
                     <span class="required-field-mark"> *</span>
-                    <span data-on-hover="true"
+                    <span class="icon icon--info"
                           data-tooltip="{{'PasswordRules' | settingType1Message}}"
-                          data-tooltip-type="warning">
-                        <span class="icon icon--info"></span>
-                    </span>
+                          data-inner-tooltip="true"></span>
                 </label>
-                <div class="w60-percent"
-                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'password'}}">
+                <div class="w60-percent">
                     <input type="password"
                            maxlength="18"
                            class="setting-field setting-field--fullwidth"
-                           data-ng-model="accountDetail.password" />
+                           data-ng-model="accountDetail.password"
+                           data-setting-field="password" />
                 </div>
             </div>
             <div class="row" data-ng-if="isNew">
@@ -120,12 +117,12 @@
                     <span>{{::('ConfirmPassword' | settingType1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
-                <div class="w60-percent"
-                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'confirmPassword'}}">
+                <div class="w60-percent">
                     <input type="password"
                            maxlength="18"
                            class="setting-field setting-field--fullwidth"
-                           data-ng-model="accountDetail.confirmPassword" />
+                           data-ng-model="accountDetail.confirmPassword"
+                           data-setting-field="confirmPassword" />
                 </div>
             </div>
         </div>
@@ -158,18 +155,17 @@
                 <label class="w40-percent">
                     <span>{{::('Password' | settingType1Label)}}</span>
                     <span class="required-field-mark"> *</span>
-                    <span data-on-hover="true"
+                    <span class="icon icon--info"
                           data-tooltip="{{'PasswordRules' | settingType1Message}}"
-                          data-tooltip-type="warning">
-                        <span class="icon icon--info"></span>
+                          data-inner-tooltip="true">
                     </span>
                 </label>
-                <div class="w60-percent"
-                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'password'}}">
+                <div class="w60-percent">
                     <input type="password"
                            maxlength="18"
                            class="setting-field setting-field--fullwidth"
-                           data-ng-model="accountDetail.password" />
+                           data-ng-model="accountDetail.password"
+                           data-setting-field="password" />
                 </div>
             </div>
             <div class="row" data-ng-if="isNew">
@@ -177,12 +173,12 @@
                     <span>{{::('ConfirmPassword' | settingType1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
-                <div class="w60-percent"
-                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'confirmPassword'}}">
+                <div class="w60-percent">
                     <input type="password"
                            maxlength="18"
                            class="setting-field setting-field--fullwidth"
-                           data-ng-model="accountDetail.confirmPassword" />
+                           data-ng-model="accountDetail.confirmPassword"
+                           data-setting-field="confirmPassword" />
                 </div>
             </div>
         </div>
@@ -206,10 +202,9 @@
                 <label class="w40-percent">
                     <span>{{::('SpreadGroup' | settingType1Label)}}</span>
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
-                    <span data-on-hover="true"
+                    <span class="icon icon--info"
                           data-tooltip="{{'SpreadGroupRule' | settingType1Message}}"
-                          data-tooltip-type="warning">
-                        <span class="icon icon--info"></span>
+                          data-inner-tooltip="true">
                     </span>
                 </label>
                 <div class="w60-percent" data-ng-if="isNew">
@@ -233,18 +228,17 @@
                 <label class="w40-percent">
                     <span>{{::('Password' | settingType1Label)}}</span>
                     <span class="required-field-mark"> *</span>
-                    <span data-on-hover="true"
+                    <span class="icon icon--info"
                           data-tooltip="{{'PasswordRules' | settingType1Message}}"
-                          data-tooltip-type="warning">
-                        <span class="icon icon--info"></span>
+                          data-inner-tooltip="true">
                     </span>
                 </label>
-                <div class="w60-percent"
-                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'password'}}">
+                <div class="w60-percent">
                     <input type="password"
                            maxlength="18"
                            class="setting-field setting-field--fullwidth"
-                           data-ng-model="accountDetail.password" />
+                           data-ng-model="accountDetail.password"
+                           data-setting-field="password" />
                 </div>
             </div>
             <div class="row" data-ng-if="isNew">
@@ -252,12 +246,12 @@
                     <span>{{::('ConfirmPassword' | settingType1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
-                <div class="w60-percent"
-                     data-tooltip="{{accountDetail.validationState | tooltipMessage:'settingType1ResourceService':'confirmPassword'}}">
+                <div class="w60-percent">
                     <input type="password"
                            maxlength="18"
                            class="setting-field setting-field--fullwidth"
-                           data-ng-model="accountDetail.confirmPassword" />
+                           data-ng-model="accountDetail.confirmPassword"
+                           data-setting-field="confirmPassword" />
                 </div>
             </div>
         </div>

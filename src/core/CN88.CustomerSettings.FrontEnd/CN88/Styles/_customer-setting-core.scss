@@ -220,7 +220,7 @@ select.setting-field {
     .tooltip__content {
         margin: {
             bottom: 0;
-            right: 12px;
+            right: 8px;
         }
 
         text-align: right;
@@ -282,11 +282,11 @@ select.setting-field {
     &.tooltip--info {
         .tooltip__content {
             &:after {
-                border-right-color: $tooltip-info-bg-color;
+                border-left-color: $tooltip-info-bg-color;
             }
 
             &:before {
-                border-right-color: $tooltip-info-border-color;
+                border-left-color: $tooltip-info-border-color;
             }
         }
     }
@@ -296,7 +296,7 @@ select.setting-field {
     .tooltip__content {
         margin: {
             bottom: 0;
-            left: 12px;
+            left: 8px;
         }
 
         text-align: left;
@@ -438,6 +438,10 @@ select.setting-field {
             }
         }
     }
+}
+
+.error-tooltip-container {
+    display: none;
 }
 
 .icon {
