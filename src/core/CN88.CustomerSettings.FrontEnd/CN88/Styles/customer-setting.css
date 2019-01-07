@@ -880,11 +880,6 @@ select.setting-field {
   border-color: #516e8f;
   color: #2267b6; }
 
-.setting-type-1 .general-data .password-rule {
-  text-align: left; }
-  .setting-type-1 .general-data .password-rule .note {
-    font-weight: bold; }
-
 .setting-type-1 .general-data .username-selection {
   display: inline-block;
   margin: 0 10px; }
@@ -910,3 +905,8 @@ select.setting-field {
 
 .setting-type-1 .icon--invalid-username {
   background-position: -3px -87px; }
+
+.setting-type-1 .password-rule {
+  text-align: left; }
+  .setting-type-1 .password-rule .note {
+    font-weight: bold; }

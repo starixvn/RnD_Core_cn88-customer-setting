@@ -52,14 +52,6 @@ $sub-header-border-agent-color: #516e8f;
     }
 
     .general-data {
-        .password-rule {
-            text-align: left;
-
-            .note {
-                font-weight: bold;
-            }
-        }
-
         .username-selection {
             display: inline-block;
             margin: 0 10px;
@@ -99,6 +91,14 @@ $sub-header-border-agent-color: #516e8f;
 
         &--invalid-username {
             background-position: -3px -87px;
+        }
+    }
+
+    .password-rule {
+        text-align: left;
+
+        .note {
+            font-weight: bold;
         }
     }
 }

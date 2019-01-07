@@ -119,7 +119,7 @@ module CustomerSetting {
                 var strongPassword = /^(?=.*\d)(?=.*[a-zA-Z!@#$%^&*])(?!.*\s).{8,40}$/;
 
                 if (!this.password.match(strongPassword)) {
-                    this.validationState = new ValidationResult("InvalidPassword", "password");
+                    this.validationState = new ValidationResult("PasswordRules", "password");
 
                     return false;
                 }

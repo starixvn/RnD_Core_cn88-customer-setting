@@ -31142,7 +31142,7 @@ var CustomerSetting;
                 }
                 var strongPassword = /^(?=.*\d)(?=.*[a-zA-Z!@#$%^&*])(?!.*\s).{8,40}$/;
                 if (!this.password.match(strongPassword)) {
-                    this.validationState = new CustomerSetting.ValidationResult("InvalidPassword", "password");
+                    this.validationState = new CustomerSetting.ValidationResult("PasswordRules", "password");
                     return false;
                 }
                 if (this.confirmPassword !== this.password) {
