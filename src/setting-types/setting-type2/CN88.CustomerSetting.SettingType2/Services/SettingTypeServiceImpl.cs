@@ -15,21 +15,27 @@
     using CN88.CustomerSetting.SettingType2.Params.Criteria;
     using Fanex.Caching;
     using Fanex.Data.Repository;
+    using Fanex.Logging;
 
     public class SettingTypeServiceImpl : SettingTypeServiceBase, SettingTypeService
     {
         private const string CommTemplateCacheKey = "CN88.CustomerSetting.SettingType2.Services.CommTemplateCacheKey";
         private const int CommTemplateCacheInHours = 4;
         private const int SettingTypeId = 2;
-        private readonly IDynamicRepository dynamicRepository;
 
-        public SettingTypeServiceImpl() : this(null)
-        {
-        }
+        public SettingTypeServiceImpl() :
+            this(null, null, null, null, null)
+        { }
 
-        internal SettingTypeServiceImpl(IDynamicRepository dynamicRepository)
+        internal SettingTypeServiceImpl(
+            ResourceService resourceService,
+            ILogger logger,
+            ICacheService cacheService,
+            IDynamicRepository dynamicRepository,
+            MessageService messageService)
+            : base(resourceService, logger, cacheService, dynamicRepository)
         {
-            this.dynamicRepository = dynamicRepository ?? new DynamicRepository();
+            MessageService = messageService ?? new MessageServiceImpl(ResourceService);
         }
 
         public override async Task<SettingType> GetCustomerSettingType(
@@ -64,7 +70,7 @@
         }
 
         private async Task<IEnumerable<CommBetSettingDto>> GetCommBetSettingDtoList(CustomerSettingQuery query)
-            => await dynamicRepository.FetchAsync<CommBetSettingDto>(
+            => await DynamicRepository.FetchAsync<CommBetSettingDto>(
                 new GetCommBetSettingCriteria
                 {
                     IsCreateNew = query.IsCreateNew,

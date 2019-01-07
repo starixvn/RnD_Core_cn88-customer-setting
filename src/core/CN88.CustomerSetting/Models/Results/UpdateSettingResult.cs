@@ -6,13 +6,13 @@
     public class UpdateSettingResult : Result
     {
         public UpdateSettingResult(IEnumerable<SettingResult> subResults)
-            : base(0)
+            : base(GetRepresentativeCode(subResults))
         {
             SubResults = subResults;
         }
 
         public UpdateSettingResult(IEnumerable<IResult> results)
-            : base(0)
+            : base(GetRepresentativeCode(results))
         {
             if (results != null)
             {
@@ -57,5 +57,10 @@
             => SubResults != null && SubResults.Any()
                 ? SubResults.FirstOrDefault(x => !x.IsSuccessful) == null
                 : base.IsSuccessful;
+
+        private static int GetRepresentativeCode(IEnumerable<IResult> results)
+            => results.Any(result => result.IsFailed)
+                ? results.FirstOrDefault(result => result.IsFailed).Code
+                : 0;
     }
 }

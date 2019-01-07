@@ -120,4 +120,40 @@
   <data name="CommBetLimit" xml:space="preserve">
     <value>佣金 &amp; 投注限額</value>
   </data>
+  <data name="Msg_10003" xml:space="preserve">
+    <value>最低投註/最高投註/單場限額無效</value>
+  </data>
+  <data name="Msg_10005" xml:space="preserve">
+    <value>最低投註必須少於或相等於最高投註以及最高投註必須小於或相等於單場投註限額</value>
+  </data>
+  <data name="Msg_10006" xml:space="preserve">
+    <value>最低投註必須大於或相等於代理最低投註限額</value>
+  </data>
+  <data name="Msg_10007" xml:space="preserve">
+    <value>最高投註必須少於或相等於代理最高投註限額</value>
+  </data>
+  <data name="Msg_10008" xml:space="preserve">
+    <value>單場限額必須少於或相等於代理單場投註限額</value>
+  </data>
+  <data name="Msg_10016" xml:space="preserve">
+    <value>最低投註大於或相等於超級總代理最低投註限額</value>
+  </data>
+  <data name="Msg_10017" xml:space="preserve">
+    <value>最高投註必須少於或相等於超級總代理最高投註限額</value>
+  </data>
+  <data name="Msg_10018" xml:space="preserve">
+    <value>單場限額必須少於或相等於超級總代理單場投註限額</value>
+  </data>
+  <data name="Msg_10019" xml:space="preserve">
+    <value>最低投註大於或相等於總代理最低投註限額</value>
+  </data>
+  <data name="Msg_10020" xml:space="preserve">
+    <value>最高投註必須少於或相等於總代理最高投註限額</value>
+  </data>
+  <data name="Msg_10021" xml:space="preserve">
+    <value>單場限額必須少於或相等於總代理單場投註限額</value>
+  </data>
+  <data name="Msg_1" xml:space="preserve">
+    <value>傭金率無效</value>
+  </data>
 </root>

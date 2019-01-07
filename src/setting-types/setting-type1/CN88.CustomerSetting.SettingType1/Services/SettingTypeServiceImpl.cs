@@ -186,8 +186,8 @@
             CreateCustomerCommand command,
             SettingType settingType)
         {
-            var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem
-                ?? throw new InvalidOperationException("AccountDetail Item cannot be null");
+            var settingItem = settingType.SettingItems?.FirstOrDefault() as AccountDetailSettingItem
+                ?? throw new InvalidOperationException("Account Detail Item cannot be null");
 
             settingItem.Password = ValidateAndEncodePassword(command, settingItem);
 

@@ -7,5 +7,7 @@
         public const int NoChange = -2;
         public const int AccessDenied = -3;
         public const int DataIsNotValid = -4;
+
+        public const int MsgTypeSuccess = 99999;
     }
 }

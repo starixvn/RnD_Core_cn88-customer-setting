@@ -223,6 +223,69 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New Super PT is too low. It makes some lines&apos; Total PT Taken become less than Super Min PT.
+        /// </summary>
+        internal static string Msg_20035 {
+            get {
+                return ResourceManager.GetString("Msg_20035", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Super PT is too high. It makes some lines&apos; Total PT Taken become greater than Super Max PT.
+        /// </summary>
+        internal static string Msg_20036 {
+            get {
+                return ResourceManager.GetString("Msg_20036", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Master &amp; Agent&apos;s Total PT is too low. It makes the line&apos;s Total PT less than Super Min PT.
+        /// </summary>
+        internal static string Msg_20037 {
+            get {
+                return ResourceManager.GetString("Msg_20037", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Master &amp; Agent&apos;s Total PT is too high. It makes the line&apos;s Total PT greater than Super Max PT.
+        /// </summary>
+        internal static string Msg_20038 {
+            get {
+                return ResourceManager.GetString("Msg_20038", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Super Min PT is greater than the Total PT Taken by some lines..
+        /// </summary>
+        internal static string Msg_30007 {
+            get {
+                return ResourceManager.GetString("Msg_30007", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Super Max PT is less than the Total PT Taken by some lines..
+        /// </summary>
+        internal static string Msg_30008 {
+            get {
+                return ResourceManager.GetString("Msg_30008", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Super Min PT must be less than or equal to Super Max PT..
+        /// </summary>
+        internal static string Msg_30009 {
+            get {
+                return ResourceManager.GetString("Msg_30009", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         internal static string Password {

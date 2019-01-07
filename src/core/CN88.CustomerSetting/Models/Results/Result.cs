@@ -20,6 +20,11 @@
         {
             Code = code;
             Message = message;
+
+            if(code == ResultValues.Success)
+            {
+                MsgType = ResultValues.MsgTypeSuccess;
+            }
         }
 
         public Result(int code, string message, int msgType)

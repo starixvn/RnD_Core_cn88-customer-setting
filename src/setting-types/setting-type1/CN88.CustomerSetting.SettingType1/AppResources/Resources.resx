@@ -214,4 +214,25 @@ Notes: your password is cAsE sEnSiTiVe</value>
   <data name="Msg_20034" xml:space="preserve">
     <value>The position taking violates Agent Max PT.</value>
   </data>
+  <data name="Msg_30007" xml:space="preserve">
+    <value>New Super Min PT is greater than the Total PT Taken by some lines.</value>
+  </data>
+  <data name="Msg_30008" xml:space="preserve">
+    <value>New Super Max PT is less than the Total PT Taken by some lines.</value>
+  </data>
+  <data name="Msg_30009" xml:space="preserve">
+    <value>Super Min PT must be less than or equal to Super Max PT.</value>
+  </data>
+  <data name="Msg_20035" xml:space="preserve">
+    <value>New Super PT is too low. It makes some lines' Total PT Taken become less than Super Min PT</value>
+  </data>
+  <data name="Msg_20036" xml:space="preserve">
+    <value>New Super PT is too high. It makes some lines' Total PT Taken become greater than Super Max PT</value>
+  </data>
+  <data name="Msg_20037" xml:space="preserve">
+    <value>Master &amp; Agent's Total PT is too low. It makes the line's Total PT less than Super Min PT</value>
+  </data>
+  <data name="Msg_20038" xml:space="preserve">
+    <value>Master &amp; Agent's Total PT is too high. It makes the line's Total PT greater than Super Max PT</value>
+  </data>
 </root>

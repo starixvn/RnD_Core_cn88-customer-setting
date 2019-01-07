@@ -120,4 +120,40 @@
   <data name="CommBetLimit" xml:space="preserve">
     <value>佣金 &amp; 投注限额</value>
   </data>
+  <data name="Msg_10003" xml:space="preserve">
+    <value>最低投注/最高投注/单场限额无效</value>
+  </data>
+  <data name="Msg_10005" xml:space="preserve">
+    <value>最低投注必须少于或相等于最高投注以及最高投注必须小于或相等于单场投注限额</value>
+  </data>
+  <data name="Msg_10006" xml:space="preserve">
+    <value>最低投注必须大于或相等于代理最低投注限额</value>
+  </data>
+  <data name="Msg_10007" xml:space="preserve">
+    <value>最高投注必须少于或相等于代理最高投注限额</value>
+  </data>
+  <data name="Msg_10008" xml:space="preserve">
+    <value>单场限额必须少于或相等于代理单场投注限额</value>
+  </data>
+  <data name="Msg_10016" xml:space="preserve">
+    <value>最低投注大于或相等于超级总代理最低投注限额</value>
+  </data>
+  <data name="Msg_10017" xml:space="preserve">
+    <value>最高投注必须少于或相等于超级总代理最高投注限额</value>
+  </data>
+  <data name="Msg_10018" xml:space="preserve">
+    <value>单场限额必须少于或相等于超级总代理单场投注限额</value>
+  </data>
+  <data name="Msg_10019" xml:space="preserve">
+    <value>最低投注大于或相等于总代理最低投注限额</value>
+  </data>
+  <data name="Msg_10020" xml:space="preserve">
+    <value>最高投注必须少于或相等于总代理最高投注限额</value>
+  </data>
+  <data name="Msg_10021" xml:space="preserve">
+    <value>单场限额必须少于或相等于总代理单场投注限额</value>
+  </data>
+  <data name="Msg_1" xml:space="preserve">
+    <value>佣金率无效</value>
+  </data>
 </root>
