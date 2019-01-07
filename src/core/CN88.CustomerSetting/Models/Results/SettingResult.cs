@@ -68,7 +68,7 @@
         }
 
         public SettingResult(IResult result)
-            : base(result.Code, result.Message)
+            : base(result.Code, result.Message, result.MsgType)
         {
         }
 

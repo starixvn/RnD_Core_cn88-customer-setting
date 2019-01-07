@@ -16,6 +16,7 @@
         {
             switch (msgType)
             {
+                case MessageTypes.InvalidCredit:
                 case MessageTypes.WrongPT:
                     return TranslateMessage<DefaultSubMessage>(rawMessage, settingLevel, language);
 

@@ -29,5 +29,7 @@
         /// </Root>
         /// </summary>
         public const int WrongPT = 5;
+
+        public const int InvalidCredit = 100;
     }
 }

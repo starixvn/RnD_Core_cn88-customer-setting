@@ -8,6 +8,7 @@
     using CN88.CustomerSetting.DataAccesses;
     using CN88.CustomerSetting.Exceptions;
     using CN88.CustomerSetting.Models;
+    using CN88.CustomerSetting.Models.Constants;
     using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.Models.Requests;
     using CN88.CustomerSetting.Models.Results;
@@ -98,8 +99,10 @@
             return settingTypeService.TranslateResultMessage(
                 new SettingResult(
                     result.Code, 
-                    result.Message, 
-                    result.MsgType, 
+                    result.Message,
+                    result.IsFailed && result.MsgType == 0 
+                        ? MessageTypes.Error
+                        : result.MsgType, 
                     command.Setting.CustomerId, 
                     settingType.Id, 
                     settingType.Name),

@@ -235,4 +235,7 @@ Notes: your password is cAsE sEnSiTiVe</value>
   <data name="Msg_20038" xml:space="preserve">
     <value>Master &amp; Agent's Total PT is too high. It makes the line's Total PT greater than Super Max PT</value>
   </data>
+  <data name="Msg_70024" xml:space="preserve">
+    <value>Insufficient credit.</value>
+  </data>
 </root>
