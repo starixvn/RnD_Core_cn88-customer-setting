@@ -125,7 +125,7 @@ module CustomerSetting {
             }
 
             this.$timeout(() => {
-                tooltip.removeClass("tooltip--right tooltip--left");
+                tooltip.removeClass("tooltip--right tooltip--left tooltip--bottom");
                 tooltip.css({ "left": "0px", "visibility": "hidden" });
 
                 var elementRect: ClientRect = target[0].getBoundingClientRect();

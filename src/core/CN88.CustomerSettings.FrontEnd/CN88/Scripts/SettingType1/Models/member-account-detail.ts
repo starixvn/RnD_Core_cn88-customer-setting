@@ -43,10 +43,54 @@ module CustomerSetting {
         }
 
         public validate(): boolean {
-            if (!super.validate()) {
+            if (!this.validateUsername()) {
                 return false;
             }
 
+            if (!this.validateMemberPassword()) {
+                return false;
+            }
+
+            if (!this.validateCredit()) {
+                return false;
+            }
+
+            if (!this.validateOddsSpread()) {
+                return false;
+            }
+
+            this.resetValidationState();
+
+            return true;
+        }
+
+        protected validateMemberPassword(): boolean {
+            if (this.isNew) {
+                if (!this.password || this.password.length === 0) {
+                    this.validationState = new ValidationResult("RequiredField", "password");
+
+                    return false;
+                }
+
+                var memberPasswordPattern: RegExp = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*[\s])).{6,10}$/;
+
+                if (!memberPasswordPattern.test(this.password)) {
+                    this.validationState = new ValidationResult("MemberPasswordRules", "password");
+
+                    return false;
+                }
+
+                if (this.confirmPassword !== this.password) {
+                    this.validationState = new ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private validateOddsSpread(): boolean {
             if (this.isNew) {
                 if (!this.spreadGroup) {
                     this.validationState = new ValidationResult("RequiredField", "spreadGroup");
@@ -54,8 +98,6 @@ module CustomerSetting {
                     return false;
                 }
             }
-
-            this.resetValidationState();
 
             return true;
         }

@@ -116,9 +116,10 @@ module CustomerSetting {
                     return false;
                 }
 
-                var strongPassword = /^(?=.*\d)(?=.*[a-zA-Z!@#$%^&*])(?!.*\s).{8,40}$/;
+                var passwordPattern: RegExp
+                    = /^(((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]))(?!.*[\s])).{8,16}$/;
 
-                if (!this.password.match(strongPassword)) {
+                if (!passwordPattern.test(this.password)) {
                     this.validationState = new ValidationResult("PasswordRules", "password");
 
                     return false;
