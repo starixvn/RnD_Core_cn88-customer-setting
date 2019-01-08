@@ -120,7 +120,7 @@
 
                     if (defaultSettingItem != null)
                     {
-                        defaultSettingItem.BetTypeName = ResourceService.GetBetTypeName(defaultSettingItem.BetTypeId, language);
+                        defaultSettingItem.BetTypeName = ResourceService.GetBetTypeName(defaultSettingItem.BetTypeId, defaultSettingItem.IsLive);
                         defaultSettingItem.SportTypeName = ResourceService.GetSportTypeName(defaultSettingItem.SportTypeId, language);
                         defaultSettingItems.Add(defaultSettingItem);
                     }

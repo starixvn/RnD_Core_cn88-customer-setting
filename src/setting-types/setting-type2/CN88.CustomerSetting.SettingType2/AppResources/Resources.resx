@@ -117,38 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BetTypeName_10_0" xml:space="preserve">
-    <value>Outright</value>
-  </data>
-  <data name="BetTypeName_1_0" xml:space="preserve">
-    <value>Handicap, Over/Under, Odd/Even</value>
-  </data>
-  <data name="BetTypeName_1_1" xml:space="preserve">
-    <value>Live Handicap, Live Over/Under, Live Odd/Even</value>
-  </data>
-  <data name="BetTypeName_5_0" xml:space="preserve">
-    <value>1 X 2, Live 1 X 2</value>
-  </data>
-  <data name="BetTypeName_9999_0" xml:space="preserve">
-    <value>Other Bet Types</value>
-  </data>
-  <data name="BetTypeName_9999_1" xml:space="preserve">
-    <value>Live Other Bet Types</value>
-  </data>
   <data name="CommBetLimit" xml:space="preserve">
     <value>Commission &amp; Bet Limit</value>
-  </data>
-  <data name="SportTypeName_1" xml:space="preserve">
-    <value>Soccer</value>
-  </data>
-  <data name="SportTypeName_2" xml:space="preserve">
-    <value>Basketball</value>
-  </data>
-  <data name="SportTypeName_99" xml:space="preserve">
-    <value>Other Sports</value>
-  </data>
-  <data name="SportTypeName_9999" xml:space="preserve">
-    <value>All Sports</value>
   </data>
   <data name="UpdateCommBetSettingSuccess" xml:space="preserve">
     <value>Commission &amp; Bet Setting are updated successfully</value>

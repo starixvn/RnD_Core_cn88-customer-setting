@@ -13,6 +13,9 @@
         [XmlAttribute]
         public short BetType { get; set; }
 
+        [XmlAttribute]
+        public bool IsLive { get; set; }
+
         public virtual string ToString(ResourceService resourceService, string language, byte settingLevel)
         {
             if (resourceService == null)
@@ -29,13 +32,13 @@
                     return resourceService.GetSportTypeName(SportType, language);
 
                 case SettingLevel.BetType:
-                    return resourceService.GetBetTypeName(BetType, language);
+                    return resourceService.GetBetTypeName(BetType, IsLive);
 
                 case SettingLevel.SportTypeBetType:
                     return string.Format(
                         "{0} - {1}",
                         resourceService.GetSportTypeName(SportType, language),
-                        resourceService.GetBetTypeName(BetType, language));
+                        resourceService.GetBetTypeName(BetType, IsLive));
 
                 default:
                     throw new InvalidOperationException("Not implement setting level");

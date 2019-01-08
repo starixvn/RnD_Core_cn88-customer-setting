@@ -85,12 +85,11 @@
         {
             var firstSettingItemDto = settingItemDto.First();
             var firstSettingItemConfig = settingItemConfig.ToList().FirstOrDefault();
-            var isLive = firstSettingItemConfig.IsLive ? 1 : 0;
 
             return new CommBetSettingItem
             {
                 SportTypeName = ResourceService.GetSportTypeName(firstSettingItemConfig.SportTypeId, language),
-                BetTypeName = Resources.ResourceManager.GetString($"BetTypeName_{firstSettingItemConfig.BetTypeId}_{isLive}"),
+                BetTypeName = ResourceService.GetBetTypeName(firstSettingItemConfig.BetTypeId, firstSettingItemConfig.IsLive),
 
                 LayoutType = firstSettingItemConfig.LayoutType,
                 IntervalValue = firstSettingItemConfig.IntervalValuePercent,

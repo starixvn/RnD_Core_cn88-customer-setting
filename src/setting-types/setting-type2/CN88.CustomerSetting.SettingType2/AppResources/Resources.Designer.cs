@@ -61,60 +61,6 @@ namespace CN88.CustomerSetting.SettingType2.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Handicap, Over/Under, Odd/Even.
-        /// </summary>
-        internal static string BetTypeName_1_0 {
-            get {
-                return ResourceManager.GetString("BetTypeName_1_0", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Live Handicap, Live Over/Under, Live Odd/Even.
-        /// </summary>
-        internal static string BetTypeName_1_1 {
-            get {
-                return ResourceManager.GetString("BetTypeName_1_1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Outright.
-        /// </summary>
-        internal static string BetTypeName_10_0 {
-            get {
-                return ResourceManager.GetString("BetTypeName_10_0", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 1 X 2, Live 1 X 2.
-        /// </summary>
-        internal static string BetTypeName_5_0 {
-            get {
-                return ResourceManager.GetString("BetTypeName_5_0", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Other Bet Types.
-        /// </summary>
-        internal static string BetTypeName_9999_0 {
-            get {
-                return ResourceManager.GetString("BetTypeName_9999_0", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Live Other Bet Types.
-        /// </summary>
-        internal static string BetTypeName_9999_1 {
-            get {
-                return ResourceManager.GetString("BetTypeName_9999_1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Commission &amp; Bet Limit.
         /// </summary>
         internal static string CommBetLimit {
@@ -273,42 +219,6 @@ namespace CN88.CustomerSetting.SettingType2.AppResources {
         internal static string Msg_11 {
             get {
                 return ResourceManager.GetString("Msg_11", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Soccer.
-        /// </summary>
-        internal static string SportTypeName_1 {
-            get {
-                return ResourceManager.GetString("SportTypeName_1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Basketball.
-        /// </summary>
-        internal static string SportTypeName_2 {
-            get {
-                return ResourceManager.GetString("SportTypeName_2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Other Sports.
-        /// </summary>
-        internal static string SportTypeName_99 {
-            get {
-                return ResourceManager.GetString("SportTypeName_99", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to All Sports.
-        /// </summary>
-        internal static string SportTypeName_9999 {
-            get {
-                return ResourceManager.GetString("SportTypeName_9999", resourceCulture);
             }
         }
         

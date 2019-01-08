@@ -79,6 +79,60 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Handicap, Over/Under, Odd/Even.
+        /// </summary>
+        public static string BetTypeName_1_0 {
+            get {
+                return ResourceManager.GetString("BetTypeName_1_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Live Handicap, Live Over/Under, Live Odd/Even.
+        /// </summary>
+        public static string BetTypeName_1_1 {
+            get {
+                return ResourceManager.GetString("BetTypeName_1_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outright.
+        /// </summary>
+        public static string BetTypeName_10_0 {
+            get {
+                return ResourceManager.GetString("BetTypeName_10_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1 X 2, Live 1 X 2.
+        /// </summary>
+        public static string BetTypeName_5_0 {
+            get {
+                return ResourceManager.GetString("BetTypeName_5_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other Bet Types.
+        /// </summary>
+        public static string BetTypeName_9999_0 {
+            get {
+                return ResourceManager.GetString("BetTypeName_9999_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Live Other Bet Types.
+        /// </summary>
+        public static string BetTypeName_9999_1 {
+            get {
+                return ResourceManager.GetString("BetTypeName_9999_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account {0} is created successfully.
         /// </summary>
         public static string CreateSuccessfully {

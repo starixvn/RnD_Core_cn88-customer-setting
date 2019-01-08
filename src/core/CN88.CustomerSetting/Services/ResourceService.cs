@@ -12,7 +12,7 @@
 
         string GetSportTypeName(int sportTypeId, string language);
 
-        string GetBetTypeName(int betTypeId, string language);
+        string GetBetTypeName(int betTypeId, bool isLive);
 
         string GetResourceData(string refId, string resourceId, string language);
     }
@@ -71,17 +71,19 @@
                 : sportTypeName;
         }
 
-        public string GetBetTypeName(int betTypeId, string language)
+        public string GetBetTypeName(int betTypeId, bool isLive)
         {
             if (betTypeId <= 0)
             {
                 return string.Empty;
             }
 
-            var betTypeName = remotingRef.GetBetTypeName(betTypeId.ToString(), language);
+            var live = isLive ? 1 : 0;
+            var betTypeKey = $"BetTypeName_{betTypeId}_{live}";
+            var betTypeName = Resources.ResourceManager.GetString(betTypeKey);
 
             return string.IsNullOrEmpty(betTypeName)
-                ? string.Format(BetTypeDefaultFormat, betTypeId)
+                ? betTypeKey
                 : betTypeName;
         }
 
