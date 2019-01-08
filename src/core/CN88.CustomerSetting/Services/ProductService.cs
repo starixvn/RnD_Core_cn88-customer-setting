@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using CN88.CustomerSetting.Helpers;
     using CN88.CustomerSetting.Models.Constants;
     using CN88.CustomerSetting.SpParams.Criteria;
     using Fanex.Caching;
@@ -32,7 +33,7 @@
         private readonly ResourceService resourceService;
 
         public ProductServiceImpl(
-            IDynamicRepository productRepository, 
+            IDynamicRepository productRepository,
             ICacheService cachingService,
             ResourceService resourceService)
         {
@@ -43,6 +44,9 @@
 
         public async Task<IEnumerable<SettingType>> GetProductSettingTypes(byte productId, byte systemId)
         {
+            InputValidator.Validate(nameof(productId), productId);
+            InputValidator.Validate(nameof(systemId), systemId);
+
             var settingTypes = await cachingService.GetOrSetAsync(
                    string.Format(SettingTypesCacheKey, productId, systemId),
                    () =>

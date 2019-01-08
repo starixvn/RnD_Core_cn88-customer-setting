@@ -2,7 +2,6 @@
 {
     using Fanex.Data.Repository;
 
-
     internal class CustomerLevelQueryCriteria : CriteriaBase
     {
         public int CustId { get; set; }

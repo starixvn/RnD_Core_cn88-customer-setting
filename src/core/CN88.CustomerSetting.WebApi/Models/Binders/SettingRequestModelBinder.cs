@@ -28,7 +28,7 @@
                 bodyString = await reader.ReadToEndAsync();
             }
 
-            if(string.IsNullOrWhiteSpace(bodyString))
+            if (string.IsNullOrWhiteSpace(bodyString))
             {
                 return;
             }

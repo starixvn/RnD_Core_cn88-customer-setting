@@ -160,6 +160,15 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Update process is unsuccessful!.
+        /// </summary>
+        public static string Msg_90001 {
+            get {
+                return ResourceManager.GetString("Msg_90001", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There is no change to update..
         /// </summary>
         public static string NoChangeToUpdate {

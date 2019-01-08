@@ -21,7 +21,7 @@
             Code = code;
             Message = message;
 
-            if(code == ResultValues.Success)
+            if (code == ResultValues.Success)
             {
                 MsgType = ResultValues.MsgTypeSuccess;
             }
@@ -67,7 +67,7 @@
         public override int GetHashCode()
             => Code.GetHashCode();
 
-        public static Result CreateErrorResult(string message) 
+        public static Result CreateErrorResult(string message)
             => new Result(ResultValues.Error, message, MessageTypes.Error);
 
         public static Result CreateSuccessResult(string message)

@@ -15,10 +15,10 @@
     public class PasswordServiceImpl : PasswordService
     {
         private const string HEX_DIGIT = "0123456789abcdef";
-        private static readonly Regex PasswordRule1 = new Regex(@"^(?=.*\d).{8,100}$");
-        private static readonly Regex PasswordRule2 = new Regex(@"^(?=.*[a-z]).{8,100}$");
-        private static readonly Regex PasswordRule3 = new Regex(@"^(?=.*[A-Z]).{8,100}$");
-        private static readonly Regex PasswordRule4 = new Regex(@"^(?=.*[\[\]\^\$\.\|\?\*\+\(\)\\~`\!@#%&\-_+={}'""<>:;,]).{8,100}$");
+        private static readonly Regex PasswordRule1 = new Regex(@"^(?=.*\d).{8,40}$");
+        private static readonly Regex PasswordRule2 = new Regex(@"^(?=.*[a-z]).{8,40}$");
+        private static readonly Regex PasswordRule3 = new Regex(@"^(?=.*[A-Z]).{8,40}$");
+        private static readonly Regex PasswordRule4 = new Regex(@"^(?=.*[\[\]\^\$\.\|\?\*\+\(\)\\~`\!@#%&\-_+={}'""<>:;,]).{8,40}$");
         private static readonly Regex MemberPasswordRule = new Regex(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,10}$");
         private static readonly Regex NoWhiteSpace = new Regex(@"^\S*$");
 
@@ -41,13 +41,20 @@
             string password,
             Level customerLevel)
         {
-            if(customerLevel.IsSuperLevel())
+            if (string.IsNullOrEmpty(password))
+            {
+                return Result.CreateErrorResult(Resources.PasswordCannotBeNullOrEmpty);
+            }
+
+            if (customerLevel.IsSuperLevel())
             {
                 return Result.Success;
             }
 
             return !IsMatchedRules(password, customerLevel.IsMemberLevel())
-                ? Result.CreateErrorResult(Resources.PasswordRequire)
+                ? Result.CreateErrorResult(customerLevel.IsMemberLevel() 
+                    ? Resources.PasswordHint04
+                    : Resources.PasswordRequire)
                 : Result.Success;
         }
 
@@ -61,9 +68,9 @@
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        private bool IsMatchedRules(string password, bool isResetMemberPassword)
+        private bool IsMatchedRules(string password, bool isMemberPassword)
         {
-            if (isResetMemberPassword)
+            if (isMemberPassword)
             {
                 return MemberPasswordRule.Match(password).Success && NoWhiteSpace.Match(password).Success;
             }

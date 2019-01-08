@@ -28,9 +28,9 @@
 
             return new CreateNewResult(
                 result.Code,
-                result.IsOk 
-                    ? string.Format(Resources.CreateSuccessfully, newUsername) 
-                    : result.Message, 
+                result.IsOk
+                    ? string.Format(Resources.CreateSuccessfully, newUsername)
+                    : result.Message,
                 int.Parse(parameters["custId"].ToString()),
                 int.Parse(parameters["errsettingtype"].ToString()),
                 int.Parse(parameters["msgtype"].ToString()));

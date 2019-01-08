@@ -2,7 +2,6 @@
 {
     using Fanex.Data.Repository;
 
-
     internal class ProductNamesQueryCriteria : CriteriaBase
     {
         public byte? ProductId { get; set; }

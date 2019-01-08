@@ -1,8 +1,5 @@
 ﻿namespace CN88.CustomerSetting.Services
 {
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Resources;
     using CN88.CustomerSetting.AppResources;
     using Fanex.RemotingRef;
 
@@ -59,7 +56,7 @@
 
             var sportTypeName = remotingRef.GetSportName(sportTypeId.ToString(), language);
 
-            if(!string.IsNullOrEmpty(sportTypeName))
+            if (!string.IsNullOrEmpty(sportTypeName))
             {
                 return sportTypeName;
             }

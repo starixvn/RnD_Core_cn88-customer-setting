@@ -103,7 +103,6 @@
         private void CheckActorAndCustomerLevelsConstrain(User actor, Level customerLevel)
         {
             var isValidConstrain = actor.IsCompany
-                || customerLevel.IsMemberLevel()
                 || actor.Level.IsUplineOf(customerLevel);
 
             if (!isValidConstrain)
@@ -116,7 +115,8 @@
         {
             if (actor.IsNotCompany && actor.Id != customerId)
             {
-                var isBelonging = await dynamicRepository.GetAsync<bool>(new CheckBelongingCriteria
+                var isBelonging = await dynamicRepository.GetAsync<bool>(
+                    new CheckBelongingCriteria
                 {
                     ActorId = actor.Id,
                     CustomerId = customerId
@@ -269,7 +269,7 @@
 
                 await CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes);
 
-                //CheckUpdatableCustomerSettingTypes(actorLevel, customerLevel, settingTypes);
+                CheckUpdatableCustomerSettingTypes(actorLevel, customerLevel, settingTypes);
             }
             catch (CustomerSettingException customerSettingException)
             {

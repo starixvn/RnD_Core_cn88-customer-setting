@@ -9,7 +9,6 @@
     using CN88.CustomerSetting.Exceptions;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Constants;
-    using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.Models.Requests;
     using CN88.CustomerSetting.Models.Results;
     using CN88.CustomerSetting.SpParams.Commands;
@@ -69,7 +68,7 @@
                     command.Setting.CustomerLevel,
                     new Hashtable(createNewParams, StringComparer.OrdinalIgnoreCase));
 
-                if(result.IsFailed
+                if (result.IsFailed
                     && result.SettingTypeId > 0)
                 {
                     return BuildSettingTypeResult(settingContext, command, result);
@@ -89,7 +88,7 @@
         {
             var settingType = command.Setting.SettingTypes.FirstOrDefault(st => st.Id == result.SettingTypeId);
 
-            if(settingType == null)
+            if (settingType == null)
             {
                 return result;
             }
@@ -98,13 +97,13 @@
 
             return settingTypeService.TranslateResultMessage(
                 new SettingResult(
-                    result.Code, 
+                    result.Code,
                     result.Message,
-                    result.IsFailed && result.MsgType == 0 
+                    result.IsFailed && result.MsgType == 0
                         ? MessageTypes.Error
-                        : result.MsgType, 
-                    command.Setting.CustomerId, 
-                    settingType.Id, 
+                        : result.MsgType,
+                    command.Setting.CustomerId,
+                    settingType.Id,
                     settingType.Name),
                 string.Empty,
                 settingType.SettingLevel,
@@ -112,7 +111,7 @@
         }
 
         private Dictionary<string, object> GetCreateNewCustomerParams(
-            ISettingContext settingContext, 
+            ISettingContext settingContext,
             CreateCustomerCommand command)
         {
             var createNewParams = new Dictionary<string, object>();

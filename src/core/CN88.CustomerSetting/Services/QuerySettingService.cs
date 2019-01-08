@@ -1,7 +1,6 @@
 ﻿namespace CN88.CustomerSetting.Services
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -19,7 +18,6 @@
 
     public class QuerySettingServiceImpl : QuerySettingService
     {
-
         private readonly ValidationService validationService;
         private readonly ProductService productService;
         private readonly ILogger logger;
@@ -74,7 +72,7 @@
 
         protected virtual async Task<IList<SettingType>> GetCustomerSettingTypes(
             ISettingContext settingContext,
-            CustomerSettingQuery query, 
+            CustomerSettingQuery query,
             IEnumerable<SettingType> productSettingTypes)
         {
             var customerSettingTypes = await Task.WhenAll(
@@ -88,7 +86,7 @@
 
         protected virtual async Task<SettingType> GetCustomerSettingType(
             ISettingContext settingContext,
-            CustomerSettingQuery query, 
+            CustomerSettingQuery query,
             SettingType productSettingType)
         {
             SettingType customerSettingType = productSettingType;
@@ -120,8 +118,8 @@
 
         protected virtual void WriteLog(
             ISettingContext settingContext,
-            CustomerSettingQuery query, 
-            SettingType productSettingType, 
+            CustomerSettingQuery query,
+            SettingType productSettingType,
             Exception ex)
         {
             var exception = new CustomerSettingException(ex.Message, ex);

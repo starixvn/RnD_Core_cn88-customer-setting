@@ -180,4 +180,7 @@
   <data name="BetTypeName_9999_1" xml:space="preserve">
     <value>Live Other Bet Types</value>
   </data>
+  <data name="Msg_90001" xml:space="preserve">
+    <value>Update process is unsuccessful!</value>
+  </data>
 </root>

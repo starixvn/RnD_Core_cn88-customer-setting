@@ -15,11 +15,11 @@
     {
         private readonly RequestDelegate next;
         private readonly ILogger logger;
+
         private static JsonSerializerSettings serializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
-
 
         public ErrorHandlingMiddleware(RequestDelegate next, ILogger logger)
         {

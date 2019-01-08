@@ -1,8 +1,5 @@
 ﻿namespace CN88.CustomerSetting.SpParams.Criteria
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using Fanex.Data.Repository;
 
     public class GetSettingTypeConfigCriteria : CriteriaBase
@@ -22,6 +19,5 @@
 
         public override bool IsValid()
             => ProductId > 0 && SettingType > 0;
-            
     }
 }

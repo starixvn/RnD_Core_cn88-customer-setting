@@ -3,11 +3,11 @@
     public class CreateNewResult : Result
     {
         public CreateNewResult(
-            int code, 
-            string message, 
+            int code,
+            string message,
             int custId,
             int settingTypeId,
-            int msgType) 
+            int msgType)
             : base(code, message, msgType)
         {
             CustId = custId;

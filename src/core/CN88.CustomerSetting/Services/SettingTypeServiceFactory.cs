@@ -9,7 +9,7 @@
         SettingTypeService GetInstance(SettingType settingType);
     }
 
-    public  class SettingTypeServiceFactoryImpl : SettingTypeServiceFactory
+    public class SettingTypeServiceFactoryImpl : SettingTypeServiceFactory
     {
         private const string AssemblyNameFormat = "CN88.CustomerSetting.SettingType{0}";
         private const string TypeNameFormat = "{0}.Services.SettingTypeServiceImpl";
