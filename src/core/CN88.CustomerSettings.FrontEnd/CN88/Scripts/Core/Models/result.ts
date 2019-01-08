@@ -218,21 +218,23 @@ module CustomerSetting {
     export class ValidationResult extends Result {
         public fieldName: string;
         public msgParams: any[];
-        public affectedFields: {};
+        public affectedFields: string[];
 
         constructor(message: string, fieldName?: string, msgParams?: any[]) {
             super(-8000, message, MessageType.error);
             this.fieldName = fieldName;
             this.msgParams = msgParams;
-            this.affectedFields = {};
+            this.affectedFields = [];
 
             if (fieldName) {
-                this.affectedFields[fieldName] = "error";
+                this.affectedFields.push(fieldName);
             }
         }
 
         public highlightField(fieldName: string): void {
-            this.affectedFields[fieldName] = "error";
+            if (this.affectedFields.indexOf(fieldName) < 0) {
+                this.affectedFields.push(fieldName);
+            }
         }
     }
 }

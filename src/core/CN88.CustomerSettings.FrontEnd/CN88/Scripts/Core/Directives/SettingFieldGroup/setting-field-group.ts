@@ -97,14 +97,16 @@ module CustomerSetting {
                             scope.dirtyField = null;
                         }
 
-                        this.handleValidationStateChange(scope);
+                        this.toggleAffectedFieldsState(scope);
                     } else {
                         var errorMessage: string = this.getErrorMessage(validationState, scope.resourceServiceName, scope.customFilterName);
 
-                        scope.dirtyField = this.handleValidationStateChange(scope, validationState.fieldName);
+                        scope.dirtyField = this.getErrorTriggeringField(scope.registeredFields, validationState.fieldName);
 
                         if (tooltipController && errorMessage && scope.dirtyField) {
+                            this.toggleAffectedFieldsState(scope, validationState.affectedFields);
                             tooltipController.showTooltipAt(errorMessage, scope.dirtyField);
+                            scope.dirtyField[0].focus();
                         }
                     }
                 }
@@ -119,25 +121,25 @@ module CustomerSetting {
             this.$filter = $filter;
         }
 
-        private handleValidationStateChange(scope: ISettingFieldGroupScope, excludedFieldName: string = null): ng.IAugmentedJQuery {
-            var dirtyField: ng.IAugmentedJQuery;
-
+        private toggleAffectedFieldsState(scope: ISettingFieldGroupScope, affectedFieldNames: string[] = []): void {
             scope.registeredFields.forEach((registeredField: KeyValuePair<string, ISettingFieldHTMLControl>) => {
-                if (registeredField.key === excludedFieldName) {
+                if (affectedFieldNames.indexOf(registeredField.key) >= 0) {
                     registeredField.value.element.addClass("setting-field--error");
-                    registeredField.value.element[0].focus();
                     registeredField.value.element.on("change", scope.reset);
                     registeredField.value.dirty = true;
-
-                    dirtyField = registeredField.value.element;
                 } else if (registeredField.value.dirty) {
                     registeredField.value.element.removeClass("setting-field--error");
                     registeredField.value.element.off("change", scope.reset);
                     registeredField.value.dirty = false;
                 }
             });
+        }
 
-            return dirtyField;
+        private getErrorTriggeringField(registeredFields: KeyValuePair<string, ISettingFieldHTMLControl>[], fieldName: string): ng.IAugmentedJQuery {
+            var filteredRegisteredFields: KeyValuePair<string, ISettingFieldHTMLControl>[] = registeredFields
+                .filter((registeredField: KeyValuePair<string, ISettingFieldHTMLControl>) => fieldName === registeredField.key);
+
+            return filteredRegisteredFields.length > 0 ? filteredRegisteredFields[0].value.element : null;
         }
 
         private getErrorMessage(result: ValidationResult, resourceServiceName: string, customFilterName: string = null): string {
