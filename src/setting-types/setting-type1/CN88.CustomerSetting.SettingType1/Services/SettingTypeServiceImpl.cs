@@ -20,6 +20,7 @@
 
     public class SettingTypeServiceImpl : SettingTypeServiceBase, SettingTypeService
     {
+        private const string CN88Site = "CN88";
         private const int SettingTypeId = 1;
         private const int CurrencyCacheTimeInMinutes = 5;
         private const string CurrencyCacheKey = "CN88.CustomerSetting.CurrencyCacheKey";
@@ -285,7 +286,7 @@
             AccountDetailSettingItem settingItem,
             Dictionary<string, object> createNewParams)
         {
-            createNewParams.Add("site", "CN88");
+            createNewParams.Add("site", CN88Site);
             createNewParams.Add("currency", settingItem.Currency?.Id);
             createNewParams.Add("lastname", settingItem.LastName ?? string.Empty);
             createNewParams.Add("phone", settingItem.Phone ?? string.Empty);

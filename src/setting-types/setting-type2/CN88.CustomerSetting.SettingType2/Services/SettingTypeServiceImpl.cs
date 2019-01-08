@@ -142,21 +142,23 @@
             var commBetSetting = settingType as CommBetSetting
                 ?? throw new InvalidOperationException("CommBetSetting data is not valid");
 
-            var updateCommResult = await UpdateCommSetting(settingContext, command.Setting, commBetSetting);
+            return await Task.FromResult(new SettingResult(Result.Success, command.Setting.CustomerId, commBetSetting.Id, commBetSetting.Name));
 
-            if (updateCommResult.IsFailed)
-            {
-                return updateCommResult;
-            }
+            ////var updateCommResult = await UpdateCommSetting(settingContext, command.Setting, commBetSetting);
 
-            var updateBetSettingResult = await UpdateBetSetting(settingContext, command.Setting, commBetSetting);
+            ////if (updateCommResult.IsFailed)
+            ////{
+            ////    return updateCommResult;
+            ////}
 
-            return new SettingResult(
-                updateCommResult.Code,
-                updateCommResult.IsSuccessful
-                    ? Resources.UpdateCommBetSettingSuccess
-                    : updateCommResult.Message,
-                updateCommResult);
+            ////var updateBetSettingResult = await UpdateBetSetting(settingContext, command.Setting, commBetSetting);
+
+            ////return new SettingResult(
+            ////    updateCommResult.Code,
+            ////    updateCommResult.IsSuccessful
+            ////        ? Resources.UpdateCommBetSettingSuccess
+            ////        : updateCommResult.Message,
+            ////    updateCommResult);
         }
 
         private async Task<SettingResult> UpdateCommSetting(
