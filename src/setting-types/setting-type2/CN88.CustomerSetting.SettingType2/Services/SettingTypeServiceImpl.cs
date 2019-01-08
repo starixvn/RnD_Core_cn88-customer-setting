@@ -142,7 +142,14 @@
             var commBetSetting = settingType as CommBetSetting
                 ?? throw new InvalidOperationException("CommBetSetting data is not valid");
 
-            return await Task.FromResult(new SettingResult(Result.Success, command.Setting.CustomerId, commBetSetting.Id, commBetSetting.Name));
+            return await Task.FromResult(
+                new SettingResult(
+                Result.Success.Code,
+                Resources.UpdateCommBetSettingSuccess,
+                0,
+                command.Setting.CustomerId,
+                commBetSetting.Id,
+                commBetSetting.Name));
 
             ////var updateCommResult = await UpdateCommSetting(settingContext, command.Setting, commBetSetting);
 
