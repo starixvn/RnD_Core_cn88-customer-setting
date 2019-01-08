@@ -86,14 +86,15 @@ module CustomerSetting {
             };
 
             scope.$watch("settingItem.validationState", (validationState: ValidationResult, oldValidationState: ValidationResult) => {
-                if (!oldValidationState) {
+                if (!oldValidationState || oldValidationState === validationState) {
                     return;
                 }
 
                 if (scope.registeredFields.length > 0) {
                     if (validationState === Result.normal) {
-                        if (tooltipController) {
-                            tooltipController.showTooltipAt(null, scope.dirtyField);
+                        if (tooltipController && scope.dirtyField) {
+                            tooltipController.hideTooltip();
+                            scope.dirtyField = null;
                         }
 
                         this.handleValidationStateChange(scope);
@@ -102,7 +103,7 @@ module CustomerSetting {
 
                         scope.dirtyField = this.handleValidationStateChange(scope, validationState.fieldName);
 
-                        if (tooltipController) {
+                        if (tooltipController && errorMessage && scope.dirtyField) {
                             tooltipController.showTooltipAt(errorMessage, scope.dirtyField);
                         }
                     }

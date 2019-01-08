@@ -5,6 +5,12 @@ module CustomerSetting {
     "use strict";
 
     export class Result {
+        private static _normal: Result = new Result(0, "", MessageType.success);
+        private static _systemError: Result = new Result(-1, "SystemError", MessageType.error);
+        private static _notAuthorizedError: Result = new Result(-2, "YouAreNotAuthorized", MessageType.error);
+        private static _noChangeToUpdate: Result = new Result(-3, "NoChangeToUpdate", MessageType.error);
+        private static _invalidParameters: Result = new Result(-3, "NoChangeToUpdate", MessageType.error);
+
         public code: number;
         public message: string;
         public msgType: MessageType;
@@ -18,23 +24,23 @@ module CustomerSetting {
         }
 
         public static get normal(): Result {
-            return new Result(0, "", MessageType.success);
+            return this._normal;
         }
 
         public static get systemError(): Result {
-            return new Result(-1, "SystemError", MessageType.error);
+            return this._systemError;
         }
 
         public static get notAuthorizedError(): Result {
-            return new Result(-2, "YouAreNotAuthorized", MessageType.error);
+            return this._notAuthorizedError;
         }
 
         public static get noChangeToUpdate(): Result {
-            return new Result(-3, "NoChangeToUpdate", MessageType.error);
+            return this._noChangeToUpdate;
         }
 
         public static get invalidParameters(): Result {
-            return new Result(-4, Exceptions.invalidParams(), MessageType.error);
+            return this._invalidParameters;
         }
 
         constructor(code: number, message: string, msgType: MessageType) {

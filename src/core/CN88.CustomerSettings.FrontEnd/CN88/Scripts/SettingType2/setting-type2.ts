@@ -18,6 +18,8 @@ module CustomerSetting {
         availableCommissionGroups: string[];
         availableLayoutTypes: Object;
         eachGroupStyle: {};
+        hasMaxBetConstraint: boolean;
+        hasMaxPerMatchConstraint: boolean;
     }
 
     class SettingType2Directive extends DefaultSettingTypeGroupingDirective {
@@ -50,6 +52,24 @@ module CustomerSetting {
                     scope.eachGroupStyle = {
                         "min-width": (100 / scope.availableCommissionGroups.length) + "%"
                     };
+                }
+
+                if (scope.customerLevel === Level.super) {
+                    scope.hasMaxBetConstraint = scope.settingType.settingItems.some((settingItem: ISettingItem) => {
+                        var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
+
+                        return settingType2Item.minMaxBet > 0;
+                    });
+
+
+                    scope.hasMaxPerMatchConstraint = scope.settingType.settingItems.some((settingItem: ISettingItem) => {
+                        var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
+
+                        return settingType2Item.minMaxPerMatch > 0;
+                    });
+                } else {
+                    scope.hasMaxBetConstraint = true;
+                    scope.hasMaxPerMatchConstraint = true;
                 }
             }
 

@@ -37,6 +37,9 @@ module CustomerSetting {
                 $scope.tooltipMessage = tooltipMessage;
                 $scope.target = target;
             };
+            this.hideTooltip = () => {
+                $scope.tooltipMessage = null;
+            };
         }];
 
         public link: ng.IDirectiveLinkFn = (scope: ITooltipScope, element: ng.IAugmentedJQuery) => {
@@ -58,10 +61,12 @@ module CustomerSetting {
                 tooltip.addClass("tooltip--on-hover");
 
                 scope.target.on("mouseenter", () => {
-                    if(!scope.beingShowed) {
-                        scope.beingShowed = true;
+                    if (!scope.beingShowed) {
                         tooltip.css({ "left": "0px", "visibility": "hidden" });
+
+                        scope.beingShowed = true;
                         scope.$apply();
+
                         this.calculateTooltipPosition(scope.target, tooltip, scope.tooltipPositionModel);
                     }
                 });

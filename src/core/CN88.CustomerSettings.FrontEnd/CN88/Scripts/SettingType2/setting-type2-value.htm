@@ -47,7 +47,7 @@
     </div>
     <div class="block__cell-wrapper w50-percent">
         <div class="block__cell w50-percent"
-             data-ng-class="{'align-center': (customerLevel === avaiCustomerLevels.super) && (item.minMaxBet === 0) && (item.maxMaxBet === 0)}">
+             data-ng-class="{'align-center': !hasMaxBetConstraint}">
             <input type="text"
                    maxlength="14"
                    class="setting-field setting-field--number setting-field--has-constraint"
@@ -58,7 +58,7 @@
             <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && (item.minMaxBet > 0) && (item.maxMaxBet === 0)">>={{item.minMaxBet | formatNumber}}</span>
         </div>
         <div class="block__cell block__cell--no-border w50-percent"
-             data-ng-class="{'align-center': (customerLevel === avaiCustomerLevels.super) && (item.minMaxPerMatch === 0) && (item.maxMaxPerMatch === 0)}">
+             data-ng-class="{'align-center': !hasMaxBetConstraint}">
             <input type="text"
                    maxlength="14"
                    class="setting-field setting-field--number setting-field--has-constraint"
