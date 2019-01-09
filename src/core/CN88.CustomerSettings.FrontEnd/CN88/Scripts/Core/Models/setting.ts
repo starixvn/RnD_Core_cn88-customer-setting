@@ -82,14 +82,17 @@ module CustomerSetting {
         }
 
         public validate(): boolean {
-            var editableSettingTypes = this.getListOfEditableSettingTypes();
-            var validSettingTypes: boolean = editableSettingTypes.every((item: SettingType) => {
-                return item.validate();
+            var validSettingTypes: boolean = this.settingTypes.every((settingType: SettingType) => {
+                return settingType.validate();
             });
 
             return this.customerLevel < Level.company
                 && this.productId > 0
                 && validSettingTypes;
+        }
+
+        public resetValidationState(): void {
+            this.settingTypes.forEach((settingType: SettingType) => settingType.resetValidationState());
         }
 
         public toJson(): {} {

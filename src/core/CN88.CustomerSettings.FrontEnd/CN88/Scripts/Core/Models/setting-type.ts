@@ -60,14 +60,24 @@ module CustomerSetting {
         }
 
         public validate(): boolean {
-            var validSettingItems: boolean = this.settingItems.every((item: ISettingItem) => {
-                return !item.validate || item.validate();
+            var validSettingItems: boolean = this.settingItems.every((settingItem: ISettingItem) => {
+                return !settingItem.validate || settingItem.validate();
             });
 
             return this.id > 0
                 && this.settingLevel > 0
                 && this.typeName !== undefined
                 && validSettingItems;
+        }
+
+        public resetValidationState(): void {
+            this.settingItems.forEach((settingItem: ISettingItem) => {
+                var castableSettingItem: DefaultSettingItem = <DefaultSettingItem>settingItem;
+
+                if (castableSettingItem && castableSettingItem.resetValidationState) {
+                    castableSettingItem.resetValidationState();
+                }
+            });
         }
 
         public toJson(): {} {

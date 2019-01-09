@@ -14,10 +14,6 @@ module CustomerSetting {
             this.setting = setting;
         }
 
-        public validate(): Result {
-            return Result.normal;
-        }
-
         public toJson(): {} {
             return {
                 uplineId: this.uplineId,

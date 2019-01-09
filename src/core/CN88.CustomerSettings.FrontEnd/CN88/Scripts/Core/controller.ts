@@ -70,8 +70,7 @@ module CustomerSetting {
         }
 
         public update(): void {
-            var editableSettings: Setting = this.setting.getEditableSettingTypes();
-            var changedSettings: Setting = this.settingTypesSharedValuesService.isNew ? editableSettings : this.setting.getChanges();
+            var changedSettings: Setting = this.settingTypesSharedValuesService.isNew ? this.setting.getEditableSettingTypes() : this.setting.getChanges();
             var validationResult: Result;
             var command: SettingCommand;
             var path: string = this.settingTypesSharedValuesService.isNew
@@ -81,15 +80,11 @@ module CustomerSetting {
             this.requestMsgResult = undefined;
 
             if (changedSettings) {
-                if (editableSettings.validate()) {
-                    command = this.parametersService.createSettingCommand(changedSettings);
-                    validationResult = command.validate();
+                changedSettings.resetValidationState();
 
-                    if (validationResult.isSuccessful) {
-                        this.updateSetting(path, command);
-                    } else {
-                        this.requestMsgResult = validationResult;
-                    }
+                if (changedSettings.validate()) {
+                    command = this.parametersService.createSettingCommand(changedSettings);
+                    this.updateSetting(path, command);
                 }
             } else {
                 var error: Result = Result.noChangeToUpdate;

@@ -29360,6 +29360,9 @@ var CustomerSetting;
         DefaultSettingItem.prototype.validate = function () {
             return true;
         };
+        DefaultSettingItem.prototype.resetValidationState = function () {
+            this.validationState = CustomerSetting.Result.normal;
+        };
         DefaultSettingItem.prototype.toJson = function () {
             var _this = this;
             var settingItem = {};
@@ -29374,9 +29377,6 @@ var CustomerSetting;
                 }
             });
             return settingItem;
-        };
-        DefaultSettingItem.prototype.resetValidationState = function () {
-            this.validationState = CustomerSetting.Result.normal;
         };
         return DefaultSettingItem;
     }());
@@ -29448,13 +29448,21 @@ var CustomerSetting;
             return updatedSettingType;
         };
         SettingType.prototype.validate = function () {
-            var validSettingItems = this.settingItems.every(function (item) {
-                return !item.validate || item.validate();
+            var validSettingItems = this.settingItems.every(function (settingItem) {
+                return !settingItem.validate || settingItem.validate();
             });
             return this.id > 0
                 && this.settingLevel > 0
                 && this.typeName !== undefined
                 && validSettingItems;
+        };
+        SettingType.prototype.resetValidationState = function () {
+            this.settingItems.forEach(function (settingItem) {
+                var castableSettingItem = settingItem;
+                if (castableSettingItem && castableSettingItem.resetValidationState) {
+                    castableSettingItem.resetValidationState();
+                }
+            });
         };
         SettingType.prototype.toJson = function () {
             var settingType = {
@@ -29551,13 +29559,15 @@ var CustomerSetting;
             return newSetting;
         };
         Setting.prototype.validate = function () {
-            var editableSettingTypes = this.getListOfEditableSettingTypes();
-            var validSettingTypes = editableSettingTypes.every(function (item) {
-                return item.validate();
+            var validSettingTypes = this.settingTypes.every(function (settingType) {
+                return settingType.validate();
             });
             return this.customerLevel < CustomerSetting.Level.company
                 && this.productId > 0
                 && validSettingTypes;
+        };
+        Setting.prototype.resetValidationState = function () {
+            this.settingTypes.forEach(function (settingType) { return settingType.resetValidationState(); });
         };
         Setting.prototype.toJson = function () {
             var setting = {
@@ -29603,9 +29613,6 @@ var CustomerSetting;
             this.uplineId = uplineId;
             this.setting = setting;
         }
-        SettingCommand.prototype.validate = function () {
-            return CustomerSetting.Result.normal;
-        };
         SettingCommand.prototype.toJson = function () {
             return {
                 uplineId: this.uplineId,
@@ -30118,8 +30125,7 @@ var CustomerSetting;
             });
         }
         CustomerSettingController.prototype.update = function () {
-            var editableSettings = this.setting.getEditableSettingTypes();
-            var changedSettings = this.settingTypesSharedValuesService.isNew ? editableSettings : this.setting.getChanges();
+            var changedSettings = this.settingTypesSharedValuesService.isNew ? this.setting.getEditableSettingTypes() : this.setting.getChanges();
             var validationResult;
             var command;
             var path = this.settingTypesSharedValuesService.isNew
@@ -30127,15 +30133,10 @@ var CustomerSetting;
                 : this.appConfigService.getUpdatePath();
             this.requestMsgResult = undefined;
             if (changedSettings) {
-                if (editableSettings.validate()) {
+                changedSettings.resetValidationState();
+                if (changedSettings.validate()) {
                     command = this.parametersService.createSettingCommand(changedSettings);
-                    validationResult = command.validate();
-                    if (validationResult.isSuccessful) {
-                        this.updateSetting(path, command);
-                    }
-                    else {
-                        this.requestMsgResult = validationResult;
-                    }
+                    this.updateSetting(path, command);
                 }
             }
             else {

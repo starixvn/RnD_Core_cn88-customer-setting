@@ -74,6 +74,10 @@ module CustomerSetting {
             return true;
         }
 
+        public resetValidationState(): void {
+            this.validationState = <ValidationResult>Result.normal;
+        }
+
         public toJson(): any {
             var settingItem: any = {};
 
@@ -88,10 +92,6 @@ module CustomerSetting {
             });
 
             return settingItem;
-        }
-
-        public resetValidationState(): void {
-            this.validationState = <ValidationResult>Result.normal;
         }
     }
 
