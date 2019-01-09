@@ -4,19 +4,30 @@
 module CustomerSetting {
     "use strict";
 
+    interface IOriginalAndFormattedValuePair {
+        formattedValue: string;
+        value: number;
+    }
+
+    interface IWindowService extends ng.IWindowService {
+        clipboardData: DataTransfer;
+    }
+
     interface INumericInputScope extends ng.IScope {
         precision: number;
+        strictFormat: boolean;
     }
 
     class NumericInputDirective implements ng.IDirective {
-        public static $inject: string[] = ["$filter"];
+        public static $inject: string[] = ["$filter", "$window"];
         public static defaultPrecision: number = 0;
 
         public restrict: string = "A";
 
         public get scope(): any {
             return {
-                precision: "=?numericInput"
+                precision: "=?numericInput",
+                strictFormat: "@"
             };
         }
 
@@ -27,9 +38,6 @@ module CustomerSetting {
 
             scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
 
-            // Chrome has a weird behavior with the mouseup event on textboxes.
-            // The position of the cursor is set on this event so that once it is fired, the selection will be removed.
-            // We add some lines of code to trace the focus status as a hack for this issue.
             element.on("focus", () => {
                 element.data("focused", true);
             });
@@ -37,7 +45,7 @@ module CustomerSetting {
             element.on("focusout", () => {
                 element.data("focused", false);
 
-                if (scope.precision > 0) {
+                if (scope.strictFormat && scope.precision > 0) {
                     element.val(this.$filter("number")(modelCtrl.$modelValue, scope.precision));
                 }
             });
@@ -47,6 +55,7 @@ module CustomerSetting {
                     var input: HTMLInputElement = <HTMLInputElement>element[0];
 
                     input.select();
+                    element.data("focused", false);
                 }
             });
 
@@ -56,13 +65,8 @@ module CustomerSetting {
                 var numberParts: string[] = value.split(".");
                 var input: HTMLInputElement = <HTMLInputElement>element[0];
 
-                if (modelCtrl.$modelValue === 0 && [46, 8].indexOf(event.keyCode) >= 0) {
-                    event.preventDefault();
-
-                    return;
-                }
-
                 if ([110, 190].indexOf(event.keyCode) >= 0) {
+                    // Prevent more than one decimal character or do not allow decimal character in integer field
                     if (numberParts.length > 1 || scope.precision === 0) {
                         event.preventDefault();
 
@@ -73,12 +77,15 @@ module CustomerSetting {
                 }
 
                 if ([46, 8, 9, 27, 13].indexOf(event.keyCode) >= 0 // Allow: backspace, delete, tab, escape, enter
-                    || (event.keyCode === 65 && event.ctrlKey === true) // Allow: Ctrl+A
+                    || (event.keyCode === 65 && event.ctrlKey) // Allow: Ctrl+A
+                    || (event.keyCode === 67 && event.ctrlKey) // Allow: Ctrl+C
+                    || (event.keyCode === 86 && event.ctrlKey) // Allow: Ctrl+V
                     || (event.keyCode >= 35 && event.keyCode <= 40)) { // Allow: home, end, left, right, down, up
                     // let it happen, don't do anything
                     return;
                 }
 
+                // Only numeric characters are allowed
                 if ((event.shiftKey || (event.keyCode < 48 || event.keyCode > 57))
                     && (event.keyCode < 96 || event.keyCode > 105)) {
                     event.preventDefault();
@@ -86,18 +93,46 @@ module CustomerSetting {
                     return;
                 }
 
-                if (dotPistion >= 0 && dotPistion < input.selectionStart && numberParts[1].length > 1) {
+                // Do not allow number of numeric characters in decimal part exceeds the precision
+                if (dotPistion >= 0 && dotPistion < input.selectionStart && numberParts[1].length >= scope.precision) {
                     event.preventDefault();
 
                     return;
                 }
 
-                if (modelCtrl.$modelValue && dotPistion < 0) {
-                    if (this.$filter("number")(modelCtrl.$modelValue, scope.precision).length >= maxLength) {
-                        event.preventDefault();
+                // Integer part is required in decimal field
+                if (dotPistion >= 0 && numberParts[0].length === 0) {
+                    event.preventDefault();
 
-                        return;
+                    return;
+                }
+
+                // In decimal fields, (precision + 1) characters are booked for decimal part
+                if (dotPistion < 0 && scope.precision > 0) {
+                    var allowedLength: number = maxLength - scope.precision - 1;
+
+                    if (value.length >= allowedLength) {
+                        event.preventDefault();
                     }
+                }
+            });
+
+            element.on("paste", (event: JQueryEventObject) => {
+                var clipboardData: DataTransfer =
+                    (<ClipboardEvent><Event>event).clipboardData
+                    || this.$window.clipboardData
+                    || (<ClipboardEvent>event.originalEvent).clipboardData;
+                var clipboard: string = clipboardData.getData("Text");
+                var { formattedValue }: IOriginalAndFormattedValuePair = this.parseAndFormatViewValue(clipboard, scope.precision, true);
+                var input: HTMLInputElement = <HTMLInputElement>element[0];
+                var selection: number = input.selectionEnd - input.selectionStart;
+                var currentValue: string = element.val();
+
+                event.preventDefault();
+
+                if ((!currentValue || selection === currentValue.length) && formattedValue) {
+                    modelCtrl.$setViewValue(formattedValue);
+                    modelCtrl.$render();
                 }
             });
 
@@ -107,25 +142,8 @@ module CustomerSetting {
 
             modelCtrl.$parsers.unshift((viewValue: string) => {
                 var input: HTMLInputElement = <HTMLInputElement>element[0];
-                var value: number;
-                var formattedValue: string = viewValue;
                 var caretPosition: number = input.selectionStart;
-                var numberParts: string[] = viewValue ? viewValue.split(".") : [];
-
-                if (numberParts.length > 1) {
-                    var precision = scope.precision;
-                    var plainIntegerPart: string = numberParts[0].replace(/[\,]/g, "") || "0";
-                    var decimalPart: string = numberParts[1].replace(/[\,\.]/g, "") || "";
-
-                    decimalPart = decimalPart.substring(0, precision);
-                    value = parseFloat(plainIntegerPart + "." + decimalPart);
-                    formattedValue = this.$filter("number")(plainIntegerPart) + "." + decimalPart;
-                } else if (numberParts.length > 0) {
-                    var plainNumber: string = viewValue.replace(/[\,]/g, "");
-
-                    value = parseInt(plainNumber, 10) || 0;
-                    formattedValue = this.$filter("number")(value);
-                }
+                var { formattedValue, value }: IOriginalAndFormattedValuePair = this.parseAndFormatViewValue(viewValue, scope.precision, false);
 
                 element.val(formattedValue);
 
@@ -146,9 +164,42 @@ module CustomerSetting {
         };
 
         private $filter: ng.IFilterService;
+        private $window: IWindowService;
 
-        constructor($filter: ng.IFilterService) {
+        constructor($filter: ng.IFilterService, $window: IWindowService) {
             this.$filter = $filter;
+            this.$window = $window;
+        }
+
+        private parseAndFormatViewValue(viewValue: string, precision: number, rounding: boolean): IOriginalAndFormattedValuePair {
+            var value: number;
+            var formattedValue: string = "";
+            var numberParts: string[] = viewValue ? viewValue.split(".") : [];
+
+            if (numberParts.length > 1) {
+                if (precision > 0 && !/[\,\.]/.test(numberParts[1])) {
+                    var plainIntegerPart: string = numberParts[0].replace(/[\,]/g, "");
+                    var decimalPart: string = rounding ? numberParts[1] : numberParts[1].substring(0, precision);
+
+                    value = +(plainIntegerPart + "." + decimalPart);
+
+                    if (!isNaN(value)) {
+                        formattedValue = rounding
+                            ? this.$filter("number")(value, precision)
+                            : this.$filter("number")(plainIntegerPart) + "." + decimalPart;
+                    }
+                }
+            } else if (numberParts.length > 0) {
+                var plainNumber: string = numberParts[0].replace(/[\,]/g, "");
+
+                value = parseInt(plainNumber, 10);
+                formattedValue = this.$filter("number")(value);
+            }
+
+            return {
+                formattedValue: formattedValue,
+                value: value
+            };
         }
     }
 

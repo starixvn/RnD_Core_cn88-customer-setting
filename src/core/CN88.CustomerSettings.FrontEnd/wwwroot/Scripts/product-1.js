@@ -30516,7 +30516,7 @@ var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
     var NumericInputDirective = (function () {
-        function NumericInputDirective($filter) {
+        function NumericInputDirective($filter, $window) {
             var _this = this;
             this.restrict = "A";
             this.link = function (scope, originalElement) {
@@ -30529,7 +30529,7 @@ var CustomerSetting;
                 });
                 element.on("focusout", function () {
                     element.data("focused", false);
-                    if (scope.precision > 0) {
+                    if (scope.strictFormat && scope.precision > 0) {
                         element.val(_this.$filter("number")(modelCtrl.$modelValue, scope.precision));
                     }
                 });
@@ -30537,6 +30537,7 @@ var CustomerSetting;
                     if (element.data("focused")) {
                         var input = element[0];
                         input.select();
+                        element.data("focused", false);
                     }
                 });
                 element.on("keydown", function (event) {
@@ -30544,10 +30545,6 @@ var CustomerSetting;
                     var dotPistion = value.indexOf(".");
                     var numberParts = value.split(".");
                     var input = element[0];
-                    if (modelCtrl.$modelValue === 0 && [46, 8].indexOf(event.keyCode) >= 0) {
-                        event.preventDefault();
-                        return;
-                    }
                     if ([110, 190].indexOf(event.keyCode) >= 0) {
                         if (numberParts.length > 1 || scope.precision === 0) {
                             event.preventDefault();
@@ -30558,7 +30555,9 @@ var CustomerSetting;
                         }
                     }
                     if ([46, 8, 9, 27, 13].indexOf(event.keyCode) >= 0
-                        || (event.keyCode === 65 && event.ctrlKey === true)
+                        || (event.keyCode === 65 && event.ctrlKey)
+                        || (event.keyCode === 67 && event.ctrlKey)
+                        || (event.keyCode === 86 && event.ctrlKey)
                         || (event.keyCode >= 35 && event.keyCode <= 40)) {
                         return;
                     }
@@ -30567,15 +30566,34 @@ var CustomerSetting;
                         event.preventDefault();
                         return;
                     }
-                    if (dotPistion >= 0 && dotPistion < input.selectionStart && numberParts[1].length > 1) {
+                    if (dotPistion >= 0 && dotPistion < input.selectionStart && numberParts[1].length >= scope.precision) {
                         event.preventDefault();
                         return;
                     }
-                    if (modelCtrl.$modelValue && dotPistion < 0) {
-                        if (_this.$filter("number")(modelCtrl.$modelValue, scope.precision).length >= maxLength) {
+                    if (dotPistion >= 0 && numberParts[0].length === 0) {
+                        event.preventDefault();
+                        return;
+                    }
+                    if (dotPistion < 0 && scope.precision > 0) {
+                        var allowedLength = maxLength - scope.precision - 1;
+                        if (value.length >= allowedLength) {
                             event.preventDefault();
-                            return;
                         }
+                    }
+                });
+                element.on("paste", function (event) {
+                    var clipboardData = event.clipboardData
+                        || _this.$window.clipboardData
+                        || event.originalEvent.clipboardData;
+                    var clipboard = clipboardData.getData("Text");
+                    var formattedValue = _this.parseAndFormatViewValue(clipboard, scope.precision, true).formattedValue;
+                    var input = element[0];
+                    var selection = input.selectionEnd - input.selectionStart;
+                    var currentValue = element.val();
+                    event.preventDefault();
+                    if ((!currentValue || selection === currentValue.length) && formattedValue) {
+                        modelCtrl.$setViewValue(formattedValue);
+                        modelCtrl.$render();
                     }
                 });
                 modelCtrl.$formatters.unshift(function () {
@@ -30583,23 +30601,8 @@ var CustomerSetting;
                 });
                 modelCtrl.$parsers.unshift(function (viewValue) {
                     var input = element[0];
-                    var value;
-                    var formattedValue = viewValue;
                     var caretPosition = input.selectionStart;
-                    var numberParts = viewValue ? viewValue.split(".") : [];
-                    if (numberParts.length > 1) {
-                        var precision = scope.precision;
-                        var plainIntegerPart = numberParts[0].replace(/[\,]/g, "") || "0";
-                        var decimalPart = numberParts[1].replace(/[\,\.]/g, "") || "";
-                        decimalPart = decimalPart.substring(0, precision);
-                        value = parseFloat(plainIntegerPart + "." + decimalPart);
-                        formattedValue = _this.$filter("number")(plainIntegerPart) + "." + decimalPart;
-                    }
-                    else if (numberParts.length > 0) {
-                        var plainNumber = viewValue.replace(/[\,]/g, "");
-                        value = parseInt(plainNumber, 10) || 0;
-                        formattedValue = _this.$filter("number")(value);
-                    }
+                    var _a = _this.parseAndFormatViewValue(viewValue, scope.precision, false), formattedValue = _a.formattedValue, value = _a.value;
                     element.val(formattedValue);
                     if (viewValue.length !== caretPosition) {
                         var offset = viewValue.length - formattedValue.length;
@@ -30613,17 +30616,45 @@ var CustomerSetting;
                 });
             };
             this.$filter = $filter;
+            this.$window = $window;
         }
         Object.defineProperty(NumericInputDirective.prototype, "scope", {
             get: function () {
                 return {
-                    precision: "=?numericInput"
+                    precision: "=?numericInput",
+                    strictFormat: "@"
                 };
             },
             enumerable: true,
             configurable: true
         });
-        NumericInputDirective.$inject = ["$filter"];
+        NumericInputDirective.prototype.parseAndFormatViewValue = function (viewValue, precision, rounding) {
+            var value;
+            var formattedValue = "";
+            var numberParts = viewValue ? viewValue.split(".") : [];
+            if (numberParts.length > 1) {
+                if (precision > 0 && !/[\,\.]/.test(numberParts[1])) {
+                    var plainIntegerPart = numberParts[0].replace(/[\,]/g, "");
+                    var decimalPart = rounding ? numberParts[1] : numberParts[1].substring(0, precision);
+                    value = +(plainIntegerPart + "." + decimalPart);
+                    if (!isNaN(value)) {
+                        formattedValue = rounding
+                            ? this.$filter("number")(value, precision)
+                            : this.$filter("number")(plainIntegerPart) + "." + decimalPart;
+                    }
+                }
+            }
+            else if (numberParts.length > 0) {
+                var plainNumber = numberParts[0].replace(/[\,]/g, "");
+                value = parseInt(plainNumber, 10);
+                formattedValue = this.$filter("number")(value);
+            }
+            return {
+                formattedValue: formattedValue,
+                value: value
+            };
+        };
+        NumericInputDirective.$inject = ["$filter", "$window"];
         NumericInputDirective.defaultPrecision = 0;
         return NumericInputDirective;
     }());
@@ -32130,7 +32161,7 @@ $templateCache.put("Directives/Tooltip/tooltip.htm","<div class=\"tooltip toolti
 $templateCache.put("SubSections/GeneralData/UsernameSuffix/username-suffix-group.htm","<div class=\"username-selection\"><username-suffix data-ng-repeat=\"suffix in accountDetail.usernameSuffixes track by $index\" data-suffix-index=\"$index\" data-suffix=\"suffix\" data-validate-username=\"validateUsername\"></username-suffix><span class=\"icon icon--valid-username\" data-ng-if=\"isChanged && isValid\"></span> <span class=\"icon icon--invalid-username\" data-ng-if=\"isChanged && !isValid\"></span></div>");
 $templateCache.put("SubSections/GeneralData/UsernameSuffix/username-suffix.htm","<select class=\"setting-field\" data-ng-model=\"suffix\" data-ng-options=\"item as item for item in range\" data-ng-change=\"validateSuffix()\"></select>");
 $templateCache.put("setting-type1.htm","<div class=\"setting-type-1\"><div class=\"block {{avaiCustomerLevels[actorLevel]}}\" data-ng-show=\"settingType\" data-ng-class=\"{ \'block--error\': !(settingType | validSettingType) }\" data-setting-field-group=\"settingType.settingItems[0]\" data-resource-service-name=\"settingType1ResourceService\"><div class=\"block__header\" data-setting-type=\"{{settingType.id}}\" data-ng-class=\"{ \'block__header--error\': !(settingType | validSettingType) }\">{{settingTypeName}}</div><div class=\"col\" data-ng-if=\"settingType | validSettingType\"><general-data data-account-detail=\"settingType.settingItems[0]\" data-editable=\"editable\"></general-data></div><div class=\"col col--last\" data-ng-if=\"settingType | validSettingType\"><customer-credit data-account-detail=\"settingType.settingItems[0]\" data-editable=\"editable\"></customer-credit><position-taking data-ng-if=\"customerLevel !== avaiCustomerLevels.member\" data-account-detail=\"settingType.settingItems[0]\" data-editable=\"editable\"></position-taking></div><div class=\"block__item block__item--error\" data-ng-if=\"!(settingType | validSettingType)\">{{settingType.settingItems[0].errorMessage}}</div></div></div>");
-$templateCache.put("SubSections/CustomerCredit/customer-credit.htm","<div class=\"customer-credit\"><div class=\"sub-header\">{{::(\'Credit\' | settingType1Label)}}</div><div data-ng-if=\"editable\"><div data-ng-if=\"customerLevel === avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w40-percent\"><span>{{::(\'Currency\' | settingType1Label)}}</span> <span class=\"required-field-mark\" data-ng-if=\"isNew\">*</span></label><div class=\"w60-percent\" data-ng-if=\"isNew\"><select class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.currency\" data-ng-options=\"currency.name for currency in accountDetail.currencies track by currency.id\" data-setting-field=\"currency\"></select></div><label class=\"w60-percent\" data-ng-if=\"!isNew\">{{accountDetail.currency.name}}</label></div><div class=\"row\"><label class=\"w40-percent\"><span>{{::(\'Credit\' | settingType1Label)}}</span> <span class=\"required-field-mark\">*</span></label><div class=\"w60-percent\"><input type=\"text\" maxlength=\"17\" class=\"setting-field setting-field--fullwidth setting-field--number\" data-numeric-input=\"2\" data-ng-model=\"accountDetail.credit\" data-setting-field=\"credit\"></div></div></div><div data-ng-if=\"customerLevel !== avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w40-percent\"><span>{{::(\'Credit\' | settingType1Label)}}</span> <span class=\"required-field-mark\">*</span></label><div class=\"w60-percent\"><input type=\"text\" maxlength=\"17\" class=\"setting-field setting-field--fullwidth setting-field--number\" data-numeric-input=\"2\" data-ng-model=\"accountDetail.credit\" data-setting-field=\"credit\"></div></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'AvailableCredit\' | settingType1Label)}}</label> <label class=\"available-credit w60-percent\">{{accountDetail.availableCredit | formatNumber:2}}</label></div></div></div><div data-ng-if=\"!editable\"><div data-ng-if=\"customerLevel === avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'Currency\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.currency.name}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'Credit\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.credit | formatNumber:2}}</label></div></div><div data-ng-if=\"customerLevel !== avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'Credit\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.credit | formatNumber:2}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'AvailableCredit\' | settingType1Label)}}</label> <label class=\"w60-percent available-credit\">{{accountDetail.availableCredit | formatNumber:2}}</label></div></div></div></div>");
+$templateCache.put("SubSections/CustomerCredit/customer-credit.htm","<div class=\"customer-credit\"><div class=\"sub-header\">{{::(\'Credit\' | settingType1Label)}}</div><div data-ng-if=\"editable\"><div data-ng-if=\"customerLevel === avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w40-percent\"><span>{{::(\'Currency\' | settingType1Label)}}</span> <span class=\"required-field-mark\" data-ng-if=\"isNew\">*</span></label><div class=\"w60-percent\" data-ng-if=\"isNew\"><select class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.currency\" data-ng-options=\"currency.name for currency in accountDetail.currencies track by currency.id\" data-setting-field=\"currency\"></select></div><label class=\"w60-percent\" data-ng-if=\"!isNew\">{{accountDetail.currency.name}}</label></div><div class=\"row\"><label class=\"w40-percent\"><span>{{::(\'Credit\' | settingType1Label)}}</span> <span class=\"required-field-mark\">*</span></label><div class=\"w60-percent\"><input type=\"text\" maxlength=\"17\" class=\"setting-field setting-field--fullwidth setting-field--number\" data-numeric-input=\"2\" data-strict-format=\"true\" data-ng-model=\"accountDetail.credit\" data-setting-field=\"credit\"></div></div></div><div data-ng-if=\"customerLevel !== avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w40-percent\"><span>{{::(\'Credit\' | settingType1Label)}}</span> <span class=\"required-field-mark\">*</span></label><div class=\"w60-percent\"><input type=\"text\" maxlength=\"17\" class=\"setting-field setting-field--fullwidth setting-field--number\" data-numeric-input=\"2\" data-strict-format=\"true\" data-ng-model=\"accountDetail.credit\" data-setting-field=\"credit\"></div></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'AvailableCredit\' | settingType1Label)}}</label> <label class=\"available-credit w60-percent\">{{accountDetail.availableCredit | formatNumber:2}}</label></div></div></div><div data-ng-if=\"!editable\"><div data-ng-if=\"customerLevel === avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'Currency\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.currency.name}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'Credit\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.credit | formatNumber:2}}</label></div></div><div data-ng-if=\"customerLevel !== avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'Credit\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.credit | formatNumber:2}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'AvailableCredit\' | settingType1Label)}}</label> <label class=\"w60-percent available-credit\">{{accountDetail.availableCredit | formatNumber:2}}</label></div></div></div></div>");
 $templateCache.put("SubSections/GeneralData/general-data.htm","<div class=\"general-data\"><div class=\"sub-header\">{{::(\'GeneralData\' | settingType1Label)}}</div><div data-ng-if=\"editable\"><div data-ng-if=\"customerLevel === avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w40-percent\"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class=\"required-field-mark\" data-ng-if=\"isNew\">*</span></label><div class=\"w60-percent\" data-ng-if=\"isNew\"><input type=\"text\" maxlength=\"30\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.username\" data-setting-field=\"username\"></div><label class=\"w60-percent\" data-ng-if=\"!isNew\">{{accountDetail.username}}</label></div><div class=\"row\" data-ng-if=\"isNew\"><label class=\"w40-percent\"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class=\"required-field-mark\">*</span></label><div class=\"w60-percent\"><input type=\"password\" maxlength=\"30\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.password\" data-setting-field=\"password\"></div></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'FirstName\' | settingType1Label)}}</label><div class=\"w60-percent\"><input type=\"text\" maxlength=\"50\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.firstName\"></div></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'LastName\' | settingType1Label)}}</label><div class=\"w60-percent\"><input type=\"text\" maxlength=\"50\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.lastName\"></div></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'Phone\' | settingType1Label)}}</label><div class=\"w60-percent\"><input type=\"text\" maxlength=\"50\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.phone\"></div></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'MobilePhone\' | settingType1Label)}}</label><div class=\"w60-percent\"><input type=\"text\" maxlength=\"50\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.mobilePhone\"></div></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'Fax\' | settingType1Label)}}</label><div class=\"w60-percent\"><input type=\"text\" maxlength=\"50\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.fax\"></div></div></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.master\"><div class=\"row\"><label class=\"w40-percent\"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class=\"required-field-mark\" data-ng-if=\"isNew\">*</span></label><div class=\"w60-percent\" data-ng-if=\"isNew\"><span>{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class=\"w60-percent\" data-ng-if=\"!isNew\">{{accountDetail.username}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'Name\' | settingType1Label)}}</label><div class=\"w60-percent\"><input type=\"text\" maxlength=\"30\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.firstName\"></div></div><div class=\"row\" data-ng-if=\"isNew\"><label class=\"w40-percent\"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class=\"required-field-mark\">*</span> <span class=\"icon icon--command icon--info\" data-tooltip=\"{{\'PasswordRules\' | settingType1Message}}\" data-tooltip-type=\"warning\" data-inner-tooltip=\"true\"></span></label><div class=\"w60-percent\"><input type=\"password\" maxlength=\"16\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.password\" data-setting-field=\"password\"></div></div><div class=\"row\" data-ng-if=\"isNew\"><label class=\"w40-percent\"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class=\"required-field-mark\">*</span></label><div class=\"w60-percent\"><input type=\"password\" maxlength=\"16\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.confirmPassword\" data-setting-field=\"confirmPassword\"></div></div></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.agent\"><div class=\"row\" data-ng-if=\"isNew\"><label class=\"w40-percent\">{{::(\'Master\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.uplineUsername}}</label></div><div class=\"row\"><label class=\"w40-percent\"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class=\"required-field-mark\" data-ng-if=\"isNew\">*</span></label><div class=\"w60-percent\" data-ng-if=\"isNew\"><span>{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class=\"w60-percent\" data-ng-if=\"!isNew\">{{accountDetail.username}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'Name\' | settingType1Label)}}</label><div class=\"w60-percent\"><input type=\"text\" maxlength=\"30\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.firstName\"></div></div><div class=\"row\" data-ng-if=\"isNew\"><label class=\"w40-percent\"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class=\"required-field-mark\">*</span> <span class=\"icon icon--command icon--info\" data-tooltip=\"{{\'PasswordRules\' | settingType1Message}}\" data-tooltip-type=\"warning\" data-inner-tooltip=\"true\"></span></label><div class=\"w60-percent\"><input type=\"password\" maxlength=\"16\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.password\" data-setting-field=\"password\"></div></div><div class=\"row\" data-ng-if=\"isNew\"><label class=\"w40-percent\"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class=\"required-field-mark\">*</span></label><div class=\"w60-percent\"><input type=\"password\" maxlength=\"16\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.confirmPassword\" data-setting-field=\"confirmPassword\"></div></div></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.member\"><div class=\"row\" data-ng-if=\"isNew\"><label class=\"w40-percent\">{{::(\'Agent\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.uplineUsername}}</label></div><div class=\"row\"><label class=\"w40-percent\"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class=\"required-field-mark\" data-ng-if=\"isNew\">*</span></label><div class=\"w60-percent\" data-ng-if=\"isNew\"><span>{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class=\"w60-percent\" data-ng-if=\"!isNew\">{{accountDetail.username}}</label></div><div class=\"row\"><label class=\"w40-percent\"><span>{{::(\'SpreadGroup\' | settingType1Label)}}</span> <span class=\"required-field-mark\" data-ng-if=\"isNew\">*</span> <span class=\"icon icon--command icon--info\" data-tooltip=\"{{\'SpreadGroupRule\' | settingType1Message}}\" data-tooltip-type=\"warning\" data-inner-tooltip=\"true\"></span></label><div class=\"w60-percent\" data-ng-if=\"isNew\"><select class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.spreadGroup\" data-ng-options=\"spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup\" data-ng-change=\"updateSpreadGroup()\"></select></div><label class=\"w60-percent\" data-ng-if=\"!isNew\">{{accountDetail.spreadGroup.uGroup}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'Name\' | settingType1Label)}}</label><div class=\"w60-percent\"><input type=\"text\" maxlength=\"30\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.firstName\"></div></div><div class=\"row\" data-ng-if=\"isNew\"><label class=\"w40-percent\"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class=\"required-field-mark\">*</span> <span class=\"icon icon--command icon--info\" data-tooltip=\"{{\'MemberPasswordRules\' | settingType1Message}}\" data-tooltip-type=\"warning\" data-inner-tooltip=\"true\"></span></label><div class=\"w60-percent\"><input type=\"password\" maxlength=\"10\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.password\" data-setting-field=\"password\"></div></div><div class=\"row\" data-ng-if=\"isNew\"><label class=\"w40-percent\"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class=\"required-field-mark\">*</span></label><div class=\"w60-percent\"><input type=\"password\" maxlength=\"10\" class=\"setting-field setting-field--fullwidth\" data-ng-model=\"accountDetail.confirmPassword\" data-setting-field=\"confirmPassword\"></div></div></div></div><div data-ng-if=\"!editable\"><div data-ng-if=\"customerLevel === avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'Username\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.username}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'FirstName\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.firstName}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'LastName\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.lastName}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'Phone\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.phone}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'MobilePhone\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.mobilePhone}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'Fax\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.fax}}</label></div></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.master\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'Username\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.username}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'Name\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.firstName}}</label></div></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.agent\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'Username\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.username}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'Name\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.firstName}}</label></div></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.member\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'Username\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.username}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'SpreadGroup\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.spreadGroup.uGroup}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'Name\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.firstName}}</label></div></div></div></div>");
 $templateCache.put("SubSections/PositionTaking/position-taking.htm","<div class=\"position-taking\"><div data-ng-if=\"editable\"><div class=\"sub-header\" data-ng-if=\"customerLevel !== avaiCustomerLevels.agent\">{{::(\'PositionTaking\' | settingType1Label)}}</div><div class=\"sub-header\" data-ng-if=\"customerLevel === avaiCustomerLevels.agent\"><span class=\"sub-header__title\">{{::(\'PositionTaking\' | settingType1Label)}}</span> <span class=\"position-taking-constraint\">{{\'MinAllowed\' | settingType1Label}} <span class=\"position-taking-constraint__value\">{{accountDetail.minAllowedPT | formatPercentage}}</span></span> <span class=\"position-taking-constraint\">{{\'MaxAllowed\' | settingType1Label}} <span class=\"position-taking-constraint__value\">{{accountDetail.maxAllowedPT | formatPercentage}}</span></span></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'SuperMinPT\' | settingType1Label)}}</label><div class=\"w60-percent\"><percentage-dropdown class=\"setting-field--fullwidth\" data-ng-model=\"accountDetail.superMinPT\" data-min=\"accountDetail.minSuperMinPT\" data-max=\"accountDetail.maxSuperMinPT\" data-step=\"accountDetail.intervalValue\" data-setting-field=\"superMinPT\"></percentage-dropdown></div></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'SuperMaxPT\' | settingType1Label)}}</label><div class=\"w60-percent\"><percentage-dropdown class=\"setting-field--fullwidth\" data-ng-model=\"accountDetail.superMaxPT\" data-min=\"accountDetail.minSuperMaxPT\" data-max=\"accountDetail.maxSuperMaxPT\" data-step=\"accountDetail.intervalValue\" data-setting-field=\"superMaxPT\"></percentage-dropdown></div></div></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.master\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'SuperPT\' | settingType1Label)}}</label><div class=\"w60-percent\"><percentage-dropdown class=\"setting-field--fullwidth\" data-ng-model=\"accountDetail.superPT\" data-min=\"accountDetail.minSuperPT\" data-max=\"accountDetail.maxSuperPT\" data-step=\"accountDetail.intervalValue\" data-setting-field=\"superPT\"></percentage-dropdown></div></div></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.agent\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'MasterPT\' | settingType1Label)}}</label><div class=\"w60-percent\"><percentage-dropdown class=\"setting-field--fullwidth\" data-ng-model=\"accountDetail.masterPT\" data-min=\"0\" data-max=\"accountDetail.maxMasterPT\" data-step=\"accountDetail.intervalValue\" data-setting-field=\"masterPT\"></percentage-dropdown></div></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'AgentPT\' | settingType1Label)}}</label><div class=\"w60-percent\"><percentage-dropdown class=\"setting-field--fullwidth\" data-ng-model=\"accountDetail.agentPT\" data-min=\"0\" data-max=\"accountDetail.maxAgentPT\" data-step=\"accountDetail.intervalValue\" data-setting-field=\"agentPT\"></percentage-dropdown></div></div></div></div><div data-ng-if=\"!editable\"><div class=\"sub-header\" data-ng-if=\"customerLevel !== avaiCustomerLevels.agent\">{{::(\'PositionTaking\' | settingType1Label)}}</div><div data-ng-if=\"customerLevel === avaiCustomerLevels.super\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'SuperMinPT\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.superMinPT | formatPercentage}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'SuperMaxPT\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.superMaxPT | formatPercentage}}</label></div></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.master\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'SuperPT\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.superPT | formatPercentage}}</label></div></div><div data-ng-if=\"customerLevel === avaiCustomerLevels.agent\"><div class=\"row\"><label class=\"w40-percent\">{{::(\'MasterPT\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.masterPT | formatPercentage}}</label></div><div class=\"row\"><label class=\"w40-percent\">{{::(\'AgentPT\' | settingType1Label)}}</label> <label class=\"w60-percent\">{{accountDetail.agentPT | formatPercentage}}</label></div></div></div></div>");
 $templateCache.put("setting-type2-header.htm","<div class=\"block__lbl\"></div><div class=\"w80-percent\"><div class=\"w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__lbl\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"item in availableCommissionGroups\">{{item}}</div></div><div class=\"block__lbl w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member\">{{::(\'MemberCommission\' | settingType2Label)}}</div><div class=\"w50-percent\"><div class=\"block__lbl w50-percent\">{{::(\'MaxBet\' | settingType2Label)}}</div><div class=\"block__lbl block__lbl--no-border w50-percent\">{{::(\'MaxPerMatch\' | settingType2Label)}}</div></div></div>");
