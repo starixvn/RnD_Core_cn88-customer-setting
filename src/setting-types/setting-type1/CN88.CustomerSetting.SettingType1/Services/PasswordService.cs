@@ -24,7 +24,7 @@
 
         public IResult ValidateAndHashPassword(string encryptedPassword, string encryptionKey, Level level)
         {
-            if (string.IsNullOrEmpty(encryptedPassword))
+            if (string.IsNullOrWhiteSpace(encryptedPassword))
             {
                 return Result.CreateErrorResult(Resources.PasswordCannotBeNullOrEmpty);
             }
@@ -41,7 +41,7 @@
             string password,
             Level customerLevel)
         {
-            if (string.IsNullOrEmpty(password))
+            if (string.IsNullOrWhiteSpace(password))
             {
                 return Result.CreateErrorResult(Resources.PasswordCannotBeNullOrEmpty);
             }
