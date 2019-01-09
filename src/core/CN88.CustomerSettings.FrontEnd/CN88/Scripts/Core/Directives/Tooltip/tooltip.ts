@@ -48,7 +48,11 @@ module CustomerSetting {
 
             var debounceResize: any = debounce(() => {
                 if (scope.tooltipMessage) {
-                    this.calculateTooltipPosition(scope.target, tooltip, scope.tooltipPositionModel);
+                    this.calculateTooltipPosition(
+                        scope.target,
+                        tooltip,
+                        scope.tooltipPositionModel,
+                        scope.manual);
                 }
             }, 100);
 
@@ -67,7 +71,11 @@ module CustomerSetting {
                         scope.beingShowed = true;
                         scope.$apply();
 
-                        this.calculateTooltipPosition(scope.target, tooltip, scope.tooltipPositionModel);
+                        this.calculateTooltipPosition(
+                            scope.target,
+                            tooltip,
+                            scope.tooltipPositionModel,
+                            scope.manual);
                     }
                 });
 
@@ -89,7 +97,11 @@ module CustomerSetting {
 
             scope.$watch("tooltipMessage", () => {
                 if (scope.tooltipMessage) {
-                    this.calculateTooltipPosition(scope.target, tooltip, scope.tooltipPositionModel);
+                    this.calculateTooltipPosition(
+                        scope.target,
+                        tooltip,
+                        scope.tooltipPositionModel,
+                        scope.manual);
                 }
             });
 
@@ -119,7 +131,8 @@ module CustomerSetting {
         private calculateTooltipPosition(
             target: ng.IAugmentedJQuery,
             tooltip: ng.IAugmentedJQuery,
-            positionModel: PositionModel): void {
+            positionModel: PositionModel,
+            autoScrollTo: boolean): void {
             if (!target || target.length === 0 || !tooltip || tooltip.length === 0) {
                 return;
             }
@@ -168,6 +181,10 @@ module CustomerSetting {
                     "left": left + "px",
                     "visibility": "visible"
                 });
+
+                if (autoScrollTo) {
+                    this.$window.scrollTo(left, top);
+                }
             });
         }
     }

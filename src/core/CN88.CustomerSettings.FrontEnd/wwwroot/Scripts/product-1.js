@@ -30953,7 +30953,7 @@ var CustomerSetting;
                 var tooltip = angular.element(template);
                 var debounceResize = CustomerSetting.debounce(function () {
                     if (scope.tooltipMessage) {
-                        _this.calculateTooltipPosition(scope.target, tooltip, scope.tooltipPositionModel);
+                        _this.calculateTooltipPosition(scope.target, tooltip, scope.tooltipPositionModel, scope.manual);
                     }
                 }, 100);
                 scope.tooltipType = scope.tooltipType || "info";
@@ -30968,7 +30968,7 @@ var CustomerSetting;
                             tooltip.css({ "left": "0px", "visibility": "hidden" });
                             scope.beingShowed = true;
                             scope.$apply();
-                            _this.calculateTooltipPosition(scope.target, tooltip, scope.tooltipPositionModel);
+                            _this.calculateTooltipPosition(scope.target, tooltip, scope.tooltipPositionModel, scope.manual);
                         }
                     });
                     scope.target.on("mouseleave", function () {
@@ -30987,7 +30987,7 @@ var CustomerSetting;
                 }
                 scope.$watch("tooltipMessage", function () {
                     if (scope.tooltipMessage) {
-                        _this.calculateTooltipPosition(scope.target, tooltip, scope.tooltipPositionModel);
+                        _this.calculateTooltipPosition(scope.target, tooltip, scope.tooltipPositionModel, scope.manual);
                     }
                 });
                 angular.element(_this.$window).on("resize", debounceResize);
@@ -31012,7 +31012,7 @@ var CustomerSetting;
             enumerable: true,
             configurable: true
         });
-        TooltipDirective.prototype.calculateTooltipPosition = function (target, tooltip, positionModel) {
+        TooltipDirective.prototype.calculateTooltipPosition = function (target, tooltip, positionModel, autoScrollTo) {
             var _this = this;
             if (!target || target.length === 0 || !tooltip || tooltip.length === 0) {
                 return;
@@ -31051,6 +31051,9 @@ var CustomerSetting;
                     "left": left + "px",
                     "visibility": "visible"
                 });
+                if (autoScrollTo) {
+                    _this.$window.scrollTo(left, top);
+                }
             });
         };
         TooltipDirective.$inject = ["$window", "$compile", "$timeout", "$templateCache", "$rootScope"];
