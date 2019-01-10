@@ -20,6 +20,8 @@ module CustomerSetting {
         eachGroupStyle: {};
         hasMaxBetConstraint: boolean;
         hasMaxPerMatchConstraint: boolean;
+        commissionPrecision: number;
+        betSettingPrecision: number;
     }
 
     class SettingType2Directive extends DefaultSettingTypeGroupingDirective {
@@ -39,6 +41,8 @@ module CustomerSetting {
             scope.cssClass = "full-width";
             scope.settingTypeName = this.settingType2ResourceService.getLabel("CommissionAndBetLimit");
             scope.availableLayoutTypes = LayoutType;
+            scope.commissionPrecision = 2;
+            scope.betSettingPrecision = 0;
 
             if (scope.settingType.settingItems && scope.settingType.settingItems.length > 0) {
                 scope.availableCommissionGroups = this.getAllAvailableGroups(scope.settingType.settingItems);

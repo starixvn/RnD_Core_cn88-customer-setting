@@ -6,11 +6,9 @@ module CustomerSetting {
 
     function FormatPercentageFilter($filter: ng.IFilterService): Function {
         var defaultPrecision: number = 0;
-        var numberFilter = $filter("number");
+        var numberFilter: Function = $filter("number");
 
         return (value: number, precision: number = defaultPrecision) => {
-            precision = precision || (value.toString().indexOf(".") > 0 ? defaultPrecision : 0);
-
             return numberFilter(value, precision) + "%";
         };
     }

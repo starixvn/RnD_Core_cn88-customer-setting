@@ -21,7 +21,7 @@
         "Fax": "Fax",
         "SpreadGroup": "Spread Group",
         "Credit": "Credit",
-        "AvailableCredit": "Available Credit",
+        "AvailableCreditRange": "Available Credit Range",
         "Currency": "Currency",
         "PositionTaking": "Position Taking",
         "SuperMinPT": "Super Min PT",

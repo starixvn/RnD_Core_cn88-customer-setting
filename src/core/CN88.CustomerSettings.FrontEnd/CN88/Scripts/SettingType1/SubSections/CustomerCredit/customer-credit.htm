@@ -24,11 +24,15 @@
                     <input type="text"
                            maxlength="17"
                            class="setting-field setting-field--fullwidth setting-field--number"
-                           data-numeric-input="2"
+                           data-numeric-input="creditPrecision"
                            data-strict-format="true"
                            data-ng-model="accountDetail.credit"
                            data-setting-field="credit" />
                 </div>
+            </div>
+            <div class="row" data-ng-if="!isNew">
+                <label class="w40-percent">{{::('AvailableCreditRange' | settingType1Label)}}</label>
+                <label class="available-credit w60-percent">>= {{accountDetail.minCredit | number:creditPrecision}}</label>
             </div>
         </div>
         <div data-ng-if="customerLevel !== avaiCustomerLevels.super">
@@ -41,16 +45,15 @@
                     <input type="text"
                            maxlength="17"
                            class="setting-field setting-field--fullwidth setting-field--number"
-                           data-numeric-input="2"
+                           data-numeric-input="creditPrecision"
                            data-strict-format="true"
                            data-ng-model="accountDetail.credit"
                            data-setting-field="credit" />
                 </div>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('AvailableCredit' | settingType1Label)}}</label>
-                <label class="available-credit w60-percent" data-ng-if="isNew">{{accountDetail.maxCredit | formatNumber:2}}</label>
-                <label class="available-credit w60-percent" data-ng-if="!isNew">[{{accountDetail.minCredit | formatNumber:2}}; {{accountDetail.maxCredit | formatNumber:2}}]</label>
+                <label class="w40-percent">{{::('AvailableCreditRange' | settingType1Label)}}</label>
+                <label class="available-credit w60-percent">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label>
             </div>
         </div>
     </div>
@@ -62,17 +65,21 @@
             </div>
             <div class="row">
                 <label class="w40-percent">{{::('Credit' | settingType1Label)}}</label>
-                <label class="w60-percent">{{accountDetail.credit | formatNumber:2}}</label>
+                <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label>
+            </div>
+            <div class="row">
+                <label class="w40-percent">{{::('AvailableCreditRange' | settingType1Label)}}</label>
+                <label class="w60-percent available-credit">>= {{accountDetail.minCredit | number:creditPrecision}}</label>
             </div>
         </div>
         <div data-ng-if="customerLevel !== avaiCustomerLevels.super">
             <div class="row">
                 <label class="w40-percent">{{::('Credit' | settingType1Label)}}</label>
-                <label class="w60-percent">{{accountDetail.credit | formatNumber:2}}</label>
+                <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('AvailableCredit' | settingType1Label)}}</label>
-                <label class="w60-percent available-credit">[{{accountDetail.minCredit | formatNumber:2}}; {{accountDetail.maxCredit | formatNumber:2}}]</label>
+                <label class="w40-percent">{{::('AvailableCreditRange' | settingType1Label)}}</label>
+                <label class="w60-percent available-credit">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label>
             </div>
         </div>
     </div>

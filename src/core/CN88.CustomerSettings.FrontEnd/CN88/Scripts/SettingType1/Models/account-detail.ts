@@ -145,13 +145,21 @@ module CustomerSetting {
             }
 
             if (this.credit < this.minCredit) {
-                this.validationState = new ValidationResult("CreditMustBeGreaterThanOrEqualTo", "credit", [this.minCredit]);
+                this.validationState = new ValidationResult(
+                    "CreditMustBeGreaterThanOrEqualTo",
+                    "credit",
+                    [this.minCredit],
+                    { precision: 2 });
 
                 return false;
             }
 
             if (this.credit > this.maxCredit) {
-                this.validationState = new ValidationResult("CreditMustBeLessThanOrEqualTo", "credit", [this.maxCredit]);
+                this.validationState = new ValidationResult(
+                    "CreditMustBeLessThanOrEqualTo",
+                    "credit",
+                    [this.maxCredit],
+                    { precision: 2 });
 
                 return false;
             }

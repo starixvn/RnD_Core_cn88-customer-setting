@@ -216,22 +216,24 @@ module CustomerSetting {
     }
 
     export class ValidationResult extends Result {
-        public fieldName: string;
+        public triggeringFieldName: string;
         public msgParams: any[];
+        public extraData: any;
         public affectedFields: string[];
 
-        constructor(message: string, fieldName?: string, msgParams?: any[]) {
+        constructor(message: string, triggeringFieldName?: string, msgParams?: any[], extraData?: any) {
             super(-8000, message, MessageType.error);
-            this.fieldName = fieldName;
+            this.triggeringFieldName = triggeringFieldName;
             this.msgParams = msgParams;
+            this.extraData = extraData || {};
             this.affectedFields = [];
 
-            if (fieldName) {
-                this.affectedFields.push(fieldName);
+            if (triggeringFieldName) {
+                this.affectedFields.push(triggeringFieldName);
             }
         }
 
-        public highlightField(fieldName: string): void {
+        public addAffectedField(fieldName: string): void {
             if (this.affectedFields.indexOf(fieldName) < 0) {
                 this.affectedFields.push(fieldName);
             }

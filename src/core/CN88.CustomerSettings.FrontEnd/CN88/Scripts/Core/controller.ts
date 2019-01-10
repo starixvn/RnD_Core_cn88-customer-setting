@@ -71,7 +71,6 @@ module CustomerSetting {
 
         public update(): void {
             var changedSettings: Setting = this.settingTypesSharedValuesService.isNew ? this.setting.getEditableSettingTypes() : this.setting.getChanges();
-            var validationResult: Result;
             var command: SettingCommand;
             var path: string = this.settingTypesSharedValuesService.isNew
                 ? this.appConfigService.getCreatePath()

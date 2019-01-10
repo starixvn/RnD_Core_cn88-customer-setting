@@ -101,7 +101,7 @@ module CustomerSetting {
                     } else {
                         var errorMessage: string = this.getErrorMessage(validationState, scope.resourceServiceName, scope.customFilterName);
 
-                        scope.dirtyField = this.getErrorTriggeringField(scope.registeredFields, validationState.fieldName);
+                        scope.dirtyField = this.getErrorTriggeringField(scope.registeredFields, validationState.triggeringFieldName);
 
                         if (tooltipController && errorMessage && scope.dirtyField) {
                             this.toggleAffectedFieldsState(scope, validationState.affectedFields);
@@ -142,27 +142,29 @@ module CustomerSetting {
             return filteredRegisteredFields.length > 0 ? filteredRegisteredFields[0].value.element : null;
         }
 
-        private getErrorMessage(result: ValidationResult, resourceServiceName: string, customFilterName: string = null): string {
+        private getErrorMessage(validationResult: ValidationResult, resourceServiceName: string, customFilterName: string = null): string {
             var message: string = null;
 
-            if (result.message) {
+            if (validationResult.message) {
                 var resourceService: ResourceService = this.$injector.get<ResourceService>(resourceServiceName);
-                var params: string[] = (result.msgParams || []).map((param: any) => {
-                    if (typeof param === "number") {
-                        var value = this.$filter("number")(param);
+                var params: string[] = (validationResult.msgParams || []).map((param: any) => {
+                    if (customFilterName) {
+                        return this.$filter(customFilterName)(param);
+                    } else if (typeof param === "number") {
+                        var precision: number = validationResult.extraData["precision"];
 
-                        if (customFilterName) {
-                            value = this.$filter(customFilterName)(value);
+                        if (precision === undefined || precision === null) {
+                            return this.$filter("number")(param);
+                        } else {
+                            return this.$filter("number")(param, precision);
                         }
-
-                        return value;
                     } else {
                         return param;
                     }
                 });
 
                 if (resourceService) {
-                    params.unshift(result.message);
+                    params.unshift(validationResult.message);
                     message = resourceService.getFormattedMessage.apply(resourceService, params);
                 }
             }

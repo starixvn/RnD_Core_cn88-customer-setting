@@ -13,7 +13,7 @@
                                  data-min="commissionGroup.minValue"
                                  data-max="commissionGroup.maxValue"
                                  data-step="item.intervalValue"
-                                 data-precision="2"></percentage-dropdown>
+                                 data-precision="commissionPrecision"></percentage-dropdown>
         </div>
         <div class="block__cell align-center w100-percent"
              data-ng-if="item.layoutType === availableLayoutTypes.singleGroup">
@@ -22,7 +22,7 @@
                                  data-min="item.mappedCommissionGroups[0].minValue"
                                  data-max="item.mappedCommissionGroups[0].maxValue"
                                  data-step="item.intervalValue"
-                                 data-precision="2"></percentage-dropdown>
+                                 data-precision="commissionPrecision"></percentage-dropdown>
         </div>
     </div>
     <div class="block__cell align-center w50-percent"
@@ -33,7 +33,7 @@
                              data-min="item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue"
                              data-max="item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue"
                              data-step="item.intervalValue"
-                             data-precision="2"
+                             data-precision="commissionPrecision"
                              data-auto-refresh="true"></percentage-dropdown>
     </div>
     <div class="block__cell w50-percent align-center"
@@ -43,7 +43,7 @@
                              data-min="item.mappedCommissionGroups[0].minValue"
                              data-max="item.mappedCommissionGroups[0].maxValue"
                              data-step="item.intervalValue"
-                             data-precision="2"></percentage-dropdown>
+                             data-precision="commissionPrecision"></percentage-dropdown>
     </div>
     <div class="block__cell-wrapper w50-percent">
         <div class="block__cell w50-percent"
@@ -54,8 +54,8 @@
                    data-numeric-input
                    data-ng-model="item.maxBet"
                    data-setting-field="maxBet" />
-            <span class="setting-field--constraint" data-ng-if="(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxBet > 0)">[{{item.minMaxBet | formatNumber}}; {{item.maxMaxBet | formatNumber}}]</span>
-            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && (item.minMaxBet > 0) && (item.maxMaxBet === 0)">>={{item.minMaxBet | formatNumber}}</span>
+            <span class="setting-field--constraint" data-ng-if="(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxBet > 0)">[{{item.minMaxBet | number:betSettingPrecision}}; {{item.maxMaxBet | number:betSettingPrecision}}]</span>
+            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && !isNew">>={{item.minMaxBet | number:betSettingPrecision}}</span>
         </div>
         <div class="block__cell block__cell--no-border w50-percent"
              data-ng-class="{'align-center': !hasMaxBetConstraint}">
@@ -65,8 +65,8 @@
                    data-numeric-input
                    data-ng-model="item.maxPerMatch"
                    data-setting-field="maxPerMatch" />
-            <span class="setting-field--constraint" data-ng-if="(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxPerMatch > 0)">[{{item.minMaxPerMatch | formatNumber}}; {{item.maxMaxPerMatch | formatNumber}}]</span>
-            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && (item.minMaxPerMatch > 0) && (item.maxMaxPerMatch === 0)">>={{item.minMaxPerMatch | formatNumber}}</span>
+            <span class="setting-field--constraint" data-ng-if="(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxPerMatch > 0)">[{{item.minMaxPerMatch | number:betSettingPrecision}}; {{item.maxMaxPerMatch | number:betSettingPrecision}}]</span>
+            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && !isNew">>={{item.minMaxPerMatch | number:betSettingPrecision}}</span>
         </div>
     </div>
 </div>
@@ -76,22 +76,22 @@
              data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
              data-ng-style="eachGroupStyle"
              data-ng-repeat="commissionGroup in item.mappedCommissionGroups">
-            {{commissionGroup.value}}
+            {{commissionGroup.value | formatPercentage:commissionPrecision}}
         </div>
         <div class="block__cell align-center" data-ng-if="item.layoutType === availableLayoutTypes.singleGroup">
-            {{item.mappedCommissionGroups[0].value}}
+            {{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}
         </div>
     </div>
     <div class="block__cell align-center w50-percent"
          data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups">
-        {{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value}}
+        {{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}
     </div>
     <div class="block__cell align-center w50-percent"
          data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup">
-        {{item.mappedCommissionGroups[0].value}}
+        {{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}
     </div>
     <div class="w50-percent w50-percent">
-        <div class="block__cell align-center w50-percent">{{item.maxBet}}</div>
-        <div class="block__cell align-center block__cell--no-border w50-percent">{{item.maxPerMatch}}</div>
+        <div class="block__cell align-center w50-percent">{{item.maxBet | number:betSettingPrecision}}</div>
+        <div class="block__cell align-center block__cell--no-border w50-percent">{{item.maxPerMatch | number:betSettingPrecision}}</div>
     </div>
 </div>
