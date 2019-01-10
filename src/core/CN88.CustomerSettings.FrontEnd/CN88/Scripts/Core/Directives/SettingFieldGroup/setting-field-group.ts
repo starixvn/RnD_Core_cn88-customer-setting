@@ -107,6 +107,7 @@ module CustomerSetting {
                             this.toggleAffectedFieldsState(scope, validationState.affectedFields);
                             tooltipController.showTooltipAt(errorMessage, scope.dirtyField);
                             scope.dirtyField[0].focus();
+                            (<HTMLInputElement>scope.dirtyField[0]).select();
                         }
                     }
                 }
@@ -151,7 +152,7 @@ module CustomerSetting {
                     if (customFilterName) {
                         return this.$filter(customFilterName)(param);
                     } else if (typeof param === "number") {
-                        var precision: number = validationResult.extraData["precision"];
+                        var precision: number = validationResult.extraData.precision;
 
                         if (precision === undefined || precision === null) {
                             return this.$filter("number")(param);

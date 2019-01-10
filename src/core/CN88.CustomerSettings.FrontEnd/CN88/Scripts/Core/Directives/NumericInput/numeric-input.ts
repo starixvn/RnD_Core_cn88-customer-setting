@@ -39,24 +39,17 @@ module CustomerSetting {
             scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
 
             element.on("focus", () => {
-                element.data("focused", true);
+                (<HTMLInputElement>element[0]).select();
             });
 
             element.on("focusout", () => {
-                element.data("focused", false);
-
                 if (scope.strictFormat && scope.precision > 0) {
                     element.val(this.$filter("number")(modelCtrl.$modelValue, scope.precision));
                 }
             });
 
-            element.on("mouseup", () => {
-                if (element.data("focused")) {
-                    var input: HTMLInputElement = <HTMLInputElement>element[0];
-
-                    input.select();
-                    element.data("focused", false);
-                }
+            element.on("mouseup", (event: JQueryEventObject) => {
+                event.preventDefault();
             });
 
             element.on("keydown", (event: JQueryEventObject) => {

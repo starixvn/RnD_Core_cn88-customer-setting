@@ -102,6 +102,16 @@ module CustomerSetting {
                 return false;
             }
 
+            if (this.credit < this.minCredit) {
+                this.validationState = new ValidationResult(
+                    "CreditMustBeGreaterThanOrEqualTo",
+                    "credit",
+                    [this.minCredit],
+                    { precision: 2 });
+
+                return false;
+            }
+
             return true;
         }
 

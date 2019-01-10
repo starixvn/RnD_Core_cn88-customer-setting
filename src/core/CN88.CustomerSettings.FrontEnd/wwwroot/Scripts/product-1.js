@@ -30343,6 +30343,151 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
+    var NumericInputDirective = (function () {
+        function NumericInputDirective($filter, $window) {
+            var _this = this;
+            this.restrict = "A";
+            this.link = function (scope, originalElement) {
+                var element = angular.element(originalElement[0]);
+                var maxLength = parseInt(element.attr("maxlength"), 10);
+                var modelCtrl = element.controller("ngModel");
+                scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
+                element.on("focus", function () {
+                    element[0].select();
+                });
+                element.on("focusout", function () {
+                    if (scope.strictFormat && scope.precision > 0) {
+                        element.val(_this.$filter("number")(modelCtrl.$modelValue, scope.precision));
+                    }
+                });
+                element.on("mouseup", function (event) {
+                    event.preventDefault();
+                });
+                element.on("keydown", function (event) {
+                    var value = element.val();
+                    var dotPistion = value.indexOf(".");
+                    var numberParts = value.split(".");
+                    var input = element[0];
+                    if ([110, 190].indexOf(event.keyCode) >= 0) {
+                        if (numberParts.length > 1 || scope.precision === 0) {
+                            event.preventDefault();
+                            return;
+                        }
+                        else if (numberParts[0].length === 0) {
+                            event.preventDefault();
+                            return;
+                        }
+                        else {
+                            return;
+                        }
+                    }
+                    if ([8, 46, 9, 27, 13].indexOf(event.keyCode) >= 0
+                        || (event.keyCode === 65 && event.ctrlKey)
+                        || (event.keyCode === 67 && event.ctrlKey)
+                        || (event.keyCode === 86 && event.ctrlKey)
+                        || (event.keyCode >= 35 && event.keyCode <= 40)) {
+                        return;
+                    }
+                    if ((event.shiftKey || (event.keyCode < 48 || event.keyCode > 57))
+                        && (event.keyCode < 96 || event.keyCode > 105)) {
+                        event.preventDefault();
+                        return;
+                    }
+                    if (dotPistion >= 0 && dotPistion < input.selectionStart && numberParts[1].length >= scope.precision) {
+                        event.preventDefault();
+                        return;
+                    }
+                    if (dotPistion < 0 && scope.precision > 0) {
+                        var allowedLength = maxLength - scope.precision - 1;
+                        if (value.length >= allowedLength) {
+                            event.preventDefault();
+                        }
+                    }
+                });
+                element.on("paste", function (event) {
+                    var clipboardData = event.clipboardData
+                        || _this.$window.clipboardData
+                        || event.originalEvent.clipboardData;
+                    var clipboard = clipboardData.getData("Text");
+                    var formattedValue = _this.parseAndFormatViewValue(clipboard, scope.precision, true).formattedValue;
+                    var input = element[0];
+                    var selection = input.selectionEnd - input.selectionStart;
+                    var currentValue = element.val();
+                    event.preventDefault();
+                    if ((!currentValue || selection === currentValue.length) && formattedValue && formattedValue.length <= maxLength) {
+                        modelCtrl.$setViewValue(formattedValue);
+                        modelCtrl.$render();
+                        input.selectionStart = formattedValue.length;
+                    }
+                });
+                modelCtrl.$formatters.unshift(function () {
+                    return _this.$filter("number")(modelCtrl.$modelValue, scope.precision);
+                });
+                modelCtrl.$parsers.unshift(function (viewValue) {
+                    var input = element[0];
+                    var caretPosition = input.selectionStart;
+                    var _a = _this.parseAndFormatViewValue(viewValue, scope.precision, false), formattedValue = _a.formattedValue, value = _a.value;
+                    element.val(formattedValue);
+                    if (viewValue.length !== caretPosition) {
+                        var offset = viewValue.length - formattedValue.length;
+                        caretPosition -= offset;
+                        if (input.selectionStart === input.selectionEnd) {
+                            input.selectionEnd = caretPosition;
+                        }
+                        input.selectionStart = caretPosition;
+                    }
+                    return value;
+                });
+            };
+            this.$filter = $filter;
+            this.$window = $window;
+        }
+        Object.defineProperty(NumericInputDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    precision: "=?numericInput",
+                    strictFormat: "@"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        NumericInputDirective.prototype.parseAndFormatViewValue = function (viewValue, precision, rounding) {
+            var value;
+            var formattedValue = "";
+            var numberParts = viewValue ? viewValue.split(".") : [];
+            if (numberParts.length > 1) {
+                if (precision > 0 && !/[\,\.]/.test(numberParts[1])) {
+                    var plainIntegerPart = numberParts[0].replace(/[\,]/g, "");
+                    var decimalPart = rounding ? numberParts[1] : numberParts[1].substring(0, precision);
+                    value = +(plainIntegerPart + "." + decimalPart);
+                    if (!isNaN(value)) {
+                        formattedValue = rounding
+                            ? this.$filter("number")(value, precision)
+                            : this.$filter("number")(plainIntegerPart) + "." + decimalPart;
+                    }
+                }
+            }
+            else if (numberParts.length > 0) {
+                var plainNumber = numberParts[0].replace(/[\,]/g, "");
+                value = +plainNumber;
+                formattedValue = this.$filter("number")(value);
+            }
+            return {
+                formattedValue: formattedValue,
+                value: value
+            };
+        };
+        NumericInputDirective.$inject = ["$filter", "$window"];
+        NumericInputDirective.defaultPrecision = 0;
+        return NumericInputDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
     (function (SettingLevel) {
         SettingLevel[SettingLevel["product"] = 1] = "product";
         SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
@@ -30481,156 +30626,6 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var NumericInputDirective = (function () {
-        function NumericInputDirective($filter, $window) {
-            var _this = this;
-            this.restrict = "A";
-            this.link = function (scope, originalElement) {
-                var element = angular.element(originalElement[0]);
-                var maxLength = parseInt(element.attr("maxlength"), 10);
-                var modelCtrl = element.controller("ngModel");
-                scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
-                element.on("focus", function () {
-                    element.data("focused", true);
-                });
-                element.on("focusout", function () {
-                    element.data("focused", false);
-                    if (scope.strictFormat && scope.precision > 0) {
-                        element.val(_this.$filter("number")(modelCtrl.$modelValue, scope.precision));
-                    }
-                });
-                element.on("mouseup", function () {
-                    if (element.data("focused")) {
-                        var input = element[0];
-                        input.select();
-                        element.data("focused", false);
-                    }
-                });
-                element.on("keydown", function (event) {
-                    var value = element.val();
-                    var dotPistion = value.indexOf(".");
-                    var numberParts = value.split(".");
-                    var input = element[0];
-                    if ([110, 190].indexOf(event.keyCode) >= 0) {
-                        if (numberParts.length > 1 || scope.precision === 0) {
-                            event.preventDefault();
-                            return;
-                        }
-                        else if (numberParts[0].length === 0) {
-                            event.preventDefault();
-                            return;
-                        }
-                        else {
-                            return;
-                        }
-                    }
-                    if ([8, 46, 9, 27, 13].indexOf(event.keyCode) >= 0
-                        || (event.keyCode === 65 && event.ctrlKey)
-                        || (event.keyCode === 67 && event.ctrlKey)
-                        || (event.keyCode === 86 && event.ctrlKey)
-                        || (event.keyCode >= 35 && event.keyCode <= 40)) {
-                        return;
-                    }
-                    if ((event.shiftKey || (event.keyCode < 48 || event.keyCode > 57))
-                        && (event.keyCode < 96 || event.keyCode > 105)) {
-                        event.preventDefault();
-                        return;
-                    }
-                    if (dotPistion >= 0 && dotPistion < input.selectionStart && numberParts[1].length >= scope.precision) {
-                        event.preventDefault();
-                        return;
-                    }
-                    if (dotPistion < 0 && scope.precision > 0) {
-                        var allowedLength = maxLength - scope.precision - 1;
-                        if (value.length >= allowedLength) {
-                            event.preventDefault();
-                        }
-                    }
-                });
-                element.on("paste", function (event) {
-                    var clipboardData = event.clipboardData
-                        || _this.$window.clipboardData
-                        || event.originalEvent.clipboardData;
-                    var clipboard = clipboardData.getData("Text");
-                    var formattedValue = _this.parseAndFormatViewValue(clipboard, scope.precision, true).formattedValue;
-                    var input = element[0];
-                    var selection = input.selectionEnd - input.selectionStart;
-                    var currentValue = element.val();
-                    event.preventDefault();
-                    if ((!currentValue || selection === currentValue.length) && formattedValue && formattedValue.length <= maxLength) {
-                        modelCtrl.$setViewValue(formattedValue);
-                        modelCtrl.$render();
-                        input.selectionStart = formattedValue.length;
-                    }
-                });
-                modelCtrl.$formatters.unshift(function () {
-                    return _this.$filter("number")(modelCtrl.$modelValue, scope.precision);
-                });
-                modelCtrl.$parsers.unshift(function (viewValue) {
-                    var input = element[0];
-                    var caretPosition = input.selectionStart;
-                    var _a = _this.parseAndFormatViewValue(viewValue, scope.precision, false), formattedValue = _a.formattedValue, value = _a.value;
-                    element.val(formattedValue);
-                    if (viewValue.length !== caretPosition) {
-                        var offset = viewValue.length - formattedValue.length;
-                        caretPosition -= offset;
-                        if (input.selectionStart === input.selectionEnd) {
-                            input.selectionEnd = caretPosition;
-                        }
-                        input.selectionStart = caretPosition;
-                    }
-                    return value;
-                });
-            };
-            this.$filter = $filter;
-            this.$window = $window;
-        }
-        Object.defineProperty(NumericInputDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    precision: "=?numericInput",
-                    strictFormat: "@"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        NumericInputDirective.prototype.parseAndFormatViewValue = function (viewValue, precision, rounding) {
-            var value;
-            var formattedValue = "";
-            var numberParts = viewValue ? viewValue.split(".") : [];
-            if (numberParts.length > 1) {
-                if (precision > 0 && !/[\,\.]/.test(numberParts[1])) {
-                    var plainIntegerPart = numberParts[0].replace(/[\,]/g, "");
-                    var decimalPart = rounding ? numberParts[1] : numberParts[1].substring(0, precision);
-                    value = +(plainIntegerPart + "." + decimalPart);
-                    if (!isNaN(value)) {
-                        formattedValue = rounding
-                            ? this.$filter("number")(value, precision)
-                            : this.$filter("number")(plainIntegerPart) + "." + decimalPart;
-                    }
-                }
-            }
-            else if (numberParts.length > 0) {
-                var plainNumber = numberParts[0].replace(/[\,]/g, "");
-                value = +plainNumber;
-                formattedValue = this.$filter("number")(value);
-            }
-            return {
-                formattedValue: formattedValue,
-                value: value
-            };
-        };
-        NumericInputDirective.$inject = ["$filter", "$window"];
-        NumericInputDirective.defaultPrecision = 0;
-        return NumericInputDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
     var PercentageDropdownDirective = (function () {
         function PercentageDropdownDirective(valueRangeService) {
             var _this = this;
@@ -30673,6 +30668,40 @@ var CustomerSetting;
         return PercentageDropdownDirective;
     }());
     CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var SettingResultDirective = (function () {
+        function SettingResultDirective($rootScope, $window) {
+            var _this = this;
+            this.replace = true;
+            this.templateUrl = "Directives/SettingResult/setting-result.htm";
+            this.link = function (scope) {
+                scope.$watch("result", function (result) {
+                    _this.$rootScope.$emit("page-height-changed");
+                    if (result) {
+                        _this.$window.scrollTo(0, 0);
+                    }
+                });
+            };
+            this.$rootScope = $rootScope;
+            this.$window = $window;
+        }
+        Object.defineProperty(SettingResultDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    result: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingResultDirective.$inject = ["$rootScope", "$window"];
+        return SettingResultDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -30737,6 +30766,7 @@ var CustomerSetting;
                                 _this.toggleAffectedFieldsState(scope, validationState.affectedFields);
                                 tooltipController.showTooltipAt(errorMessage, scope.dirtyField);
                                 scope.dirtyField[0].focus();
+                                scope.dirtyField[0].select();
                             }
                         }
                     }
@@ -30787,7 +30817,7 @@ var CustomerSetting;
                         return _this.$filter(customFilterName)(param);
                     }
                     else if (typeof param === "number") {
-                        var precision = validationResult.extraData["precision"];
+                        var precision = validationResult.extraData.precision;
                         if (precision === undefined || precision === null) {
                             return _this.$filter("number")(param);
                         }
@@ -30827,40 +30857,6 @@ var CustomerSetting;
         return SettingFieldDirective;
     }());
     CustomerSetting.ModuleRegister.directive("settingField", SettingFieldDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var SettingResultDirective = (function () {
-        function SettingResultDirective($rootScope, $window) {
-            var _this = this;
-            this.replace = true;
-            this.templateUrl = "Directives/SettingResult/setting-result.htm";
-            this.link = function (scope) {
-                scope.$watch("result", function (result) {
-                    _this.$rootScope.$emit("page-height-changed");
-                    if (result) {
-                        _this.$window.scrollTo(0, 0);
-                    }
-                });
-            };
-            this.$rootScope = $rootScope;
-            this.$window = $window;
-        }
-        Object.defineProperty(SettingResultDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    result: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingResultDirective.$inject = ["$rootScope", "$window"];
-        return SettingResultDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -31482,6 +31478,10 @@ var CustomerSetting;
         SuperAccountDetail.prototype.validateCredit = function () {
             if (this.credit === undefined || this.credit === null) {
                 this.validationState = new CustomerSetting.ValidationResult("RequiredField", "credit");
+                return false;
+            }
+            if (this.credit < this.minCredit) {
+                this.validationState = new CustomerSetting.ValidationResult("CreditMustBeGreaterThanOrEqualTo", "credit", [this.minCredit], { precision: 2 });
                 return false;
             }
             return true;
