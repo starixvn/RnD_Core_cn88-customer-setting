@@ -259,6 +259,24 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Master&apos;s PT is too high. It makes the line&apos;&apos;s Total PT greater than Super Max PT.
+        /// </summary>
+        internal static string Msg_20039 {
+            get {
+                return ResourceManager.GetString("Msg_20039", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Agent&apos;s PT is too high. It makes the line&apos;&apos;s Total PT greater than Super Max PT.
+        /// </summary>
+        internal static string Msg_20040 {
+            get {
+                return ResourceManager.GetString("Msg_20040", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Super Min PT is greater than the Total PT Taken by some lines..
         /// </summary>
         internal static string Msg_30007 {

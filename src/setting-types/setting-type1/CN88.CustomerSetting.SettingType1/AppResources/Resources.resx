@@ -238,4 +238,10 @@ Notes: your password is cAsE sEnSiTiVe</value>
   <data name="Msg_70024" xml:space="preserve">
     <value>Insufficient credit.</value>
   </data>
+  <data name="Msg_20039" xml:space="preserve">
+    <value>Master's PT is too high. It makes the line''s Total PT greater than Super Max PT</value>
+  </data>
+  <data name="Msg_20040" xml:space="preserve">
+    <value>Agent's PT is too high. It makes the line''s Total PT greater than Super Max PT</value>
+  </data>
 </root>
