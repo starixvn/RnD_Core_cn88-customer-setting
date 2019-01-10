@@ -30611,7 +30611,7 @@ var CustomerSetting;
                     element.val(formattedValue);
                     if (viewValue.length !== caretPosition) {
                         var offset = viewValue.length - formattedValue.length;
-                        caretPosition -= offset;
+                        caretPosition = Math.max(0, caretPosition - offset);
                         if (input.selectionStart === input.selectionEnd) {
                             input.selectionEnd = caretPosition;
                         }
