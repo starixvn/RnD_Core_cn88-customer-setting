@@ -49,7 +49,8 @@
             </div>
             <div class="row">
                 <label class="w40-percent">{{::('AvailableCredit' | settingType1Label)}}</label>
-                <label class="available-credit w60-percent">{{accountDetail.availableCredit | formatNumber:2}}</label>
+                <label class="available-credit w60-percent" data-ng-if="isNew">{{accountDetail.maxCredit | formatNumber:2}}</label>
+                <label class="available-credit w60-percent" data-ng-if="!isNew">[{{accountDetail.minCredit | formatNumber:2}}; {{accountDetail.maxCredit | formatNumber:2}}]</label>
             </div>
         </div>
     </div>
@@ -71,7 +72,7 @@
             </div>
             <div class="row">
                 <label class="w40-percent">{{::('AvailableCredit' | settingType1Label)}}</label>
-                <label class="w60-percent available-credit">{{accountDetail.availableCredit | formatNumber:2}}</label>
+                <label class="w60-percent available-credit">[{{accountDetail.minCredit | formatNumber:2}}; {{accountDetail.maxCredit | formatNumber:2}}]</label>
             </div>
         </div>
     </div>

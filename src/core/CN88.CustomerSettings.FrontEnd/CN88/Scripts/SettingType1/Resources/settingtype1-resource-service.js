@@ -70,6 +70,7 @@
         "MasterPTMustBeLessThanOrEqualTo": "Master PT must be less than or equal to {0}.",
         "AgentPTMustBeLessThanOrEqualTo": "Agent PT must be less than or equal to {0}.",
         "TotalPTMustBeInRange": "Total Position Taking must be between {0}% and {1}%. Please try again.",
+        "CreditMustBeGreaterThanOrEqualTo": "Credit must be greater than or equal to {0}.",
         "CreditMustBeLessThanOrEqualTo": "Credit must be less than or equal to {0}.",
         "InvalidCurrency": "Invalid currency."
     };

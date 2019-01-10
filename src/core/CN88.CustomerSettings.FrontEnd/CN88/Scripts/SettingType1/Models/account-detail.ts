@@ -16,7 +16,8 @@ module CustomerSetting {
         public mobilePhone: string;
         public fax: string;
         public credit: number;
-        public availableCredit: number;
+        public minCredit: number;
+        public maxCredit: number;
         public usernameSuffixes: string[];
         public uplineUsername: string;
 
@@ -42,7 +43,8 @@ module CustomerSetting {
                 this.mobilePhone = accountDetail.mobilePhone;
                 this.fax = accountDetail.fax;
                 this.credit = accountDetail.credit;
-                this.availableCredit = accountDetail.availableCredit;
+                this.minCredit = accountDetail.minCredit;
+                this.maxCredit = accountDetail.maxCredit;
                 this.usernameSuffixes = accountDetail.usernameSuffixes;
                 this.uplineUsername = accountDetail.uplineUsername;
             }
@@ -142,8 +144,14 @@ module CustomerSetting {
                 return false;
             }
 
-            if (this.credit > this.availableCredit) {
-                this.validationState = new ValidationResult("CreditMustBeLessThanOrEqualTo", "credit", [this.availableCredit]);
+            if (this.credit < this.minCredit) {
+                this.validationState = new ValidationResult("CreditMustBeGreaterThanOrEqualTo", "credit", [this.minCredit]);
+
+                return false;
+            }
+
+            if (this.credit > this.maxCredit) {
+                this.validationState = new ValidationResult("CreditMustBeLessThanOrEqualTo", "credit", [this.maxCredit]);
 
                 return false;
             }
