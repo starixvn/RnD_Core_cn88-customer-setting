@@ -11,7 +11,7 @@
     using Fanex.Caching;
     using Fanex.Data.Repository;
     using NSubstitute;
-    using Xunit;
+    using NUnit.Framework;
 
     public class ProductServiceTests
     {
@@ -28,7 +28,7 @@
             productService = new ProductServiceImpl(dynamicRepository, cachingService, resourceService);
         }
 
-        [Fact]
+        [Test]
         public void GetProductSettingTypes_ProductIdIsZero_ThrowArgumentOutOfRangeException()
         {
             //// Arrange
@@ -39,7 +39,7 @@
                 () => productService.GetProductSettingTypes(productId, Arg.Any<byte>()).GetAwaiter().GetResult());
         }
 
-        [Fact]
+        [Test]
         public void GetProductSettingTypes_Always_ReturnSettingTypesInCache()
         {
             //// Arrange
@@ -58,10 +58,10 @@
                 .GetResult();
 
             //// Assert
-            Assert.Same(settingTypes, actualSettingTypes);
+            Assert.AreSame(settingTypes, actualSettingTypes);
         }
 
-        [Fact]
+        [Test]
         public void GetProductSettingTypes_NoDataInCache_ReturnSettingTypesFromDatabase()
         {
             //// Arrange
@@ -83,13 +83,13 @@
                 .GetResult();
 
             //// Assert
-            Assert.Same(settingTypesFromDatabase, actualSettingTypes);
+            Assert.AreSame(settingTypesFromDatabase, actualSettingTypes);
         }
 
         /// <summary>
         /// Get single setting types
         /// </summary>
-        [Fact]
+        [Test]
         public void GetProductSettingType_Always_ReturnSettingTypeInCache()
         {
             //// Arrange
@@ -109,10 +109,10 @@
                 .GetResult();
 
             //// Assert
-            Assert.Same(settingTypes.First(), actualSettingType);
+            Assert.AreSame(settingTypes.First(), actualSettingType);
         }
 
-        [Fact]
+        [Test]
         public void GetProductSettingType_NoData_ReturnNull()
         {
             //// Arrange

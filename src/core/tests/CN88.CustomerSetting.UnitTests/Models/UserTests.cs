@@ -3,7 +3,7 @@
     using System;
     using CustomerSetting.Models;
     using CustomerSetting.Models.Enumerations;
-    using Xunit;
+    using NUnit.Framework;
 
     public class UserTests
     {
@@ -18,9 +18,9 @@
             new object[] { Level.Agent, Level.Agent, true }
         };
 
-        [Theory]
-        [InlineData(0)]
-        [InlineData(-1)]
+        
+        [TestCase(0)]
+        [TestCase(-1)]
         public void SetId_InputValueIsNegativeOrZero_ThrowArgumentOutOfRangeException(int userId)
         {
             //// Arrange
@@ -34,10 +34,10 @@
                 });
         }
 
-        [Theory]
-        [InlineData("    ")]
-        [InlineData("")]
-        [InlineData(null)]
+        
+        [TestCase("    ")]
+        [TestCase("")]
+        [TestCase(null)]
         public void SetName_InputValueIsNullOrWhiteSpace_ThrowArgumentOutOfRangeException(string userName)
         {
             //// Arrange
@@ -51,7 +51,7 @@
             });
         }
 
-        [Fact]
+        [Test]
         public void SetLevel_InputValuesIsNull_ThrowArgumentNullException()
         {
             //// Arrange
@@ -65,7 +65,7 @@
                 });
         }
 
-        [Fact]
+        [Test]
         public void SetLevel_InputValuesIsMember_ThrowArgumentOutOfRangeException()
         {
             //// Arrange
@@ -79,9 +79,9 @@
                 });
         }
 
-        [Theory]
-        [InlineData(-10)]
-        [InlineData(-1)]
+        
+        [TestCase(-10)]
+        [TestCase(-1)]
         public void SetSubAccountId_InputValueIsNegative_ThrowArgumentOutOfRangeException(int subAccountId)
         {
             //// Arrange

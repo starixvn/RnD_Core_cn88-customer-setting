@@ -72,7 +72,8 @@
             settingItem.Fax = customerInfo.Fax;
             settingItem.Currency = new Currency { Name = customerInfo.Currency };
             settingItem.Credit = customerInfo.Credit;
-            settingItem.AvailableCredit = customerInfo.AvailableCredit;
+            settingItem.MaxCredit = customerInfo.MaxCredit;
+            settingItem.MinCredit = customerInfo.MinCredit;
 
             if(query.CustomerLevel.IsMemberLevel()
                 && !string.IsNullOrEmpty(customerInfo.UGroup))
@@ -90,7 +91,8 @@
             var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.UplineId, query.ProductId, true);
             var createCustomerInfo = await GetDefaultCreateCustomerInfo(query.CustomerLevel, query.UplineId);
 
-            settingItem.AvailableCredit = createCustomerInfo.AvailableCredit;
+            settingItem.MaxCredit = createCustomerInfo.MaxCredit;
+            settingItem.MinCredit = createCustomerInfo.MinCredit;
             settingItem.UplineUsername = createCustomerInfo.UplineUsername;
             settingItem.UsernameSuffixes = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString());
             settingItem.Currencies = query.CustomerLevel.IsSuperLevel()

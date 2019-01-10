@@ -1,15 +1,15 @@
 ﻿namespace CN88.CustomerSetting.Tests.Models
 {
     using CustomerSetting.Models;
-    using Xunit;
+    using NUnit.Framework;
 
     public class SettingItemDefaultTests
     {
-        [Theory]
-        [InlineData(0, 1)]
-        [InlineData(-1, 1)]
-        [InlineData(1, -1)]
-        [InlineData(1, 0)]
+        
+        [TestCase(0, 1)]
+        [TestCase(-1, 1)]
+        [TestCase(1, -1)]
+        [TestCase(1, 0)]
         public void Validate_SportTypeOrBetTypeIsNegativeOrZero_ReturnErrorResult(
             short sportTypeId,
             short betTypeId)
@@ -28,9 +28,9 @@
             Assert.False(actualResult.IsSuccessful);
         }
 
-        [Theory]
-        [InlineData(1, 10)]
-        [InlineData(10, 1)]
+        
+        [TestCase(1, 10)]
+        [TestCase(10, 1)]
         public void Validate_DataIsValid_ReturnSuccessResult(
             short sportTypeId,
             short betTypeId)
@@ -49,10 +49,10 @@
             Assert.True(actualResult.IsSuccessful);
         }
 
-        [Theory]
-        [InlineData(1, 1, "SportType=\"1\" BetType=\"1\"")]
-        [InlineData(10, 1, "SportType=\"10\" BetType=\"1\"")]
-        [InlineData(1, 10, "SportType=\"1\" BetType=\"10\"")]
+        
+        [TestCase(1, 1, "SportType=\"1\" BetType=\"1\"")]
+        [TestCase(10, 1, "SportType=\"10\" BetType=\"1\"")]
+        [TestCase(1, 10, "SportType=\"1\" BetType=\"10\"")]
         public void ToXml_ReturnFormattedXml(
             short sportTypeId,
             short betTypeId,
@@ -69,17 +69,17 @@
             var actualXml = settingItem.ToXml();
 
             //// Assert
-            Assert.Equal(expectedXml, actualXml);
+            Assert.AreEqual(expectedXml, actualXml);
         }
 
-        [Fact]
+        [Test]
         public void TypeName_Always_ReturnsExpectedValue()
         {
             //// Arrange
             var settingItem = new SettingItemDefault();
 
             //// Assert
-            Assert.Equal(settingItem.GetType().AssemblyQualifiedName, settingItem.TypeName);
+            Assert.AreEqual(settingItem.GetType().AssemblyQualifiedName, settingItem.TypeName);
         }
     }
 }

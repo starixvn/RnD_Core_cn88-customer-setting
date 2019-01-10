@@ -6,7 +6,7 @@
     using CustomerSetting.Models.Enumerations;
     using CustomerSetting.Models.Results;
     using NSubstitute;
-    using Xunit;
+    using NUnit.Framework;
 
     public class SettingTypeTests
     {
@@ -24,7 +24,7 @@
             new object[] { Level.Master, Level.Member }
         };
 
-        [Fact]
+        [Test]
         public void SettingItemsProperty_SetNullValueThenGet_ReturnEmptySettingItem()
         {
             //// Arrange
@@ -34,18 +34,18 @@
             settingType.SettingItems = null;
 
             //// Assert
-            Assert.Empty(settingType.SettingItems);
+            Assert.IsEmpty(settingType.SettingItems);
         }
 
-        [Fact]
+        [Test]
         public void TypeName_Always_ReturnExpectedValue()
         {
             var settingType = new SettingType();
 
-            Assert.Equal(settingType.GetType().AssemblyQualifiedName, settingType.TypeName);
+            Assert.AreEqual(settingType.GetType().AssemblyQualifiedName, settingType.TypeName);
         }
 
-        [Fact]
+        [Test]
         public void ToXml_Always_ReturnFormattedXml()
         {
             //// Arrange
@@ -61,10 +61,10 @@
             var actualXmlFormatted = settingType.ToXml();
 
             //// Assert
-            Assert.Equal("<ROOT>SettingItemStub</ROOT>", actualXmlFormatted);
+            Assert.AreEqual("<ROOT>SettingItemStub</ROOT>", actualXmlFormatted);
         }
 
-        [Fact]
+        [Test]
         public void Validate_SettingTypeHasNoSettingItem_ReturnNoChangeResult()
         {
             //// Arrange
@@ -77,10 +77,10 @@
             var actualResult = settingType.Validate();
 
             //// Assert
-            Assert.Equal(ResultValues.NoChange, actualResult.Code);
+            Assert.AreEqual(ResultValues.NoChange, actualResult.Code);
         }
 
-        [Fact]
+        [Test]
         public void Validate_SettingItemIsNotValid_ReturnErrorResult()
         {
             //// Arrange
@@ -104,7 +104,7 @@
             Assert.False(actualResult.IsSuccessful);
         }
 
-        [Fact]
+        [Test]
         public void Validate_AllSettingItemsAreValid_ReturnSuccessResult()
         {
             //// Arrange
@@ -125,7 +125,7 @@
             Assert.True(actualResult.IsSuccessful);
         }
 
-        [Fact]
+        [Test]
         public void ToStringMethod_Always_ReturnCombinationOfIdAndTemplate()
         {
             //// Arrange
@@ -139,10 +139,10 @@
             var actual = settingType.ToString();
 
             //// Assert
-            Assert.Equal(string.Join(typeof(SettingType).ToString(), settingTypeId), actual);
+            Assert.AreEqual(string.Join(typeof(SettingType).ToString(), settingTypeId), actual);
         }
 
-        [Fact]
+        [Test]
         public void SatisfyCustomerLevelConstraint_ActorIsAdmin_ReturnTrue()
         {
             // Arrange.

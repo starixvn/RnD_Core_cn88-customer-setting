@@ -4,27 +4,27 @@
     using CustomerSetting.Models;
     using CustomerSetting.Models.Constants;
     using CustomerSetting.Models.Results;
-    using Xunit;
+    using NUnit.Framework;
 
     public class SettingItemErrorTests
     {
-        [Fact]
+        [Test]
         public void ErrorMessage_Always_ReturnSettingTypeErrorMessage()
         {
             var errorItem = new SettingItemError();
 
-            Assert.Equal(Resources.SettingTypeError, errorItem.ErrorMessage);
+            Assert.AreEqual(Resources.SettingTypeError, errorItem.ErrorMessage);
         }
 
-        [Fact]
+        [Test]
         public void TypeName_Always_ReturnExpectedName()
         {
             var errorItem = new SettingItemError();
 
-            Assert.Equal(errorItem.GetType().AssemblyQualifiedName, errorItem.TypeName);
+            Assert.AreEqual(errorItem.GetType().AssemblyQualifiedName, errorItem.TypeName);
         }
 
-        [Fact]
+        [Test]
         public void Validate_Always_ReturnFailedSettingResult()
         {
             //// Arrange
@@ -35,16 +35,16 @@
             IResult settingResult = errorItem.Validate();
 
             //// Assert
-            Assert.Equal(expected, settingResult);
+            Assert.AreEqual(expected, settingResult);
         }
 
-        [Fact]
+        [Test]
         public void ToXml_Always_ReturnExpectedString()
         {
             var errorItem = new SettingItemError();
             var expectedXml = $"<Error>{Resources.SettingTypeError}</Error>";
 
-            Assert.Equal(expectedXml, errorItem.ToXml());
+            Assert.AreEqual(expectedXml, errorItem.ToXml());
         }
     }
 }

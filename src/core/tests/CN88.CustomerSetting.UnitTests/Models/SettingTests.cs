@@ -3,11 +3,11 @@
     using System;
     using CustomerSetting.Models;
     using CustomerSetting.Models.Enumerations;
-    using Xunit;
+    using NUnit.Framework;
 
     public class SettingTests
     {
-        //[Fact]
+        //[Test]
         //public void SetProductId_ValueIsZero_ThrowArgumentOutOfRangeException()
         //{
         //    //// Arrange
@@ -17,8 +17,8 @@
         //    Assert.Throws<ArgumentOutOfRangeException>(() => { setting.ProductId = 0; }, "Product Id cannot be negative or zero.");
         //}
 
-        //[InlineData(0)]
-        //[InlineData(-1)]
+        //[TestCase(0)]
+        //[TestCase(-1)]
         //public void CustomerId_SetValueIsNegativeOrZero_ThrowArgumentOutOfRangeException(int customerId)
         //{
         //    //// Arrange
@@ -28,7 +28,7 @@
         //    Assert.Throws<ArgumentOutOfRangeException>(() => { setting.CustomerId = customerId; }, "Customer Id cannot be negative or zero.");
         //}
 
-        [Fact]
+        [Test]
         public void CustomerId_SetValidValueThenGet_ReturnSetValue()
         {
             //// Arrange
@@ -39,10 +39,10 @@
             setting.CustomerId = customerId;
 
             //// Assert
-            Assert.Equal(customerId, setting.CustomerId);
+            Assert.AreEqual(customerId, setting.CustomerId);
         }
 
-        ////[Fact]
+        ////[Test]
         ////public void CustomerLevel_SetNullValue_ThrowArgumentNullException()
         ////{
         ////    //// Arrange
@@ -53,14 +53,14 @@
         ////    Assert.tha(ex.ParamName, Is.EqualTo("value"));
         ////}
 
-        [Fact]
+        [Test]
         public void SettingTypes_SetValueToNullThenGet_ReturnEmptySettingTypes()
         {
             //// Arrange
             var setting = new Setting(1, Level.Super, 1, null);
 
             //// Assert
-            Assert.Empty(setting.SettingTypes);
+            Assert.IsEmpty(setting.SettingTypes);
         }
     }
 }

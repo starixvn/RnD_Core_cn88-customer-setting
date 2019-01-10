@@ -24,7 +24,9 @@
 
         public decimal Credit { get; set; }
 
-        public decimal AvailableCredit { get; set; }
+        public decimal MaxCredit { get; set; }
+
+        public decimal MinCredit { get; set; }
 
         public SpreadGroup SpreadGroup { get; set; }
 

@@ -6,7 +6,7 @@
     using CN88.CustomerSetting.AppResources;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Services;
-    using Xunit;
+    using NUnit.Framework;
 
     public abstract class MessageServiceBaseTests
     {
@@ -19,7 +19,7 @@
 
         protected MessageService MessageService { get; set; }
 
-        [Fact]
+        [Test]
         public virtual void TranslateMessage_MessageTypeIsException_ReturnMatchedMessageContent()
         {
             //// Arrange
@@ -31,10 +31,10 @@
             var actualMessageContent = MessageService.TranslateMessage(msgType, rawMessage, settingLevel, "en-US");
 
             //// Assert
-            Assert.Equal(Resources.Msg_90001, actualMessageContent.MainMessage);
+            Assert.AreEqual(Resources.Msg_90001, actualMessageContent.MainMessage);
         }
 
-        [Fact]
+        [Test]
         public virtual void TranslateMessage_MessageIdIsNotFound_ReturnUndefinedMessage()
         {
             //// Arrange
@@ -46,10 +46,10 @@
             var actualMessageContent = MessageService.TranslateMessage(msgType, rawMessage, settingLevel, "en-US");
 
             //// Assert
-            Assert.Equal("Undefined error message 121212", actualMessageContent.MainMessage);
+            Assert.AreEqual("Undefined error message 121212", actualMessageContent.MainMessage);
         }
 
-        [Fact]
+        [Test]
         public virtual void TranslateMessage_MessageTypeIsOther_ReturnRawMessage()
         {
             //// Arrange
@@ -61,7 +61,7 @@
             var actualMessageContent = MessageService.TranslateMessage(msgType, rawMessage, settingLevel, "en-US");
 
             //// Assert
-            Assert.Equal(rawMessage, actualMessageContent.MainMessage);
+            Assert.AreEqual(rawMessage, actualMessageContent.MainMessage);
         }
     }
 }

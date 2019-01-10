@@ -6,6 +6,8 @@
 
         public string NewUsername { get; set; }
 
-        public decimal AvailableCredit { get; set; }
+        public decimal MaxCredit { get; set; }
+
+        public decimal MinCredit { get; set; }
     }
 }

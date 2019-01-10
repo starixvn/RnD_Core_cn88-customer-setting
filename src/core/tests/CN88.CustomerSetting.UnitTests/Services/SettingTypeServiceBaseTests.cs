@@ -14,7 +14,7 @@
     using CN88.CustomerSetting.Tests.Models;
     using Fanex.Logging;
     using NSubstitute;
-    using Xunit;
+    using NUnit.Framework;
 
     public class SettingTypeServiceBaseTests : SettingTypeServiceBase
     {
@@ -27,7 +27,7 @@
             MessageService = Substitute.For<MessageService>();
         }
 
-        [Fact]
+        [Test]
         public void SetSportTypeBetTypeName_WhenCalled_SetSportTypeBetTypeNameForSettingItems()
         {
             //// Arrange
@@ -53,11 +53,11 @@
 
             //// Assert
             var settingItem = actualSettingType.SettingItems.First() as SettingItemDefault;
-            Assert.Equal(sportTypeName, settingItem.SportTypeName);
-            Assert.Equal(betTypeName, settingItem.BetTypeName);
+            Assert.AreEqual(sportTypeName, settingItem.SportTypeName);
+            Assert.AreEqual(betTypeName, settingItem.BetTypeName);
         }
 
-        [Fact]
+        [Test]
         public void GetCustomerSettingType_TypeOfSettingItemIsNotDefaultSettingItem_ThrowInvalidCastException()
         {
             //// Arrange
@@ -73,7 +73,7 @@
             Assert.Throws<InvalidCastException>(() => SetSportTypeBetTypeName(settingType, DefaultLanguage));
         }
 
-        [Fact]
+        [Test]
         public void TranslateResultMessage_SettingResultIsNull_ThrowArgumentNullException()
         {
             //// Arrange
@@ -86,7 +86,7 @@
                 => TranslateResultMessage(settingResult, successMessage, settingLevel, DefaultLanguage));
         }
 
-        [Fact]
+        [Test]
         public void TranslateResultMessage_SettingResultIsSuccess_ReturnSuccessMessage()
         {
             //// Arrange
@@ -98,10 +98,10 @@
             var actualSettingResult = TranslateResultMessage(settingResult, successMessage, settingLevel, DefaultLanguage);
 
             //// Assert
-            Assert.Equal(successMessage, actualSettingResult.Message);
+            Assert.AreEqual(successMessage, actualSettingResult.Message);
         }
 
-        [Fact]
+        [Test]
         public void TranslateResultMessage_SettingResultIsFailed_AlwaysCallTranslateMessage()
         {
             //// Arrange
@@ -123,7 +123,7 @@
                 Arg.Is(DefaultLanguage));
         }
 
-        [Fact]
+        [Test]
         public void TranslateResultMessage_SettingResultIsFailed_AlwaysReturnTranslatedMessage()
         {
             //// Arrange
@@ -138,7 +138,7 @@
             var actualSettingResult = TranslateResultMessage(settingResult, successMessage, settingLevel, DefaultLanguage);
 
             //// Assert
-            Assert.Equal(messageContent.MainMessage, actualSettingResult.Message);
+            Assert.AreEqual(messageContent.MainMessage, actualSettingResult.Message);
         }
 
 
