@@ -1,4 +1,5 @@
 ﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
+/// <reference path="../../services/app-config-service.ts" />
 /// <reference path="../../module-registrater.ts" />
 
 module CustomerSetting {
@@ -19,7 +20,7 @@ module CustomerSetting {
     }
 
     class NumericInputDirective implements ng.IDirective {
-        public static $inject: string[] = ["$filter", "$window"];
+        public static $inject: string[] = ["$filter", "$window", "appConfigService"];
         public static defaultPrecision: number = 0;
 
         public restrict: string = "A";
@@ -39,27 +40,36 @@ module CustomerSetting {
             scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
 
             element.on("focus", () => {
-                (<HTMLInputElement>element[0]).select();
+                element.data("focused", true);
             });
 
             element.on("focusout", () => {
+                element.data("focused", false);
+
                 if (scope.strictFormat && scope.precision > 0) {
-                    element.val(this.$filter("number")(modelCtrl.$modelValue, scope.precision));
+                    element.val(this.numberFilter(modelCtrl.$modelValue, scope.precision));
                 }
             });
 
-            element.on("mouseup", (event: JQueryEventObject) => {
-                event.preventDefault();
+            element.on("mouseup", () => {
+                if (element.data("focused")) {
+                    var input: HTMLInputElement = <HTMLInputElement>element[0];
+
+                    input.select();
+                    element.data("focused", false);
+                }
             });
 
             element.on("keydown", (event: JQueryEventObject) => {
                 var value: string = element.val();
-                var dotPistion = value.indexOf(".");
-                var numberParts: string[] = value.split(".");
+                var decimalSeparatorPosition = value.indexOf(this.decimalSeparator);
+                var numberParts: string[] = value.split(this.decimalSeparator);
                 var input: HTMLInputElement = <HTMLInputElement>element[0];
+                var cursorPosition: number = input.selectionStart;
 
                 if ([110, 190].indexOf(event.keyCode) >= 0) {
-                    if (numberParts.length > 1 || scope.precision === 0) { // Prevent more than one decimal character or do not allow decimal character in integer field
+                    // Prevent more than one decimal character or do not allow decimal character in integer field
+                    if (numberParts.length > 1 || scope.precision === 0) {
                         event.preventDefault();
 
                         return;
@@ -72,7 +82,33 @@ module CustomerSetting {
                     }
                 }
 
-                if ([8, 46, 9, 27, 13].indexOf(event.keyCode) >= 0 // Allow: backspace, delete, tab, escape, enter
+                // Special check on backspace keydown
+                if (event.keyCode === 8) {
+                    // Move cursor to the previous position if it is right after a thousand separator
+                    if ((input.selectionStart === input.selectionEnd)
+                        && (cursorPosition > 0)
+                        && (value[cursorPosition - 1] === this.thousandSeparator)) {
+                        input.selectionStart = cursorPosition - 1;
+                        input.selectionEnd = cursorPosition - 1;
+                    }
+
+                    return;
+                }
+
+                // Special check on delete keydown
+                if (event.keyCode === 46) {
+                    // Move cursor to the next position if it is right before a thousand separator
+                    if ((input.selectionStart === input.selectionEnd)
+                        && (cursorPosition > 0)
+                        && (value[cursorPosition] === this.thousandSeparator)) {
+                        input.selectionStart = cursorPosition + 1;
+                        input.selectionEnd = cursorPosition + 1;
+                    }
+
+                    return;
+                }
+
+                if ([9, 27, 13].indexOf(event.keyCode) >= 0 // Allow: tab, escape, enter
                     || (event.keyCode === 65 && event.ctrlKey) // Allow: Ctrl+A
                     || (event.keyCode === 67 && event.ctrlKey) // Allow: Ctrl+C
                     || (event.keyCode === 86 && event.ctrlKey) // Allow: Ctrl+V
@@ -90,14 +126,16 @@ module CustomerSetting {
                 }
 
                 // Do not allow number of numeric characters in decimal part exceeds the precision
-                if (dotPistion >= 0 && dotPistion < input.selectionStart && numberParts[1].length >= scope.precision) {
+                if (decimalSeparatorPosition >= 0
+                    && decimalSeparatorPosition < cursorPosition
+                    && numberParts[1].length >= scope.precision) {
                     event.preventDefault();
 
                     return;
                 }
 
                 // In decimal fields, (precision + 1) characters are booked for decimal part
-                if (dotPistion < 0 && scope.precision > 0) {
+                if (decimalSeparatorPosition < 0 && scope.precision > 0) {
                     var allowedLength: number = maxLength - scope.precision - 1;
 
                     if (value.length >= allowedLength) {
@@ -127,7 +165,7 @@ module CustomerSetting {
             });
 
             modelCtrl.$formatters.unshift(() => {
-                return this.$filter("number")(modelCtrl.$modelValue, scope.precision);
+                return this.numberFilter(modelCtrl.$modelValue, scope.precision);
             });
 
             modelCtrl.$parsers.unshift((viewValue: string) => {
@@ -153,37 +191,41 @@ module CustomerSetting {
             });
         };
 
-        private $filter: ng.IFilterService;
         private $window: IWindowService;
+        private numberFilter: Function;
+        private thousandSeparator: string;
+        private decimalSeparator: string;
 
-        constructor($filter: ng.IFilterService, $window: IWindowService) {
-            this.$filter = $filter;
+        constructor($filter: ng.IFilterService, $window: IWindowService, appConfigService: AppConfigService) {
             this.$window = $window;
+            this.numberFilter = $filter("number");
+            this.thousandSeparator = appConfigService.thousandSeparator;
+            this.decimalSeparator = appConfigService.decimalSeparator;
         }
 
         private parseAndFormatViewValue(viewValue: string, precision: number, rounding: boolean): IOriginalAndFormattedValuePair {
             var value: number;
             var formattedValue: string = "";
-            var numberParts: string[] = viewValue ? viewValue.split(".") : [];
+            var numberParts: string[] = viewValue ? viewValue.split(this.decimalSeparator) : [];
 
             if (numberParts.length > 1) {
                 if (precision > 0 && !/[\,\.]/.test(numberParts[1])) {
                     var plainIntegerPart: string = numberParts[0].replace(/[\,]/g, "");
                     var decimalPart: string = rounding ? numberParts[1] : numberParts[1].substring(0, precision);
 
-                    value = +(plainIntegerPart + "." + decimalPart);
+                    value = +(plainIntegerPart + this.decimalSeparator + decimalPart);
 
                     if (!isNaN(value)) {
                         formattedValue = rounding
-                            ? this.$filter("number")(value, precision)
-                            : this.$filter("number")(plainIntegerPart) + "." + decimalPart;
+                            ? this.numberFilter(value, precision)
+                            : this.numberFilter(plainIntegerPart) + this.decimalSeparator + decimalPart;
                     }
                 }
             } else if (numberParts.length > 0) {
                 var plainNumber: string = numberParts[0].replace(/[\,]/g, "");
 
                 value = +plainNumber;
-                formattedValue = this.$filter("number")(value);
+                formattedValue = this.numberFilter(value);
             }
 
             return {

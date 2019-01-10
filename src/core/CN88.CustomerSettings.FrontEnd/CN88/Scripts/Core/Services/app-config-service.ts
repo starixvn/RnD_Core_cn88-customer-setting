@@ -7,6 +7,14 @@ module CustomerSetting {
     export class AppConfigService {
         public static $inject: string[] = ["$window"];
 
+        public get thousandSeparator(): string {
+            return ",";
+        }
+
+        public get decimalSeparator(): string {
+            return ".";
+        }
+
         private applicationPath: string;
         private antiForgeryToken: string;
         private editable: boolean;

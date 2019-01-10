@@ -2,6 +2,7 @@
 /// <reference path="../../models/key-value-pair.ts" />
 /// <reference path="../../models/result.ts" />
 /// <reference path="../../models/setting-item.ts" />
+/// <reference path="../../resources/resource-service.ts" />
 /// <reference path="../../module-registrater.ts" />
 
 module CustomerSetting {

@@ -21,6 +21,7 @@ module CustomerSetting {
         public static $inject: string[] = [
             "$window",
             "$timeout",
+            "$locale",
             "appConfigService",
             "parametersService",
             "resourceService",
@@ -44,6 +45,7 @@ module CustomerSetting {
         constructor(
             $window: ng.IWindowService,
             $timeout: ng.ITimeoutService,
+            $locale: ng.ILocaleService,
             appConfigService: AppConfigService,
             parametersService: ParametersService,
             resourceService: ResourceService,
@@ -56,6 +58,9 @@ module CustomerSetting {
             this.resourceService = resourceService;
             this.requestService = requestService;
             this.settingTypesSharedValuesService = settingTypesSharedValuesService;
+
+            $locale.NUMBER_FORMATS.GROUP_SEP = this.appConfigService.thousandSeparator;
+            $locale.NUMBER_FORMATS.DECIMAL_SEP = this.appConfigService.decimalSeparator;
 
             /* tslint:disable:no-string-literal */
             this.successfulUpdatingCallback = this.$window.parent["successfulUpdatingCallback"];
