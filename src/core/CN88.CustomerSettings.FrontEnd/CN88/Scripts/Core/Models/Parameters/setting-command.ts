@@ -1,6 +1,4 @@
-﻿/// <reference path="../enums/level.ts" />
-/// <reference path="../result.ts" />
-/// <reference path="../setting.ts" />
+﻿/// <reference path="../setting.ts" />
 
 module CustomerSetting {
     "use strict";

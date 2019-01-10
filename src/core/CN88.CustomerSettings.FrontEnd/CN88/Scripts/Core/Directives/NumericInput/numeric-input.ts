@@ -66,8 +66,11 @@ module CustomerSetting {
                 var input: HTMLInputElement = <HTMLInputElement>element[0];
 
                 if ([110, 190].indexOf(event.keyCode) >= 0) {
-                    // Prevent more than one decimal character or do not allow decimal character in integer field
-                    if (numberParts.length > 1 || scope.precision === 0) {
+                    if (numberParts.length > 1 || scope.precision === 0) { // Prevent more than one decimal character or do not allow decimal character in integer field
+                        event.preventDefault();
+
+                        return;
+                    } else if (numberParts[0].length === 0) { // Integer part is required in decimal field
                         event.preventDefault();
 
                         return;
@@ -76,7 +79,7 @@ module CustomerSetting {
                     }
                 }
 
-                if ([46, 8, 9, 27, 13].indexOf(event.keyCode) >= 0 // Allow: backspace, delete, tab, escape, enter
+                if ([8, 46, 9, 27, 13].indexOf(event.keyCode) >= 0 // Allow: backspace, delete, tab, escape, enter
                     || (event.keyCode === 65 && event.ctrlKey) // Allow: Ctrl+A
                     || (event.keyCode === 67 && event.ctrlKey) // Allow: Ctrl+C
                     || (event.keyCode === 86 && event.ctrlKey) // Allow: Ctrl+V
@@ -95,13 +98,6 @@ module CustomerSetting {
 
                 // Do not allow number of numeric characters in decimal part exceeds the precision
                 if (dotPistion >= 0 && dotPistion < input.selectionStart && numberParts[1].length >= scope.precision) {
-                    event.preventDefault();
-
-                    return;
-                }
-
-                // Integer part is required in decimal field
-                if (dotPistion >= 0 && numberParts[0].length === 0) {
                     event.preventDefault();
 
                     return;
@@ -130,9 +126,10 @@ module CustomerSetting {
 
                 event.preventDefault();
 
-                if ((!currentValue || selection === currentValue.length) && formattedValue) {
+                if ((!currentValue || selection === currentValue.length) && formattedValue && formattedValue.length <= maxLength) {
                     modelCtrl.$setViewValue(formattedValue);
                     modelCtrl.$render();
+                    input.selectionStart = formattedValue.length;
                 }
             });
 
@@ -192,7 +189,7 @@ module CustomerSetting {
             } else if (numberParts.length > 0) {
                 var plainNumber: string = numberParts[0].replace(/[\,]/g, "");
 
-                value = parseInt(plainNumber, 10);
+                value = +plainNumber;
                 formattedValue = this.$filter("number")(value);
             }
 
