@@ -29945,13 +29945,13 @@ var CustomerSetting;
             configurable: true
         });
         AppConfigService.prototype.getQueryPath = function () {
-            return this.applicationPath + "viewCustomerSetting/querySetting?";
+            return this.applicationPath + "viewCN88CustomerSetting/querySetting?";
         };
         AppConfigService.prototype.getCreatePath = function () {
-            return this.applicationPath + "createCustomer/create";
+            return this.applicationPath + "createCN88Customer/create";
         };
         AppConfigService.prototype.getUpdatePath = function () {
-            return this.applicationPath + "updateCustomerSetting/update";
+            return this.applicationPath + "updateCN88CustomerSetting/update";
         };
         AppConfigService.prototype.buildPath = function (relativePath) {
             return this.applicationPath + relativePath;

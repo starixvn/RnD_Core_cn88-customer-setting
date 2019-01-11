@@ -42,15 +42,15 @@ module CustomerSetting {
         }
 
         public getQueryPath(): string {
-            return this.applicationPath + "viewCustomerSetting/querySetting?";
+            return this.applicationPath + "viewCN88CustomerSetting/querySetting?";
         }
 
         public getCreatePath(): string {
-            return this.applicationPath + "createCustomer/create";
+            return this.applicationPath + "createCN88Customer/create";
         }
 
         public getUpdatePath(): string {
-            return this.applicationPath + "updateCustomerSetting/update";
+            return this.applicationPath + "updateCN88CustomerSetting/update";
         }
 
         public buildPath(relativePath: string): string {
