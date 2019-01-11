@@ -361,7 +361,7 @@
                 RoleId = command.Setting.CustomerLevel.Value,
                 Credit = settingItem.Credit,
                 CustId = command.Setting.CustomerId,
-                Fax = settingItem.Fax,
+                Fax = WebUtility.HtmlEncode(settingItem.Fax ?? string.Empty),
                 FirstName = WebUtility.HtmlEncode(settingItem.FirstName ?? string.Empty),
                 LastName = WebUtility.HtmlEncode(settingItem.LastName ?? string.Empty),
                 MobilePhone = WebUtility.HtmlEncode(settingItem.MobilePhone ?? string.Empty),
