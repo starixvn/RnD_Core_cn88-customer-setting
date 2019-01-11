@@ -65,4 +65,9 @@ module CustomerSetting {
     export function clone(source: any): any {
         return angular.copy(source);
     }
+
+
+    export function stringifyJson(json: any): any {
+        return angular.toJson(json);
+    }
 }

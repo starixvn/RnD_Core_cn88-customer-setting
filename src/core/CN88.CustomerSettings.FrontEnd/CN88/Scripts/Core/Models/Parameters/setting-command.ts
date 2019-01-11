@@ -1,4 +1,5 @@
-﻿/// <reference path="../setting.ts" />
+﻿/// <reference path="../../helpers.ts" />
+/// <reference path="../setting.ts" />
 
 module CustomerSetting {
     "use strict";
@@ -15,7 +16,7 @@ module CustomerSetting {
         public toJson(): {} {
             return {
                 uplineId: this.uplineId,
-                setting: JSON.stringify(this.setting.toJson())
+                setting: stringifyJson(this.setting.toJson())
             };
         }
     }

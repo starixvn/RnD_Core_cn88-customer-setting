@@ -62,8 +62,7 @@ module CustomerSetting {
                 "validationState",
                 "ignoredProperties",
                 "isNew",
-                "customerLevel",
-                "$$hashKey"];
+                "customerLevel"];
         }
 
         public isChanged(): boolean {

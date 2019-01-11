@@ -28945,55 +28945,6 @@ String.prototype.hash = function () {
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    (function (DisplayMode) {
-        DisplayMode[DisplayMode["editable"] = 1] = "editable";
-        DisplayMode[DisplayMode["readOnly"] = 2] = "readOnly";
-        DisplayMode[DisplayMode["hidden"] = 3] = "hidden";
-    })(CustomerSetting.DisplayMode || (CustomerSetting.DisplayMode = {}));
-    var DisplayMode = CustomerSetting.DisplayMode;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    (function (Level) {
-        Level[Level["company"] = 5] = "company";
-        Level[Level["super"] = 4] = "super";
-        Level[Level["master"] = 3] = "master";
-        Level[Level["agent"] = 2] = "agent";
-        Level[Level["member"] = 1] = "member";
-    })(CustomerSetting.Level || (CustomerSetting.Level = {}));
-    var Level = CustomerSetting.Level;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    (function (MessageType) {
-        MessageType[MessageType["success"] = 0] = "success";
-        MessageType[MessageType["warning"] = 1] = "warning";
-        MessageType[MessageType["error"] = 2] = "error";
-        MessageType[MessageType["info"] = 4] = "info";
-    })(CustomerSetting.MessageType || (CustomerSetting.MessageType = {}));
-    var MessageType = CustomerSetting.MessageType;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var KeyValuePair = (function () {
-        function KeyValuePair(key, value) {
-            this.key = key;
-            this.value = value;
-        }
-        return KeyValuePair;
-    }());
-    CustomerSetting.KeyValuePair = KeyValuePair;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
     var StringFormater = (function () {
         function StringFormater() {
         }
@@ -29062,6 +29013,59 @@ var CustomerSetting;
         return angular.copy(source);
     }
     CustomerSetting.clone = clone;
+    function stringifyJson(json) {
+        return angular.toJson(json);
+    }
+    CustomerSetting.stringifyJson = stringifyJson;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    (function (DisplayMode) {
+        DisplayMode[DisplayMode["editable"] = 1] = "editable";
+        DisplayMode[DisplayMode["readOnly"] = 2] = "readOnly";
+        DisplayMode[DisplayMode["hidden"] = 3] = "hidden";
+    })(CustomerSetting.DisplayMode || (CustomerSetting.DisplayMode = {}));
+    var DisplayMode = CustomerSetting.DisplayMode;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    (function (Level) {
+        Level[Level["company"] = 5] = "company";
+        Level[Level["super"] = 4] = "super";
+        Level[Level["master"] = 3] = "master";
+        Level[Level["agent"] = 2] = "agent";
+        Level[Level["member"] = 1] = "member";
+    })(CustomerSetting.Level || (CustomerSetting.Level = {}));
+    var Level = CustomerSetting.Level;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    (function (MessageType) {
+        MessageType[MessageType["success"] = 0] = "success";
+        MessageType[MessageType["warning"] = 1] = "warning";
+        MessageType[MessageType["error"] = 2] = "error";
+        MessageType[MessageType["info"] = 4] = "info";
+    })(CustomerSetting.MessageType || (CustomerSetting.MessageType = {}));
+    var MessageType = CustomerSetting.MessageType;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var KeyValuePair = (function () {
+        function KeyValuePair(key, value) {
+            this.key = key;
+            this.value = value;
+        }
+        return KeyValuePair;
+    }());
+    CustomerSetting.KeyValuePair = KeyValuePair;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -29355,8 +29359,7 @@ var CustomerSetting;
                 "validationState",
                 "ignoredProperties",
                 "isNew",
-                "customerLevel",
-                "$$hashKey"];
+                "customerLevel"];
         }
         DefaultSettingItem.prototype.isChanged = function () {
             return (this.sportTypeId !== this.oldSetting.sportTypeId)
@@ -29621,7 +29624,7 @@ var CustomerSetting;
         SettingCommand.prototype.toJson = function () {
             return {
                 uplineId: this.uplineId,
-                setting: JSON.stringify(this.setting.toJson())
+                setting: CustomerSetting.stringifyJson(this.setting.toJson())
             };
         };
         return SettingCommand;
