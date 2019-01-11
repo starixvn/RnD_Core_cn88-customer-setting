@@ -52,13 +52,20 @@ $sub-header-border-agent-color: #516e8f;
     }
 
     .general-data {
+        .upline-username {
+            margin-right: 10px;
+        }
+
         .username-selection {
             display: inline-block;
-            margin: 0 10px;
 
             .setting-field {
                 margin: 0 5px;
                 min-width: initial;
+
+                &--first {
+                    margin-left: 0;
+                }
             }
         }
     }

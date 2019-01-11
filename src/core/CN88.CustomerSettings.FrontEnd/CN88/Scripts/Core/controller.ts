@@ -32,6 +32,7 @@ module CustomerSetting {
         public setting: Setting;
         public warningMessages: Result | UpdatingSettingResult;
         public requestMsgResult: Result | UpdatingSettingResult;
+        public cancelCallback: Function;
 
         private $window: ng.IWindowService;
         private $timeout: ng.ITimeoutService;
@@ -64,6 +65,7 @@ module CustomerSetting {
 
             /* tslint:disable:no-string-literal */
             this.successfulUpdatingCallback = this.$window.parent["successfulUpdatingCallback"];
+            this.cancelCallback = this.$window.parent["cancelCallback"];
             /* tslint:enable:no-string-literal */
 
             this.systemId = this.parametersService.systemId;

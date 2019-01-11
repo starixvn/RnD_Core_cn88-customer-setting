@@ -68,6 +68,10 @@ select.setting-field {
     height: 28px;
     padding: 4px 16px;
 
+    &--cancel {
+        background-color: $cancel-button-backround-color;
+    }
+
     &--margin-top {
         margin-top: 10px;
     }

@@ -1,5 +1,6 @@
 ﻿<div class="username-selection">
     <username-suffix data-ng-repeat="suffix in accountDetail.usernameSuffixes track by $index"
+                     data-ng-class="{ 'setting-field--first': $first }"
                      data-suffix-index="$index"
                      data-suffix="suffix"
                      data-validate-username="validateUsername"></username-suffix>

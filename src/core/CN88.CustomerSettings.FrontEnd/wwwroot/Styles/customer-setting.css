@@ -313,6 +313,8 @@ select.setting-field {
   color: #fff;
   height: 28px;
   padding: 4px 16px; }
+  .btn--cancel {
+    background-color: #909090; }
   .btn--margin-top {
     margin-top: 10px; }
   .btn:hover, .btn:focus {
@@ -882,12 +884,16 @@ select.setting-field {
   border-color: #516e8f;
   color: #2267b6; }
 
+.setting-type-1 .general-data .upline-username {
+  margin-right: 10px; }
+
 .setting-type-1 .general-data .username-selection {
-  display: inline-block;
-  margin: 0 10px; }
+  display: inline-block; }
   .setting-type-1 .general-data .username-selection .setting-field {
     margin: 0 5px;
     min-width: initial; }
+    .setting-type-1 .general-data .username-selection .setting-field--first {
+      margin-left: 0; }
 
 .setting-type-1 .customer-credit {
   margin-bottom: 15px; }

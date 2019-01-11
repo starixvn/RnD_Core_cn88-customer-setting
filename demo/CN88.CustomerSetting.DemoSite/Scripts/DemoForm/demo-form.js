@@ -416,9 +416,11 @@ var DemoFrom;
     }(Target));
 })(DemoFrom || (DemoFrom = {}));
 /* tslint:disable */
-function successfulUpdatingCallback(isPartialUpdate, isMultipleUpdate) {
+function successfulUpdatingCallback(isSuccessful) {
     console.log("Be called after updating sucessfully!");
 }
-;
+function cancelCallback() {
+    console.log("Cancel the form!");
+}
 /* tslint:enable */
 //# sourceMappingURL=demo-form.js.map

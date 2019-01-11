@@ -6,6 +6,7 @@
     var labels = {};
 
     labels["en-us"] = {
+        "Cancel": "Cancel",
         "Save": "Save"
     };
 
