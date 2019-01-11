@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Threading.Tasks;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Enumerations;
@@ -65,11 +66,11 @@
                 ?? throw new InvalidOperationException($"Not found customer id {query.CustomerId} level {query.CustomerLevel.DisplayName}"); ;
 
             settingItem.Username = customerInfo.Username;
-            settingItem.FirstName = customerInfo.FirstName;
-            settingItem.LastName = customerInfo.LastName;
-            settingItem.Phone = customerInfo.Phone;
-            settingItem.MobilePhone = customerInfo.MobilePhone;
-            settingItem.Fax = customerInfo.Fax;
+            settingItem.FirstName = WebUtility.HtmlDecode(customerInfo.FirstName);
+            settingItem.LastName = WebUtility.HtmlDecode(customerInfo.LastName);
+            settingItem.Phone = WebUtility.HtmlDecode(customerInfo.Phone);
+            settingItem.MobilePhone = WebUtility.HtmlDecode(customerInfo.MobilePhone);
+            settingItem.Fax = WebUtility.HtmlDecode(customerInfo.Fax);
             settingItem.Currency = new Currency { Name = customerInfo.Currency };
             settingItem.Credit = customerInfo.Credit;
             settingItem.MaxCredit = customerInfo.MaxCredit;
@@ -90,7 +91,7 @@
         {
             var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.UplineId, query.ProductId, true);
             var createCustomerInfo = await GetDefaultCreateCustomerInfo(query.CustomerLevel, query.UplineId);
-
+            
             settingItem.MaxCredit = createCustomerInfo.MaxCredit;
             settingItem.MinCredit = createCustomerInfo.MinCredit;
             settingItem.UplineUsername = createCustomerInfo.UplineUsername;
@@ -241,7 +242,7 @@
             {
                 { "username", settingItem.Username ?? throw new InvalidOperationException("Username cannot be null") },
                 { "userpwd", settingItem.Password ?? throw new InvalidOperationException(Resources.PasswordCannotBeNullOrEmpty) },
-                { "firstname", settingItem.FirstName ?? string.Empty },
+                { "firstname", WebUtility.HtmlEncode(settingItem.FirstName ?? string.Empty) },
                 { "credit", settingItem.Credit },
                 { "systemid", settingContext.System },
                 { "ip", settingContext.IP },
@@ -290,10 +291,10 @@
         {
             createNewParams.Add("site", CN88Site);
             createNewParams.Add("currency", settingItem.Currency?.Id);
-            createNewParams.Add("lastname", settingItem.LastName ?? string.Empty);
-            createNewParams.Add("phone", settingItem.Phone ?? string.Empty);
-            createNewParams.Add("mobilephone", settingItem.MobilePhone ?? string.Empty);
-            createNewParams.Add("fax", settingItem.Fax ?? string.Empty);
+            createNewParams.Add("lastname", WebUtility.HtmlEncode(settingItem.LastName ?? string.Empty));
+            createNewParams.Add("phone", WebUtility.HtmlEncode(settingItem.Phone ?? string.Empty));
+            createNewParams.Add("mobilephone", WebUtility.HtmlEncode(settingItem.MobilePhone ?? string.Empty));
+            createNewParams.Add("fax", WebUtility.HtmlEncode(settingItem.Fax ?? string.Empty));
 
             return createNewParams;
         }

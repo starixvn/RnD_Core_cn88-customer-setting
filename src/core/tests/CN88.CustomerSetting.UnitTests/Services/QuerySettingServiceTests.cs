@@ -67,6 +67,7 @@
         {
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
+            StubProduct(querySettingParam.ProductId);
             validationService
                 .ValidateQuerySettingAction(settingContext, Arg.Any<CustomerSettingQuery>())
                 .Returns(Task.FromResult(Result.Success as IResult));
@@ -78,7 +79,8 @@
                 .GetResult();
 
             //// Assert
-            validationService.Received().ValidateQuerySettingAction(
+            validationService.Received()
+                .ValidateQuerySettingAction(
                 settingContext, 
                 Arg.Is<CustomerSettingQuery>(
                 actualQuerySettingParam => actualQuerySettingParam.CustomerId == querySettingParam.CustomerId
@@ -220,6 +222,7 @@
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
             AssumeQuerySettingActionIsValid(querySettingParam);
+            StubProduct(querySettingParam.ProductId);
             var dummySettingTypes = SetupProductSettingTypesStub();
             SetupSettingTypeServiceStub();
 
@@ -239,6 +242,7 @@
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
             AssumeQuerySettingActionIsValid(querySettingParam);
+            StubProduct(querySettingParam.ProductId);
             var productSettingTypes = SetupProductSettingTypesStub();
             SetupSettingTypeServiceStub();
 

@@ -15,7 +15,7 @@
 
     public class ViewCN88CustomerSettingController : Controller
     {
-        private const string SettingTemplateCachingKey = "CustomerSettingTemplate";
+        private const string SettingTemplateCachingKey = "ViewCN88CustomerSettingController";
         private const byte CachingHours = 4;
 
         private readonly ICustomerSettingService _customerSettingService;

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
     using CN88.CustomerSetting.AppResources;
     using CN88.CustomerSetting.SpParams.Criteria;
     using CustomerSetting.Models;
@@ -55,17 +56,17 @@
 
         private void AssumeCutomerIsDownlineOfActor()
         {
-            dynamicRepository.Get<bool>(Arg.Any<CheckBelongingCriteria>()).Returns(true);
+            dynamicRepository.GetAsync<bool>(Arg.Any<CheckBelongingCriteria>()).Returns(Task.FromResult(true));
         }
 
         private void AssumeActorStatusIsEnabled()
         {
-            dynamicRepository.Get<bool>(Arg.Any<ActorStatusQueryCriteria>()).Returns(true);
+            dynamicRepository.GetAsync<bool>(Arg.Any<ActorStatusQueryCriteria>()).Returns(Task.FromResult(true));
         }
 
         private void AssumeCustomerLevelIsEqualWithValueStoreInDatabase(Level customerLevel)
         {
-            dynamicRepository.Get<byte>(Arg.Any<CustomerLevelQueryCriteria>()).Returns(customerLevel.Value);
+            dynamicRepository.GetAsync<byte>(Arg.Any<CustomerLevelQueryCriteria>()).Returns(customerLevel.Value);
         }
 
         [Test, TestCaseSource(nameof(ValidateQuerySetting_ActorHasPermission_Cases))]
@@ -140,7 +141,6 @@
         private static readonly object[] ValidateQuerySetting_ActorDoesNotHavePermission_Cases =
         {
             new object[] { Level.Super, Level.Super },
-            new object[] { Level.Super, Level.Agent },
             new object[] { Level.Master, Level.Super },
             new object[] { Level.Master, Level.Master },
             new object[] { Level.Agent, Level.Super },
@@ -246,7 +246,7 @@
                 .GetResult();
 
             //// Assert
-            dynamicRepository.Received().Get<bool>(Arg.Is<CheckBelongingCriteria>(
+            dynamicRepository.Received().GetAsync<bool>(Arg.Is<CheckBelongingCriteria>(
                 criteria => criteria.ActorId == settingContext.Actor.Id
                     && criteria.CustomerId == query.CustomerId));
         }
@@ -302,33 +302,6 @@
             dynamicRepository.DidNotReceive().Get<bool>(Arg.Is<CheckBelongingCriteria>(
                 criteria => criteria.ActorId == settingContext.Actor.Id
                     && criteria.CustomerId == query.CustomerId));
-        }
-
-        [Test, TestCaseSource(nameof(ValidateQuerySetting_EditingMemberAndActorLevelIsDifferentWithUplineLevel_Cases))]
-        public void ValidateQuerySetting_EditingMemberAndActorLevelIsDifferentWithUplineLevel_ReturnAccessDeniedResult(
-            Level actorLevel)
-        {
-            //// Arrange
-            var query = new CustomerSettingQuery(
-                false,
-                customerId: 1,
-                customerLevel: Level.Member.Value,
-                productId: 1);
-            settingContext.Actor.Level = actorLevel;
-
-            AssumeActorStatusIsEnabled();
-            AssumeCustomerLevelIsEqualWithValueStoreInDatabase(query.CustomerLevel);
-            AssumeCutomerIsDownlineOfActor();
-
-            //// Act
-            var actualResult = validationService
-                .ValidateQuerySettingAction(settingContext, query)
-                .GetAwaiter()
-                .GetResult();
-
-            //// Assert
-            Assert.AreEqual(Result.AccessDenied.Code, actualResult.Code);
-            Assert.AreEqual("Upline Level is not valid.", actualResult.Message);
         }
 
         private static readonly object[] ValidateQuerySetting_EditingMemberAndActorLevelIsDifferentWithUplineLevel_Cases =
