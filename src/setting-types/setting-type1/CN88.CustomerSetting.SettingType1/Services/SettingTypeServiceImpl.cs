@@ -362,10 +362,10 @@
                 Credit = settingItem.Credit,
                 CustId = command.Setting.CustomerId,
                 Fax = settingItem.Fax,
-                FirstName = settingItem.FirstName,
-                LastName = settingItem.LastName,
-                MobilePhone = settingItem.MobilePhone,
-                Phone = settingItem.Phone,
+                FirstName = WebUtility.HtmlEncode(settingItem.FirstName ?? string.Empty),
+                LastName = WebUtility.HtmlEncode(settingItem.LastName ?? string.Empty),
+                MobilePhone = WebUtility.HtmlEncode(settingItem.MobilePhone ?? string.Empty),
+                Phone = WebUtility.HtmlEncode(settingItem.Phone ?? string.Empty),
                 Language = LanguageNameConverter.GetLanguageKey(language)
             };
 
