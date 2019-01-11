@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
+/// <reference path="../../core/helpers.ts" />
 /// <reference path="account-detail.ts" />
 /// <reference path="currency.ts" />
 
@@ -13,8 +14,8 @@ module CustomerSetting {
         public superMaxPT: number;
         public minSuperMaxPT: number;
         public maxSuperMaxPT: number;
-        public currency: ICurrency;
         public currencies: ICurrency[];
+        public currency: ICurrency;
 
         constructor();
         constructor(accountDetail: any);
@@ -32,8 +33,8 @@ module CustomerSetting {
                 this.superMaxPT = accountDetail.superMaxPT;
                 this.minSuperMaxPT = accountDetail.minSuperMaxPT;
                 this.maxSuperMaxPT = accountDetail.maxSuperMaxPT;
-                this.currency = accountDetail.currency;
                 this.currencies = accountDetail.currencies;
+                this.currency = backup ? accountDetail.currency : clone(accountDetail.currency);
             }
 
             if (backup) {

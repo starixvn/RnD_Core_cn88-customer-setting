@@ -1,4 +1,6 @@
-﻿module CustomerSetting {
+﻿/// <reference path="../typings/angularjs/angular.d.ts" />
+
+module CustomerSetting {
     "use strict";
 
     export class StringFormater {
@@ -58,5 +60,9 @@
                 timeout = setTimeout(runLater, waitTime);
             }
         };
+    }
+
+    export function clone(source: any): any {
+        return angular.copy(source);
     }
 }

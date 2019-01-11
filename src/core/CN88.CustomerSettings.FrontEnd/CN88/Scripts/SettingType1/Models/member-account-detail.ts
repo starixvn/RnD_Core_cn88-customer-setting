@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
+/// <reference path="../../core/helpers.ts" />
 /// <reference path="account-detail.ts" />
 /// <reference path="spread-group.ts" />
 
@@ -7,8 +8,8 @@ module CustomerSetting {
     "use strict";
 
     export class MemberAccountDetail extends AccountDetail {
-        public spreadGroup: ISpreadGroup;
         public spreadGroups: ISpreadGroup[];
+        public spreadGroup: ISpreadGroup;
 
         constructor();
         constructor(accountDetail: any);
@@ -20,8 +21,8 @@ module CustomerSetting {
             if (accountDetail) {
                 super(accountDetail, backup, isNew, customerLevel, hashKey);
 
-                this.spreadGroup = accountDetail.spreadGroup;
                 this.spreadGroups = accountDetail.spreadGroups;
+                this.spreadGroup = backup ? accountDetail.spreadGroup : clone(accountDetail.spreadGroup);
             }
 
             if (backup) {

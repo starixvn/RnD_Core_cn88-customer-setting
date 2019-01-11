@@ -29058,6 +29058,10 @@ var CustomerSetting;
         };
     }
     CustomerSetting.debounce = debounce;
+    function clone(source) {
+        return angular.copy(source);
+    }
+    CustomerSetting.clone = clone;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -30775,10 +30779,15 @@ var CustomerSetting;
                             var errorMessage = _this.getErrorMessage(validationState, scope.resourceServiceName, scope.customFilterName);
                             scope.dirtyField = _this.getErrorTriggeringField(scope.registeredFields, validationState.triggeringFieldName);
                             if (tooltipController && errorMessage && scope.dirtyField) {
+                                var inputElement = scope.dirtyField[0];
                                 _this.toggleAffectedFieldsState(scope, validationState.affectedFields);
                                 tooltipController.showTooltipAt(errorMessage, scope.dirtyField);
-                                scope.dirtyField[0].focus();
-                                scope.dirtyField[0].select();
+                                if (inputElement.focus) {
+                                    inputElement.focus();
+                                }
+                                if (inputElement.select) {
+                                    inputElement.select();
+                                }
                             }
                         }
                     }
@@ -31269,7 +31278,7 @@ var CustomerSetting;
             this.appConfigService = appConfigService;
         }
         UsernameSuffixGroupDirective.$inject = ["requestService", "appConfigService"];
-        UsernameSuffixGroupDirective.validatingUsernamePath = "CreateCustomer/CheckExistedUsername";
+        UsernameSuffixGroupDirective.validatingUsernamePath = "CreateCN88Customer/CheckExistedUsername";
         return UsernameSuffixGroupDirective;
     }());
     CustomerSetting.ModuleRegister.directive("usernameSuffixGroup", UsernameSuffixGroupDirective);
@@ -31474,8 +31483,8 @@ var CustomerSetting;
                 this.superMaxPT = accountDetail.superMaxPT;
                 this.minSuperMaxPT = accountDetail.minSuperMaxPT;
                 this.maxSuperMaxPT = accountDetail.maxSuperMaxPT;
-                this.currency = accountDetail.currency;
                 this.currencies = accountDetail.currencies;
+                this.currency = backup ? accountDetail.currency : CustomerSetting.clone(accountDetail.currency);
             }
             if (backup) {
                 this.oldSetting = new SuperAccountDetail(this);
@@ -31608,8 +31617,8 @@ var CustomerSetting;
             if (hashKey === void 0) { hashKey = null; }
             if (accountDetail) {
                 _super.call(this, accountDetail, backup, isNew, customerLevel, hashKey);
-                this.spreadGroup = accountDetail.spreadGroup;
                 this.spreadGroups = accountDetail.spreadGroups;
+                this.spreadGroup = backup ? accountDetail.spreadGroup : CustomerSetting.clone(accountDetail.spreadGroup);
             }
             if (backup) {
                 this.oldSetting = new MemberAccountDetail(this);
@@ -31922,7 +31931,7 @@ var CustomerSetting;
             if (customerLevel === void 0) { customerLevel = null; }
             _super.call(this, settingType2Item, isNew, customerLevel);
             if (settingType2Item) {
-                this.commissionGroups = settingType2Item.commissionGroups;
+                this.commissionGroups = backup ? settingType2Item.commissionGroups : CustomerSetting.clone(settingType2Item.commissionGroups);
                 this.maxBet = settingType2Item.maxBet;
                 this.minMaxBet = settingType2Item.minMaxBet;
                 this.maxMaxBet = settingType2Item.maxMaxBet;

@@ -23,7 +23,7 @@ module CustomerSetting {
     class UsernameSuffixGroupDirective implements ng.IDirective {
         public static $inject: string[] = ["requestService", "appConfigService"];
 
-        private static validatingUsernamePath: string = "CreateCustomer/CheckExistedUsername";
+        private static validatingUsernamePath: string = "CreateCN88Customer/CheckExistedUsername";
 
         public replace: boolean = true;
 

@@ -105,10 +105,18 @@ module CustomerSetting {
                         scope.dirtyField = this.getErrorTriggeringField(scope.registeredFields, validationState.triggeringFieldName);
 
                         if (tooltipController && errorMessage && scope.dirtyField) {
+                            var inputElement: HTMLInputElement = <HTMLInputElement>scope.dirtyField[0];
+
                             this.toggleAffectedFieldsState(scope, validationState.affectedFields);
                             tooltipController.showTooltipAt(errorMessage, scope.dirtyField);
-                            scope.dirtyField[0].focus();
-                            (<HTMLInputElement>scope.dirtyField[0]).select();
+
+                            if (inputElement.focus) {
+                                inputElement.focus();
+                            }
+
+                            if (inputElement.select) {
+                                inputElement.select();
+                            }
                         }
                     }
                 }
