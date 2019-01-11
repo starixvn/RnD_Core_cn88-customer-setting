@@ -13,19 +13,19 @@
     using RestSharp;
     using Services;
 
-    public class ViewCustomerSettingController : Controller
+    public class ViewCN88CustomerSettingController : Controller
     {
         private const string SettingTemplateCachingKey = "CustomerSettingTemplate";
         private const byte CachingHours = 4;
 
         private readonly ICustomerSettingService _customerSettingService;
 
-        public ViewCustomerSettingController()
+        public ViewCN88CustomerSettingController()
             : this(null)
         {
         }
 
-        internal ViewCustomerSettingController(
+        internal ViewCN88CustomerSettingController(
             ICustomerSettingService customerSettingService)
         {
             _customerSettingService = customerSettingService ?? new CustomerSettingService();

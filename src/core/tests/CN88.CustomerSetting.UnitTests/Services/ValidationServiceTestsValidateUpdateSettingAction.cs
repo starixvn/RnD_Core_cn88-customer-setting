@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using CustomerSetting.Models;
     using CustomerSetting.Models.Constants;
     using CustomerSetting.Models.Enumerations;
@@ -95,10 +96,10 @@
             ////    InstanceFactory.CreateCustomerSettingType(1)
             ////};
             productService.GetProductSettingTypes(updateParam.Setting.ProductId, (byte)SystemType.Nap)
-                .Returns(new List<SettingType>
+                .Returns(Task.FromResult(new List<SettingType>
                 {
                     InstanceFactory.CreateCustomerSettingType(2)
-                });
+                } as IEnumerable<SettingType>));
 
             //// Act
             var actualResult = validationService
@@ -123,10 +124,10 @@
             ////    InstanceFactory.CreateCustomerSettingType(1)
             ////};
             productService.GetProductSettingTypes(updateParam.Setting.ProductId, (byte)SystemType.Nap)
-                .Returns(new List<SettingType>
+                .Returns(Task.FromResult(new List<SettingType>
                 {
                     InstanceFactory.CreateCustomerSettingType(1)
-                });
+                } as IEnumerable<SettingType>));
 
             //// Act
             var actualResult = validationService.ValidateUpdateSettingAction(settingContext, updateParam)

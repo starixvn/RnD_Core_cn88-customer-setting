@@ -1,6 +1,7 @@
 ﻿namespace CN88.CustomerSetting.Tests
 {
     using System.Collections.Generic;
+    using System.Linq;
     using CustomerSetting.Models;
     using CustomerSetting.Models.Enumerations;
     using CustomerSetting.Models.Requests;
@@ -80,14 +81,16 @@
             return new CustomerSettingQuery(isCreateNew, customerId, customerLevel.Value, productId, uplineLevel.Value);
         }
 
-        internal static Product CreateProduct(byte productId = 1)
-            => new Product(productId, "productId", new List<SettingType>
+        internal static Product CreateProduct(byte productId = 1, bool includedSettingTypes = true)
+            => new Product(productId, "productId", includedSettingTypes 
+                ? new List <SettingType>
                 {
-                    InstanceFactory.CreateProductSettingType(1),
-                    InstanceFactory.CreateProductSettingType(2),
-                    InstanceFactory.CreateProductSettingType(3),
-                    InstanceFactory.CreateProductSettingType(4)
-                });
+                    CreateProductSettingType(1),
+                    CreateProductSettingType(2),
+                    CreateProductSettingType(3),
+                    CreateProductSettingType(4)
+                }
+                : Enumerable.Empty<SettingType>());
 
         public static User CreateUser(
             int userId = 1,

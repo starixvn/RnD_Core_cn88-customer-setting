@@ -8,16 +8,16 @@
     using RestSharp;
 
     [ValidateAntiForgery]
-    public class CreateCustomerController : Controller
+    public class CreateCN88CustomerController : Controller
     {
         private readonly ICustomerSettingService _customerSettingService;
 
-        public CreateCustomerController()
+        public CreateCN88CustomerController()
             : this(null)
         {
         }
 
-        internal CreateCustomerController(ICustomerSettingService customerSettingService)
+        internal CreateCN88CustomerController(ICustomerSettingService customerSettingService)
         {
             _customerSettingService = customerSettingService ?? new CustomerSettingService();
         }

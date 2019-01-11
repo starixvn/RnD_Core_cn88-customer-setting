@@ -132,8 +132,8 @@ var DemoFrom;
                 customerLevel: this.target.role,
                 uplineId: this.target.uplineId,
                 path: isCreateNew
-                    ? this.resolveUrl("CN88CustomerSetting/ViewCustomerSetting/Create")
-                    : this.resolveUrl("CN88CustomerSetting/ViewCustomerSetting"),
+                    ? this.resolveUrl("CN88CustomerSetting/ViewCN88CustomerSetting/Create")
+                    : this.resolveUrl("CN88CustomerSetting/ViewCN88CustomerSetting"),
                 frameName: "setting-page"
             };
             if (this.isMultipleUpdates) {

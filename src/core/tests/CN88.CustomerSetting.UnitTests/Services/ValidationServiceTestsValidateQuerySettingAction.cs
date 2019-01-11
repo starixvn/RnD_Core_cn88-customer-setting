@@ -71,8 +71,7 @@
         [Test, TestCaseSource(nameof(ValidateQuerySetting_ActorHasPermission_Cases))]
         public void ValidateQuerySetting_ActorHasPermission_ReturnSuccessResult(
             Level userLevel,
-            Level customerLevel,
-            Level uplineLevel)
+            Level customerLevel)
         {
             //// Arrange
             var query = new CustomerSettingQuery(

@@ -40,7 +40,7 @@
 
         public async Task<ISetting> GetCustomerSetting(ISettingContext settingContext, CustomerSettingQuery query)
         {
-            Validate(settingContext, query);
+            await Validate(settingContext, query);
 
             var product = await productService.GetProduct(settingContext, query.ProductId, settingContext.System);
             var customerSettingTypes = await GetCustomerSettingTypes(settingContext, query, product.SettingTypes);

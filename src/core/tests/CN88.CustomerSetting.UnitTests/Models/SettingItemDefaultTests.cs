@@ -50,19 +50,24 @@
         }
 
         
-        [TestCase(1, 1, "SportType=\"1\" BetType=\"1\"")]
-        [TestCase(10, 1, "SportType=\"10\" BetType=\"1\"")]
-        [TestCase(1, 10, "SportType=\"1\" BetType=\"10\"")]
+        [TestCase(1, 1, false, "SportType=\"1\" BetType=\"1\" IsLive=\"0\"")]
+        [TestCase(10, 1, false, "SportType=\"10\" BetType=\"1\" IsLive=\"0\"")]
+        [TestCase(1, 10, false, "SportType=\"1\" BetType=\"10\" IsLive=\"0\"")]
+        [TestCase(1, 1, true, "SportType=\"1\" BetType=\"1\" IsLive=\"1\"")]
+        [TestCase(10, 1, true, "SportType=\"10\" BetType=\"1\" IsLive=\"1\"")]
+        [TestCase(1, 10, true, "SportType=\"1\" BetType=\"10\" IsLive=\"1\"")]
         public void ToXml_ReturnFormattedXml(
             short sportTypeId,
             short betTypeId,
+            bool isLive,
             string expectedXml)
         {
             //// Arrange
             var settingItem = new SettingItemDefault
             {
                 SportTypeId = sportTypeId,
-                BetTypeId = betTypeId
+                BetTypeId = betTypeId,
+                IsLive = isLive
             };
 
             //// Act

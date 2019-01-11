@@ -8,16 +8,16 @@
     using Services;
 
     [ValidateAntiForgery]
-    public class UpdateCustomerSettingController : Controller
+    public class UpdateCN88CustomerSettingController : Controller
     {
         private readonly ICustomerSettingService _customerSettingService;
 
-        public UpdateCustomerSettingController()
+        public UpdateCN88CustomerSettingController()
             : this(null)
         {
         }
 
-        internal UpdateCustomerSettingController(ICustomerSettingService customerSettingService)
+        internal UpdateCN88CustomerSettingController(ICustomerSettingService customerSettingService)
         {
             _customerSettingService = customerSettingService ?? new CustomerSettingService();
         }

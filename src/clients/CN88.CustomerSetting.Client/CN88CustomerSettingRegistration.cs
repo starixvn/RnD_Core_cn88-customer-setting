@@ -75,7 +75,7 @@
             routes.MapRoute(
                 name: "CN88_Setting",
                 url: UrlRootName + "/{controller}/{action}/{id}",
-                defaults: new { controller = "ViewCustomerSetting", action = "Edit", id = UrlParameter.Optional },
+                defaults: new { controller = "ViewCN88CustomerSetting", action = "Edit", id = UrlParameter.Optional },
                 namespaces: new string[] { "CN88.CustomerSetting.Client.Controllers" });
         }
 
