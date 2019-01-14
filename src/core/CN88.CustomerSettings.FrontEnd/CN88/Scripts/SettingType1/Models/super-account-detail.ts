@@ -1,6 +1,5 @@
 ﻿/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
-/// <reference path="../../core/helpers.ts" />
 /// <reference path="account-detail.ts" />
 /// <reference path="currency.ts" />
 
@@ -34,11 +33,7 @@ module CustomerSetting {
                 this.minSuperMaxPT = accountDetail.minSuperMaxPT;
                 this.maxSuperMaxPT = accountDetail.maxSuperMaxPT;
                 this.currencies = accountDetail.currencies;
-                this.currency = backup ? accountDetail.currency : clone(accountDetail.currency);
-            }
-
-            if (backup) {
-                this.oldSetting = new SuperAccountDetail(this);
+                this.currency = accountDetail.currency;
             }
 
             this.ignoredProperties.push("currencies");

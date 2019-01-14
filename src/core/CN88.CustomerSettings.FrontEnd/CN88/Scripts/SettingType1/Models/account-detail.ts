@@ -30,7 +30,7 @@ module CustomerSetting {
         constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level)
         constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string)
         constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
-            super(accountDetail, isNew, customerLevel);
+            super(accountDetail, backup, isNew, customerLevel);
 
             this.hashKey = hashKey;
 
@@ -49,11 +49,6 @@ module CustomerSetting {
                 this.uplineUsername = accountDetail.uplineUsername;
             }
 
-            if (backup) {
-                this.oldSetting = new AccountDetail(this);
-            }
-
-            this.resetValidationState();
             this.ignoredProperties = this.ignoredProperties.concat([
                 "confirmPassword",
                 "usernameSuffixes",

@@ -1,4 +1,5 @@
-﻿/// <reference path="enums/level.ts" />
+﻿/// <reference path="../helpers.ts" />
+/// <reference path="enums/level.ts" />
 /// <reference path="result.ts" />
 
 module CustomerSetting {
@@ -29,10 +30,11 @@ module CustomerSetting {
         protected customerLevel: Level;
         protected ignoredProperties: string[];
 
-        constructor();
-        constructor(settingItem: any, isNew: boolean);
-        constructor(settingItem: any, isNew: boolean, customerLevel: Level);
-        constructor(settingItem?: any, isNew: boolean = false, customerLevel: Level = null) {
+        constructor()
+        constructor(settingItem: any, backup: boolean)
+        constructor(settingItem: any, backup: boolean, isNew: boolean)
+        constructor(settingItem: any, backup: boolean, isNew: boolean, customerLevel: Level)
+        constructor(settingItem?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null) {
             this.isNew = isNew;
             this.customerLevel = customerLevel;
 
@@ -49,9 +51,13 @@ module CustomerSetting {
                 if (settingItem.isLive !== undefined) {
                     this.isLive = settingItem.isLive;
                 }
+
+                if (backup) {
+                    this.oldSetting = clone(settingItem);
+                }
             }
 
-            this.validationState = <ValidationResult>ValidationResult.normal;
+            this.resetValidationState();
             this.ignoredProperties = [
                 "sportTypeName",
                 "betTypeName",
@@ -66,8 +72,7 @@ module CustomerSetting {
         }
 
         public isChanged(): boolean {
-            return (this.sportTypeId !== this.oldSetting.sportTypeId)
-                || (this.betTypeId !== this.oldSetting.betTypeId);
+            return (this.sportTypeId !== this.oldSetting.sportTypeId) || (this.betTypeId !== this.oldSetting.betTypeId);
         }
 
         public validate(): boolean {
@@ -100,8 +105,8 @@ module CustomerSetting {
         public typeName: string;
         public oldSetting: DefaultSettingItem;
 
-        constructor();
-        constructor(errorItem: any);
+        constructor()
+        constructor(errorItem: any)
         constructor(errorItem?: any) {
             if (errorItem && errorItem.errorMessage) {
                 this.errorMessage = errorItem.errorMessage;

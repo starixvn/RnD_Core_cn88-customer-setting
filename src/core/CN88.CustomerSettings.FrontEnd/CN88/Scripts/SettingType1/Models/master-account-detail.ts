@@ -24,10 +24,6 @@ module CustomerSetting {
                 this.minSuperPT = accountDetail.minSuperPT;
                 this.maxSuperPT = accountDetail.maxSuperPT;
             }
-
-            if (backup) {
-                this.oldSetting = new MasterAccountDetail(this);
-            }
         }
 
         public isChanged(): boolean {

@@ -1,7 +1,6 @@
 ﻿/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
 /// <reference path="../../core/models/setting-item.ts" />
-/// <reference path="../../core/helpers.ts" />
 /// <reference path="commission-group.ts" />
 /// <reference path="layout-type.ts" />
 
@@ -26,10 +25,10 @@ module CustomerSetting {
         constructor(settingType2Item: any, backup: boolean, isNew: boolean)
         constructor(settingType2Item: any, backup: boolean, isNew: boolean, customerLevel: Level)
         constructor(settingType2Item?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null) {
-            super(settingType2Item, isNew, customerLevel);
+            super(settingType2Item, backup, isNew, customerLevel);
 
             if (settingType2Item) {
-                this.commissionGroups = backup ? settingType2Item.commissionGroups : clone(settingType2Item.commissionGroups);
+                this.commissionGroups = settingType2Item.commissionGroups;
                 this.maxBet = settingType2Item.maxBet;
                 this.minMaxBet = settingType2Item.minMaxBet;
                 this.maxMaxBet = settingType2Item.maxMaxBet;
@@ -40,10 +39,6 @@ module CustomerSetting {
 
             if (this.customerLevel === Level.member) {
                 this.memberSpreadGroupIndex = 0;
-            }
-
-            if (backup) {
-                this.oldSetting = new SettingType2Item(this);
             }
 
             this.ignoredProperties.push("mappedCommissionGroups");

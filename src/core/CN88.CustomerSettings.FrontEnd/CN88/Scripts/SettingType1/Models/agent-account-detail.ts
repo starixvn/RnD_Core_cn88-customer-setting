@@ -34,10 +34,6 @@ module CustomerSetting {
                 this.minAllowedPT = accountDetail.minAllowedPT;
                 this.maxAllowedPT = accountDetail.maxAllowedPT;
             }
-
-            if (backup) {
-                this.oldSetting = new AgentAccountDetail(this);
-            }
         }
 
         public isChanged(): boolean {

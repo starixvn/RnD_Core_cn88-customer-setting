@@ -1,6 +1,5 @@
 ﻿/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
-/// <reference path="../../core/helpers.ts" />
 /// <reference path="account-detail.ts" />
 /// <reference path="spread-group.ts" />
 
@@ -22,11 +21,7 @@ module CustomerSetting {
                 super(accountDetail, backup, isNew, customerLevel, hashKey);
 
                 this.spreadGroups = accountDetail.spreadGroups;
-                this.spreadGroup = backup ? accountDetail.spreadGroup : clone(accountDetail.spreadGroup);
-            }
-
-            if (backup) {
-                this.oldSetting = new MemberAccountDetail(this);
+                this.spreadGroup = accountDetail.spreadGroup;
             }
 
             this.ignoredProperties.push("spreadGroups");
