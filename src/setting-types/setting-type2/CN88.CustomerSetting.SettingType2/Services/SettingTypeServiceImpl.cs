@@ -141,89 +141,37 @@
         {
             var commBetSetting = settingType as CommBetSetting
                 ?? throw new InvalidOperationException("CommBetSetting data is not valid");
-
-            return await Task.FromResult(
-                new SettingResult(
-                Result.Success.Code,
-                Resources.UpdateCommBetSettingSuccess,
-                0,
-                command.Setting.CustomerId,
-                commBetSetting.Id,
-                commBetSetting.Name));
-
-            ////var updateCommResult = await UpdateCommSetting(settingContext, command.Setting, commBetSetting);
-
-            ////if (updateCommResult.IsFailed)
-            ////{
-            ////    return updateCommResult;
-            ////}
-
-            ////var updateBetSettingResult = await UpdateBetSetting(settingContext, command.Setting, commBetSetting);
-
-            ////return new SettingResult(
-            ////    updateCommResult.Code,
-            ////    updateCommResult.IsSuccessful
-            ////        ? Resources.UpdateCommBetSettingSuccess
-            ////        : updateCommResult.Message,
-            ////    updateCommResult);
-        }
-
-        private async Task<SettingResult> UpdateCommSetting(
-            ISettingContext settingContext,
-            ISetting setting,
-            CommBetSetting settingType)
-        {
-            var command = new UpdateCommSettingCommand
+            var setting = command.Setting;
+            var updateCommand = new UpdateCommBetSettingCommand
             {
                 RoleId = setting.CustomerLevel.Value,
                 CustId = setting.CustomerId,
 
                 ProductId = setting.ProductId,
-                Comm = settingType.ToCommXml(await GetCommTemplateSetting(), setting.CustomerLevel),
+                BetSetting = commBetSetting.ToBetSettingXml(),
+                CommSetting = commBetSetting.ToCommXml(await GetCommTemplateSetting(), setting.CustomerLevel),
 
                 IP = settingContext.IP,
                 UserId = settingContext.Actor.Id,
                 SubAccountId = settingContext.Actor.SubAccountId,
             };
 
-            await DynamicRepository.ExecuteAsync(command);
+            await DynamicRepository.ExecuteAsync(updateCommand);
 
-            return new SettingResult(
-                command.ErrCode,
-                command.ErrMsg,
-                command.MsgType,
+            var result = new SettingResult(
+                updateCommand.ErrCode,
+                updateCommand.ErrMsg,
+                updateCommand.MsgType,
                 setting.CustomerId,
                 settingType.Id,
                 settingType.Name);
-        }
-
-        private async Task<SettingResult> UpdateBetSetting(
-            ISettingContext settingContext,
-            ISetting setting,
-            CommBetSetting settingType)
-        {
-            var command = new UpdateBetSettingCommand
-            {
-                RoleId = setting.CustomerLevel.Value,
-                CustId = setting.CustomerId,
-
-                ProductId = setting.ProductId,
-                BetSetting = settingType.ToBetSettingXml(),
-
-                IP = settingContext.IP,
-                UserId = settingContext.Actor.Id,
-                SubAccountId = settingContext.Actor.SubAccountId,
-            };
-
-            await DynamicRepository.ExecuteAsync(command);
 
             return new SettingResult(
-                command.ErrCode,
-                command.ErrMsg,
-                command.MsgType,
-                setting.CustomerId,
-                settingType.Id,
-                settingType.Name);
+                result.Code,
+                result.IsSuccessful
+                    ? Resources.UpdateCommBetSettingSuccess
+                    : result.Message,
+                result);
         }
 
         private async Task<IEnumerable<CommTemplate>> GetCommTemplateSetting()

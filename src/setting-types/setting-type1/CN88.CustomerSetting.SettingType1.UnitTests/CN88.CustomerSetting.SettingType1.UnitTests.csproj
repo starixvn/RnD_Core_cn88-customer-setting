@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\core\CN88.CustomerSetting\CN88.CustomerSetting.csproj" />
+    <ProjectReference Include="..\..\..\core\tests\CN88.CustomerSetting.UnitTests\CN88.CustomerSetting.UnitTests.csproj" />
+    <ProjectReference Include="..\CN88.CustomerSetting.SettingType1\CN88.CustomerSetting.SettingType1.csproj" />
+  </ItemGroup>
+
+</Project>

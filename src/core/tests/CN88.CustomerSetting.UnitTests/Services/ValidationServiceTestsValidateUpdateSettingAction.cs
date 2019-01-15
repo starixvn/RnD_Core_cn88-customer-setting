@@ -32,8 +32,7 @@
             dynamicRepository = Substitute.For<IDynamicRepository>();
             logger = Substitute.For<ILogger>();
 
-            validationService = Substitute.ForPartsOf<ValidationService>(
-                settingContext,
+            validationService = Substitute.ForPartsOf<ValidationServiceImpl>(
                 productService,
                 dynamicRepository,
                 logger);
@@ -75,7 +74,10 @@
             AssumeValidateQuerySettingIsSuccessful();
 
             //// Act
-            validationService.ValidateUpdateSettingAction(settingContext, updateParam);
+            validationService
+                .ValidateUpdateSettingAction(settingContext, updateParam)
+                .GetAwaiter()
+                .GetResult();
 
             //// Assert
             productService.Received().GetProductSettingTypes(
@@ -116,21 +118,24 @@
         {
             //// Arrange
             var updateParam = InstanceFactory.CreateUpdateSettingParam();
-
+            
             AssumeValidateQuerySettingIsSuccessful();
 
             ////updateParam.Setting.SettingTypes = new List<SettingType>
             ////{
             ////    InstanceFactory.CreateCustomerSettingType(1)
             ////};
+            //productService.GetProduct(
+            //    settingContext, 
+            //    updateParam.Setting.ProductId, 
+            //    (byte)SystemType.Nap)
+            //    .Returns(Task.FromResult(InstanceFactory.CreateProduct(updateParam.Setting.ProductId)));
             productService.GetProductSettingTypes(updateParam.Setting.ProductId, (byte)SystemType.Nap)
-                .Returns(Task.FromResult(new List<SettingType>
-                {
-                    InstanceFactory.CreateCustomerSettingType(1)
-                } as IEnumerable<SettingType>));
+                .Returns(Task.FromResult(updateParam.Setting.SettingTypes));
 
             //// Act
-            var actualResult = validationService.ValidateUpdateSettingAction(settingContext, updateParam)
+            var actualResult = validationService
+                .ValidateUpdateSettingAction(settingContext, updateParam)
                 .GetAwaiter()
                 .GetResult();
 

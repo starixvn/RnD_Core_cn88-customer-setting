@@ -51,7 +51,10 @@
             //// Act
             Assert.Throws<ArgumentNullException>(
                 new TestDelegate(
-                    () => validationService.ValidateQuerySettingAction(settingContext, query)));
+                    () => validationService
+                            .ValidateQuerySettingAction(settingContext, query)
+                            .GetAwaiter()
+                            .GetResult()));
         }
 
         private void AssumeCutomerIsDownlineOfActor()
@@ -167,7 +170,10 @@
                 .GetResult();
 
             //// Assert
-            dynamicRepository.Received().Get<bool>(Arg.Is<ActorStatusQueryCriteria>(criteria => criteria.CustId == settingContext.Actor.Id));
+            dynamicRepository
+                .Received()
+                .GetAsync<bool>(Arg.Is<ActorStatusQueryCriteria>(
+                    criteria => criteria.CustId == settingContext.Actor.Id));
         }
 
         [Test]
@@ -214,7 +220,10 @@
                 .GetResult();
 
             //// Assert
-            dynamicRepository.Received().Get<byte>(Arg.Is<CustomerLevelQueryCriteria>(criteria => criteria.CustId == query.CustomerId));
+            dynamicRepository
+                .Received()
+                .GetAsync<byte>(Arg.Is<CustomerLevelQueryCriteria>(
+                    criteria => criteria.CustId == query.CustomerId));
         }
 
         private static readonly object[] ValidateQuerySetting_ActorIsNotCompany_AlwaysCallCheckBelonging_Cases =

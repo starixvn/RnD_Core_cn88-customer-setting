@@ -16,7 +16,24 @@
         {
             customerLevel = customerLevel ?? Level.Master;
             var setting = CreateCustomerSetting(customerId, customerLevel, productId);
+            
             return new UpdateCustomerSettingCommand(setting);
+        }
+
+        public static CreateCustomerCommand CreateCreateCustomerCommand(
+            int customerId = 2,
+            int uplineId = 1,
+            Level customerLevel = null,
+            byte productId = 1,
+            string hashKey = "123556",
+            int numOfSettingTypes = 1)
+        {
+            customerLevel = customerLevel ?? Level.Agent;
+            var setting = CreateCustomerSetting(customerId, customerLevel, productId);
+
+            setting.SettingTypes = setting.SettingTypes.Take(numOfSettingTypes);
+
+            return new CreateCustomerCommand(setting, uplineId, hashKey);
         }
 
         public static Setting CreateCustomerSetting(
@@ -69,16 +86,16 @@
             int customerId = 1,
             Level customerLevel = null,
             byte productId = 1,
-            Level uplineLevel = null)
+            int uplineId = 0)
         {
             customerLevel = customerLevel ?? Level.Member;
 
-            if (customerLevel.IsMemberLevel())
-            {
-                uplineLevel = uplineLevel ?? Level.Master;
-            }
-
-            return new CustomerSettingQuery(isCreateNew, customerId, customerLevel.Value, productId, uplineLevel.Value);
+            return new CustomerSettingQuery(
+                isCreateNew, 
+                customerId, 
+                customerLevel.Value, 
+                productId,
+                uplineId);
         }
 
         internal static Product CreateProduct(byte productId = 1, bool includedSettingTypes = true)

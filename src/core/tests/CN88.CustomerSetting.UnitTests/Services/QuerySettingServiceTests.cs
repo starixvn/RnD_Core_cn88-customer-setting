@@ -23,7 +23,7 @@
         private ISettingContext settingContext;
         private ValidationService validationService;
         private ProductService productService;
-        private IDynamicRepository dymanicRepository;
+        private IDynamicRepository dynamicRepository;
         private ILogger logger;
         private SettingTypeServiceFactory settingTypeServiceFactory;
 
@@ -37,7 +37,7 @@
             validationService = Substitute.For<ValidationService>();
             logger = Substitute.For<ILogger>();
             settingTypeServiceFactory = Substitute.For<SettingTypeServiceFactory>();
-            dymanicRepository = Substitute.For<IDynamicRepository>();
+            dynamicRepository = Substitute.For<IDynamicRepository>();
 
             settingTypeService = Substitute.For<SettingTypeService>();
 
@@ -45,7 +45,7 @@
 
             querySettingService = new QuerySettingServiceImpl(
                 validationService,
-                dymanicRepository,
+                dynamicRepository,
                 logger,
                 productService,
                 settingTypeServiceFactory);
@@ -54,7 +54,7 @@
         [Test]
         public void GetCustomerSetting_QuerySettingParamIsNull_ThrowArgumentNullException()
         {
-            //// Arrange
+            //// Arranges
             CustomerSettingQuery querySettingParam = null;
 
             //// Act
@@ -68,9 +68,11 @@
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
             StubProduct(querySettingParam.ProductId);
+            SetupSettingTypeServiceStub();
             validationService
                 .ValidateQuerySettingAction(settingContext, Arg.Any<CustomerSettingQuery>())
                 .Returns(Task.FromResult(Result.Success as IResult));
+
 
             //// Act
             querySettingService
@@ -175,7 +177,7 @@
             AssumeQuerySettingActionIsValid(querySettingParam);
 
             var productSettingTypes = InstanceFactory.CreateProduct().SettingTypes;
-            productService.GetProductSettingTypes(Arg.Any<byte>(), Arg.Any<byte>()).Returns(productSettingTypes);
+            StubProduct(querySettingParam.ProductId);
 
             productSettingTypes.First().SettingItems = new List<SettingItemStub> { new SettingItemStub() };
             SetupSettingTypeServiceStub(productSettingTypes.First());
@@ -195,6 +197,8 @@
         {
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
+            StubProduct(querySettingParam.ProductId, false);
+      
             AssumeQuerySettingActionIsValid(querySettingParam);
 
             //// Act
@@ -259,7 +263,9 @@
         private void SetupSettingTypeServiceStub(SettingType dummySettingType = null)
         {
             var customerSettingType = dummySettingType ?? InstanceFactory.CreateCustomerSettingType(1);
-            settingTypeService.GetCustomerSettingType(Arg.Any<ISettingContext>(), Arg.Any<CustomerSettingQuery>()).Returns(customerSettingType);
+            settingTypeService
+                .GetCustomerSettingType(Arg.Any<ISettingContext>(), Arg.Any<CustomerSettingQuery>())
+                .Returns(Task.FromResult(customerSettingType));
             settingTypeServiceFactory.GetInstance(Arg.Any<SettingType>()).Returns(settingTypeService);
         }
 
@@ -269,6 +275,7 @@
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
             AssumeQuerySettingActionIsValid(querySettingParam);
+            StubProduct(querySettingParam.ProductId);
             SetupProductSettingTypesStub();
 
             var expectedException = new DllNotFoundException("Dll not found");

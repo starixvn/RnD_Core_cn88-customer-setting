@@ -14,7 +14,7 @@
 
         private byte _systemId = 1;
 
-        private string _language = "en-US";
+        private string _language = "zh-TW";
 
         public User Actor
         {

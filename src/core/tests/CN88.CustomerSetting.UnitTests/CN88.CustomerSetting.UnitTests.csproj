@@ -17,4 +17,8 @@
     <ProjectReference Include="..\..\CN88.CustomerSetting\CN88.CustomerSetting.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DataAccesses\" />
+  </ItemGroup>
+
 </Project>
