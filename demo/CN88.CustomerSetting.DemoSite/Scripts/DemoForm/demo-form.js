@@ -416,6 +416,7 @@ var DemoFrom;
     }(Target));
 })(DemoFrom || (DemoFrom = {}));
 /* tslint:disable */
+var showCN88CancelButton = true;
 function successfulUpdatingCallback(isSuccessful) {
     console.log("Be called after updating sucessfully!");
 }

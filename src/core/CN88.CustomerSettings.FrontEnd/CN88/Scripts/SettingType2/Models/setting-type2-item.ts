@@ -47,19 +47,6 @@ module CustomerSetting {
             this.resetValidationState();
         }
 
-        public isChanged(): boolean {
-            var isChanged: boolean = super.isChanged();
-            var oldSetting: SettingType2Item = <SettingType2Item>this.oldSetting;
-            var commisisonGroupChanged: boolean = this.commissionGroups.some((commissionGroup: ICommissionGroup, index: number) => {
-                return commissionGroup.value !== oldSetting.commissionGroups[index].value;
-            });
-
-            return isChanged
-                || commisisonGroupChanged
-                || this.maxBet !== oldSetting.maxBet
-                || this.maxPerMatch !== oldSetting.maxPerMatch;
-        }
-
         public toJson(): any {
             var json: any = super.toJson();
 

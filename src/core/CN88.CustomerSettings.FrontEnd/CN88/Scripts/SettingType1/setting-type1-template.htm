@@ -15,7 +15,8 @@
         </div>
         <div class="col col--last" data-ng-if="settingType | validSettingType">
             <customer-credit data-account-detail="settingType.settingItems[0]"
-                             data-editable="editable"></customer-credit>
+                             data-editable="editable"
+                             data-precision="settingType.creditPrecision"></customer-credit>
             <position-taking data-ng-if="customerLevel !== avaiCustomerLevels.member"
                              data-account-detail="settingType.settingItems[0]"
                              data-editable="editable"></position-taking>

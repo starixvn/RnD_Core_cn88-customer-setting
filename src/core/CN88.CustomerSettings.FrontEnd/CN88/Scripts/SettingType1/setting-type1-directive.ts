@@ -6,6 +6,7 @@
 /// <reference path="../core/services/app-config-service.ts" />
 /// <reference path="../core/services/setting-types-shared-values-service.ts" />
 /// <reference path="../core/module-registrater.ts" />
+/// <reference path="models/setting-type1.ts" />
 /// <reference path="models/setting-type1-item.ts" />
 /// <reference path="resources/settingtype1-resource-service.ts" />
 
@@ -19,7 +20,7 @@ module CustomerSetting {
             "settingTypesSharedValuesService"
         ];
 
-        public templateUrl: string = "setting-type1.htm";
+        public templateUrl: string = "setting-type1-template.htm";
 
         public link: ng.IDirectiveLinkFn = (scope: ISettingTypeDirectiveSharedScope) => {
             this.linkInternal(scope);
@@ -59,4 +60,6 @@ module CustomerSetting {
     }
 
     ModuleRegister.directive("settingtype1", SettingType1Directive);
+
+    SettingTypeRegister.register(1, (settingType: any) => new SettingType1(settingType));
 }

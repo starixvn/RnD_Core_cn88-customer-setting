@@ -70,7 +70,7 @@ module CustomerSetting {
     export class SettingResult extends Result {
         public settingTypeId: number;
         public settingTypeName: string;
-        public messages: Array<string>;
+        public messages: string[];
 
         constructor(
             code: number,
@@ -78,7 +78,7 @@ module CustomerSetting {
             msgType: MessageType,
             settingTypeId: number,
             settingTypeName: string,
-            messages: Array<string>) {
+            messages: string[]) {
             super(code, message, msgType);
             this.settingTypeId = settingTypeId;
             this.settingTypeName = settingTypeName;
@@ -89,7 +89,7 @@ module CustomerSetting {
     export class CustomerSettingResult {
         public customerId: number;
         public customerName: string;
-        public settingResults: Array<SettingResult>;
+        public settingResults: SettingResult[];
 
         public get isSuccessful(): boolean {
             return !this.settingResults
@@ -102,7 +102,7 @@ module CustomerSetting {
             if (settingResult) {
                 this.customerId = settingResult.customerId;
                 this.customerName = settingResult.customerName;
-                this.settingResults = new Array<SettingResult>();
+                this.settingResults = [];
                 this.settingResults.push(new SettingResult(
                     settingResult.code,
                     settingResult.message,
@@ -125,18 +125,18 @@ module CustomerSetting {
             }
         }
 
-        public removeSuccessResults(): Array<SettingResult> {
+        public removeSuccessResults(): SettingResult[] {
             if (this.settingResults) {
                 this.settingResults = this.settingResults.filter((result: SettingResult) => {
                     return !result.isSuccessful;
                 });
             }
 
-            return this.settingResults || new Array<SettingResult>();
+            return this.settingResults || [];
         }
 
         public removeDuplicatedMessages(): void {
-            var uniquedResults: Array<SettingResult> = new Array<SettingResult>();
+            var uniquedResults: SettingResult[] = [];
 
             this.settingResults.forEach((item: SettingResult) => {
                 if (!item.messages && uniquedResults.length > 0) {
@@ -159,7 +159,7 @@ module CustomerSetting {
     }
 
     export class UpdatingSettingResult extends Result {
-        public subResults: Array<CustomerSettingResult>;
+        public subResults: CustomerSettingResult[];
         public isFailed: boolean;
 
         public get isSuccessful(): boolean {
@@ -183,7 +183,7 @@ module CustomerSetting {
                 }
 
                 if (result.subResults) {
-                    this.subResults = new Array<CustomerSettingResult>();
+                    this.subResults = [];
 
                     result.subResults.forEach((subResult: any) => {
                         var existingCustomerResult: CustomerSettingResult = this.subResults.filter((item: CustomerSettingResult) => {
@@ -204,14 +204,14 @@ module CustomerSetting {
             }
         }
 
-        public removeSuccessResults(): Array<CustomerSettingResult> {
+        public removeSuccessResults(): CustomerSettingResult[] {
             if (this.subResults) {
                 this.subResults = this.subResults.filter((result: CustomerSettingResult) => {
                     return !result.isSuccessful && result.removeSuccessResults().length > 0;
                 });
             }
 
-            return this.subResults || new Array<CustomerSettingResult>();
+            return this.subResults || [];
         }
     }
 

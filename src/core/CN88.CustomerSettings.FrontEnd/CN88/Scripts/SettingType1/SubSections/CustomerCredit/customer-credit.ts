@@ -11,11 +11,13 @@ module CustomerSetting {
     class CustomerCreditDirective extends SubSectionBaseDirective {
         public templateUrl: string = "SubSections/CustomerCredit/customer-credit.htm";
 
-        public link: ng.IDirectiveLinkFn = (scope: ICustomerCreditScope) => {
-            this.linkInternal(scope);
-
-            scope.creditPrecision = 2;
-        };
+        public get scope(): any {
+            return {
+                accountDetail: "=",
+                editable: "=",
+                creditPrecision: "=precision"
+            };
+        }
     }
 
     ModuleRegister.directive("customerCredit", CustomerCreditDirective);

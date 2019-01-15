@@ -60,21 +60,6 @@ module CustomerSetting {
             }
         }
 
-        public isChanged(): boolean {
-            var isChanged: boolean = super.isChanged();
-            var oldSetting = <AccountDetail>this.oldSetting;
-
-            return isChanged
-                || this.username !== oldSetting.username
-                || this.password !== oldSetting.password
-                || this.firstName !== oldSetting.firstName
-                || this.lastName !== oldSetting.lastName
-                || this.phone !== oldSetting.phone
-                || this.mobilePhone !== oldSetting.mobilePhone
-                || this.fax !== oldSetting.fax
-                || this.credit !== oldSetting.credit;
-        }
-
         public validate(): boolean {
             if (!this.validateUsername()) {
                 return false;

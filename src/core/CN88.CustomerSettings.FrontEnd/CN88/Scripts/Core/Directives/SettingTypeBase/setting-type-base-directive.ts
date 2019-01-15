@@ -11,7 +11,7 @@ module CustomerSetting {
     "use strict";
 
     interface INewSettingItem {
-        (settingItem: any, backup?: boolean, isNew?: boolean, customerLevel?: Level, uplineId?: number, extraData?: Array<KeyValuePair<string, any>>): ISettingItem;
+        (settingItem: any, backup?: boolean, isNew?: boolean, customerLevel?: Level, uplineId?: number): ISettingItem;
     }
 
     export interface ISettingTypeDirectiveSharedScope extends ng.IScope {
@@ -79,8 +79,7 @@ module CustomerSetting {
                                     true,
                                     scope.isNew,
                                     scope.customerLevel,
-                                    scope.uplineId,
-                                    scope.settingType.extraData);
+                                    scope.uplineId);
                             }
                         });
                     }

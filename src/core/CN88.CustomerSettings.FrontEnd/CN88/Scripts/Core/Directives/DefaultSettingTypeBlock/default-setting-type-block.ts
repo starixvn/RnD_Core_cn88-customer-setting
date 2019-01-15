@@ -37,8 +37,8 @@ module CustomerSetting {
 
         protected groupSettingItemsBySportType(settingItems: ISettingItem[]): DefaultSettingItem[][] {
             var currentSportTypeId: number = -1;
-            var result: Array<Array<DefaultSettingItem>> = new Array<Array<DefaultSettingItem>>();
-            var group: Array<DefaultSettingItem>;
+            var result: DefaultSettingItem[][] = [];
+            var group: DefaultSettingItem[];
 
             settingItems.forEach((item: ISettingItem) => {
                 var settingItem = <DefaultSettingItem>item;
@@ -49,7 +49,7 @@ module CustomerSetting {
                     }
 
                     currentSportTypeId = settingItem.sportTypeId;
-                    group = new Array<DefaultSettingItem>();
+                    group = [];
                 }
 
                 group.push(settingItem);

@@ -7,7 +7,9 @@
 /// <reference path="../core/services/crossing-setting-types-service-bus.ts" />
 /// <reference path="../core/services/setting-types-shared-values-service.ts" />
 /// <reference path="../core/module-registrater.ts" />
+/// <reference path="../core/setting-type-registrater.ts" />
 /// <reference path="models/layout-type.ts" />
+/// <reference path="models/setting-type2.ts" />
 /// <reference path="models/setting-type2-item.ts" />
 /// <reference path="resources/settingtype2-resource-service.ts" />
 
@@ -41,8 +43,8 @@ module CustomerSetting {
             scope.cssClass = "full-width";
             scope.settingTypeName = this.settingType2ResourceService.getLabel("CommissionAndBetLimit");
             scope.availableLayoutTypes = LayoutType;
-            scope.commissionPrecision = 2;
-            scope.betSettingPrecision = 0;
+            scope.commissionPrecision = (<SettingType2>scope.settingType).commissionPrecision;
+            scope.betSettingPrecision = (<SettingType2>scope.settingType).betSettingPrecision;
 
             if (scope.settingType.settingItems && scope.settingType.settingItems.length > 0) {
                 scope.availableCommissionGroups = this.getAllAvailableGroups(scope.settingType.settingItems);
@@ -64,7 +66,6 @@ module CustomerSetting {
 
                         return settingType2Item.minMaxBet > 0;
                     });
-
 
                     scope.hasMaxPerMatchConstraint = scope.settingType.settingItems.some((settingItem: ISettingItem) => {
                         var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
@@ -152,4 +153,6 @@ module CustomerSetting {
     }
 
     ModuleRegister.directive("settingtype2", SettingType2Directive);
+
+    SettingTypeRegister.register(2, (settingType: any) => new SettingType2(settingType));
 }

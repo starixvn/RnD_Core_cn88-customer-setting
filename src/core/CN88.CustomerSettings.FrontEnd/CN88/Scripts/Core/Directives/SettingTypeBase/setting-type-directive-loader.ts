@@ -28,11 +28,11 @@ module CustomerSetting {
         };
 
         private $compile: ng.ICompileService;
-        private loadedSettingTypes: Array<number>;
+        private loadedSettingTypes: number[];
 
         constructor($compile: ng.ICompileService) {
             this.$compile = $compile;
-            this.loadedSettingTypes = new Array<number>();
+            this.loadedSettingTypes = [];
         }
 
         private generateNodes(scope: ISettingTypeLoaderScope, element: ng.IAugmentedJQuery): void {

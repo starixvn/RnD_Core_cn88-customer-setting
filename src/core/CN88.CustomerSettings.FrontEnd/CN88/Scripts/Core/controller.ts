@@ -33,6 +33,7 @@ module CustomerSetting {
         public warningMessages: Result | UpdatingSettingResult;
         public requestMsgResult: Result | UpdatingSettingResult;
         public cancelCallback: Function;
+        public cancelButtonRequired: boolean;
 
         private $window: ng.IWindowService;
         private $timeout: ng.ITimeoutService;
@@ -65,7 +66,11 @@ module CustomerSetting {
 
             /* tslint:disable:no-string-literal */
             this.successfulUpdatingCallback = this.$window.parent["successfulUpdatingCallback"];
-            this.cancelCallback = this.$window.parent["cancelCallback"];
+            this.cancelButtonRequired = this.$window.parent["showCN88CancelButton"];
+
+            if (this.cancelButtonRequired) {
+                this.cancelCallback = this.$window.parent["cancelCallback"];
+            }
             /* tslint:enable:no-string-literal */
 
             this.systemId = this.parametersService.systemId;
@@ -77,7 +82,7 @@ module CustomerSetting {
         }
 
         public update(): void {
-            var changedSettings: Setting = this.settingTypesSharedValuesService.isNew ? this.setting.getEditableSettingTypes() : this.setting.getChanges();
+            var changedSettings: Setting = this.settingTypesSharedValuesService.isNew ? this.setting.getEditableSettings() : this.setting.getChanges();
             var command: SettingCommand;
             var path: string = this.settingTypesSharedValuesService.isNew
                 ? this.appConfigService.getCreatePath()

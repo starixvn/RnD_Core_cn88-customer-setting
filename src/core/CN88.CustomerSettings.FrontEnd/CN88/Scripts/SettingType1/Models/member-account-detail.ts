@@ -31,13 +31,6 @@ module CustomerSetting {
             }
         }
 
-        public isChanged(): boolean {
-            var isChanged: boolean = super.isChanged();
-            var oldSetting: MemberAccountDetail = <MemberAccountDetail>this.oldSetting;
-
-            return isChanged || this.spreadGroup.uGroup !== oldSetting.spreadGroup.uGroup;
-        }
-
         public validate(): boolean {
             if (!this.validateUsername()) {
                 return false;

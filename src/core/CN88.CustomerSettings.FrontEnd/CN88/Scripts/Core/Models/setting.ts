@@ -1,4 +1,5 @@
-﻿/// <reference path="enums/display-mode.ts" />
+﻿/// <reference path="../setting-type-registrater.ts" />
+/// <reference path="enums/display-mode.ts" />
 /// <reference path="enums/level.ts" />
 /// <reference path="enums/message-type.ts" />
 /// <reference path="setting-type.ts" />
@@ -12,7 +13,7 @@ module CustomerSetting {
         public customerLevel: Level;
         public productId: number;
         public productName: string;
-        public settingTypes: Array<SettingType>;
+        public settingTypes: SettingType[];
         public warningMessage: UpdatingSettingResult;
 
         constructor();
@@ -29,16 +30,16 @@ module CustomerSetting {
                 }
 
                 if (setting.settingTypes) {
-                    this.settingTypes = setting.settingTypes.map((settingType: any) => new SettingType(settingType));
+                    this.settingTypes = setting.settingTypes.map((settingType: any) => SettingTypeRegister.getInitializer(settingType.id)(settingType));
                 } else {
-                    this.settingTypes = new Array<SettingType>();
+                    this.settingTypes = [];
                 }
             }
         }
 
-        public getEditableSettingTypes(): Setting {
+        public getEditableSettings(): Setting {
             var newSetting: Setting;
-            var editableSettingTypes: SettingType[] = this.getListOfEditableSettingTypes();
+            var editableSettingTypes: SettingType[] = this.getEditableSettingTypes();
 
             if (editableSettingTypes && editableSettingTypes.length > 0) {
                 newSetting = new Setting();
@@ -55,11 +56,11 @@ module CustomerSetting {
 
         public getChanges(): Setting {
             var newSetting: Setting;
-            var matchedSettingTypes: Array<SettingType> = this.getListOfEditableSettingTypes();
-            var changedSettingTypes: Array<SettingType> = new Array<SettingType>();
+            var editableSettingTypes: SettingType[] = this.getEditableSettingTypes();
+            var changedSettingTypes: SettingType[] = [];
 
-            if (matchedSettingTypes && matchedSettingTypes.length > 0) {
-                matchedSettingTypes.forEach((settingType: SettingType) => {
+            if (editableSettingTypes && editableSettingTypes.length > 0) {
+                editableSettingTypes.forEach((settingType: SettingType) => {
                     var changedSettingType: SettingType = settingType.getChanges();
 
                     if (changedSettingType) {
@@ -102,7 +103,6 @@ module CustomerSetting {
                     value: this.customerLevel
                 },
                 productId: this.productId,
-                productName: this.productName,
                 settingTypes: []
             };
 
@@ -113,7 +113,7 @@ module CustomerSetting {
             return setting;
         }
 
-        private getListOfEditableSettingTypes(): SettingType[] {
+        private getEditableSettingTypes(): SettingType[] {
             return this.settingTypes.filter((settingType: SettingType) => {
                 return settingType.displayMode === DisplayMode.editable;
             });

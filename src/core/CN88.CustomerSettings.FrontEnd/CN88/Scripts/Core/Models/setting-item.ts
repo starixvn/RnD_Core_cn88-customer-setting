@@ -10,6 +10,7 @@ module CustomerSetting {
         oldSetting: ISettingItem;
         isChanged(): boolean;
         validate(): boolean;
+        resetValidationState(): void;
         toJson(): {};
     }
 
@@ -72,7 +73,13 @@ module CustomerSetting {
         }
 
         public isChanged(): boolean {
-            return (this.sportTypeId !== this.oldSetting.sportTypeId) || (this.betTypeId !== this.oldSetting.betTypeId);
+            return Object.keys(this).some((prop: string) => {
+                if ((this.ignoredProperties.indexOf(prop) < 0)
+                    && (prop.charAt(0) !== "$")
+                    && !equals(this[prop], this.oldSetting[prop])) {
+                    return true;
+                }
+            });
         }
 
         public validate(): boolean {
@@ -120,6 +127,10 @@ module CustomerSetting {
 
         public validate(): boolean {
             return true;
+        }
+
+        public resetValidationState(): void {
+            return;
         }
 
         public toJson(): {} {

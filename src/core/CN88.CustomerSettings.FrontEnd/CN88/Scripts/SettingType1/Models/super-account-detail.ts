@@ -43,16 +43,6 @@ module CustomerSetting {
             }
         }
 
-        public isChanged(): boolean {
-            var isChanged: boolean = super.isChanged();
-            var oldSetting: SuperAccountDetail = <SuperAccountDetail>this.oldSetting;
-
-            return isChanged
-                || this.superMinPT !== oldSetting.superMinPT
-                || this.superMaxPT !== oldSetting.superMaxPT
-                || this.currency.id !== oldSetting.currency.id;
-        }
-
         public validate(): boolean {
             if (!super.validateUsername()) {
                 return false;

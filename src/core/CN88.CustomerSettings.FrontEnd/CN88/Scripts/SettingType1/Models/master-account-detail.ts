@@ -26,13 +26,6 @@ module CustomerSetting {
             }
         }
 
-        public isChanged(): boolean {
-            var isChanged: boolean = super.isChanged();
-            var oldSetting: MasterAccountDetail = <MasterAccountDetail>this.oldSetting;
-
-            return isChanged || this.superPT !== oldSetting.superPT;
-        }
-
         public validate(): boolean {
             if (!super.validate()) {
                 return false;

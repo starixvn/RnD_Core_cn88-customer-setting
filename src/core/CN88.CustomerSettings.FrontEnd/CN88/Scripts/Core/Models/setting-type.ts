@@ -9,12 +9,11 @@ module CustomerSetting {
         public id: number;
         public name: string;
         public settingLevel: number;
-        public settingItems: Array<ISettingItem>;
+        public settingItems: ISettingItem[];
         public typeName: string;
         public displayOrder: number;
         public displayMode: number;
         public isError: boolean;
-        public extraData: Array<KeyValuePair<string, any>>;
 
         constructor();
         constructor(settingType: any)
@@ -28,13 +27,12 @@ module CustomerSetting {
                 this.displayOrder = settingType.displayOrder;
                 this.displayMode = settingType.displayMode;
                 this.isError = settingType.isError;
-                this.extraData = this.getExtraData(settingType);
             }
         }
 
         public getChanges(): SettingType {
             var updatedSettingType: SettingType;
-            var changedSettingItems: Array<ISettingItem> = this.settingItems.filter((item: ISettingItem) => {
+            var changedSettingItems: ISettingItem[] = this.settingItems.filter((item: ISettingItem) => {
                 if (item.isChanged) {
                     return item.isChanged();
                 } else {
@@ -53,7 +51,6 @@ module CustomerSetting {
                 updatedSettingType.displayOrder = this.displayOrder;
                 updatedSettingType.displayMode = this.displayMode;
                 updatedSettingType.isError = this.isError;
-                updatedSettingType.extraData = this.extraData;
             }
 
             return updatedSettingType;
@@ -72,18 +69,13 @@ module CustomerSetting {
 
         public resetValidationState(): void {
             this.settingItems.forEach((settingItem: ISettingItem) => {
-                var castableSettingItem: DefaultSettingItem = <DefaultSettingItem>settingItem;
-
-                if (castableSettingItem && castableSettingItem.resetValidationState) {
-                    castableSettingItem.resetValidationState();
-                }
+                settingItem.resetValidationState();
             });
         }
 
         public toJson(): {} {
             var settingType: any = {
                 id: this.id,
-                name: this.name,
                 settingLevel: this.settingLevel,
                 settingItems: [],
                 typeName: this.typeName,
@@ -96,28 +88,7 @@ module CustomerSetting {
                 settingType.settingItems.push(settingItem.toJson());
             });
 
-            if (this.extraData && this.extraData.length > 0) {
-                this.extraData.forEach((extraItem: KeyValuePair<string, any>) => {
-                    settingType[extraItem.key] = extraItem.value;
-                });
-            }
-
             return settingType;
-        }
-
-        private getExtraData(rawData: any): Array<KeyValuePair<string, any>> {
-            var extraData: Array<KeyValuePair<string, any>> = new Array<KeyValuePair<string, any>>();
-            var addedProperties: string[] = Object.keys(this).filter((prop: string) => {
-                return prop !== "extraData";
-            });
-
-            extraData = Object.keys(rawData).filter((propName: string) => {
-                return addedProperties.indexOf(propName) < 0;
-            }).map((prop: string) => {
-                return new KeyValuePair<string, any>(prop, rawData[prop]);
-            });
-
-            return extraData;
         }
     }
 }

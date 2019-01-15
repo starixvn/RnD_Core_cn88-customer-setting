@@ -66,8 +66,11 @@ module CustomerSetting {
         return angular.copy(source);
     }
 
-
     export function stringifyJson(json: any): any {
         return angular.toJson(json);
+    }
+
+    export function equals(first: any, second: any): boolean {
+        return angular.equals(first, second);
     }
 }
