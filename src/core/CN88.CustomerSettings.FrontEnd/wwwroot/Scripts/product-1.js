@@ -29736,6 +29736,9 @@ var CustomerSetting;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var app = angular.module("customerSetting", []);
+app.config(['$compileProvider', function ($compileProvider) {
+        $compileProvider.debugInfoEnabled(false);
+    }]);
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
@@ -30752,7 +30755,6 @@ var CustomerSetting;
                 errorTooltipContainer.attr("data-tooltip", "{{errorMessage}}");
                 errorTooltipContainer.attr("data-manual", "true");
                 errorTooltipContainer.attr("data-tooltip-type", "error");
-                errorTooltipContainer.attr("data-target", "dirtyField");
                 element.prepend(errorTooltipContainer);
                 return {
                     post: _this.link

@@ -24,7 +24,6 @@
         "js-string-escape": "^1.0.0",
         "merge-stream": "^1.0.0",
         "minimize": "^1.6.1",
-        "mssql": "^2.2.0",
         "rimraf": "~2.2.8",
         "through2": "^2.0.0",
         "typescript": "^1.8.10",
