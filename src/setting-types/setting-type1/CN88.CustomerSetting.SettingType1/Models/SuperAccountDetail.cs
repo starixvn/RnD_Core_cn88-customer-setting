@@ -1,4 +1,6 @@
-﻿namespace CN88.CustomerSetting.SettingType1.Models
+﻿using CN88.CustomerSetting.Models.Results;
+
+namespace CN88.CustomerSetting.SettingType1.Models
 {
     public class SuperAccountDetail : AccountDetailSettingItem
     {
@@ -19,5 +21,15 @@
 
         public override string ToXml()
             => string.Format(PTXmlFormat, base.ToXml(), SuperMinPT, SuperMaxPT);
+
+        public override IResult Validate()
+        {
+            if(SuperMinPT > SuperMaxPT)
+            {
+                return Result.CreateErrorResult(AppResources.Resources.Msg_30009);
+            }
+
+            return base.Validate();
+        }
     }
 }

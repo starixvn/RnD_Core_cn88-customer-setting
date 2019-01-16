@@ -244,4 +244,16 @@ Notes: your password is cAsE sEnSiTiVe</value>
   <data name="Msg_20040" xml:space="preserve">
     <value>Agent's PT is too high. It makes the line''s Total PT greater than Super Max PT</value>
   </data>
+  <data name="Max" xml:space="preserve">
+    <value>Max</value>
+  </data>
+  <data name="MaxLive" xml:space="preserve">
+    <value>MaxLive</value>
+  </data>
+  <data name="Min" xml:space="preserve">
+    <value>Min</value>
+  </data>
+  <data name="MinLive" xml:space="preserve">
+    <value>MinLive</value>
+  </data>
 </root>

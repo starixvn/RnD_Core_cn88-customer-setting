@@ -3,7 +3,7 @@
     public class MasterAccountDetail : AccountDetailSettingItem
     {
         private const string PTXmlFormat
-            = "<PT {0} SuperPT=\"{1}\"/>";
+            = "<PT {0} SuperPT=\"{1}\" />";
 
         public decimal SuperPT { get; set; }
 

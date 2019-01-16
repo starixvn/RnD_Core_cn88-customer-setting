@@ -1,0 +1,1 @@
+﻿[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("CN88.CustomerSetting.SettingType2.UnitTests")]

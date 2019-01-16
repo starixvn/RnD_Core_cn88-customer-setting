@@ -19,20 +19,20 @@
 
         protected MessageService MessageService { get; set; }
 
-        [Test]
-        public virtual void TranslateMessage_MessageTypeIsException_ReturnMatchedMessageContent()
-        {
-            //// Arrange
-            int msgType = ExceptionMessageType;
-            string rawMessage = "<Root MsgID=\"90001\" Msg=\"Update process is unsuccessful!\"/>";
-            byte settingLevel = 1;
+        ////[Test]
+        ////public virtual void TranslateMessage_MessageTypeIsException_ReturnMatchedMessageContent()
+        ////{
+        ////    //// Arrange
+        ////    int msgType = OtherMessageType;
+        ////    string rawMessage = "<Root MsgID=\"90001\" Msg=\"Update process is unsuccessful!\"/>";
+        ////    byte settingLevel = 1;
 
-            //// Act
-            var actualMessageContent = MessageService.TranslateMessage(msgType, rawMessage, settingLevel, "en-US");
+        ////    //// Act
+        ////    var actualMessageContent = MessageService.TranslateMessage(msgType, rawMessage, settingLevel, "en-US");
 
-            //// Assert
-            Assert.AreEqual(Resources.Msg_90001, actualMessageContent.MainMessage);
-        }
+        ////    //// Assert
+        ////    Assert.AreEqual(Resources.Msg_90001, actualMessageContent.MainMessage);
+        ////}
 
         [Test]
         public virtual void TranslateMessage_MessageIdIsNotFound_ReturnUndefinedMessage()

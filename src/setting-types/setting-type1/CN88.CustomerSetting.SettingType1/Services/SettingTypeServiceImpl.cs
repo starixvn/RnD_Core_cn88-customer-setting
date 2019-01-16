@@ -373,7 +373,7 @@
 
             return updateCustomerInfoCommand.ErrCode > 0
                 ? new SettingResult(Result.CreateErrorResult(updateCustomerInfoCommand.ErrMsg))
-                : new SettingResult(Result.CreateSuccessResult(updateCustomerInfoCommand.ErrMsg));
+                : new SettingResult(Result.Success);
         }
     }
 }

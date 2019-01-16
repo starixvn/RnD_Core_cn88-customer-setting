@@ -3,7 +3,7 @@
     public class AgentAccountDetail : AccountDetailSettingItem
     {
         private const string PTXmlFormat
-            = "<PT {0} MasterPT=\"{1}\" AgentPT=\"{2}\"/>";
+            = "<PT {0} MasterPT=\"{1}\" AgentPT=\"{2}\" />";
 
         public decimal MinAllowedPT { get; set; }
 

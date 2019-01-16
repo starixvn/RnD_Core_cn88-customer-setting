@@ -70,6 +70,42 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Max.
+        /// </summary>
+        internal static string Max {
+            get {
+                return ResourceManager.GetString("Max", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxLive.
+        /// </summary>
+        internal static string MaxLive {
+            get {
+                return ResourceManager.GetString("MaxLive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Min.
+        /// </summary>
+        internal static string Min {
+            get {
+                return ResourceManager.GetString("Min", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MinLive.
+        /// </summary>
+        internal static string MinLive {
+            get {
+                return ResourceManager.GetString("MinLive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid position taking..
         /// </summary>
         internal static string Msg_20001 {

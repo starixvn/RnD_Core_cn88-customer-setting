@@ -12,8 +12,9 @@
         public override string ToString(ResourceService resourceService, string language, byte settingLevel)
         {
             return string.Format(
-                "{0}: {1}",
+                "{0} - {1}: {2}",
                 base.ToString(resourceService, language, settingLevel),
+                IsLive ? AppResources.Resources.MaxLive : AppResources.Resources.Max,
                 MaxPT);
         }
     }

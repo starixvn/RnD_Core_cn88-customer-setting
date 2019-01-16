@@ -2,14 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Text;
     using System.Linq;
     using System.Threading.Tasks;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Enumerations;
+    using CN88.CustomerSetting.Models.Results;
     using CN88.CustomerSetting.Services;
     using CN88.CustomerSetting.SettingType1.Models;
     using CN88.CustomerSetting.SettingType1.Models.Dtos;
+    using CN88.CustomerSetting.SettingType1.Params.Commands;
     using CN88.CustomerSetting.SettingType1.Params.Criteria;
     using CN88.CustomerSetting.SettingType1.Services;
     using CN88.CustomerSetting.Tests;
@@ -19,7 +20,6 @@
     using Fanex.Logging;
     using NSubstitute;
     using NUnit.Framework;
-    using CN88.CustomerSetting.Models.Results;
 
     public class SettingTypeServiceTests
     {
@@ -148,7 +148,6 @@
                 .GetCustomerSettingType(settingContext, settingQuery))
                 .SettingItems
                 .FirstOrDefault() as AccountDetailSettingItem;
-
 
             Assert.AreEqual(2, accountDetailItem.SpreadGroups.Count());
             Assert.AreEqual("CNA", accountDetailItem.SpreadGroups.ElementAt(0).GroupName);
@@ -290,9 +289,189 @@
             Assert.AreEqual("<ROOT><PT SportType=\"1\" BetType=\"2\" IsLive=\"1\" MinPT=\"11\" MaxPT=\"12\" /></ROOT>", createParams["ptsetting"]);
         }
 
-        private static AccountDetailSettingType StubSuperAccountDetailSettingType()
+        [Test]
+        public void BuildCreateCustomerParams_AddNewMaster_ReturnCreateParams()
         {
-            return new AccountDetailSettingType
+            var command = InstanceFactory.CreateCreateCustomerCommand(customerLevel: Level.Master);
+            var settingType = StubMasterAccountDetailSettingType();
+            var settingItem = settingType.SettingItems.FirstOrDefault() as MasterAccountDetail;
+            settingContext.Actor = new User
+            {
+                Level = Level.Super,
+                Id = 3434,
+                SubAccountId = 111
+            };
+
+            StubPasswordPassAvalidation();
+
+            var createParams = settingTypeServiceImpl
+                .BuildCreateCustomerParams(
+                    settingContext,
+                    command,
+                    settingType);
+
+            Assert.AreEqual("CustomerName", createParams["username"]);
+            Assert.AreEqual("MasterName", createParams["firstname"]);
+            Assert.AreEqual(3434, createParams["credit"]);
+            Assert.AreEqual(settingContext.System, createParams["systemid"]);
+            Assert.AreEqual(settingContext.IP, createParams["ip"]);
+            Assert.AreEqual(3434, createParams["creator"]);
+            Assert.AreEqual(111, createParams["subaccid"]);
+            Assert.AreEqual(1, createParams["srecommend"]);
+            Assert.AreEqual("<ROOT><PT SportType=\"2\" BetType=\"1\" IsLive=\"1\" SuperPT=\"20\" /></ROOT>", createParams["ptsetting"]);
+        }
+
+        [Test]
+        public void BuildCreateCustomerParams_AddNewAgent_ReturnCreateParams()
+        {
+            var command = InstanceFactory.CreateCreateCustomerCommand(customerLevel: Level.Agent);
+            var settingType = StubAgentAccountDetailSettingType();
+            var settingItem = settingType.SettingItems.FirstOrDefault() as AgentAccountDetail;
+            settingContext.Actor = new User
+            {
+                Level = Level.Master,
+                Id = 34342,
+                SubAccountId = 1112
+            };
+
+            StubPasswordPassAvalidation();
+
+            var createParams = settingTypeServiceImpl
+                .BuildCreateCustomerParams(
+                    settingContext,
+                    command,
+                    settingType);
+
+            Assert.AreEqual("CustomerName", createParams["username"]);
+            Assert.AreEqual("AgentName", createParams["firstname"]);
+            Assert.AreEqual(3434, createParams["credit"]);
+            Assert.AreEqual(settingContext.System, createParams["systemid"]);
+            Assert.AreEqual(settingContext.IP, createParams["ip"]);
+            Assert.AreEqual(34342, createParams["creator"]);
+            Assert.AreEqual(1112, createParams["subaccid"]);
+            Assert.AreEqual(1, createParams["mrecommend"]);
+            Assert.AreEqual("<ROOT><PT SportType=\"2\" BetType=\"1\" IsLive=\"1\" MasterPT=\"11\" AgentPT=\"23\" /></ROOT>", createParams["ptsetting"]);
+        }
+
+        [Test]
+        public void BuildCreateCustomerParams_AddNewMember_ReturnCreateParams()
+        {
+            var command = InstanceFactory.CreateCreateCustomerCommand(customerLevel: Level.Member);
+            var settingType = StubMemberAccountDetailSettingType();
+            var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem;
+            settingContext.Actor = new User
+            {
+                Level = Level.Master,
+                Id = 34342,
+                SubAccountId = 1112
+            };
+
+            StubPasswordPassAvalidation();
+
+            var createParams = settingTypeServiceImpl
+                .BuildCreateCustomerParams(
+                    settingContext,
+                    command,
+                    settingType);
+
+            Assert.AreEqual("CustomerName", createParams["username"]);
+            Assert.AreEqual("AgentName", createParams["firstname"]);
+            Assert.AreEqual(3434, createParams["credit"]);
+            Assert.AreEqual(settingContext.System, createParams["systemid"]);
+            Assert.AreEqual(settingContext.IP, createParams["ip"]);
+            Assert.AreEqual(34342, createParams["creator"]);
+            Assert.AreEqual(1112, createParams["subaccid"]);
+            Assert.AreEqual(1, createParams["recommend"]);
+            Assert.AreEqual("A", createParams["ugroup"]);
+        }
+
+        [Test]
+        public void UpdateCustomerSettingType_SettingItemIsNull_ThrowInvalidOperationException()
+        {
+            var updateCommand = InstanceFactory.CreateUpdateSettingParam();
+            var updateSettingType = new AccountDetailSettingType
+            {
+                SettingItems = Enumerable.Empty<ISettingItem>()
+            };
+
+            Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await settingTypeServiceImpl.UpdateCustomerSettingType(
+                settingContext,
+                updateCommand,
+                updateSettingType));
+        }
+
+        [Test]
+        public async Task UpdateCustomerSettingType_Always_UpdateCustomerInfo()
+        {
+            var updateCommand = InstanceFactory.CreateUpdateSettingParam(customerLevel: Level.Super);
+            var updateSettingType = StubSuperAccountDetailSettingType();
+
+            await settingTypeServiceImpl.UpdateCustomerSettingType(settingContext, updateCommand, updateSettingType);
+
+            await dynamicRepository.Received().ExecuteAsync(Arg.Is<UpdateCustomerInfoCommand>(
+                command => command.RoleId == Level.Super.Value
+                            && command.Credit == 3434
+                            && command.LastName == "LastName"
+                            && command.Phone == "Phone"
+                            && command.MobilePhone == "MobilePhone"
+                            && command.FirstName == "SuperName"
+                            && command.Language == "CT"
+                            && command.CustId == 1
+                            && command.LastName == "LastName"
+                ));
+        }
+
+        [Test]
+        public async Task UpdateCustomerSettingType_UpdateCustomerInfoFailed_ReturnFailedResult()
+        {
+            var updateCommand = InstanceFactory.CreateUpdateSettingParam(customerLevel: Level.Super);
+            var updateSettingType = StubSuperAccountDetailSettingType();
+
+            dynamicRepository
+                .ExecuteAsync(Arg.Any<UpdateCustomerInfoCommand>())
+                .Returns(command =>
+                {
+                    ((UpdateCustomerInfoCommand)command[0]).ErrCode = 1;
+
+                    return Task.FromResult(1);
+                });
+
+            var result = await settingTypeServiceImpl.UpdateCustomerSettingType(settingContext, updateCommand, updateSettingType);
+
+            Assert.IsTrue(result.IsFailed);
+        }
+
+        [Test]
+        public async Task UpdateCustomerSettingType_UpdateCustomerInfoSuccess_ThenUpdatePTSetting()
+        {
+            var updateCommand = InstanceFactory.CreateUpdateSettingParam(customerLevel: Level.Super);
+            var updateSettingType = StubSuperAccountDetailSettingType();
+
+            await settingTypeServiceImpl.UpdateCustomerSettingType(settingContext, updateCommand, updateSettingType);
+
+            await dynamicRepository.Received().ExecuteAsync(Arg.Is<UpdatePTSettingCommand>(
+                command => command.RoleId == Level.Super.Value
+                            && command.IP == settingContext.IP
+                            && command.ProductId == 1
+                            && command.UserId == 100
+                            && command.PTSetting == "<ROOT><PT SportType=\"1\" BetType=\"2\" IsLive=\"1\" MinPT=\"11\" MaxPT=\"12\" /></ROOT>"
+                ));
+        }
+
+        [Test]
+        public async Task UpdateCustomerSettingType_UpdateSuccess_ReturnSuccessResult()
+        {
+            var updateCommand = InstanceFactory.CreateUpdateSettingParam(customerLevel: Level.Super);
+            var updateSettingType = StubSuperAccountDetailSettingType();
+
+            var result = await settingTypeServiceImpl.UpdateCustomerSettingType(settingContext, updateCommand, updateSettingType);
+
+            Assert.IsTrue(result.IsSuccessful);
+        }
+
+        private static AccountDetailSettingType StubSuperAccountDetailSettingType()
+            => new AccountDetailSettingType
             {
                 SettingItems = new List<SuperAccountDetail>
                 {
@@ -318,9 +497,68 @@
                         Password = "Password"
                     }
                 }
-
             };
-        }
+
+        private static AccountDetailSettingType StubMasterAccountDetailSettingType()
+            => new AccountDetailSettingType
+            {
+                SettingItems = new List<MasterAccountDetail>
+                {
+                     new MasterAccountDetail
+                    {
+                        FirstName = "MasterName",
+                        Credit = 3434,
+                        IsLive = true,
+                        SportTypeId = 2,
+                        BetTypeId = 1,
+                        Username = "CustomerName",
+                        Password = "Password",
+                        SuperPT = 20
+                    }
+                }
+            };
+
+        private static AccountDetailSettingType StubAgentAccountDetailSettingType()
+            => new AccountDetailSettingType
+            {
+                SettingItems = new List<AgentAccountDetail>
+                {
+                     new AgentAccountDetail
+                    {
+                        FirstName = "AgentName",
+                        Credit = 3434,
+                        IsLive = true,
+                        SportTypeId = 2,
+                        BetTypeId = 1,
+                        Username = "CustomerName",
+                        Password = "Password",
+                        AgentPT = 23,
+                        MasterPT = 11
+                    }
+                }
+            };
+
+        private static AccountDetailSettingType StubMemberAccountDetailSettingType()
+            => new AccountDetailSettingType
+            {
+                SettingItems = new List<AccountDetailSettingItem>
+                {
+                     new AccountDetailSettingItem
+                    {
+                        FirstName = "AgentName",
+                        Credit = 3434,
+                        IsLive = true,
+                        SportTypeId = 2,
+                        BetTypeId = 1,
+                        Username = "CustomerName",
+                        Password = "Password",
+                        SpreadGroup = new SpreadGroup
+                        {
+                            UGroup = "A"
+                        }
+                    }
+                }
+            };
 
         private void StubAccountDetail(Level level)
         {
@@ -376,7 +614,6 @@
             }
         }
 
-
         private void StubGetCustomerInfoForCreate()
         {
             var customerInfo = new CreateCustomerInfoDto
@@ -390,8 +627,6 @@
             dynamicRepository
                 .GetAsync<CreateCustomerInfoDto>(Arg.Any<GetCustomerInfoForCreateCriteria>())
                 .Returns(Task.FromResult(customerInfo));
-
-
         }
 
         private void StubGetCustomerInfoForEdit()
@@ -414,8 +649,6 @@
             dynamicRepository
                 .GetAsync<CustomerInfoDto>(Arg.Any<GetGeneralInfoCriteria>())
                 .Returns(Task.FromResult(customerInfo));
-
-
         }
 
         private void StubCurrencyCached()

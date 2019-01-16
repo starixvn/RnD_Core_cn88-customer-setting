@@ -20,6 +20,9 @@
     </Setting>
 
     <Setting Key="CS_CustSetting_CommBetSetting_Upd" SpName="CS_CustSetting_CommBetSetting_Upd" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0" TimeOut="600">
+      <Parameters>
+        <Parameter Name="IsTest" Value="true" />
+      </Parameters>
     </Setting>
   </Function>
 </Functions>
