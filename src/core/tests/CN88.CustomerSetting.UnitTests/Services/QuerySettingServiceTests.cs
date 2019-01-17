@@ -98,11 +98,9 @@
             validationService.ValidateQuerySettingAction(settingContext, Arg.Any<CustomerSettingQuery>()).Returns(Result.AccessDenied);
 
             //// Act
-            Assert.Throws<AccessViolationException>(
-                () => querySettingService
-                    .GetCustomerSetting(settingContext, querySettingParam)
-                    .GetAwaiter()
-                    .GetResult());
+            Assert.ThrowsAsync<AccessViolationException>(
+                async () => await querySettingService
+                    .GetCustomerSetting(settingContext, querySettingParam));
         }
 
         private void AssumeQuerySettingActionIsValid(CustomerSettingQuery customerSettingQuery)
@@ -112,7 +110,7 @@
 
 
         [Test]
-        public void GetCustomerSetting_CustomerIsValid_ReturnCustomerId()
+        public async Task GetCustomerSetting_CustomerIsValid_ReturnCustomerId()
         {
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
@@ -120,17 +118,15 @@
             StubProduct(querySettingParam.ProductId, false);
 
             //// Act
-            var actualCustomerSetting = querySettingService
-                .GetCustomerSetting(settingContext, querySettingParam)
-                .GetAwaiter()
-                .GetResult();
+            var actualCustomerSetting = await querySettingService
+                .GetCustomerSetting(settingContext, querySettingParam);
 
             //// Assert
             Assert.AreEqual(querySettingParam.CustomerId, actualCustomerSetting.CustomerId);
         }
 
         [Test]
-        public void GetCustomerSetting_CustomerIsValid_ReturnCustomerLevel()
+        public async Task GetCustomerSetting_CustomerIsValid_ReturnCustomerLevel()
         {
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
@@ -138,10 +134,8 @@
             StubProduct(querySettingParam.ProductId, false);
 
             //// Act
-            var actualCustomerSetting = querySettingService
-                .GetCustomerSetting(settingContext, querySettingParam)
-                .GetAwaiter()
-                .GetResult();
+            var actualCustomerSetting = await querySettingService
+                .GetCustomerSetting(settingContext, querySettingParam);
 
             //// Assert
             Assert.AreEqual(querySettingParam.CustomerLevel, actualCustomerSetting.CustomerLevel);
@@ -149,7 +143,7 @@
 
 
         [Test]
-        public void GetCustomerSetting_Always_CallGetProductSettingTypes()
+        public async Task GetCustomerSetting_Always_CallGetProductSettingTypes()
         {
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
@@ -157,20 +151,18 @@
             StubProduct(querySettingParam.ProductId, false);
 
             //// Act
-            querySettingService
-                .GetCustomerSetting(settingContext, querySettingParam)
-                .GetAwaiter()
-                .GetResult();
+            await querySettingService
+                .GetCustomerSetting(settingContext, querySettingParam);
 
             //// Assert
-            productService.Received().GetProduct(
+            await productService.Received().GetProduct(
                 settingContext,
                 querySettingParam.ProductId,
                 Arg.Any<byte>());
         }
 
         [Test]
-        public void GetCustomerSetting_ProductHasSettingTypes_ReturnCustomerSettingTypesMatchedWithProduct()
+        public async Task GetCustomerSetting_ProductHasSettingTypes_ReturnCustomerSettingTypesMatchedWithProduct()
         {
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
@@ -183,17 +175,15 @@
             SetupSettingTypeServiceStub(productSettingTypes.First());
 
             //// Act
-            var actualCustomerSetting = querySettingService
-                .GetCustomerSetting(settingContext, querySettingParam)
-                .GetAwaiter()
-                .GetResult();
+            var actualCustomerSetting = await querySettingService
+                .GetCustomerSetting(settingContext, querySettingParam);
 
             //// Assert
             Assert.AreEqual(productSettingTypes.First().Id, actualCustomerSetting.SettingTypes.First().Id);
         }
 
         [Test]
-        public void GetCustomerSetting_Always_ReturnProductId()
+        public async Task GetCustomerSetting_Always_ReturnProductId()
         {
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
@@ -202,10 +192,8 @@
             AssumeQuerySettingActionIsValid(querySettingParam);
 
             //// Act
-            var actualCustomerSetting = querySettingService
-                .GetCustomerSetting(settingContext, querySettingParam)
-                .GetAwaiter()
-                .GetResult();
+            var actualCustomerSetting = await querySettingService
+                .GetCustomerSetting(settingContext, querySettingParam);
 
             //// Assert
             Assert.AreEqual(querySettingParam.ProductId, actualCustomerSetting.ProductId);
@@ -221,7 +209,7 @@
         }
 
         [Test]
-        public void GetCustomerSetting_Always_CallResolveSettingTypeService()
+        public async Task GetCustomerSetting_Always_CallResolveSettingTypeService()
         {
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
@@ -231,17 +219,15 @@
             SetupSettingTypeServiceStub();
 
             //// Act
-            querySettingService
-                .GetCustomerSetting(settingContext, querySettingParam)
-                .GetAwaiter()
-                .GetResult();
+            await querySettingService
+                .GetCustomerSetting(settingContext, querySettingParam);
 
             //// Assert
             settingTypeServiceFactory.Received(dummySettingTypes.Count()).GetInstance(Arg.Any<SettingType>());
         }
 
         [Test]
-        public void GetCustomerSetting_Always_CallGetCustomerSettingType()
+        public async Task GetCustomerSetting_Always_CallGetCustomerSettingType()
         {
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
@@ -251,13 +237,11 @@
             SetupSettingTypeServiceStub();
 
             //// Act
-            querySettingService
-                .GetCustomerSetting(settingContext, querySettingParam)
-                .GetAwaiter()
-                .GetResult();
+            await querySettingService
+                .GetCustomerSetting(settingContext, querySettingParam);
 
             //// Assert
-            settingTypeService.Received(productSettingTypes.Count()).GetCustomerSettingType(settingContext, querySettingParam);
+            await settingTypeService.Received(productSettingTypes.Count()).GetCustomerSettingType(settingContext, querySettingParam);
         }
 
         private void SetupSettingTypeServiceStub(SettingType dummySettingType = null)
@@ -270,7 +254,7 @@
         }
 
         [Test]
-        public void GetCustomerSetting_RaisedException_AlwaysCallLogError()
+        public async Task GetCustomerSetting_RaisedException_AlwaysCallLogError()
         {
             //// Arrange
             CustomerSettingQuery querySettingParam = InstanceFactory.CreateQuerySettingParam(false);
@@ -283,10 +267,8 @@
                 .GetInstance(Arg.Any<SettingType>()).Returns(x => { throw expectedException; });
 
             //// Act
-            querySettingService
-                .GetCustomerSetting(settingContext, querySettingParam)
-                .GetAwaiter()
-                .GetResult();
+            await querySettingService
+                .GetCustomerSetting(settingContext, querySettingParam);
 
             //// Assert
             logger.Received().Error(

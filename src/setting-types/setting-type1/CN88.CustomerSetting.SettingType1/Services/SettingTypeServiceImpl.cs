@@ -76,11 +76,11 @@
             settingItem.MaxCredit = customerInfo.MaxCredit;
             settingItem.MinCredit = customerInfo.MinCredit;
 
-            if(query.CustomerLevel.IsMemberLevel()
+            if (query.CustomerLevel.IsMemberLevel()
                 && !string.IsNullOrEmpty(customerInfo.UGroup))
             {
                 settingItem.SpreadGroup = (await GetSpreadGroups())
-                    .FirstOrDefault(group => 
+                    .FirstOrDefault(group =>
                         string.Compare(customerInfo.UGroup, group.UGroup, true) == 0);
             }
 
@@ -91,7 +91,7 @@
         {
             var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.UplineId, query.ProductId, true);
             var createCustomerInfo = await GetDefaultCreateCustomerInfo(query.CustomerLevel, query.UplineId);
-            
+
             settingItem.MaxCredit = createCustomerInfo.MaxCredit;
             settingItem.MinCredit = createCustomerInfo.MinCredit;
             settingItem.UplineUsername = createCustomerInfo.UplineUsername;
@@ -345,9 +345,9 @@
                 settingType.Name);
 
             return TranslateResultMessage(
-                settingResult, 
-                Resources.UpdateAccountDetailSuccess, 
-                settingType.SettingLevel, 
+                settingResult,
+                Resources.UpdateAccountDetailSuccess,
+                settingType.SettingLevel,
                 settingContext.Language);
         }
 

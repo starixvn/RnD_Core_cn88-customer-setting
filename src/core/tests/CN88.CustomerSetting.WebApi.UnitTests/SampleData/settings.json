@@ -1,0 +1,30 @@
+﻿{
+  "productId": 255,
+  "productName": "Product 255",
+  "customerId": 1,
+  "customerLevel": {
+    "displayName": "Super",
+    "value": 4
+  },
+  "settingTypes": [
+    {
+      "id": 1,
+      "name": "Setting Type 1",
+      "settingLevel": 1,
+      "displayOrder": 1,
+      "displayMode": 1,
+      "isReadOnly": false,
+      "settingItems": [
+        {
+          "sportTypeId": 121,
+          "sportTypeName": "Sport Type 121",
+          "betTypeId": 30001,
+          "betTypeName": "Bet Type 30001",
+          "typeName": "CN88.CustomerSetting.Models.SettingItemDefault, CN88.CustomerSetting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+        }
+      ],
+      "typeName": "CN88.CustomerSetting.Models.SettingType, CN88.CustomerSetting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+      "isError": false
+    }
+  ]
+}

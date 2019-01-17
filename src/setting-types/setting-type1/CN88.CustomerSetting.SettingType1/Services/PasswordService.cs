@@ -52,7 +52,7 @@
             }
 
             return !IsMatchedRules(password, customerLevel.IsMemberLevel())
-                ? Result.CreateErrorResult(customerLevel.IsMemberLevel() 
+                ? Result.CreateErrorResult(customerLevel.IsMemberLevel()
                     ? Resources.PasswordHint04
                     : Resources.PasswordRequire)
                 : Result.Success;

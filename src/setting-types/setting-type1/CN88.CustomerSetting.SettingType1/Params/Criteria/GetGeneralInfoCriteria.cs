@@ -1,8 +1,5 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Params.Criteria
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using Fanex.Data.Repository;
 
     public class GetGeneralInfoCriteria : CriteriaBase

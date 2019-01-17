@@ -24,9 +24,9 @@
 
         public string ToBetSettingXml()
             => string.Format(
-                SettingTypeXmlFormat, 
+                SettingTypeXmlFormat,
                 string.Join(
-                    string.Empty, 
+                    string.Empty,
                     SettingItems
                         .Cast<CommBetSettingItem>()
                         .Select(settingItem => settingItem.ToBetSettingXml())));

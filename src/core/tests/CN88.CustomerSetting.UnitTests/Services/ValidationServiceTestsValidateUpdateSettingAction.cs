@@ -66,7 +66,7 @@
         }
 
         [Test]
-        public void ValidateUpdateSetting_Always_CallGetProductSettingTypes()
+        public async Task ValidateUpdateSetting_Always_CallGetProductSettingTypes()
         {
             //// Arrange
             var updateParam = InstanceFactory.CreateUpdateSettingParam();
@@ -74,10 +74,8 @@
             AssumeValidateQuerySettingIsSuccessful();
 
             //// Act
-            validationService
-                .ValidateUpdateSettingAction(settingContext, updateParam)
-                .GetAwaiter()
-                .GetResult();
+            await validationService
+                .ValidateUpdateSettingAction(settingContext, updateParam);
 
             //// Assert
             productService.Received().GetProductSettingTypes(
@@ -86,7 +84,7 @@
         }
 
         [Test]
-        public void ValidateUpdateSetting_CustomerSettingTypesDontMatchWithProductSettingTypes_ReturnFailedResult()
+        public async Task ValidateUpdateSetting_CustomerSettingTypesDontMatchWithProductSettingTypes_ReturnFailedResult()
         {
             //// Arrange
             var updateParam = InstanceFactory.CreateUpdateSettingParam();
@@ -104,17 +102,15 @@
                 } as IEnumerable<SettingType>));
 
             //// Act
-            var actualResult = validationService
-                .ValidateUpdateSettingAction(settingContext, updateParam)
-                .GetAwaiter()
-                .GetResult();
+            var actualResult = await validationService
+                .ValidateUpdateSettingAction(settingContext, updateParam);
 
             //// Assert
             Assert.IsFalse(actualResult.IsSuccessful);
         }
 
         [Test]
-        public void ValidateUpdateSetting_CustomerSettingTypesMatchWithProductSettingTypes_ReturnSuccessResult()
+        public async Task ValidateUpdateSetting_CustomerSettingTypesMatchWithProductSettingTypes_ReturnSuccessResult()
         {
             //// Arrange
             var updateParam = InstanceFactory.CreateUpdateSettingParam();
@@ -134,17 +130,15 @@
                 .Returns(Task.FromResult(updateParam.Setting.SettingTypes));
 
             //// Act
-            var actualResult = validationService
-                .ValidateUpdateSettingAction(settingContext, updateParam)
-                .GetAwaiter()
-                .GetResult();
+            var actualResult = await validationService
+                .ValidateUpdateSettingAction(settingContext, updateParam);
 
             //// Assert
             Assert.IsTrue(actualResult.IsSuccessful);
         }
 
         [Test]
-        public void ValidateUpdateSetting_AnySettingTypeIsNotEditable_ReturnFailedResult()
+        public async Task ValidateUpdateSetting_AnySettingTypeIsNotEditable_ReturnFailedResult()
         {
             // Arrange.
             var updateParam = InstanceFactory.CreateUpdateSettingParam();
@@ -153,16 +147,14 @@
             AssumeValidateQuerySettingIsSuccessful();
 
             // Act.
-            var actualResult = validationService.ValidateUpdateSettingAction(settingContext, updateParam)
-                .GetAwaiter()
-                .GetResult();
+            var actualResult = await validationService.ValidateUpdateSettingAction(settingContext, updateParam);
 
             // Assert.
             Assert.IsFalse(actualResult.IsSuccessful);
         }
 
         [Test]
-        public void ValidateUpdateSetting_AnySettingTypeDoesNotMeetCustomerLevelConstraint_ReturnFailedResult()
+        public async Task ValidateUpdateSetting_AnySettingTypeDoesNotMeetCustomerLevelConstraint_ReturnFailedResult()
         {
             // Arrange.
             var updateParam = InstanceFactory.CreateUpdateSettingParam(customerLevel: Level.Agent);
@@ -171,9 +163,7 @@
             AssumeValidateQuerySettingIsSuccessful();
 
             // Act.
-            var actualResult = validationService.ValidateUpdateSettingAction(settingContext, updateParam)
-                .GetAwaiter()
-                .GetResult();
+            var actualResult = await validationService.ValidateUpdateSettingAction(settingContext, updateParam);
 
             // Assert.
             Assert.IsFalse(actualResult.IsSuccessful);

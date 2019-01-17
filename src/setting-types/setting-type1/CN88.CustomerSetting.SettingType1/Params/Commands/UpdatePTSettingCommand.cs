@@ -10,7 +10,7 @@
             => "CS_CustSetting_PTSetting_Upd";
 
         public override bool IsValid()
-            => base.IsValid() 
+            => base.IsValid()
                 && !string.IsNullOrWhiteSpace(PTSetting);
     }
 }

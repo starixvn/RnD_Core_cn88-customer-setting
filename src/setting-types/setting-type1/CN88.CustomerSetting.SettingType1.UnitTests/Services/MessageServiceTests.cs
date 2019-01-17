@@ -1,9 +1,6 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.UnitTests.Services
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using CN88.CustomerSetting.Services;
     using CN88.CustomerSetting.SettingType1.AppResources;
     using CN88.CustomerSetting.SettingType1.Services;

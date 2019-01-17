@@ -73,7 +73,7 @@
         }
 
         [Test, TestCaseSource(nameof(ValidateQuerySetting_ActorHasPermission_Cases))]
-        public void ValidateQuerySetting_ActorHasPermission_ReturnSuccessResult(
+        public async Task ValidateQuerySetting_ActorHasPermission_ReturnSuccessResult(
             Level userLevel,
             Level customerLevel)
         {
@@ -91,10 +91,8 @@
             AssumeCustomerLevelIsEqualWithValueStoreInDatabase(query.CustomerLevel);
 
             //// Act
-            var actualResult = validationService
-                .ValidateQuerySettingAction(settingContext, query)
-                .GetAwaiter()
-                .GetResult();
+            var actualResult = await validationService
+                .ValidateQuerySettingAction(settingContext, query);
 
             //// Assert
             Assert.IsTrue(actualResult.IsSuccessful);
@@ -114,7 +112,7 @@
         };
 
         [Test, TestCaseSource(nameof(ValidateQuerySetting_ActorDoesNotHavePermission_Cases))]
-        public void ValidateQuerySetting_ActorDoesNotHavePermission_ReturnFailedResult(
+        public async Task ValidateQuerySetting_ActorDoesNotHavePermission_ReturnFailedResult(
             Level userLevel,
             Level customerLevel)
         {
@@ -132,10 +130,8 @@
             AssumeCutomerIsDownlineOfActor();
 
             //// Act
-            var actualResult = validationService
-                .ValidateQuerySettingAction(settingContext, query)
-                .GetAwaiter()
-                .GetResult();
+            var actualResult = await validationService
+                .ValidateQuerySettingAction(settingContext, query);
 
             //// Assert
             Assert.IsFalse(actualResult.IsSuccessful);
@@ -152,7 +148,7 @@
         };
 
         [Test]
-        public void ValidateQuerySetting_Always_CallGetActorStatus()
+        public async Task ValidateQuerySetting_Always_CallGetActorStatus()
         {
             //// Arrange
             var query = new CustomerSettingQuery(
@@ -164,20 +160,18 @@
             settingContext.Actor.Level = Level.Agent;
 
             //// Act
-            validationService
-                .ValidateQuerySettingAction(settingContext, query)
-                .GetAwaiter()
-                .GetResult();
+            await validationService
+                .ValidateQuerySettingAction(settingContext, query);
 
             //// Assert
-            dynamicRepository
+            await dynamicRepository
                 .Received()
                 .GetAsync<bool>(Arg.Is<ActorStatusQueryCriteria>(
                     criteria => criteria.CustId == settingContext.Actor.Id));
         }
 
         [Test]
-        public void ValidateQuerySetting_ActorIsDisabled_ReturnFailedResult()
+        public async Task ValidateQuerySetting_ActorIsDisabled_ReturnFailedResult()
         {
             //// Arrange
             var query = new CustomerSettingQuery(
@@ -190,10 +184,8 @@
             dynamicRepository.Get<bool>(Arg.Any<ActorStatusQueryCriteria>()).Returns(false);
 
             //// Act
-            var actualResult = validationService
-                .ValidateQuerySettingAction(settingContext, query)
-                .GetAwaiter()
-                .GetResult();
+            var actualResult = await validationService
+                .ValidateQuerySettingAction(settingContext, query);
 
             //// Assert
             Assert.IsFalse(actualResult.IsSuccessful);
@@ -201,7 +193,7 @@
         }
 
         [Test]
-        public void ValidateQuerySetting_Always_CallGetCustomerLevel()
+        public async Task ValidateQuerySetting_Always_CallGetCustomerLevel()
         {
             //// Arrange
             var query = new CustomerSettingQuery(
@@ -214,13 +206,11 @@
             AssumeActorStatusIsEnabled();
 
             //// Act
-            validationService
-                .ValidateQuerySettingAction(settingContext, query)
-                .GetAwaiter()
-                .GetResult();
+            await validationService
+                .ValidateQuerySettingAction(settingContext, query);
 
             //// Assert
-            dynamicRepository
+            await dynamicRepository
                 .Received()
                 .GetAsync<byte>(Arg.Is<CustomerLevelQueryCriteria>(
                     criteria => criteria.CustId == query.CustomerId));
@@ -234,7 +224,7 @@
         };
 
         [Test, TestCaseSource(nameof(ValidateQuerySetting_ActorIsNotCompany_AlwaysCallCheckBelonging_Cases))]
-        public void ValidateQuerySetting_ActorIsNotCompany_AlwaysCallCheckBelonging(
+        public async Task ValidateQuerySetting_ActorIsNotCompany_AlwaysCallCheckBelonging(
             Level actorLevel)
         {
             //// Arrange
@@ -249,19 +239,17 @@
             AssumeCustomerLevelIsEqualWithValueStoreInDatabase(query.CustomerLevel);
 
             //// Act
-            validationService
-                .ValidateQuerySettingAction(settingContext, query)
-                .GetAwaiter()
-                .GetResult();
+            await validationService
+                .ValidateQuerySettingAction(settingContext, query);
 
             //// Assert
-            dynamicRepository.Received().GetAsync<bool>(Arg.Is<CheckBelongingCriteria>(
+            await dynamicRepository.Received().GetAsync<bool>(Arg.Is<CheckBelongingCriteria>(
                 criteria => criteria.ActorId == settingContext.Actor.Id
                     && criteria.CustomerId == query.CustomerId));
         }
 
         [Test]
-        public void ValidateQuerySetting_IsNotSameLine_ReturnAccessDeninedResult()
+        public async Task ValidateQuerySetting_IsNotSameLine_ReturnAccessDeninedResult()
         {
             //// Arrange
             var query = new CustomerSettingQuery(
@@ -277,10 +265,8 @@
             dynamicRepository.Get<bool>(Arg.Any<CheckBelongingCriteria>()).Returns(false);
 
             //// Act
-            var actualResult = validationService
-                .ValidateQuerySettingAction(settingContext, query)
-                .GetAwaiter()
-                .GetResult();
+            var actualResult = await validationService
+                .ValidateQuerySettingAction(settingContext, query);
 
             //// Assert
             Assert.AreEqual(Result.AccessDenied.Code, actualResult.Code);
@@ -288,7 +274,7 @@
         }
 
         [Test]
-        public void ValidateQuerySetting_ActorIsCompany_DontCallValidateBelongIn()
+        public async Task ValidateQuerySetting_ActorIsCompany_DontCallValidateBelongIn()
         {
             //// Arrange
             var query = new CustomerSettingQuery(
@@ -302,13 +288,11 @@
             AssumeCustomerLevelIsEqualWithValueStoreInDatabase(query.CustomerLevel);
 
             //// Act
-            validationService
-                .ValidateQuerySettingAction(settingContext, query)
-                .GetAwaiter()
-                .GetResult();
+            await validationService
+                .ValidateQuerySettingAction(settingContext, query);
 
             //// Assert
-            dynamicRepository.DidNotReceive().Get<bool>(Arg.Is<CheckBelongingCriteria>(
+            await dynamicRepository.DidNotReceive().GetAsync<bool>(Arg.Is<CheckBelongingCriteria>(
                 criteria => criteria.ActorId == settingContext.Actor.Id
                     && criteria.CustomerId == query.CustomerId));
         }

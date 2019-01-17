@@ -43,7 +43,7 @@
             CustomerSettingQuery query)
         {
             var settingTypeConfig = (await GetSettingTypeConfig<CommBetSettingConfigDto>(query.ProductId, SettingTypeId))
-                                    .GroupBy(config => new { config.SportTypeId, config.BetTypeId, config.IsLive});
+                                    .GroupBy(config => new { config.SportTypeId, config.BetTypeId, config.IsLive });
 
             var commBetSettingDtoList = await GetCommBetSettingDtoList(query);
             var settingItems = new List<CommBetSettingItem>();

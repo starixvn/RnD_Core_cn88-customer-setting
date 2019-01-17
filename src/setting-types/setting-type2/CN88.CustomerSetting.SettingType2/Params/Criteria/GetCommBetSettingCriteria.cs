@@ -13,7 +13,7 @@
         public bool IsCreateNew { get; set; }
 
         public override string GetSettingKey()
-            => IsCreateNew 
+            => IsCreateNew
                 ? "CS_CustomerIns_CommBetSetting_Sel"
                 : "CS_CustSetting_CommBetSetting_Sel";
 

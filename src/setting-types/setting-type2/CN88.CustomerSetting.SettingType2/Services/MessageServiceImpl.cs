@@ -1,8 +1,5 @@
 ﻿namespace CN88.CustomerSetting.SettingType2.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using CN88.CustomerSetting.Models.Messages;
     using CN88.CustomerSetting.Services;
     using CN88.CustomerSetting.SettingType2.AppResources;

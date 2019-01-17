@@ -12,7 +12,7 @@
             => "CS_CustSetting_CommBetSetting_Upd";
 
         public override bool IsValid()
-            => base.IsValid() 
+            => base.IsValid()
                 && !string.IsNullOrWhiteSpace(BetSetting)
                 && !string.IsNullOrWhiteSpace(CommSetting);
     }

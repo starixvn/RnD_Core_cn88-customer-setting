@@ -7,7 +7,7 @@
     public class GetPTSettingCriteria : CriteriaBase
     {
         public GetPTSettingCriteria(
-            byte roleId, 
+            byte roleId,
             int custId,
             bool isCreateNew)
         {
@@ -24,7 +24,7 @@
         public bool IsCreateNew { get; }
 
         public override string GetSettingKey()
-            => IsCreateNew 
+            => IsCreateNew
                 ? "CS_PTSetting_CustomerIns_Sel"
                 : "CS_CustSetting_PTSetting_Sel";
 

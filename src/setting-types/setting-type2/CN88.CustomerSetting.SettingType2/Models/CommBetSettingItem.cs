@@ -1,7 +1,7 @@
 ﻿namespace CN88.CustomerSetting.SettingType2.Models
 {
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Enumerations;
 
@@ -39,7 +39,7 @@
         public decimal MaxDiscount { get; set; }
 
         public string ToCommXml(IEnumerable<CommTemplate> commTemplates, Level level)
-            => level.IsMemberLevel() 
+            => level.IsMemberLevel()
                 ? string.Join(string.Empty,
                         CommissionGroups.Select(comm =>
                                 FormatMemberComXml(commTemplates, comm)))

@@ -30,7 +30,7 @@
             => "CS_CustSetting_GeneralInfo_Upd";
 
         public override bool IsValid()
-            => CustId > 0 
+            => CustId > 0
                 && RoleId > 0;
     }
 }

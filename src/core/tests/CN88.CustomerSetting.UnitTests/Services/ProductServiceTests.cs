@@ -35,12 +35,12 @@
             byte productId = 0;
 
             //// Act
-            Assert.Throws<ArgumentOutOfRangeException>(
-                () => productService.GetProductSettingTypes(productId, Arg.Any<byte>()).GetAwaiter().GetResult());
+            Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+                async () => await productService.GetProductSettingTypes(productId, Arg.Any<byte>()));
         }
 
         [Test]
-        public void GetProductSettingTypes_Always_ReturnSettingTypesInCache()
+        public async Task GetProductSettingTypes_Always_ReturnSettingTypesInCache()
         {
             //// Arrange
             byte productId = 1;
@@ -52,17 +52,15 @@
               .Returns(settingTypes);
 
             //// Act
-            var actualSettingTypes = productService
-                .GetProductSettingTypes(productId, (byte)SystemType.Nap)
-                .GetAwaiter()
-                .GetResult();
+            var actualSettingTypes = await productService
+                .GetProductSettingTypes(productId, (byte)SystemType.Nap);
 
             //// Assert
             Assert.AreSame(settingTypes, actualSettingTypes);
         }
 
         [Test]
-        public void GetProductSettingTypes_NoDataInCache_ReturnSettingTypesFromDatabase()
+        public async Task GetProductSettingTypes_NoDataInCache_ReturnSettingTypesFromDatabase()
         {
             //// Arrange
             byte productId = 1;
@@ -77,10 +75,8 @@
                 .Returns(settingTypesFromDatabase);
 
             //// Act
-            var actualSettingTypes = productServiceImpl
-                .GetProductSettingTypes(productId, (byte)SystemType.Nap)
-                .GetAwaiter()
-                .GetResult();
+            var actualSettingTypes = await productServiceImpl
+                .GetProductSettingTypes(productId, (byte)SystemType.Nap);
 
             //// Assert
             Assert.AreSame(settingTypesFromDatabase, actualSettingTypes);
@@ -90,7 +86,7 @@
         /// Get single setting types
         /// </summary>
         [Test]
-        public void GetProductSettingType_Always_ReturnSettingTypeInCache()
+        public async Task GetProductSettingType_Always_ReturnSettingTypeInCache()
         {
             //// Arrange
             byte productId = 1;
@@ -103,17 +99,15 @@
                 .Returns(settingTypes);
 
             //// Act
-            var actualSettingType = productService
-                .GetProductSettingType(productId, settingType, (byte)SystemType.Nap)
-                .GetAwaiter()
-                .GetResult();
+            var actualSettingType = await productService
+                .GetProductSettingType(productId, settingType, (byte)SystemType.Nap);
 
             //// Assert
             Assert.AreSame(settingTypes.First(), actualSettingType);
         }
 
         [Test]
-        public void GetProductSettingType_NoData_ReturnNull()
+        public async Task GetProductSettingType_NoData_ReturnNull()
         {
             //// Arrange
             byte productId = 1;
@@ -132,10 +126,8 @@
                 .Returns(Task.FromResult(settingTypesFromDatabase));
 
             //// Act
-            var actualSettingType = productService
-                .GetProductSettingType(productId, settingType, (byte)SystemType.Nap)
-                .GetAwaiter()
-                .GetResult();
+            var actualSettingType = await productService
+                .GetProductSettingType(productId, settingType, (byte)SystemType.Nap);
 
             //// Assert
             Assert.Null(actualSettingType);

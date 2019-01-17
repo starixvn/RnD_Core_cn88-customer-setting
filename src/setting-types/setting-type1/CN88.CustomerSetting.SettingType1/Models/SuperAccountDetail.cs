@@ -24,7 +24,7 @@ namespace CN88.CustomerSetting.SettingType1.Models
 
         public override IResult Validate()
         {
-            if(SuperMinPT > SuperMaxPT)
+            if (SuperMinPT > SuperMaxPT)
             {
                 return Result.CreateErrorResult(AppResources.Resources.Msg_30009);
             }
