@@ -68,7 +68,7 @@
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        private bool IsMatchedRules(string password, bool isMemberPassword)
+        internal bool IsMatchedRules(string password, bool isMemberPassword)
         {
             if (isMemberPassword)
             {

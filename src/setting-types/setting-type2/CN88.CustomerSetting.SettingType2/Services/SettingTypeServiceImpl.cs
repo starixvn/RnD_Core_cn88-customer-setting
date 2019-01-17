@@ -166,12 +166,11 @@
                 settingType.Id,
                 settingType.Name);
 
-            return new SettingResult(
-                result.Code,
-                result.IsSuccessful
-                    ? Resources.UpdateCommBetSettingSuccess
-                    : result.Message,
-                result);
+            return TranslateResultMessage(
+                result,
+                Resources.UpdateCommBetSettingSuccess,
+                settingType.SettingLevel,
+                settingContext.Language);
         }
 
         private async Task<IEnumerable<CommTemplate>> GetCommTemplateSetting()
