@@ -417,10 +417,10 @@ var DemoFrom;
 })(DemoFrom || (DemoFrom = {}));
 /* tslint:disable */
 var showCN88CancelButton = true;
-function successfulUpdatingCallback(isSuccessful) {
+function cn88SuccessfulUpdatingCallback(isSuccessful) {
     console.log("Be called after updating sucessfully!");
 }
-function cancelCallback() {
+function cn88CancelCallback() {
     console.log("Cancel the form!");
 }
 /* tslint:enable */

@@ -65,11 +65,11 @@ module CustomerSetting {
             $locale.NUMBER_FORMATS.DECIMAL_SEP = this.appConfigService.decimalSeparator;
 
             /* tslint:disable:no-string-literal */
-            this.successfulUpdatingCallback = this.$window.parent["successfulUpdatingCallback"];
+            this.successfulUpdatingCallback = this.$window.parent["cn88SuccessfulUpdatingCallback"];
             this.cancelButtonRequired = this.$window.parent["showCN88CancelButton"];
 
             if (this.cancelButtonRequired) {
-                this.cancelCallback = this.$window.parent["cancelCallback"];
+                this.cancelCallback = this.$window.parent["cn88CancelCallback"];
             }
             /* tslint:enable:no-string-literal */
 
