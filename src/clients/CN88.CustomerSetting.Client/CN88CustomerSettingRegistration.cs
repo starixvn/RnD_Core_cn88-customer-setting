@@ -12,7 +12,7 @@
     public abstract class CN88CustomerSettingRegistration
     {
         private static CN88CustomerSettingRegistration client;
-        public static string UrlRootName = "CN88CustomerSetting";
+        public const string UrlRootName = "CN88CustomerSetting";
 
         internal static SettingContext SettingContext
         {

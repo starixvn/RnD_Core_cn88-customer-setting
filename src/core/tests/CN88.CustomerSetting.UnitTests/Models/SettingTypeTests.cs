@@ -10,20 +10,6 @@
 
     public class SettingTypeTests
     {
-        private static readonly object[] directUplineAndDownlinePairs =
-        {
-            new object[] { Level.Super, Level.Master },
-            new object[] { Level.Master, Level.Agent },
-            new object[] { Level.Agent, Level.Member }
-        };
-
-        private static readonly object[] indirectUplineAndDownlinePairs =
-        {
-            new object[] { Level.Super, Level.Agent },
-            new object[] { Level.Super, Level.Member },
-            new object[] { Level.Master, Level.Member }
-        };
-
         [Test]
         public void SettingItemsProperty_SetNullValueThenGet_ReturnEmptySettingItem()
         {
@@ -156,31 +142,5 @@
             // Assert.
             Assert.True(actualResult);
         }
-
-        //[Test, TestCaseSource(nameof(directUplineAndDownlinePairs))]
-        //public void SatisfyCustomerLevelConstraint_ActorIsDirectUplineOfCustomer_ReturnTrue(Level actorLevel, Level customerLevel)
-        //{
-        //    // Arrange.
-        //    var settingType = new SettingType();
-
-        //    // Act.
-        //    var actualResult = settingType.SatisfyCustomerLevelConstraint(actorLevel, customerLevel);
-
-        //    // Assert.
-        //    Assert.IsTrue(actualResult);
-        //}
-
-        //[Test, TestCaseSource(nameof(indirectUplineAndDownlinePairs))]
-        //public void SatisfyCustomerLevelConstraint_ActorIsIndirectUplineOfCustomer_ReturnFalse(Level actorLevel, Level customerLevel)
-        //{
-        //    // Arrange.
-        //    var settingType = new SettingType();
-
-        //    // Act.
-        //    var actualResult = settingType.SatisfyCustomerLevelConstraint(actorLevel, customerLevel);
-
-        //    // Assert.
-        //    Assert.IsFalse(actualResult);
-        //}
     }
 }

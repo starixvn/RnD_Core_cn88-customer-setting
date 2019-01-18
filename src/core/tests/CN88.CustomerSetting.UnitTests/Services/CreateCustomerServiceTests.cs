@@ -188,11 +188,8 @@
                createCustomerCommand).Returns(Task.FromResult(Result.Success as IResult));
         }
 
-        private void SetupSettingTypeServiceStub(
-            SettingType dummySettingType = null)
+        private void SetupSettingTypeServiceStub()
         {
-            var customerSettingType = dummySettingType ?? InstanceFactory.CreateCustomerSettingType(1);
-
             settingTypeService
                 .BuildCreateCustomerParams(
                 settingContext,

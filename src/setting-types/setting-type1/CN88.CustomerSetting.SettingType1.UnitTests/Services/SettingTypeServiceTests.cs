@@ -264,7 +264,6 @@
         {
             var command = InstanceFactory.CreateCreateCustomerCommand(customerLevel: Level.Super);
             var settingType = StubSuperAccountDetailSettingType();
-            var settingItem = settingType.SettingItems.FirstOrDefault() as SuperAccountDetail;
 
             StubPasswordPassAvalidation();
 
@@ -294,7 +293,6 @@
         {
             var command = InstanceFactory.CreateCreateCustomerCommand(customerLevel: Level.Master);
             var settingType = StubMasterAccountDetailSettingType();
-            var settingItem = settingType.SettingItems.FirstOrDefault() as MasterAccountDetail;
             settingContext.Actor = new User
             {
                 Level = Level.Super,
@@ -326,7 +324,6 @@
         {
             var command = InstanceFactory.CreateCreateCustomerCommand(customerLevel: Level.Agent);
             var settingType = StubAgentAccountDetailSettingType();
-            var settingItem = settingType.SettingItems.FirstOrDefault() as AgentAccountDetail;
             settingContext.Actor = new User
             {
                 Level = Level.Master,
@@ -358,7 +355,6 @@
         {
             var command = InstanceFactory.CreateCreateCustomerCommand(customerLevel: Level.Member);
             var settingType = StubMemberAccountDetailSettingType();
-            var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem;
             settingContext.Actor = new User
             {
                 Level = Level.Master,

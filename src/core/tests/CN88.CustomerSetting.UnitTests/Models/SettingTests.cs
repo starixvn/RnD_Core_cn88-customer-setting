@@ -1,33 +1,11 @@
 ﻿namespace CN88.CustomerSetting.Tests.Models
 {
-    using System;
     using CustomerSetting.Models;
     using CustomerSetting.Models.Enumerations;
     using NUnit.Framework;
 
     public class SettingTests
     {
-        //[Test]
-        //public void SetProductId_ValueIsZero_ThrowArgumentOutOfRangeException()
-        //{
-        //    //// Arrange
-        //    Setting setting = InstanceFactory.CreateCustomerSetting();
-
-        //    //// Act and Assert
-        //    Assert.Throws<ArgumentOutOfRangeException>(() => { setting.ProductId = 0; }, "Product Id cannot be negative or zero.");
-        //}
-
-        //[TestCase(0)]
-        //[TestCase(-1)]
-        //public void CustomerId_SetValueIsNegativeOrZero_ThrowArgumentOutOfRangeException(int customerId)
-        //{
-        //    //// Arrange
-        //    Setting setting = InstanceFactory.CreateCustomerSetting();
-
-        //    //// Act and Assert
-        //    Assert.Throws<ArgumentOutOfRangeException>(() => { setting.CustomerId = customerId; }, "Customer Id cannot be negative or zero.");
-        //}
-
         [Test]
         public void CustomerId_SetValidValueThenGet_ReturnSetValue()
         {

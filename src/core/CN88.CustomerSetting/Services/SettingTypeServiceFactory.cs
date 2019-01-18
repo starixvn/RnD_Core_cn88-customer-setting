@@ -28,7 +28,7 @@
             return settingTypeService;
         }
 
-        private SettingTypeService GetInstanceFromCache(SettingType settingType)
+        private static SettingTypeService GetInstanceFromCache(SettingType settingType)
         {
             SettingTypeService settingTypeService = null;
 
@@ -37,7 +37,7 @@
             return settingTypeService;
         }
 
-        private SettingTypeService CreateInstanceAndCache(SettingType settingType)
+        private static SettingTypeService CreateInstanceAndCache(SettingType settingType)
         {
             SettingTypeService settingTypeService = null;
             var fullTypeName = GetFullTypeServiceName(settingType);
@@ -55,7 +55,7 @@
             return settingTypeService;
         }
 
-        private string GetFullTypeServiceName(SettingType settingType)
+        private static string GetFullTypeServiceName(SettingType settingType)
         {
             var assemblyName = string.Format(AssemblyNameFormat, settingType.Id);
             var typeName = string.Format(TypeNameFormat, assemblyName);

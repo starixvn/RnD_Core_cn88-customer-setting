@@ -6,9 +6,11 @@
     using CN88.CustomerSetting.Models.Results;
     using Fanex.Data;
 
+#pragma warning disable S1118 // Utility classes should not have public constructors
     public class BaseDataAccess
+#pragma warning restore S1118 // Utility classes should not have public constructors
     {
-        protected async Task<IResult> ExecuteNonQuery(string settingKey, Hashtable storedProcedureParam)
+        protected static async Task<IResult> ExecuteNonQuery(string settingKey, Hashtable storedProcedureParam)
         {
             using (var objectDb = new ObjectDb(settingKey))
             {

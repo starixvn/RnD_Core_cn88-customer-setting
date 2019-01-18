@@ -23,7 +23,6 @@
         private ISettingContext settingContext;
         private ValidationService validationService;
         private ProductService productService;
-        private IDynamicRepository dynamicRepository;
         private ILogger logger;
         private SettingTypeServiceFactory settingTypeServiceFactory;
 
@@ -37,7 +36,6 @@
             validationService = Substitute.For<ValidationService>();
             logger = Substitute.For<ILogger>();
             settingTypeServiceFactory = Substitute.For<SettingTypeServiceFactory>();
-            dynamicRepository = Substitute.For<IDynamicRepository>();
 
             settingTypeService = Substitute.For<SettingTypeService>();
 
@@ -45,7 +43,6 @@
 
             querySettingService = new QuerySettingServiceImpl(
                 validationService,
-                dynamicRepository,
                 logger,
                 productService,
                 settingTypeServiceFactory);

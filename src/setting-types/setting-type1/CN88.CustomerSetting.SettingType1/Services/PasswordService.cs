@@ -37,7 +37,7 @@
                 : validationResult;
         }
 
-        private Result Validate(
+        private static Result Validate(
             string password,
             Level customerLevel)
         {
@@ -52,11 +52,14 @@
             }
 
             return !IsMatchedRules(password, customerLevel.IsMemberLevel())
-                ? Result.CreateErrorResult(customerLevel.IsMemberLevel()
-                    ? Resources.PasswordHint04
-                    : Resources.PasswordRequire)
+                ? Result.CreateErrorResult(BuildFailedPasswordValidationMessage(customerLevel))
                 : Result.Success;
         }
+
+        private static string BuildFailedPasswordValidationMessage(Level customerLevel)
+            => customerLevel.IsMemberLevel()
+                                ? Resources.PasswordHint04
+                                : Resources.PasswordRequire;
 
         /// <summary>
         /// Password must be at least 8 characters without white space and contain at least 3 of the following:
@@ -96,7 +99,9 @@
             {
                 for (int m = 1; m <= num2; m++)
                 {
+#pragma warning disable S1643 // Strings should not be concatenated using '+' in a loop
                     temp1 += Convert.ToChar(0x15);
+#pragma warning restore S1643 // Strings should not be concatenated using '+' in a loop
                 }
             }
 
@@ -113,7 +118,10 @@
                 }
             }
 
+#pragma warning disable S1449 // Culture should be specified for "string" operations
             var temp2 = num3.ToString();
+#pragma warning restore S1449 // Culture should be specified for "string" operations
+#pragma warning disable S1643 // Strings should not be concatenated using '+' in a loop
             string str = string.Empty;
             for (int j = 1; j <= temp2.Length; j++)
             {
@@ -124,7 +132,9 @@
                     length = temp2.Length - j + 1;
                 }
 
+
                 str += CfsCode(temp2.Substring(j - 1, length));
+
             }
 
             string str2 = string.Empty;
@@ -134,6 +144,7 @@
             }
 
             return str2;
+#pragma warning restore S1643 // Strings should not be concatenated using '+' in a loop
         }
 
         private static string CfsCode(string value)
@@ -142,7 +153,9 @@
 
             for (int i = 1; i <= value.Length; i++)
             {
+#pragma warning disable S1643 // Strings should not be concatenated using '+' in a loop
                 number += (int)Convert.ToChar(value.Substring(i - 1, 1));
+#pragma warning restore S1643 // Strings should not be concatenated using '+' in a loop
             }
 
             return (Convert.ToInt32(number)).ToString("X");
@@ -179,7 +192,9 @@
                 x = s[i];
                 s[i] = s[j];
                 s[j] = x;
+#pragma warning disable S1643 // Strings should not be concatenated using '+' in a loop
                 ct += Convert.ToChar(vs[y] ^ s[(s[i] + s[j]) % 256]);
+#pragma warning restore S1643 // Strings should not be concatenated using '+' in a loop
             }
             return ct;
         }

@@ -15,7 +15,7 @@
     [ApiController]
     public class CustomerSettingController : Controller
     {
-        private static string templateCached;
+        private static volatile string templateCached;
         private const string templateFilePath = "/Templates/customer-setting.htm";
         private readonly QuerySettingService querySettingService;
         private readonly CreateCustomerService createCustomerService;
@@ -62,7 +62,9 @@
             {
                 var file = hostingEnvironment.WebRootFileProvider.GetFileInfo(templatePath);
                 template = System.IO.File.ReadAllText(file.PhysicalPath);
+#pragma warning disable S2696 // Instance members should not write to "static" fields
                 templateCached = template;
+#pragma warning restore S2696 // Instance members should not write to "static" fields
             }
 
             return template;

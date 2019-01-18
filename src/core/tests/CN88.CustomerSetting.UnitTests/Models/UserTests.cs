@@ -7,18 +7,6 @@
 
     public class UserTests
     {
-        private static readonly object[] isMethodAlwaysReturnRightValueCases =
-        {
-            new object[] { Level.Company, Level.Company, true },
-            new object[] { Level.Company, Level.Super, false },
-            new object[] { Level.Super, Level.Super, true },
-            new object[] { Level.Super, Level.Master, false },
-            new object[] { Level.Master, Level.Master, true },
-            new object[] { Level.Master, Level.Agent, false },
-            new object[] { Level.Agent, Level.Agent, true }
-        };
-
-        
         [TestCase(0)]
         [TestCase(-1)]
         public void SetId_InputValueIsNegativeOrZero_ThrowArgumentOutOfRangeException(int userId)

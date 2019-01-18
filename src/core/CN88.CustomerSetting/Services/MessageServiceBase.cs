@@ -12,7 +12,10 @@
         MessageContent TranslateMessage(int msgType, string rawMessage, byte settingLevel, string language);
     }
 
+#pragma warning disable S1694 // An abstract class should have both abstract and concrete methods
+
     public abstract class MessageServiceBase : MessageService
+#pragma warning restore S1694 // An abstract class should have both abstract and concrete methods
     {
         private const string NotFoundMessageFormat = "Undefined error message {0}";
         private const string MessageFormat = "Msg_{0}";
@@ -26,17 +29,15 @@
 
         public virtual MessageContent TranslateMessage(int msgType, string rawMessage, byte settingLevel, string language)
         {
-            switch (msgType)
+            if (msgType == MessageTypes.Exception)
             {
-                case MessageTypes.Exception:
-                    return TranslateSimpleMessage(rawMessage);
-
-                default:
-                    return new MessageContent(rawMessage);
+                return TranslateSimpleMessage(rawMessage);
             }
+
+            return new MessageContent(rawMessage);
         }
 
-        private MessageContent TranslateSimpleMessage(string rawMessage)
+        private static MessageContent TranslateSimpleMessage(string rawMessage)
         {
             var mainMessage = rawMessage;
             var simpleMessage = Deserialize<SimpleMessage>(rawMessage);

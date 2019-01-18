@@ -22,17 +22,14 @@
         private readonly ProductService productService;
         private readonly ILogger logger;
         private readonly SettingTypeServiceFactory settingTypeServiceFactory;
-        private readonly IDynamicRepository dynamicRepository;
 
         public QuerySettingServiceImpl(
             ValidationService validationService,
-            IDynamicRepository dynamicRepository,
             ILogger logger,
             ProductService productService,
             SettingTypeServiceFactory settingTypeServiceFactory)
         {
             this.validationService = validationService;
-            this.dynamicRepository = dynamicRepository;
             this.logger = logger;
             this.productService = productService;
             this.settingTypeServiceFactory = settingTypeServiceFactory;
@@ -55,7 +52,9 @@
             return setting;
         }
 
+#pragma warning disable S4457 // Parameter validation in "async"/"await" methods should be wrapped
         protected virtual async Task Validate(ISettingContext settingContext, CustomerSettingQuery query)
+#pragma warning restore S4457 // Parameter validation in "async"/"await" methods should be wrapped
         {
             if (query == null)
             {

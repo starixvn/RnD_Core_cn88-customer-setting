@@ -40,13 +40,15 @@
             this.logger = logger;
         }
 
-        /// <summary>
-        /// Validate Query action is valid or not, this function also using by
-        /// update action, this function mark virtual for testable update action validation.
-        /// </summary>
-        /// <param name="query">Query information for querying customer setting.</param>
-        /// <returns>Query action is valid or not.</returns>
+#pragma warning disable S4457 // Parameter validation in "async"/"await" methods should be wrapped
+                             /// <summary>
+                             /// Validate Query action is valid or not, this function also using by
+                             /// update action, this function mark virtual for testable update action validation.
+                             /// </summary>
+                             /// <param name="query">Query information for querying customer setting.</param>
+                             /// <returns>Query action is valid or not.</returns>
         public virtual async Task<IResult> ValidateQuerySettingAction(
+#pragma warning restore S4457 // Parameter validation in "async"/"await" methods should be wrapped
             ISettingContext settingContext,
             CustomerSettingQuery query)
         {
@@ -100,7 +102,7 @@
             }
         }
 
-        private void CheckActorAndCustomerLevelsConstrain(User actor, Level customerLevel)
+        private static void CheckActorAndCustomerLevelsConstrain(User actor, Level customerLevel)
         {
             var isValidConstrain = actor.IsCompany
                 || actor.Level.IsUplineOf(customerLevel);
@@ -229,7 +231,7 @@
             }
         }
 
-        private void CheckUpdatableCustomerSettingTypes(Level actorLevel, Level customerLevel, IEnumerable<SettingType> customerSettingTypes)
+        private static void CheckUpdatableCustomerSettingTypes(Level actorLevel, Level customerLevel, IEnumerable<SettingType> customerSettingTypes)
         {
             foreach (var customerSettingType in customerSettingTypes)
             {

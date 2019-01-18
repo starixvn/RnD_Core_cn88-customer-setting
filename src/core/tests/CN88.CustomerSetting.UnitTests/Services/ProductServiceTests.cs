@@ -20,7 +20,8 @@
         private ICacheService cachingService;
         private ResourceService resourceService;
 
-        public ProductServiceTests()
+        [SetUp]
+        public void SetUp()
         {
             resourceService = Substitute.For<ResourceService>();
             dynamicRepository = Substitute.For<IDynamicRepository>();

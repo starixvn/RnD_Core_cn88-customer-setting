@@ -81,7 +81,9 @@
             {
                 settingItem.SpreadGroup = (await GetSpreadGroups().ConfigureAwait(false))
                     .FirstOrDefault(group =>
+#pragma warning disable S1449 // Culture should be specified for "string" operations
                         string.Compare(customerInfo.UGroup, group.UGroup, true) == 0);
+#pragma warning restore S1449 // Culture should be specified for "string" operations
             }
 
             return CreateSettingType(settingItem);
@@ -190,7 +192,9 @@
             CreateCustomerCommand command,
             SettingType settingType)
         {
+#pragma warning disable S3215 // "interface" instances should not be cast to concrete types
             var settingItem = settingType.SettingItems?.FirstOrDefault() as AccountDetailSettingItem
+#pragma warning restore S3215 // "interface" instances should not be cast to concrete types
                 ?? throw new InvalidOperationException("Account Detail Item cannot be null");
 
             settingItem.Password = ValidateAndEncodePassword(command, settingItem);
@@ -304,7 +308,9 @@
             UpdateCustomerSettingCommand command,
             SettingType settingType)
         {
+#pragma warning disable S3215 // "interface" instances should not be cast to concrete types
             var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem
+#pragma warning restore S3215 // "interface" instances should not be cast to concrete types
                 ?? throw new InvalidOperationException("AccountDetail cannot be null");
 
             var updateCustomerInfoResult = await UpdateCustomerInfo(command, settingItem, settingContext.Language).ConfigureAwait(false);

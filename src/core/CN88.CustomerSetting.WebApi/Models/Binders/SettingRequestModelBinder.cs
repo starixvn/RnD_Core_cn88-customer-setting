@@ -9,7 +9,9 @@
 
     public class SettingRequestModelBinder<T> : IModelBinder
     {
+#pragma warning disable S4457 // Parameter validation in "async"/"await" methods should be wrapped
         public async Task BindModelAsync(ModelBindingContext bindingContext)
+#pragma warning restore S4457 // Parameter validation in "async"/"await" methods should be wrapped
         {
             if (bindingContext == null)
             {

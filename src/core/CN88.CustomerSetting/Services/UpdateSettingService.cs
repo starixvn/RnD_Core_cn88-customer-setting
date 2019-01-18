@@ -97,7 +97,7 @@
                         0,
                         setting.CustomerId,
                         settingType.Id,
-                        settingType.Name));
+                        settingType.Name)).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -107,7 +107,7 @@
                     Result.SystemError,
                     setting.CustomerId,
                     settingType.Id,
-                    settingType.Name));
+                    settingType.Name)).ConfigureAwait(false);
             }
         }
 

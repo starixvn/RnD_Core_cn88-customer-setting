@@ -108,7 +108,7 @@
         /// </summary>
         /// <param name="settingType">Type of the setting, includes list of setting items.</param>
         /// <returns>Setting type with setting item have sport, bet type name.</returns>
-        protected SettingType SetSportTypeBetTypeName(SettingType settingType, string language)
+        internal SettingType SetSportTypeBetTypeName(SettingType settingType, string language)
         {
             if (settingType != null && settingType.SettingItems.Any())
             {
@@ -116,7 +116,9 @@
 
                 foreach (ISettingItem settingItem in settingType.SettingItems)
                 {
+#pragma warning disable S3215 // "interface" instances should not be cast to concrete types
                     var defaultSettingItem = settingItem as SettingItemDefault;
+#pragma warning restore S3215 // "interface" instances should not be cast to concrete types
 
                     if (defaultSettingItem != null)
                     {
@@ -136,7 +138,7 @@
             return settingType;
         }
 
-        protected SettingResult CreateSettingResult(IResult result, int customerId, SettingType settingType)
+        protected static SettingResult CreateSettingResult(IResult result, int customerId, SettingType settingType)
             => new SettingResult(
                 result.Code,
                 result.Message,
@@ -159,22 +161,6 @@
             ISettingContext settingContext,
             UpdateCustomerSettingCommand command,
             SettingType settingType);
-
-        private void WriteLog(
-            ISettingContext settingContext,
-            int customerId,
-            Level customerLevel,
-            byte productId,
-            SettingType customerSettingType,
-            Exception ex)
-        {
-            var customerSettingException = new CustomerSettingException(ex.Message, ex);
-            customerSettingException.SetSettingContextInfo("Update Setting", settingContext);
-            customerSettingException.SetCustomerInfo(customerId, customerLevel);
-            customerSettingException.SetProductInfo(productId, customerSettingType);
-
-            Logger.Error(customerSettingException.Message, customerSettingException);
-        }
 
         public abstract IDictionary<string, object> BuildCreateCustomerParams(ISettingContext settingContext, CreateCustomerCommand command, SettingType settingType);
     }

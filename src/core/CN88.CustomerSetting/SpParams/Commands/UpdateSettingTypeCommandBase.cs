@@ -25,10 +25,12 @@
         public int MsgType { get; set; }
 
         public override bool IsValid()
+#pragma warning disable S1067 // Expressions should not be too complex
             => RoleId > 0
                 && CustId > 0
                 && UserId > 0
                 && ProductId > 0
                 && !string.IsNullOrWhiteSpace(IP);
+#pragma warning restore S1067 // Expressions should not be too complex
     }
 }

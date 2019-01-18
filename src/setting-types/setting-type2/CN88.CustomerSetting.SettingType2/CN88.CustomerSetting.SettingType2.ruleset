@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="SonarQube - R&amp;D / CN88 Customer Setting Nexcel CSharp" ToolsVersion="15.0">
+  <Include Path="..\..\..\..\.sonarlint\cn88-customersettingcsharp.ruleset" Action="Default" />
+</RuleSet>

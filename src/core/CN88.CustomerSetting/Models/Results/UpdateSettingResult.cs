@@ -20,7 +20,9 @@
 
                 foreach (IResult result in results)
                 {
+#pragma warning disable S3215 // "interface" instances should not be cast to concrete types
                     var updateSettingResult = result as UpdateSettingResult;
+#pragma warning restore S3215 // "interface" instances should not be cast to concrete types
 
                     if (updateSettingResult != null)
                     {
@@ -28,16 +30,11 @@
                     }
                     else
                     {
+#pragma warning disable S3215 // "interface" instances should not be cast to concrete types
                         var settingResult = result as SettingResult;
+#pragma warning restore S3215 // "interface" instances should not be cast to concrete types
 
-                        if (settingResult != null)
-                        {
-                            subResults.Add(settingResult);
-                        }
-                        else
-                        {
-                            subResults.Add(new SettingResult(result));
-                        }
+                        subResults.Add(settingResult ?? new SettingResult(result));
                     }
                 }
 

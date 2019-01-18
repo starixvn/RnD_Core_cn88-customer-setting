@@ -84,7 +84,7 @@
             string language)
         {
             var firstSettingItemDto = settingItemDto.First();
-            var firstSettingItemConfig = settingItemConfig.ToList().FirstOrDefault();
+            var firstSettingItemConfig = settingItemConfig.FirstOrDefault();
 
             return new CommBetSettingItem
             {
@@ -156,7 +156,7 @@
                 SubAccountId = settingContext.Actor.SubAccountId,
             };
 
-            await DynamicRepository.ExecuteAsync(updateCommand);
+            await DynamicRepository.ExecuteAsync(updateCommand).ConfigureAwait(false);
 
             var result = new SettingResult(
                 updateCommand.ErrCode,

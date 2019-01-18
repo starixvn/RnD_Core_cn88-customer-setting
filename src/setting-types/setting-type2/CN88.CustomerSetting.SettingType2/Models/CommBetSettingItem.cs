@@ -64,7 +64,7 @@
                     : 0,
                     commTemplates));
 
-        private int? GetCommValueId(decimal value, IEnumerable<CommTemplate> commTemplates)
+        private static int? GetCommValueId(decimal value, IEnumerable<CommTemplate> commTemplates)
             => commTemplates
                     .FirstOrDefault(commTemplate => commTemplate.Value == value)?
                     .Id;
