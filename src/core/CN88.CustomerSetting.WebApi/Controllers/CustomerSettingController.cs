@@ -6,10 +6,12 @@
     using CN88.CustomerSetting.Services;
     using CN88.CustomerSetting.WebApi.Models.Binders;
     using CN88.CustomerSetting.WebApi.Models.Requests;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]/[action]")]
+    [Authorize(AuthenticationSchemes = "api")]
     [ApiController]
     public class CustomerSettingController : Controller
     {

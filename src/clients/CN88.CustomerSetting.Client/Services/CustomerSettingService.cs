@@ -82,7 +82,9 @@
         private IRestClient GetRestClient()
         {
             var restClient = new RestClient(RandomHelper.GetRandomUri(CN88CustomerSettingConfiguration.Settings.ServiceUris));
-            restClient.Authenticator = new HmacAuthenticator();
+            restClient.Authenticator = new HmacAuthenticator(
+                "CN88App",
+                CN88CustomerSettingConfiguration.Settings.SecretKey);
 
             return restClient;
         }

@@ -4,6 +4,8 @@
     using System.Linq;
     using CN88.CustomerSetting.DataAccesses;
     using CN88.CustomerSetting.Services;
+    using CN88.CustomerSetting.WebApi.Configurations;
+    using CN88.CustomerSetting.WebApi.Handlers;
     using CN88.CustomerSetting.WebApi.Middlewares;
     using Fanex.Caching;
     using Fanex.Data;
@@ -42,7 +44,12 @@
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
+            var customerSettingApiConfigs = new CustomerSettingApiConfigs();
+            Configuration.Bind("CustomerSettingApi", customerSettingApiConfigs);
+
+
             services
+                .AddSingleton(customerSettingApiConfigs)
                 .AddSingleton<IDynamicRepository, DynamicRepository>()
                 .AddSingleton<ICacheService, CacheService>()
                 .AddSingleton<ValidationService, ValidationServiceImpl>()
@@ -58,6 +65,10 @@
             {
                 c.SwaggerDoc("v1", new Info { Title = "CN88 Customer Setting", Version = "v1" });
             });
+
+            services.AddMemoryCache();
+            services.AddAuthentication(o => o.AddScheme("api", a => a.HandlerType = typeof(HmacAuthenticationHandler)));
+            services.AddMvcCore().AddJsonFormatters().AddAuthorization();
 
             InitRemotingRef();
         }

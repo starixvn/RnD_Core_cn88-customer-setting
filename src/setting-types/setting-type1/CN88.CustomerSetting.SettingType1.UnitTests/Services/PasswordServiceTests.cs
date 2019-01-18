@@ -45,6 +45,11 @@
         }
 
         [TestCase("", false)]
+        [TestCase("1234aa", false)]
+        [TestCase("123456", false)]
+        [TestCase("fdghhj", false)]
+        [TestCase("@#@#@#@#@$$#", false)]
+        [TestCase("ĐFFSDFDSFSDSFD", false)]
         public void IsMatchedRules_PasswordInvalid_ReturnFalse(string password, bool isMember)
         {
             Assert.IsFalse(passwordService.IsMatchedRules(password, isMember));
