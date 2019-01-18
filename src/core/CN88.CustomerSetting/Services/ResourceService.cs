@@ -17,7 +17,6 @@
     public class ResourceServiceImpl : ResourceService
     {
         private const string SportTypeDefaultFormat = "Sport Type {0}";
-        private const string BetTypeDefaultFormat = "Bet Type {0}";
         private const string ProductDefaultFormat = "Product {0}";
         private const string ProductRefId = "Product";
         private const string RefResourceDefaultFormat = "Ref Resource: {0} - Key: {1}";
