@@ -14,17 +14,15 @@
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly ILogger logger;
 
         private static JsonSerializerSettings serializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        public ErrorHandlingMiddleware(RequestDelegate next, ILogger logger)
+        public ErrorHandlingMiddleware(RequestDelegate next)
         {
             this.next = next;
-            this.logger = logger;
         }
 
         public async Task Invoke(HttpContext context /* other dependencies */)

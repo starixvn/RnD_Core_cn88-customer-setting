@@ -26,7 +26,6 @@
 
     public class CreateCustomerServiceImpl : CreateCustomerService
     {
-        private readonly ProductService productService;
         private readonly CustomerDataAccess customerDataAccess;
         private readonly SettingTypeServiceFactory settingTypeServiceFactory;
         private readonly ValidationService validationService;
@@ -34,14 +33,12 @@
         private readonly ILogger logger;
 
         public CreateCustomerServiceImpl(
-            ProductService productService,
             CustomerDataAccess customerDataAccess,
             SettingTypeServiceFactory settingTypeServiceFactory,
             ValidationService validationService,
             IDynamicRepository dynamicRepository,
             ILogger logger)
         {
-            this.productService = productService;
             this.customerDataAccess = customerDataAccess;
             this.settingTypeServiceFactory = settingTypeServiceFactory;
             this.validationService = validationService;

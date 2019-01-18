@@ -52,7 +52,7 @@
         [TestCase("ĐFFSDFDSFSDSFD", false)]
         public void IsMatchedRules_PasswordInvalid_ReturnFalse(string password, bool isMember)
         {
-            Assert.IsFalse(passwordService.IsMatchedRules(password, isMember));
+            Assert.IsFalse(PasswordServiceImpl.IsMatchedRules(password, isMember));
         }
     }
 }

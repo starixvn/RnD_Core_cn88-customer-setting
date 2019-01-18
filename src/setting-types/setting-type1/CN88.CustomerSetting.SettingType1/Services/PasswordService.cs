@@ -68,7 +68,7 @@
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        internal bool IsMatchedRules(string password, bool isMemberPassword)
+        internal static bool IsMatchedRules(string password, bool isMemberPassword)
         {
             if (isMemberPassword)
             {
@@ -83,7 +83,7 @@
             return (r1 + r2 + r3 + r4 >= 3) && NoWhiteSpace.Match(password).Success;
         }
 
-        private string Decrypt(string password, string encryptKey)
+        private static string Decrypt(string password, string encryptKey)
             => RC4(encryptKey, HexDecode(password));
 
         public static string CfsEnCode(string codeStr)

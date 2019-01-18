@@ -10,7 +10,6 @@
         private string name;
         private int subAccountId;
         private Level level;
-        private string site;
 
         public int Id
         {

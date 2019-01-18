@@ -20,7 +20,6 @@
     public class CreateCustomerServiceTests
     {
         private ISettingContext settingContext;
-        private ProductService productService;
         private CustomerDataAccess customerDataAccess;
         private SettingTypeService settingTypeService;
         private SettingTypeServiceFactory settingTypeServiceFactory;
@@ -33,7 +32,6 @@
         public void SetUp()
         {
             settingContext = new SettingContextStub();
-            productService = Substitute.For<ProductService>();
             validationService = Substitute.For<ValidationService>();
             logger = Substitute.For<ILogger>();
             settingTypeServiceFactory = Substitute.For<SettingTypeServiceFactory>();
@@ -42,7 +40,6 @@
             customerDataAccess = Substitute.For<CustomerDataAccess>();
 
             createCustomerService = new CreateCustomerServiceImpl(
-                productService,
                 customerDataAccess,
                 settingTypeServiceFactory,
                 validationService,

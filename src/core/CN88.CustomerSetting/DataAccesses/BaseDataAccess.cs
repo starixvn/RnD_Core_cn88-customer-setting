@@ -18,7 +18,7 @@
             }
         }
 
-        protected IResult GetResult(Hashtable param)
+        protected static IResult GetResult(Hashtable param)
         {
             if (param == null
                 || !param.ContainsKey("errcode")

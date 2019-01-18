@@ -36,7 +36,7 @@
                 int.Parse(parameters["msgtype"].ToString()));
         }
 
-        private string GetSpSettingKey(Level level)
+        private static string GetSpSettingKey(Level level)
         {
             switch (level.Value)
             {

@@ -49,7 +49,7 @@
             return new MessageContent(mainMessage);
         }
 
-        protected T Deserialize<T>(string text) where T : SimpleMessage
+        protected static T Deserialize<T>(string text) where T : SimpleMessage
         {
             var serializer = new XmlSerializer(typeof(T));
 
@@ -59,7 +59,7 @@
             }
         }
 
-        protected string GetMessage(ResourceManager resouceManager, int messsageId)
+        protected static string GetMessage(ResourceManager resouceManager, int messsageId)
         {
             if (resouceManager == null)
             {
