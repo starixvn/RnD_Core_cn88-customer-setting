@@ -58,14 +58,15 @@
                                SystemId = systemId
                            });
                    },
-                    new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(CacheDuration, 0, 0)));
+                   new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(CacheDuration, 0, 0)))
+                   .ConfigureAwait(false);
 
             return settingTypes;
         }
 
         public async Task<SettingType> GetProductSettingType(byte productId, short settingTypeId, byte systemId)
         {
-            var productSettingTypes = await GetProductSettingTypes(productId, systemId);
+            var productSettingTypes = await GetProductSettingTypes(productId, systemId).ConfigureAwait(false);
 
             if (productSettingTypes == null)
             {
@@ -85,14 +86,15 @@
                           .Fetch<ProductName>(new ProductNamesQueryCriteria { LanguageKey = LanguageNameConverter.GetRefLanguageName() })
                           .Select(productName => new Product(productName.ProductId, productName.Name));
                   },
-                  new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(CacheDuration, 0, 0)));
+                  new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(CacheDuration, 0, 0)))
+                  .ConfigureAwait(false);
 
             return products;
         }
 
         public async Task<Product> GetProduct(ISettingContext settingContext, byte productId, byte systemId)
         {
-            var productSettingTypes = (await GetProductSettingTypes(productId, systemId))
+            var productSettingTypes = (await GetProductSettingTypes(productId, systemId).ConfigureAwait(false))
                .Where(product => product.DisplayMode != DisplayModes.Hidden);
             var productName = resourceService.GetProductName(productId, settingContext.Language);
 

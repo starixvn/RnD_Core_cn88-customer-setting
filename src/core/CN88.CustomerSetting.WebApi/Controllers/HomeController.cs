@@ -5,7 +5,7 @@
     public class HomeController : Controller
     {
         public IActionResult Index()
-            => new ContentResult()
+            => new ContentResult
             {
                 Content = "CN88 Customer Setting API started."
             };

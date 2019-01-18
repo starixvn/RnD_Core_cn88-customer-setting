@@ -7,9 +7,9 @@
 
     public class LocalizationMiddleware
     {
-        private const string DefaultLanguage = "en-US";
-        public string languageKey = "language";
-        private static readonly CultureInfo DefaultCulture = CultureInfo.CreateSpecificCulture(DefaultLanguage);
+        private const string defaultLanguage = "en-US";
+        private const string languageKey = "language";
+        private static readonly CultureInfo DefaultCulture = CultureInfo.CreateSpecificCulture(defaultLanguage);
 
         private readonly RequestDelegate next;
 

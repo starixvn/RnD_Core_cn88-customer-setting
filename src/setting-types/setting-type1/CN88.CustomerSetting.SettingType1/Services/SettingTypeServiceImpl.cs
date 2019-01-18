@@ -53,17 +53,17 @@
         {
             if (query.IsCreateNew)
             {
-                return await GetDefaultSettingForCreateNew(query);
+                return await GetDefaultSettingForCreateNew(query).ConfigureAwait(false);
             }
 
-            return await GetAccountDetail(query);
+            return await GetAccountDetail(query).ConfigureAwait(false);
         }
 
         private async Task<SettingType> GetAccountDetail(CustomerSettingQuery query)
         {
-            var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.CustomerId, query.ProductId, false);
-            var customerInfo = (await DynamicRepository.GetAsync<CustomerInfoDto>(new GetGeneralInfoCriteria(query.CustomerLevel.Value, query.CustomerId)))
-                ?? throw new InvalidOperationException($"Not found customer id {query.CustomerId} level {query.CustomerLevel.DisplayName}"); ;
+            var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.CustomerId, query.ProductId, false).ConfigureAwait(false);
+            var customerInfo = (await DynamicRepository.GetAsync<CustomerInfoDto>(new GetGeneralInfoCriteria(query.CustomerLevel.Value, query.CustomerId)).ConfigureAwait(false))
+                ?? throw new InvalidOperationException($"Not found customer id {query.CustomerId} level {query.CustomerLevel.DisplayName}");
 
             settingItem.Username = customerInfo.Username;
             settingItem.FirstName = WebUtility.HtmlDecode(customerInfo.FirstName);
@@ -79,7 +79,7 @@
             if (query.CustomerLevel.IsMemberLevel()
                 && !string.IsNullOrEmpty(customerInfo.UGroup))
             {
-                settingItem.SpreadGroup = (await GetSpreadGroups())
+                settingItem.SpreadGroup = (await GetSpreadGroups().ConfigureAwait(false))
                     .FirstOrDefault(group =>
                         string.Compare(customerInfo.UGroup, group.UGroup, true) == 0);
             }
@@ -89,20 +89,20 @@
 
         private async Task<SettingType> GetDefaultSettingForCreateNew(CustomerSettingQuery query)
         {
-            var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.UplineId, query.ProductId, true);
-            var createCustomerInfo = await GetDefaultCreateCustomerInfo(query.CustomerLevel, query.UplineId);
+            var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.UplineId, query.ProductId, true).ConfigureAwait(false);
+            var createCustomerInfo = await GetDefaultCreateCustomerInfo(query.CustomerLevel, query.UplineId).ConfigureAwait(false);
 
             settingItem.MaxCredit = createCustomerInfo.MaxCredit;
             settingItem.MinCredit = createCustomerInfo.MinCredit;
             settingItem.UplineUsername = createCustomerInfo.UplineUsername;
             settingItem.UsernameSuffixes = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString());
             settingItem.Currencies = query.CustomerLevel.IsSuperLevel()
-                                ? await GetCurrencies()
+                                ? await GetCurrencies().ConfigureAwait(false)
                                 : Enumerable.Empty<Currency>();
 
             if (query.CustomerLevel.IsMemberLevel())
             {
-                settingItem.SpreadGroups = await GetSpreadGroups();
+                settingItem.SpreadGroups = await GetSpreadGroups().ConfigureAwait(false);
                 settingItem.SpreadGroup = settingItem.SpreadGroups.FirstOrDefault();
             }
 
@@ -123,8 +123,8 @@
                 return new MemberAccountDetail();
             }
 
-            var settingItem = await GetAccountDetailSettingItem(level, custId, isCreateNew);
-            var settingTypeConfig = (await GetSettingTypeConfig<AccountDetailSettingItem>(productId, SettingTypeId)).FirstOrDefault();
+            var settingItem = await GetAccountDetailSettingItem(level, custId, isCreateNew).ConfigureAwait(false);
+            var settingTypeConfig = (await GetSettingTypeConfig<AccountDetailSettingItem>(productId, SettingTypeId).ConfigureAwait(false)).FirstOrDefault();
             if (settingTypeConfig != null)
             {
                 settingItem.IntervalValue = settingTypeConfig.IntervalValue;
@@ -143,15 +143,15 @@
             switch (level.Value)
             {
                 case Level.SuperLevelId:
-                    settingItem = await GetSuperAccountDetail(custId, isCreateNew);
+                    settingItem = await GetSuperAccountDetail(custId, isCreateNew).ConfigureAwait(false);
                     break;
 
                 case Level.MasterLevelId:
-                    settingItem = await GetMasterAccountDetail(custId, isCreateNew);
+                    settingItem = await GetMasterAccountDetail(custId, isCreateNew).ConfigureAwait(false);
                     break;
 
                 default:
-                    settingItem = await GetAgentAccountDetail(custId, isCreateNew);
+                    settingItem = await GetAgentAccountDetail(custId, isCreateNew).ConfigureAwait(false);
                     break;
             }
 
@@ -160,30 +160,30 @@
         }
 
         private async Task<AccountDetailSettingItem> GetSuperAccountDetail(int custId, bool isCreateNew)
-            => await DynamicRepository.GetAsync<SuperAccountDetail>(new GetPTSettingCriteria(Level.Super.Value, custId, isCreateNew));
+            => await DynamicRepository.GetAsync<SuperAccountDetail>(new GetPTSettingCriteria(Level.Super.Value, custId, isCreateNew)).ConfigureAwait(false);
 
         private async Task<AccountDetailSettingItem> GetMasterAccountDetail(int custId, bool isCreateNew)
-            => await DynamicRepository.GetAsync<MasterAccountDetail>(new GetPTSettingCriteria(Level.Master.Value, custId, isCreateNew));
+            => await DynamicRepository.GetAsync<MasterAccountDetail>(new GetPTSettingCriteria(Level.Master.Value, custId, isCreateNew)).ConfigureAwait(false);
 
         private async Task<AccountDetailSettingItem> GetAgentAccountDetail(int custId, bool isCreateNew)
-            => await DynamicRepository.GetAsync<AgentAccountDetail>(new GetPTSettingCriteria(Level.Agent.Value, custId, isCreateNew));
+            => await DynamicRepository.GetAsync<AgentAccountDetail>(new GetPTSettingCriteria(Level.Agent.Value, custId, isCreateNew)).ConfigureAwait(false);
 
         private async Task<CreateCustomerInfoDto> GetDefaultCreateCustomerInfo(Level level, int uplineId)
             => level.IsNotSuperLevel()
-                ? await DynamicRepository.GetAsync<CreateCustomerInfoDto>(new GetCustomerInfoForCreateCriteria(level.Value, uplineId))
+                ? await DynamicRepository.GetAsync<CreateCustomerInfoDto>(new GetCustomerInfoForCreateCriteria(level.Value, uplineId)).ConfigureAwait(false)
                 : new CreateCustomerInfoDto();
 
         private async Task<IEnumerable<Currency>> GetCurrencies()
             => await CacheService.GetOrSetAsync(
                        CurrencyCacheKey,
                        () => DynamicRepository.Fetch<Currency>(new GetCurrencyListCriteria()),
-                        new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(0, CurrencyCacheTimeInMinutes, 0)));
+                        new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(0, CurrencyCacheTimeInMinutes, 0))).ConfigureAwait(false);
 
         private async Task<IEnumerable<SpreadGroup>> GetSpreadGroups()
             => await CacheService.GetOrSetAsync(
                        SpreadGroupCacheKey,
                        () => DynamicRepository.Fetch<SpreadGroup>(new GetSpreadGroupCriteria()),
-                        new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(SpreadGroupCacheTimeInHours, 0, 0)));
+                        new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(SpreadGroupCacheTimeInHours, 0, 0))).ConfigureAwait(false);
 
         public override IDictionary<string, object> BuildCreateCustomerParams(
             ISettingContext settingContext,
@@ -307,13 +307,13 @@
             var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem
                 ?? throw new InvalidOperationException("AccountDetail cannot be null");
 
-            var updateCustomerInfoResult = await UpdateCustomerInfo(command, settingItem, settingContext.Language);
+            var updateCustomerInfoResult = await UpdateCustomerInfo(command, settingItem, settingContext.Language).ConfigureAwait(false);
             if (updateCustomerInfoResult.IsFailed)
             {
                 return updateCustomerInfoResult;
             }
 
-            return await UpdatePTSetting(settingContext, command, settingType);
+            return await UpdatePTSetting(settingContext, command, settingType).ConfigureAwait(false);
         }
 
         private async Task<SettingResult> UpdatePTSetting(
@@ -334,7 +334,7 @@
                 SubAccountId = settingContext.Actor.SubAccountId,
             };
 
-            await DynamicRepository.ExecuteAsync(updatePTSettingCommand);
+            await DynamicRepository.ExecuteAsync(updatePTSettingCommand).ConfigureAwait(false);
 
             var settingResult = new SettingResult(
                 updatePTSettingCommand.ErrCode,
@@ -369,7 +369,7 @@
                 Language = LanguageNameConverter.GetLanguageKey(language)
             };
 
-            await DynamicRepository.ExecuteAsync(updateCustomerInfoCommand);
+            await DynamicRepository.ExecuteAsync(updateCustomerInfoCommand).ConfigureAwait(false);
 
             return updateCustomerInfoCommand.ErrCode > 0
                 ? new SettingResult(Result.CreateErrorResult(updateCustomerInfoCommand.ErrMsg))

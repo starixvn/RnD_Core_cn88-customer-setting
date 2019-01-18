@@ -22,7 +22,7 @@
             parameters.Add("msgtype", 0);
             parameters.Add("errmsg", string.Empty);
 
-            var result = await ExecuteNonQuery(spSettingKey, parameters);
+            var result = await ExecuteNonQuery(spSettingKey, parameters).ConfigureAwait(false);
 
             var newUsername = parameters["username"];
 

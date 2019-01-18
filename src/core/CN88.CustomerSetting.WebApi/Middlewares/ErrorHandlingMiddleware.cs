@@ -35,8 +35,8 @@
             }
             catch (Exception ex)
             {
-                await ExceptionHandler.HandleAsync(ex, context);
-                await HandleExceptionAsync(context, ex);
+                await ExceptionHandler.HandleAsync(ex, context).ConfigureAwait(false);
+                await HandleExceptionAsync(context, ex).ConfigureAwait(false);
             }
         }
 

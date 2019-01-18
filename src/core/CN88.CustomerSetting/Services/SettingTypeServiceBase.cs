@@ -149,7 +149,7 @@
             => await CacheService.GetOrSetAsync(
                        string.Format(SettingTypeConfigCacheKey, productId, settingTypeId),
                        () => DynamicRepository.Fetch<T>(new GetSettingTypeConfigCriteria(productId, settingTypeId)),
-                        new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(SettingTypeConfigCacheTimeInHours, 0, 0)));
+                        new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(SettingTypeConfigCacheTimeInHours, 0, 0))).ConfigureAwait(false);
 
         public abstract Task<SettingType> GetCustomerSettingType(
             ISettingContext settingContext,

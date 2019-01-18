@@ -62,19 +62,19 @@
 
             try
             {
-                await CheckActorStatus(actor);
+                await CheckActorStatus(actor).ConfigureAwait(false);
 
                 if (query.IsNotCreateNew)
                 {
-                    await CheckCustomerLevel(customerId, customerLevel);
+                    await CheckCustomerLevel(customerId, customerLevel).ConfigureAwait(false);
 
                     CheckActorAndCustomerLevelsConstrain(actor, customerLevel);
 
-                    await CheckBelonging(actor, customerId);
+                    await CheckBelonging(actor, customerId).ConfigureAwait(false);
                 }
                 else
                 {
-                    await CheckBelonging(actor, uplineId);
+                    await CheckBelonging(actor, uplineId).ConfigureAwait(false);
                 }
             }
             catch (CustomerSettingException customerSettingException)
@@ -92,7 +92,7 @@
             var enabledStatus = await dynamicRepository.GetAsync<bool>(new ActorStatusQueryCriteria
             {
                 CustId = actor.Id
-            });
+            }).ConfigureAwait(false);
 
             if (!enabledStatus)
             {
@@ -120,7 +120,7 @@
                 {
                     ActorId = actor.Id,
                     CustomerId = customerId
-                });
+                }).ConfigureAwait(false);
 
                 if (!isBelonging)
                 {
@@ -139,7 +139,7 @@
             var actualCustomerLevel = await dynamicRepository.GetAsync<byte>(new CustomerLevelQueryCriteria
             {
                 CustId = customerId
-            });
+            }).ConfigureAwait(false);
 
             if (actualCustomerLevel != customerLevel.Value)
             {
@@ -178,9 +178,9 @@
 
             try
             {
-                await CheckQueryPermission(settingContext, customerId, customerLevel, productId, false, 0);
+                await CheckQueryPermission(settingContext, customerId, customerLevel, productId, false, 0).ConfigureAwait(false);
 
-                await CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes);
+                await CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes).ConfigureAwait(false);
 
                 CheckUpdatableCustomerSettingTypes(actorLevel, customerLevel, settingTypes);
             }
@@ -203,7 +203,7 @@
             int uplineId)
         {
             var querySettingParam = new CustomerSettingQuery(isCreateNew, customerId, customerLevel.Value, productId, uplineId);
-            var result = await ValidateQuerySettingAction(settingContext, querySettingParam);
+            var result = await ValidateQuerySettingAction(settingContext, querySettingParam).ConfigureAwait(false);
 
             if (result.IsNotOk)
             {
@@ -217,7 +217,7 @@
             IEnumerable<SettingType> customerSettingTypes)
         {
             var productSettingTypes = (await productService
-                .GetProductSettingTypes(productId, settingContext.System))
+                .GetProductSettingTypes(productId, settingContext.System).ConfigureAwait(false))
                 .Where(product => product.DisplayMode == DisplayModes.Editable);
 
             foreach (var customerSettingType in customerSettingTypes)
@@ -265,9 +265,9 @@
 
             try
             {
-                await CheckQueryPermission(settingContext, customerId, customerLevel, productId, true, command.UplineId);
+                await CheckQueryPermission(settingContext, customerId, customerLevel, productId, true, command.UplineId).ConfigureAwait(false);
 
-                await CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes);
+                await CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes).ConfigureAwait(false);
 
                 CheckUpdatableCustomerSettingTypes(actorLevel, customerLevel, settingTypes);
             }

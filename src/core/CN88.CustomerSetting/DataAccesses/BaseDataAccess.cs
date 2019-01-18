@@ -12,7 +12,7 @@
         {
             using (var objectDb = new ObjectDb(settingKey))
             {
-                await objectDb.ExecuteNonQueryAsync(storedProcedureParam);
+                await objectDb.ExecuteNonQueryAsync(storedProcedureParam).ConfigureAwait(false);
 
                 return GetResult(storedProcedureParam);
             }

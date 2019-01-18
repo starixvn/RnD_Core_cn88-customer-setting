@@ -42,10 +42,10 @@
             ISettingContext settingContext,
             CustomerSettingQuery query)
         {
-            var settingTypeConfig = (await GetSettingTypeConfig<CommBetSettingConfigDto>(query.ProductId, SettingTypeId))
+            var settingTypeConfig = (await GetSettingTypeConfig<CommBetSettingConfigDto>(query.ProductId, SettingTypeId).ConfigureAwait(false))
                                     .GroupBy(config => new { config.SportTypeId, config.BetTypeId, config.IsLive });
 
-            var commBetSettingDtoList = await GetCommBetSettingDtoList(query);
+            var commBetSettingDtoList = await GetCommBetSettingDtoList(query).ConfigureAwait(false);
             var settingItems = new List<CommBetSettingItem>();
 
             foreach (var settingItemConfig in settingTypeConfig)
@@ -76,7 +76,7 @@
                     IsCreateNew = query.IsCreateNew,
                     CustId = query.IsCreateNew ? query.UplineId : query.CustomerId,
                     RoleId = query.CustomerLevel.Value
-                });
+                }).ConfigureAwait(false);
 
         private CommBetSettingItem BuildSettingItem(
             IEnumerable<CommBetSettingDto> settingItemDto,
@@ -149,7 +149,7 @@
 
                 ProductId = setting.ProductId,
                 BetSetting = commBetSetting.ToBetSettingXml(),
-                CommSetting = commBetSetting.ToCommXml(await GetCommTemplateSetting(), setting.CustomerLevel),
+                CommSetting = commBetSetting.ToCommXml(await GetCommTemplateSetting().ConfigureAwait(false), setting.CustomerLevel),
 
                 IP = settingContext.IP,
                 UserId = settingContext.Actor.Id,
@@ -177,6 +177,6 @@
             => await CacheService.GetOrSetAsync(
                        CommTemplateCacheKey,
                        () => DynamicRepository.Fetch<CommTemplate>(new GetCommTemplateCriteria()),
-                        new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(CommTemplateCacheInHours, 0, 0)));
+                        new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(CommTemplateCacheInHours, 0, 0))).ConfigureAwait(false);
     }
 }

@@ -90,12 +90,13 @@
         {
             var num = 30;
             var num2 = num - codeStr.Length;
+            var temp1 = codeStr;
 
             if (num2 > 1)
             {
                 for (int m = 1; m <= num2; m++)
                 {
-                    codeStr += Convert.ToChar(0x15);
+                    temp1 += Convert.ToChar(0x15);
                 }
             }
 
@@ -103,27 +104,27 @@
 
             for (int i = 1; i <= num; i++)
             {
-                if (num <= codeStr.Length)
+                if (num <= temp1.Length)
                 {
-                    var result = Convert.ToChar(codeStr.Substring(i - 1, 1));
+                    var result = Convert.ToChar(temp1.Substring(i - 1, 1));
 
                     int num5 = num + (result * i);
                     num3 *= num5;
                 }
             }
 
-            codeStr = num3.ToString();
+            var temp2 = num3.ToString();
             string str = string.Empty;
-            for (int j = 1; j <= codeStr.Length; j++)
+            for (int j = 1; j <= temp2.Length; j++)
             {
                 var length = 3;
 
-                if (codeStr.Length - j < 2)
+                if (temp2.Length - j < 2)
                 {
-                    length = codeStr.Length - j + 1;
+                    length = temp2.Length - j + 1;
                 }
 
-                str += CfsCode(codeStr.Substring(j - 1, length));
+                str += CfsCode(temp2.Substring(j - 1, length));
             }
 
             string str2 = string.Empty;
@@ -192,12 +193,12 @@
                 b16_map[Convert.ToInt32(string.Concat(b16_digits[i >> 4], b16_digits[i & 15]), 16)] = Convert.ToChar(i);
             }
             var c = data.Length;
-            if (c % 2 != 0) data = '0' + data;
+            var temp1 = c % 2 != 0 ? '0' + data : data;
             var result = new List<char>();
 
             for (var i = 0; i < c; i += 2)
             {
-                result.Add(b16_map[Convert.ToInt32(data.Substring(i, 2), 16)]);
+                result.Add(b16_map[Convert.ToInt32(temp1.Substring(i, 2), 16)]);
             }
             return new string(result.ToArray());
         }

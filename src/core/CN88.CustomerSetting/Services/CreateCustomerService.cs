@@ -53,7 +53,7 @@
             ISettingContext settingContext,
             CreateCustomerCommand command)
         {
-            var validationResult = await Validate(settingContext, command);
+            var validationResult = await Validate(settingContext, command).ConfigureAwait(false);
 
             if (validationResult.IsNotOk)
             {
@@ -64,9 +64,11 @@
             {
                 var createNewParams = GetCreateNewCustomerParams(settingContext, command);
 
-                var result = await customerDataAccess.CreateNewCustomer(
-                    command.Setting.CustomerLevel,
-                    new Hashtable(createNewParams, StringComparer.OrdinalIgnoreCase));
+                var result = await customerDataAccess
+                    .CreateNewCustomer(
+                        command.Setting.CustomerLevel,
+                        new Hashtable(createNewParams, StringComparer.OrdinalIgnoreCase))
+                    .ConfigureAwait(false);
 
                 if (result.IsFailed
                     && result.SettingTypeId > 0)
@@ -138,7 +140,7 @@
         {
             var command = new CheckValidUsernameCommand(username);
 
-            await dynamicRepository.ExecuteAsync(command);
+            await dynamicRepository.ExecuteAsync(command).ConfigureAwait(false);
 
             return command.IsExists
                 ? Result.CreateErrorResult(string.Empty)
@@ -148,7 +150,7 @@
         protected virtual async Task<IResult> Validate(
            ISettingContext settingContext,
            CreateCustomerCommand command)
-            => await validationService.ValidateCreateCustomerAction(settingContext, command);
+            => await validationService.ValidateCreateCustomerAction(settingContext, command).ConfigureAwait(false);
 
         protected virtual void WriteLog(
             ISettingContext settingContext,

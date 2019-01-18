@@ -15,9 +15,8 @@
     [ApiController]
     public class CustomerSettingController : Controller
     {
-        private static string TemplateCached;
-        private const string TemplateFilePath = "/Templates/customer-setting.htm";
-        private const byte CachingHours = 4;
+        private static string templateCached;
+        private const string templateFilePath = "/Templates/customer-setting.htm";
         private readonly QuerySettingService querySettingService;
         private readonly CreateCustomerService createCustomerService;
         private readonly IHostingEnvironment hostingEnvironment;
@@ -56,14 +55,14 @@
         [HttpGet]
         public string GetTemplate()
         {
-            string template = TemplateCached;
-            string templatePath = TemplateFilePath;
+            string template = templateCached;
+            string templatePath = templateFilePath;
 
             if (string.IsNullOrEmpty(template))
             {
                 var file = hostingEnvironment.WebRootFileProvider.GetFileInfo(templatePath);
                 template = System.IO.File.ReadAllText(file.PhysicalPath);
-                TemplateCached = template;
+                templateCached = template;
             }
 
             return template;

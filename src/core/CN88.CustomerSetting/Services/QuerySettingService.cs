@@ -40,10 +40,10 @@
 
         public async Task<ISetting> GetCustomerSetting(ISettingContext settingContext, CustomerSettingQuery query)
         {
-            await Validate(settingContext, query);
+            await Validate(settingContext, query).ConfigureAwait(false);
 
-            var product = await productService.GetProduct(settingContext, query.ProductId, settingContext.System);
-            var customerSettingTypes = await GetCustomerSettingTypes(settingContext, query, product.SettingTypes);
+            var product = await productService.GetProduct(settingContext, query.ProductId, settingContext.System).ConfigureAwait(false);
+            var customerSettingTypes = await GetCustomerSettingTypes(settingContext, query, product.SettingTypes).ConfigureAwait(false);
 
             var setting = new Setting(
                 query.CustomerId,
@@ -62,7 +62,7 @@
                 throw new ArgumentNullException(nameof(query));
             }
 
-            var result = await validationService.ValidateQuerySettingAction(settingContext, query);
+            var result = await validationService.ValidateQuerySettingAction(settingContext, query).ConfigureAwait(false);
 
             if (result.IsNotOk)
             {
@@ -77,7 +77,8 @@
         {
             var customerSettingTypes = await Task.WhenAll(
                 productSettingTypes.Select(
-                    productSettingType => GetCustomerSettingType(settingContext, query, productSettingType)));
+                    productSettingType => GetCustomerSettingType(settingContext, query, productSettingType)))
+                    .ConfigureAwait(false);
 
             return customerSettingTypes
                 .OrderBy(settingType => settingType.DisplayOrder)
@@ -95,7 +96,7 @@
             {
                 var settingTypeService = settingTypeServiceFactory.GetInstance(productSettingType);
 
-                customerSettingType = await settingTypeService.GetCustomerSettingType(settingContext, query);
+                customerSettingType = await settingTypeService.GetCustomerSettingType(settingContext, query).ConfigureAwait(false);
                 customerSettingType.Id = productSettingType.Id;
                 customerSettingType.SettingLevel = productSettingType.SettingLevel;
                 customerSettingType.DisplayOrder = productSettingType.DisplayOrder;

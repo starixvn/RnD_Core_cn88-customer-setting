@@ -37,14 +37,14 @@
             ISettingContext settingContext,
             UpdateCustomerSettingCommand command)
         {
-            var validationResult = await Validate(settingContext, command);
+            var validationResult = await Validate(settingContext, command).ConfigureAwait(false);
 
             if (validationResult.IsNotOk)
             {
                 return validationResult;
             }
 
-            var result = new UpdateSettingResult(await UpdateCustomerSettingTypes(settingContext, command));
+            var result = new UpdateSettingResult(await UpdateCustomerSettingTypes(settingContext, command).ConfigureAwait(false));
 
             return result;
         }
@@ -52,14 +52,13 @@
         protected virtual async Task<IResult> Validate(
             ISettingContext settingContext,
             UpdateCustomerSettingCommand command)
-            => await validationService.ValidateUpdateSettingAction(settingContext, command);
+            => await validationService.ValidateUpdateSettingAction(settingContext, command).ConfigureAwait(false);
 
         protected virtual async Task<IEnumerable<SettingResult>> UpdateCustomerSettingTypes(
             ISettingContext settingContext,
             UpdateCustomerSettingCommand command)
         {
             var settingTypes = command.Setting.SettingTypes;
-            var settingTypeResults = new List<SettingResult>();
 
             return await Task.WhenAll(
                 settingTypes.Select(
@@ -67,7 +66,7 @@
                         UpdateCustomerSettingType(
                         settingContext,
                         command,
-                        settingType)));
+                        settingType))).ConfigureAwait(false);
         }
 
         protected virtual async Task<SettingResult> UpdateCustomerSettingType(
@@ -75,14 +74,15 @@
             UpdateCustomerSettingCommand command,
             SettingType settingType)
         {
-            var setting = command?.Setting;
+            var setting = command.Setting
+                        ?? throw new ArgumentNullException(nameof(command), "Setting cannot be null");
 
             try
             {
                 CheckSettingTypeIsValid(settingType);
 
                 var settingTypeService = settingTypeServiceFactory.GetInstance(settingType);
-                var settingResult = await settingTypeService.UpdateCustomerSettingType(settingContext, command, settingType);
+                var settingResult = await settingTypeService.UpdateCustomerSettingType(settingContext, command, settingType).ConfigureAwait(false);
 
                 return settingResult;
             }
