@@ -223,7 +223,7 @@ namespace CN88.CustomerSetting.SettingType2.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Commission &amp; Bet Setting are updated successfully.
+        ///   Looks up a localized string similar to Commission &amp; Bet Setting are updated successfully..
         /// </summary>
         internal static string UpdateCommBetSettingSuccess {
             get {
