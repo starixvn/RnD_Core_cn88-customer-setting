@@ -55,10 +55,10 @@
                    data-ng-model="item.maxBet"
                    data-setting-field="maxBet" />
             <span class="setting-field--constraint" data-ng-if="(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxBet > 0)">[{{item.minMaxBet | number:betSettingPrecision}}; {{item.maxMaxBet | number:betSettingPrecision}}]</span>
-            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && !isNew">>={{item.minMaxBet | number:betSettingPrecision}}</span>
+            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && (item.maxMaxBet === 0) && hasMaxBetConstraint">>={{item.minMaxBet | number:betSettingPrecision}}</span>
         </div>
         <div class="block__cell block__cell--no-border w50-percent"
-             data-ng-class="{'align-center': !hasMaxBetConstraint}">
+             data-ng-class="{'align-center': !hasMaxPerMatchConstraint}">
             <input type="text"
                    maxlength="14"
                    class="setting-field setting-field--number setting-field--has-constraint"
@@ -66,7 +66,7 @@
                    data-ng-model="item.maxPerMatch"
                    data-setting-field="maxPerMatch" />
             <span class="setting-field--constraint" data-ng-if="(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxPerMatch > 0)">[{{item.minMaxPerMatch | number:betSettingPrecision}}; {{item.maxMaxPerMatch | number:betSettingPrecision}}]</span>
-            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && !isNew">>={{item.minMaxPerMatch | number:betSettingPrecision}}</span>
+            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && (item.maxMaxPerMatch === 0) && hasMaxPerMatchConstraint">>={{item.minMaxPerMatch | number:betSettingPrecision}}</span>
         </div>
     </div>
 </div>

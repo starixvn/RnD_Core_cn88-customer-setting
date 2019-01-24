@@ -17,6 +17,7 @@ module CustomerSetting {
     interface INumericInputScope extends ng.IScope {
         precision: number;
         strictFormat: boolean;
+        negativeAllowed: boolean;
     }
 
     class NumericInputDirective implements ng.IDirective {
@@ -28,7 +29,8 @@ module CustomerSetting {
         public get scope(): any {
             return {
                 precision: "=?numericInput",
-                strictFormat: "@"
+                strictFormat: "@",
+                negativeAllowed: "@"
             };
         }
 
@@ -67,7 +69,7 @@ module CustomerSetting {
                 var input: HTMLInputElement = <HTMLInputElement>element[0];
                 var cursorPosition: number = input.selectionStart;
 
-                if ([110, 190].indexOf(event.keyCode) >= 0) {
+                if (this.decimalKeyCodes.indexOf(event.keyCode) >= 0) {
                     // Prevent more than one decimal character or do not allow decimal character in integer field
                     if (numberParts.length > 1 || scope.precision === 0) {
                         event.preventDefault();
@@ -78,6 +80,15 @@ module CustomerSetting {
 
                         return;
                     } else {
+                        return;
+                    }
+                }
+
+                // In case that negative number allowed
+                if (scope.negativeAllowed && this.negativeKeyCodes.indexOf(event.keyCode) >= 0) {
+                    var selection: number = input.selectionEnd - input.selectionStart;
+
+                    if (cursorPosition === 0 || selection === value.length) {
                         return;
                     }
                 }
@@ -150,14 +161,17 @@ module CustomerSetting {
                     || this.$window.clipboardData
                     || (<ClipboardEvent>event.originalEvent).clipboardData;
                 var clipboard: string = clipboardData.getData("Text");
-                var { formattedValue }: IOriginalAndFormattedValuePair = this.parseAndFormatViewValue(clipboard, scope.precision, true);
+                var { formattedValue, value }: IOriginalAndFormattedValuePair = this.parseAndFormatViewValue(clipboard, scope.precision, true);
                 var input: HTMLInputElement = <HTMLInputElement>element[0];
                 var selection: number = input.selectionEnd - input.selectionStart;
                 var currentValue: string = element.val();
 
                 event.preventDefault();
 
-                if ((!currentValue || selection === currentValue.length) && formattedValue && formattedValue.length <= maxLength) {
+                if ((!currentValue || selection === currentValue.length)
+                    && (scope.negativeAllowed || value >= 0)
+                    && formattedValue
+                    && formattedValue.length <= maxLength) {
                     modelCtrl.$setViewValue(formattedValue);
                     modelCtrl.$render();
                     input.selectionStart = formattedValue.length;
@@ -173,7 +187,9 @@ module CustomerSetting {
                 var caretPosition: number = input.selectionStart;
                 var { formattedValue, value }: IOriginalAndFormattedValuePair = this.parseAndFormatViewValue(viewValue, scope.precision, false);
 
-                element.val(formattedValue);
+                if (!scope.negativeAllowed || viewValue !== this.negativePrefix) {
+                    element.val(formattedValue);
+                }
 
                 if (viewValue.length !== caretPosition) {
                     var offset: number = viewValue.length - formattedValue.length;
@@ -195,12 +211,18 @@ module CustomerSetting {
         private numberFilter: Function;
         private thousandSeparator: string;
         private decimalSeparator: string;
+        private decimalKeyCodes: number[];
+        private negativePrefix: string;
+        private negativeKeyCodes: number[];
 
         constructor($filter: ng.IFilterService, $window: IWindowService, appConfigService: AppConfigService) {
             this.$window = $window;
             this.numberFilter = $filter("number");
             this.thousandSeparator = appConfigService.thousandSeparator;
             this.decimalSeparator = appConfigService.decimalSeparator;
+            this.decimalKeyCodes = appConfigService.decimalKeyCodes;
+            this.negativePrefix = appConfigService.negativePrefix;
+            this.negativeKeyCodes = appConfigService.negativeKeyCodes;
         }
 
         private parseAndFormatViewValue(viewValue: string, precision: number, rounding: boolean): IOriginalAndFormattedValuePair {

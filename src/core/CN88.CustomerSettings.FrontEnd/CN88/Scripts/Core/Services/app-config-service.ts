@@ -15,6 +15,18 @@ module CustomerSetting {
             return ".";
         }
 
+        public get decimalKeyCodes(): number[] {
+            return [110, 190];
+        }
+
+        public get negativePrefix(): string {
+            return "-";
+        }
+
+        public get negativeKeyCodes(): number[] {
+            return [109, 189];
+        }
+
         private applicationPath: string;
         private antiForgeryToken: string;
         private editable: boolean;

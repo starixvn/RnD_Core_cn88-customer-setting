@@ -64,13 +64,13 @@ module CustomerSetting {
                     scope.hasMaxBetConstraint = scope.settingType.settingItems.some((settingItem: ISettingItem) => {
                         var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
 
-                        return settingType2Item.minMaxBet > 0;
+                        return settingType2Item.minMaxBet > 0 || settingType2Item.maxMaxBet > 0;
                     });
 
                     scope.hasMaxPerMatchConstraint = scope.settingType.settingItems.some((settingItem: ISettingItem) => {
                         var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
 
-                        return settingType2Item.minMaxPerMatch > 0;
+                        return settingType2Item.minMaxPerMatch > 0 || settingType2Item.maxMaxPerMatch > 0;
                     });
                 } else {
                     scope.hasMaxBetConstraint = true;

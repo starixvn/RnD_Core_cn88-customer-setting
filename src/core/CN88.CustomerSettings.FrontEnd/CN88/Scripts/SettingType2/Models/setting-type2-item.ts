@@ -152,6 +152,12 @@ module CustomerSetting {
                 }
             }
 
+            if (this.maxBet > this.maxPerMatch) {
+                this.validationState = new ValidationResult("MaxBetMustBeLessThanOrEqualToMaxPerMatch", "maxBet");
+
+                return false;
+            }
+
             return true;
         }
     }
