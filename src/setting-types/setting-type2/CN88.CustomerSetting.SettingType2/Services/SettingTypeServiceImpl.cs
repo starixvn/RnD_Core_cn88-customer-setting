@@ -89,7 +89,7 @@
             return new CommBetSettingItem
             {
                 SportTypeName = ResourceService.GetSportTypeName(firstSettingItemConfig.SportTypeId, language),
-                BetTypeName = ResourceService.GetBetTypeName(firstSettingItemConfig.BetTypeId, firstSettingItemConfig.IsLive),
+                BetTypeName = ResourceService.GetBetTypeName(firstSettingItemConfig.BetTypeId, firstSettingItemConfig.IsLive, language),
 
                 LayoutType = firstSettingItemConfig.LayoutType,
                 IntervalValue = firstSettingItemConfig.IntervalValuePercent,

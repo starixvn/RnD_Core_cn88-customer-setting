@@ -183,4 +183,7 @@
   <data name="Msg_90001" xml:space="preserve">
     <value>Update process is unsuccessful!</value>
   </data>
+  <data name="Live" xml:space="preserve">
+    <value>Live</value>
+  </data>
 </root>

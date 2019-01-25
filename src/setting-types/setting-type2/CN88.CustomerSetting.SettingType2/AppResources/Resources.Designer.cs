@@ -70,7 +70,7 @@ namespace CN88.CustomerSetting.SettingType2.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wrong Max bet/ Max per match..
+        ///   Looks up a localized string similar to Wrong Max Bet/ Max per Match..
         /// </summary>
         internal static string Mgs_10040 {
             get {
@@ -187,7 +187,7 @@ namespace CN88.CustomerSetting.SettingType2.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Max bet must be less than max bet per match..
+        ///   Looks up a localized string similar to Max Bet must be less than Max per Match..
         /// </summary>
         internal static string Msg_10041 {
             get {
@@ -196,7 +196,7 @@ namespace CN88.CustomerSetting.SettingType2.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Max bet is out of range..
+        ///   Looks up a localized string similar to Max Bet is out of range..
         /// </summary>
         internal static string Msg_10042 {
             get {
@@ -205,7 +205,7 @@ namespace CN88.CustomerSetting.SettingType2.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Max bet per match is out of range..
+        ///   Looks up a localized string similar to Max per Match is out of range..
         /// </summary>
         internal static string Msg_10043 {
             get {

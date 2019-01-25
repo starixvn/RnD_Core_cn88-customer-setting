@@ -104,7 +104,7 @@
             var sportTypeName = "SportTypeName";
             var betTypeName = "BetTypeName";
             resourceService.GetSportTypeName(1, Arg.Any<string>()).Returns(sportTypeName);
-            resourceService.GetBetTypeName(1, Arg.Any<bool>()).Returns(betTypeName);
+            resourceService.GetBetTypeName(1, Arg.Any<bool>(), Arg.Any<string>()).Returns(betTypeName);
 
             //// Act
             var actualSettingType = settingTypeServiceMock.SetSportTypeBetTypeName(settingType, DefaultLanguage);

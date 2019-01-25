@@ -48,7 +48,7 @@
                                 + "<Row SportType=\"1\" BetType=\"1\" />"
                                 + "</Root>";
             ResourceService.GetSportTypeName(1, Arg.Any<string>()).Returns(sportTypeName);
-            ResourceService.GetBetTypeName(1, Arg.Any<bool>()).Returns(betTypeName);
+            ResourceService.GetBetTypeName(1, Arg.Any<bool>(), Arg.Any<string>()).Returns(betTypeName);
 
             //// Act
             var actualMessageContent = MessageService.TranslateMessage(msgType, rawMessage, settingLevel, SettingContext.Language);
@@ -74,7 +74,7 @@
                                 + "<Row SportType=\"1\" BetType=\"1\" />"
                                 + "</Root>";
             ResourceService.GetSportTypeName(1, Arg.Any<string>()).Returns(sportTypeName);
-            ResourceService.GetBetTypeName(1, Arg.Any<bool>()).Returns(betTypeName);
+            ResourceService.GetBetTypeName(1, Arg.Any<bool>(), Arg.Any<string>()).Returns(betTypeName);
 
             //// Act
             var actualMessageContent = MessageService.TranslateMessage(msgType, rawMessage, settingLevel, SettingContext.Language);

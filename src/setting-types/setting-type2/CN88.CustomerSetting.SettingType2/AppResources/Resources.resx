@@ -163,15 +163,15 @@
     <value>Commission is out of range.</value>
   </data>
   <data name="Mgs_10040" xml:space="preserve">
-    <value>Wrong Max bet/ Max per match.</value>
+    <value>Wrong Max Bet/ Max per Match.</value>
   </data>
   <data name="Msg_10041" xml:space="preserve">
-    <value>Max bet must be less than max bet per match.</value>
+    <value>Max Bet must be less than Max per Match.</value>
   </data>
   <data name="Msg_10042" xml:space="preserve">
-    <value>Max bet is out of range.</value>
+    <value>Max Bet is out of range.</value>
   </data>
   <data name="Msg_10043" xml:space="preserve">
-    <value>Max bet per match is out of range.</value>
+    <value>Max per Match is out of range.</value>
   </data>
 </root>
