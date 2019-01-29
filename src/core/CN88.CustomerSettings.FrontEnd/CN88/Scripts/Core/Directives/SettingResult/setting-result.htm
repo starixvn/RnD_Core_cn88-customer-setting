@@ -19,7 +19,7 @@
                 <div class="msg__main-message">{{settingResult.message}}</div>
                 <div class="msg__sub-message"
                      data-ng-if="settingResult.messages"
-                     data-ng-repeat="message in settingResult.messages">
+                     data-ng-repeat="message in settingResult.messages track by $index">
                     {{message}}
                 </div>
             </div>
