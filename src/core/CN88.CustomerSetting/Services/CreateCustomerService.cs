@@ -93,8 +93,7 @@
             }
 
             var settingTypeService = settingTypeServiceFactory.GetInstance(settingType);
-
-            return settingTypeService.TranslateResultMessage(
+            var settingResult = settingTypeService.TranslateResultMessage(
                 new SettingResult(
                     result.Code,
                     result.Message,
@@ -107,6 +106,8 @@
                 string.Empty,
                 settingType.SettingLevel,
                 settingContext.Language);
+
+            return new UpdateSettingResult(new List<SettingResult> { settingResult });
         }
 
         private Dictionary<string, object> GetCreateNewCustomerParams(
