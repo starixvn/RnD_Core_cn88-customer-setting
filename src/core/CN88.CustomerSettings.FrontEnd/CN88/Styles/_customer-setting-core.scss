@@ -118,6 +118,7 @@ select.setting-field {
         @include border-radius(2 * $border-radius);
         @include opacity(1);
         color: $tooltip-text-color;
+        font-weight: normal;
         line-height: 1.5rem;
         margin-bottom: 12px;
         max-width: 300px;
@@ -464,8 +465,20 @@ select.setting-field {
         cursor: pointer;
     }
 
+    &--warning {
+        background-position: -3px -67px;
+    }
+
+    &--error {
+        background-position: -3px -24px;
+    }
+
     &--info {
         background-position: -3px -3px;
+    }
+
+    &--margin-left {
+        margin-left: 5px;
     }
 }
 

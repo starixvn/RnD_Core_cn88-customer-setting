@@ -357,6 +357,7 @@ select.setting-field {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
     opacity: 1;
     color: #333;
+    font-weight: normal;
     line-height: 1.5rem;
     margin-bottom: 12px;
     max-width: 300px;
@@ -544,8 +545,14 @@ select.setting-field {
   width: 20px; }
   .icon--command {
     cursor: pointer; }
+  .icon--warning {
+    background-position: -3px -67px; }
+  .icon--error {
+    background-position: -3px -24px; }
   .icon--info {
     background-position: -3px -3px; }
+  .icon--margin-left {
+    margin-left: 5px; }
 
 .msg-container {
   border: 1px solid #d9d9d9;
@@ -876,14 +883,6 @@ select.setting-field {
   .setting-type-1 .sub-header__title {
     margin-right: 20px; }
 
-.setting-type-1 .master .sub-header {
-  border-color: #276443;
-  color: #209656; }
-
-.setting-type-1 .agent .sub-header {
-  border-color: #516e8f;
-  color: #2267b6; }
-
 .setting-type-1 .general-data .upline-username {
   margin-right: 10px; }
 
@@ -907,6 +906,11 @@ select.setting-field {
   margin: 0 10px; }
   .setting-type-1 .position-taking .position-taking-constraint__value {
     font-weight: bold; }
+
+.setting-type-1 .position-taking .msg--pt-effective-date {
+  background-color: #ffe8e8;
+  margin: 10px 25px;
+  padding: 4px 0; }
 
 .setting-type-1 .icon--valid-username {
   background-position: -3px -108px; }

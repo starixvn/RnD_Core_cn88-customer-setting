@@ -17,7 +17,7 @@
             </div>
             <div class="row">
                 <label class="w40-percent">
-                    <span>{{::('Credit' | settingType1Label)}}</span>
+                    <span>{{::('Credits' | settingType1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
                 <div class="w60-percent">
@@ -38,7 +38,7 @@
         <div data-ng-if="customerLevel !== avaiCustomerLevels.super">
             <div class="row">
                 <label class="w40-percent">
-                    <span>{{::('Credit' | settingType1Label)}}</span>
+                    <span>{{::('Credits' | settingType1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
                 <div class="w60-percent">
@@ -64,7 +64,7 @@
                 <label class="w60-percent">{{accountDetail.currency.name}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('Credit' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Credits' | settingType1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label>
             </div>
             <div class="row">
@@ -74,7 +74,7 @@
         </div>
         <div data-ng-if="customerLevel !== avaiCustomerLevels.super">
             <div class="row">
-                <label class="w40-percent">{{::('Credit' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Credits' | settingType1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label>
             </div>
             <div class="row">

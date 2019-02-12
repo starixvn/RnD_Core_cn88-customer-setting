@@ -1,12 +1,9 @@
 ﻿@import "../other";
 @import "../variables";
 
-$sub-header-super-color: #97141e;
-$sub-header-border-super-color: #67151b;
-$sub-header-master-color: #209656;
-$sub-header-border-master-color: #276443;
-$sub-header-agent-color: #2267b6;
-$sub-header-border-agent-color: #516e8f;
+$sub-header-color: #97141e;
+$sub-header-border-color: #67151b;
+$pt-effective-date-warning-bg-color: $tooltip-error-bg-color;
 
 .setting-type-1 {
     .col {
@@ -30,8 +27,8 @@ $sub-header-border-agent-color: #516e8f;
     }
 
     .sub-header {
-        border-bottom: 2 * $border-size solid $sub-header-border-super-color;
-        color: $sub-header-super-color;
+        border-bottom: 2 * $border-size solid $sub-header-border-color;
+        color: $sub-header-color;
         font-weight: bold;
         margin-bottom: 15px;
         padding-left: 15px;
@@ -39,16 +36,6 @@ $sub-header-border-agent-color: #516e8f;
         &__title {
             margin-right: 20px;
         }
-    }
-
-    .master .sub-header {
-        border-color: $sub-header-border-master-color;
-        color: $sub-header-master-color;
-    }
-
-    .agent .sub-header {
-        border-color: $sub-header-border-agent-color;
-        color: $sub-header-agent-color;
     }
 
     .general-data {
@@ -88,6 +75,12 @@ $sub-header-border-agent-color: #516e8f;
             &__value {
                 font-weight: bold;
             }
+        }
+
+        .msg--pt-effective-date {
+            background-color: $pt-effective-date-warning-bg-color;
+            margin: 10px 25px;
+            padding: 4px 0;
         }
     }
 

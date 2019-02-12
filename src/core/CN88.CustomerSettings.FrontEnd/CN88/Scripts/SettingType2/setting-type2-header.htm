@@ -7,7 +7,21 @@
     </div>
     <div class="block__lbl w50-percent" data-ng-if="customerLevel === avaiCustomerLevels.member">{{::('MemberCommission' | settingType2Label)}}</div>
     <div class="w50-percent">
-        <div class="block__lbl w50-percent">{{::('MaxBet' | settingType2Label)}}</div>
-        <div class="block__lbl block__lbl--no-border w50-percent">{{::('MaxPerMatch' | settingType2Label)}}</div>
+        <div class="block__lbl w50-percent">
+            <span>{{::('MaxPerMatch' | settingType2Label)}}</span>
+            <span class="icon icon--command icon--info icon--margin-left"
+                  data-tooltip="{{'MaxPerMatchNote' | settingType2Message}}"
+                  data-tooltip-type="warning"
+                  data-inner-tooltip="true">
+            </span>
+        </div>
+        <div class="block__lbl block__lbl--no-border w50-percent">
+            <span>{{::('MaxBet' | settingType2Label)}}</span>
+            <span class="icon icon--command icon--info icon--margin-left"
+                  data-tooltip="{{'MaxBetNote' | settingType2Message}}"
+                  data-tooltip-type="warning"
+                  data-inner-tooltip="true">
+            </span>
+        </div>
     </div>
 </div>
