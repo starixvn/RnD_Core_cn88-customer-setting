@@ -72,7 +72,7 @@ module.exports = function (configs) {
     gulp.task("product:js:combine", ["product:scripts:compile"], function () {
         var productsConfigs = require(path.join(process.cwd(), configs.gulpDir, configs.configFiles.productsConfig));
         var libPaths = [
-            path.join(process.cwd(), configs.bower, "angular/angular.js"),
+            path.join(process.cwd(), configs.nodeModules, "angular/angular.js"),
             path.join(process.cwd(), configs.root, "Libraries/**/*.js")
         ];
         var streams = [];
