@@ -43,7 +43,7 @@ module CustomerSetting {
         }];
 
         public link: ng.IDirectiveLinkFn = (scope: ITooltipScope, element: ng.IAugmentedJQuery) => {
-            var template: {} = this.$templateCache.get("Directives/Tooltip/tooltip.htm");
+            var template: {} = this.$templateCache.get("Directives/Tooltip/tooltip.html");
             var tooltip: ng.IAugmentedJQuery = angular.element(template);
 
             var debounceResize: any = debounce(() => {

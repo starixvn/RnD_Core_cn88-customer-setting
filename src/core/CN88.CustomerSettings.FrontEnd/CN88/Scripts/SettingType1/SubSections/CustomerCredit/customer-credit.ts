@@ -9,7 +9,7 @@ module CustomerSetting {
     }
 
     class CustomerCreditDirective extends SubSectionBaseDirective {
-        public templateUrl: string = "SubSections/CustomerCredit/customer-credit.htm";
+        public templateUrl: string = "customer-credit.htm";
 
         public get scope(): any {
             return {

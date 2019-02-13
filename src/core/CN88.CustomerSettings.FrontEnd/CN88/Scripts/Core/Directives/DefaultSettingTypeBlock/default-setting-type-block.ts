@@ -15,7 +15,7 @@ module CustomerSetting {
     }
 
     export class DefaultSettingTypeGroupingDirective extends SettingTypeBaseDirective {
-        public templateUrl: string = "Directives/DefaultSettingTypeBlock/default-setting-type-block.htm";
+        public templateUrl: string = "default-setting-type-block.htm";
 
         public link: ng.IDirectiveLinkFn = (scope: IDefaultSettingTypeDirectiveScope) => {
             this.linkInternal(scope);

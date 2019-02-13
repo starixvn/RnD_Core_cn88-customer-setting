@@ -6,11 +6,12 @@ module.exports = function (configs) {
     var concat = require("gulp-concat");
     var gulp = require("gulp");
     var merge = require("merge-stream");
+    var embedTemplates = require("gulp-angular-embed-templates");
+    var templateCache = require("gulp-angular-templatecache");
     var minifyHTML = require("gulp-minify-html");
     var path = require("path");
     var rename = require("gulp-rename");
     var runSequence = require("run-sequence");
-    var templateCache = require("gulp-angular-templatecache");
     var ts = require("gulp-typescript");
     var uglify = require("gulp-uglify");
 
@@ -39,18 +40,18 @@ module.exports = function (configs) {
                 path.join(sourceDir, "Core/**/*.ts")
             ];
             var htmSources = [
-                path.join(sourceDir, "Core/**/*.htm"),
-                path.join(sourceDir, "!customer-setting.htm")
+                path.join(sourceDir, "Core/**/*.html")
             ];
 
             if (prodConfig.settingTypes.length > 0) {
                 prodConfig.settingTypes.forEach(function (item) {
                     tsSources.push(path.join(sourceDir, "SettingType" + item, "**/*.ts"));
-                    htmSources.push(path.join(sourceDir, "SettingType" + item, "**/*.htm"));
+                    htmSources.push(path.join(sourceDir, "SettingType" + item, "**/*.html"));
                 });
             }
 
             gulp.src(tsSources)
+                .pipe(embedTemplates({ sourceType: "ts", minimize: { empty: true } }))
                 .pipe(ts(tsCompilingConfig))
                 .pipe(concat("1js-" + prodConfig.productId + ".js"))
                 .pipe(gulp.dest(productTempDir));

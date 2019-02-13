@@ -20,7 +20,7 @@ module CustomerSetting {
             };
         }
 
-        public templateUrl: string = "Directives/SettingResult/setting-result.htm";
+        public templateUrl: string = "setting-result.htm";
 
         public link: ng.IDirectiveLinkFn = (scope: ISettingResultScope) => {
             scope.$watch("result", (result: UpdatingSettingResult) => {

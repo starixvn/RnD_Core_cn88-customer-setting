@@ -25,7 +25,7 @@ module CustomerSetting {
             };
         }
 
-        public templateUrl: string = "SubSections/GeneralData/UsernameSuffix/username-suffix.htm";
+        public templateUrl: string = "username-suffix.htm";
 
         public link: ng.IDirectiveLinkFn = (scope: IUsernameSuffixScope) => {
             scope.range = this.generateSuffixRange();

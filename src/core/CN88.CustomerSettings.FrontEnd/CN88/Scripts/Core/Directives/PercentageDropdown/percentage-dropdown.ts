@@ -12,6 +12,7 @@ module CustomerSetting {
         step: number;
         factor: number;
         precision: number;
+        placeholder: string;
         autoRefresh: boolean;
         range: number[];
     }
@@ -20,7 +21,7 @@ module CustomerSetting {
         public static $inject: string[] = ["valueRangeService"];
 
         public replace: boolean = true;
-        public templateUrl: string = "Directives/PercentageDropdown/percentage-dropdown.htm";
+        public templateUrl: string = "percentage-dropdown.htm";
 
         public restrict: string = "E";
 
@@ -31,6 +32,7 @@ module CustomerSetting {
                 max: "=",
                 step: "=",
                 precision: "=",
+                placeholder: "@",
                 autoRefresh: "="
             };
         }

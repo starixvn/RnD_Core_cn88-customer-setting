@@ -15,7 +15,7 @@ module CustomerSetting {
     class GeneralDataDirective extends SubSectionBaseDirective {
         public static $inject: string[] = ["settingTypesSharedValuesService", "crossingSettingTypesServiceBus"];
 
-        public templateUrl: string = "SubSections/GeneralData/general-data.htm";
+        public templateUrl: string = "general-data.htm";
 
         public link: ng.IDirectiveLinkFn = (scope: IGeneralDataScope) => {
             this.linkInternal(scope);

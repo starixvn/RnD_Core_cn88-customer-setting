@@ -27,7 +27,7 @@ module CustomerSetting {
 
         public replace: boolean = true;
 
-        public templateUrl: string = "SubSections/GeneralData/UsernameSuffix/username-suffix-group.htm";
+        public templateUrl: string = "username-suffix-group.htm";
 
         public link: ng.IDirectiveLinkFn = (scope: IUsernameSuffixGroupScope) => {
             scope.selectedSuffixes = scope.accountDetail.usernameSuffixes.slice();

@@ -38,8 +38,8 @@ module CustomerSetting {
         public link: ng.IDirectiveLinkFn = (scope: ISettingType2Scope) => {
             this.linkInternal(scope);
 
-            scope.headerTemplateUrl = "setting-type2-header.htm";
-            scope.valueTemplateUrl = "setting-type2-value.htm";
+            scope.headerTemplateUrl = "setting-type2-header.html";
+            scope.valueTemplateUrl = "setting-type2-value.html";
             scope.cssClass = "full-width";
             scope.settingTypeName = this.settingType2ResourceService.getLabel("CommissionAndBetLimit");
             scope.availableLayoutTypes = LayoutType;

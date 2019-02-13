@@ -907,6 +907,11 @@ select.setting-field {
   .setting-type-1 .position-taking .position-taking-constraint__value {
     font-weight: bold; }
 
+.setting-type-1 .position-taking .msg--pt-effective-date {
+  background-color: #ffe8e8;
+  margin: 10px 25px;
+  padding: 4px 0; }
+
 .setting-type-1 .icon--valid-username {
   background-position: -3px -108px; }
 

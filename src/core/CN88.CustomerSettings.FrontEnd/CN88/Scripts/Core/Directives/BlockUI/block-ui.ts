@@ -13,7 +13,7 @@ module CustomerSetting {
 
         public replace: boolean = true;
 
-        public templateUrl: string = "Directives/BlockUI/block-ui.htm";
+        public templateUrl: string = "block-ui.htm";
 
         public link: ng.IDirectiveLinkFn = (scope: IBlockUiDirectiveScope) => {
             this.blockUiService.setup(scope);
