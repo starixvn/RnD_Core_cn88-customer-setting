@@ -2,7 +2,7 @@
 
 var app: ng.IModule = angular.module("customerSetting", []);
 
-app.config(['$compileProvider', ($compileProvider: ng.ICompileProvider) => {
+app.config(["$compileProvider", ($compileProvider: ng.ICompileProvider) => {
     $compileProvider.debugInfoEnabled(false);
 }]);
 

@@ -8,9 +8,11 @@ module CustomerSetting {
 
     export class SuperAccountDetail extends AccountDetail {
         public superMinPT: number;
+        public currentSuperMinPT: number;
         public minSuperMinPT: number;
         public maxSuperMinPT: number;
         public superMaxPT: number;
+        public currentSuperMaxPT: number;
         public minSuperMaxPT: number;
         public maxSuperMaxPT: number;
         public currencies: ICurrency[];
@@ -27,8 +29,10 @@ module CustomerSetting {
                 super(accountDetail, backup, isNew, customerLevel, hashKey);
 
                 this.superMinPT = accountDetail.superMinPT;
+                this.currentSuperMinPT = accountDetail.currentSuperMinPT;
                 this.minSuperMinPT = accountDetail.minSuperMinPT;
                 this.maxSuperMinPT = accountDetail.maxSuperMinPT;
+                this.currentSuperMaxPT = accountDetail.currentSuperMaxPT;
                 this.superMaxPT = accountDetail.superMaxPT;
                 this.minSuperMaxPT = accountDetail.minSuperMaxPT;
                 this.maxSuperMaxPT = accountDetail.maxSuperMaxPT;
@@ -36,10 +40,21 @@ module CustomerSetting {
                 this.currency = accountDetail.currency;
             }
 
+            this.ignoredProperties.push("currentSuperMinPT");
+            this.ignoredProperties.push("minSuperMinPT");
+            this.ignoredProperties.push("maxSuperMinPT");
+            this.ignoredProperties.push("currentSuperMaxPT");
+            this.ignoredProperties.push("minSuperMaxPT");
+            this.ignoredProperties.push("maxSuperMaxPT");
             this.ignoredProperties.push("currencies");
 
             if (!this.isNew) {
                 this.ignoredProperties.push("currency");
+            }
+
+            if (this.isPTReadOnly) {
+                this.ignoredProperties.push("superMinPT");
+                this.ignoredProperties.push("superMaxPT");
             }
         }
 

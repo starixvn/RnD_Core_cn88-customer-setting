@@ -7,9 +7,11 @@ module CustomerSetting {
 
     export class AgentAccountDetail extends AccountDetail {
         public masterPT: number;
+        public currentMasterPT: number;
         public minMasterPT: number;
         public maxMasterPT: number;
         public agentPT: number;
+        public currentAgentPT: number;
         public minAgentPT: number;
         public maxAgentPT: number;
         public minAllowedPT: number;
@@ -26,13 +28,29 @@ module CustomerSetting {
                 super(accountDetail, backup, isNew, customerLevel, hashKey);
 
                 this.masterPT = accountDetail.masterPT;
+                this.currentMasterPT = accountDetail.currentMasterPT;
                 this.minMasterPT = accountDetail.minMasterPT;
                 this.maxMasterPT = accountDetail.maxMasterPT;
                 this.agentPT = accountDetail.agentPT;
+                this.currentAgentPT = accountDetail.currentAgentPT;
                 this.minAgentPT = accountDetail.minAgentPT;
                 this.maxAgentPT = accountDetail.maxAgentPT;
                 this.minAllowedPT = accountDetail.minAllowedPT;
                 this.maxAllowedPT = accountDetail.maxAllowedPT;
+
+                this.ignoredProperties.push("currentMasterPT");
+                this.ignoredProperties.push("minMasterPT");
+                this.ignoredProperties.push("maxMasterPT");
+                this.ignoredProperties.push("currentAgentPT");
+                this.ignoredProperties.push("minAgentPT");
+                this.ignoredProperties.push("maxAgentPT");
+                this.ignoredProperties.push("minAllowedPT");
+                this.ignoredProperties.push("maxAllowedPT");
+
+                if (this.isPTReadOnly) {
+                    this.ignoredProperties.push("masterPT");
+                    this.ignoredProperties.push("agentPT");
+                }
             }
         }
 

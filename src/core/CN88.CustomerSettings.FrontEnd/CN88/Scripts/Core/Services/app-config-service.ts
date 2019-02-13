@@ -7,6 +7,14 @@ module CustomerSetting {
     export class AppConfigService {
         public static $inject: string[] = ["$window"];
 
+        public get shortDateFormat(): string {
+            return "yyyy-MM-dd";
+        }
+
+        public get dateTimeFormat(): string {
+            return "yyyy-MM-dd hh:mm:ss";
+        }
+
         public get thousandSeparator(): string {
             return ",";
         }
@@ -54,15 +62,15 @@ module CustomerSetting {
         }
 
         public getQueryPath(): string {
-            return this.applicationPath + "viewCN88CustomerSetting/querySetting?";
+            return this.applicationPath + "ViewCN88CustomerSetting/QuerySetting";
         }
 
         public getCreatePath(): string {
-            return this.applicationPath + "createCN88Customer/create";
+            return this.applicationPath + "CreateCN88Customer/Create";
         }
 
         public getUpdatePath(): string {
-            return this.applicationPath + "updateCN88CustomerSetting/update";
+            return this.applicationPath + "UpdateCN88CustomerSetting/Update";
         }
 
         public buildPath(relativePath: string): string {

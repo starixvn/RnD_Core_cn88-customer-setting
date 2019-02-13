@@ -26,8 +26,7 @@ module.exports = function (configs) {
     var destinationDir = path.join(process.cwd(), configs.root, configs.publish);
     var tempDir = path.join(process.cwd(), configs.root, "Temp");
     var styleResources = [
-        path.join(process.cwd(), configs.root, configs.styles, "customer-setting.{*.map,css,*.css}"),
-        path.join(process.cwd(), configs.root, configs.styles, "flexbox-patch.{*.map,css,*.css}")
+        path.join(process.cwd(), configs.root, configs.styles, "customer-setting.{*.map,css,*.css}")
     ];
 
     gulp.task("product:scripts:compile", function () {

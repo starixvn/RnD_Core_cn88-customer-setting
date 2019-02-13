@@ -20,6 +20,8 @@ module CustomerSetting {
         public maxCredit: number;
         public usernameSuffixes: string[];
         public uplineUsername: string;
+        public isPTReadOnly: boolean;
+        public ptEffectiveTime: Date;
 
         protected hashKey: string;
 
@@ -47,12 +49,18 @@ module CustomerSetting {
                 this.maxCredit = accountDetail.maxCredit;
                 this.usernameSuffixes = accountDetail.usernameSuffixes;
                 this.uplineUsername = accountDetail.uplineUsername;
+                this.isPTReadOnly = accountDetail.isPTReadOnly;
+                this.ptEffectiveTime = accountDetail.ptEffectiveTime;
             }
 
             this.ignoredProperties = this.ignoredProperties.concat([
                 "confirmPassword",
                 "usernameSuffixes",
+                "minCredit",
+                "maxCredit",
                 "uplineUsername",
+                "isPTReadOnly",
+                "ptEffectiveTime",
                 "hashKey"]);
 
             if (!this.isNew) {

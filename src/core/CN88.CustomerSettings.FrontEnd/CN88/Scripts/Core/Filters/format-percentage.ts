@@ -9,7 +9,7 @@ module CustomerSetting {
         var numberFilter: Function = $filter("number");
 
         return (value: number, precision: number = defaultPrecision) => {
-            return numberFilter(value, precision) + "%";
+            return (value === undefined || value === null || isNaN(value)) ? "" : numberFilter(value, precision) + "%";
         };
     }
 

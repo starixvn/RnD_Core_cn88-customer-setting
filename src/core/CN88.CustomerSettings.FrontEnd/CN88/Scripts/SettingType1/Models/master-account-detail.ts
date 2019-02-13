@@ -7,6 +7,7 @@ module CustomerSetting {
 
     export class MasterAccountDetail extends AccountDetail {
         public superPT: number;
+        public currentSuperPT: number;
         public minSuperPT: number;
         public maxSuperPT: number;
 
@@ -21,8 +22,17 @@ module CustomerSetting {
                 super(accountDetail, backup, isNew, customerLevel, hashKey);
 
                 this.superPT = accountDetail.superPT;
+                this.currentSuperPT = accountDetail.currentSuperPT;
                 this.minSuperPT = accountDetail.minSuperPT;
                 this.maxSuperPT = accountDetail.maxSuperPT;
+
+                this.ignoredProperties.push("currentSuperPT");
+                this.ignoredProperties.push("minSuperPT");
+                this.ignoredProperties.push("maxSuperPT");
+
+                if (this.isPTReadOnly) {
+                    this.ignoredProperties.push("superPT");
+                }
             }
         }
 
