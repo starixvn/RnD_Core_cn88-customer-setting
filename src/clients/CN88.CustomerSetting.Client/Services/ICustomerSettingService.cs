@@ -14,5 +14,7 @@
         IRestResponse QueryCustomerSettingTemplate();
 
         IRestResponse CheckExistedUsername(string username);
+
+        IRestResponse GetMainShareHolderSuggestionNames();
     }
 }

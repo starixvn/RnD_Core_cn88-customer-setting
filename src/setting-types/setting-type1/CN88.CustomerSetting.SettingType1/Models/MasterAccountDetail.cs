@@ -5,7 +5,9 @@
         private const string PTXmlFormat
             = "<PT {0} SuperPT=\"{1}\" />";
 
-        public decimal SuperPT { get; set; }
+        public decimal? SuperPT { get; set; }
+
+        public decimal CurrentSuperPT { get; set; }
 
         public decimal MinSuperPT { get; set; }
 

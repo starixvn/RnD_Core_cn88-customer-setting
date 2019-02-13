@@ -16,7 +16,7 @@
             = "<Comm {0} ValueId=\"{1}\"/>";
 
         private const string BetSettingXmlFormat
-            = "<BetSetting {0} MaxBet=\"{1}\" MaxPerMatch=\"{2}\"/>";
+            = "<BetSetting {0} MaxBet=\"{1}\" MaxPerEvent=\"{2}\"/>";
 
         public IEnumerable<CommissionGroup> CommissionGroups { get; set; }
 
@@ -26,11 +26,11 @@
 
         public decimal MaxBet { get; set; }
 
-        public decimal MaxPerMatch { get; set; }
+        public decimal MaxPerEvent { get; set; }
 
-        public decimal MaxMaxPerMatch { get; set; }
+        public decimal MaxMaxPerEvent { get; set; }
 
-        public decimal MinMaxPerMatch { get; set; }
+        public decimal MinMaxPerEvent { get; set; }
 
         public decimal MinComm { get; set; }
 
@@ -74,6 +74,6 @@
                 BetSettingXmlFormat,
                 base.ToXml(),
                 MaxBet,
-                MaxPerMatch);
+                MaxPerEvent);
     }
 }

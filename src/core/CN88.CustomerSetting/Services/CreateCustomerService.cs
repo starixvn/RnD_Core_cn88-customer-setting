@@ -12,6 +12,7 @@
     using CN88.CustomerSetting.Models.Requests;
     using CN88.CustomerSetting.Models.Results;
     using CN88.CustomerSetting.SpParams.Commands;
+    using CN88.CustomerSetting.SpParams.Criteria;
     using Fanex.Data.Repository;
     using Fanex.Logging;
 
@@ -22,6 +23,8 @@
             CreateCustomerCommand command);
 
         Task<IResult> IsUsernameExisted(string username);
+
+        Task<IEnumerable<string>> GetMainShareHolderSuggestionNames();
     }
 
     public class CreateCustomerServiceImpl : CreateCustomerService
@@ -161,5 +164,15 @@
 
             logger.Error(ex.Message, ex);
         }
+
+        public async Task<IEnumerable<string>> GetMainShareHolderSuggestionNames()
+            => await Task.FromResult(
+                new List<string>
+                {
+                    "ShareHolderName1",
+                    "ShareHolderName2",
+                    "ShareHolderName3"
+                })
+            .ConfigureAwait(false);
     }
 }

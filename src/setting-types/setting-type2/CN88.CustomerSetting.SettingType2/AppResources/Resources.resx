@@ -124,37 +124,37 @@
     <value>Commission &amp; Bet Setting are updated successfully.</value>
   </data>
   <data name="Msg_10003" xml:space="preserve">
-    <value>Invalid Min bet/ Max bet/ Max per match.</value>
+    <value>Invalid Min bet/ Max per Bet/ Max per Event.</value>
   </data>
   <data name="Msg_10005" xml:space="preserve">
-    <value>Min bet must be less than or equal to max bet and max bet must be less than or equal to max bet per match.</value>
+    <value>Min bet must be less than or equal to Max per Bet and Max per Bet must be less than or equal to Max per Bet per match.</value>
   </data>
   <data name="Msg_10006" xml:space="preserve">
     <value>Min bet must be greater than or equal to Agent min bet.</value>
   </data>
   <data name="Msg_10007" xml:space="preserve">
-    <value>Max bet must be less than or equal to Agent max bet.</value>
+    <value>Max per Bet must be less than or equal to Agent Max per Bet.</value>
   </data>
   <data name="Msg_10008" xml:space="preserve">
-    <value>Max Per Match must be less than or equal to Agent Max Per Match.</value>
+    <value>Max per Event must be less than or equal to Agent Max per Event.</value>
   </data>
   <data name="Msg_10016" xml:space="preserve">
     <value>Min bet must be greater than or equal to Super Agent min bet.</value>
   </data>
   <data name="Msg_10017" xml:space="preserve">
-    <value>Max bet must be less than or equal to Super Agent max bet.</value>
+    <value>Max per Bet must be less than or equal to Super Agent Max per Bet.</value>
   </data>
   <data name="Msg_10018" xml:space="preserve">
-    <value>Max Per Match must be less than or equal to Super Agent Max Per Match.</value>
+    <value>Max per Event must be less than or equal to Super Agent Max per Event.</value>
   </data>
   <data name="Msg_10019" xml:space="preserve">
     <value>Min bet must be greater than or equal to Master Agent min bet.</value>
   </data>
   <data name="Msg_10020" xml:space="preserve">
-    <value>Max bet must be less than or equal to Master Agent max bet.</value>
+    <value>Max per Bet must be less than or equal to Master Agent Max per Bet.</value>
   </data>
   <data name="Msg_10021" xml:space="preserve">
-    <value>Max Per Match must be less than or equal to Master Agent Max Per Match.</value>
+    <value>Max per Event must be less than or equal to Master Agent Max per Event.</value>
   </data>
   <data name="Msg_1" xml:space="preserve">
     <value>Invalid Commission Rate.</value>
@@ -163,15 +163,15 @@
     <value>Commission is out of range.</value>
   </data>
   <data name="Mgs_10040" xml:space="preserve">
-    <value>Wrong Max Bet/ Max per Match.</value>
+    <value>Wrong Max per Bet/ Max per Event.</value>
   </data>
   <data name="Msg_10041" xml:space="preserve">
-    <value>Max Bet must be less than Max per Match.</value>
+    <value>Max per Bet must be less than Max per Event.</value>
   </data>
   <data name="Msg_10042" xml:space="preserve">
-    <value>Max Bet is out of range.</value>
+    <value>Max per Bet is out of range.</value>
   </data>
   <data name="Msg_10043" xml:space="preserve">
-    <value>Max per Match is out of range.</value>
+    <value>Max per Event is out of range.</value>
   </data>
 </root>

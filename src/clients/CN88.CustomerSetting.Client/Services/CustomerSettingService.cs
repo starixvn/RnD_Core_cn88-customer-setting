@@ -10,7 +10,7 @@
     internal class CustomerSettingService : ICustomerSettingService
     {
         private const string LanguageKey = "language";
-        private readonly IRestClient _restClient;
+        private readonly IRestClient restClient;
 
         internal CustomerSettingService()
             : this(null)
@@ -19,7 +19,7 @@
 
         internal CustomerSettingService(IRestClient restClient)
         {
-            _restClient = restClient ?? GetRestClient();
+            this.restClient = restClient ?? GetRestClient();
         }
 
         public IRestResponse QueryCustomerSetting(QuerySettingRequest query)
@@ -35,7 +35,7 @@
 
             request.AddJsonBody(query);
 
-            return _restClient.Execute(request);
+            return restClient.Execute(request);
         }
 
         private void SetLanguage(RestRequest restRequest, string language)
@@ -56,7 +56,7 @@
             request.AddJsonBody(update);
             request.Timeout = CN88CustomerSettingConfiguration.Settings.UpdateSettingTimeout;
 
-            IRestResponse restReponse = _restClient.Execute(request);
+            IRestResponse restReponse = restClient.Execute(request);
 
             return UpdateTimeOutResponse(restReponse);
         }
@@ -76,7 +76,7 @@
         {
             IRestRequest request = new RestRequest("/customersetting/gettemplate", Method.GET);
 
-            return _restClient.Execute(request);
+            return restClient.Execute(request);
         }
 
         private IRestClient GetRestClient()
@@ -102,7 +102,7 @@
             request.AddJsonBody(create);
             request.Timeout = CN88CustomerSettingConfiguration.Settings.UpdateSettingTimeout;
 
-            IRestResponse restReponse = _restClient.Execute(request);
+            IRestResponse restReponse = restClient.Execute(request);
 
             return UpdateTimeOutResponse(restReponse);
         }
@@ -113,7 +113,14 @@
 
             request.AddParameter("username", username);
 
-            return _restClient.Execute(request);
+            return restClient.Execute(request);
+        }
+
+        public IRestResponse GetMainShareHolderSuggestionNames()
+        {
+            IRestRequest request = new RestRequest("/customersetting/GetMainShareHolderSuggestionNames", Method.GET);
+
+            return restClient.Execute(request);
         }
     }
 }

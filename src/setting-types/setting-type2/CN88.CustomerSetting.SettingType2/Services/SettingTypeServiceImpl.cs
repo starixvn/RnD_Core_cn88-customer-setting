@@ -103,9 +103,9 @@
                 MaxMaxBet = firstSettingItemDto.MaxMaxBet,
                 MinMaxBet = firstSettingItemDto.MinMaxBet,
 
-                MaxPerMatch = firstSettingItemDto.MaxPerMatch,
-                MaxMaxPerMatch = firstSettingItemDto.MaxMaxPerMatch,
-                MinMaxPerMatch = firstSettingItemDto.MinMaxPerMatch,
+                MaxPerEvent = firstSettingItemDto.MaxPerEvent,
+                MaxMaxPerEvent = firstSettingItemDto.MaxMaxPerEvent,
+                MinMaxPerEvent = firstSettingItemDto.MinMaxPerEvent,
 
                 CommissionGroups = settingItemDto.Select(
                     dto => new CommissionGroup

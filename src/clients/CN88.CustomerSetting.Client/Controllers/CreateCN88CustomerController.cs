@@ -26,21 +26,37 @@
         public ContentResult Create(CreateCustomerRequest request)
         {
             SetActorInformation(request);
-            IRestResponse updateResult = _customerSettingService.CreateCustomer(request);
-            Response.StatusCode = (int)updateResult.StatusCode;
-            Response.TrySkipIisCustomErrors = true;
+            IRestResponse result = _customerSettingService.CreateCustomer(request);
 
-            return Content(updateResult.Content);
+            ModifyResponse(result);
+
+            return Content(result.Content);
         }
 
         [HttpGet, CustomerSettingAuth(IsUpdate = false)]
         public ContentResult CheckExistedUsername(string username)
         {
             IRestResponse result = _customerSettingService.CheckExistedUsername(username);
-            Response.StatusCode = (int)result.StatusCode;
-            Response.TrySkipIisCustomErrors = true;
+
+            ModifyResponse(result);
 
             return Content(result.Content);
+        }
+
+        [HttpGet, CustomerSettingAuth(IsUpdate = false)]
+        public ContentResult GetMainShareHolderSuggestionNames()
+        {
+            IRestResponse result = _customerSettingService.GetMainShareHolderSuggestionNames();
+
+            ModifyResponse(result);
+
+            return Content(result.Content);
+        }
+
+        private void ModifyResponse(IRestResponse result)
+        {
+            Response.StatusCode = (int)result.StatusCode;
+            Response.TrySkipIisCustomErrors = true;
         }
 
         private static void SetActorInformation(CreateCustomerRequest request)

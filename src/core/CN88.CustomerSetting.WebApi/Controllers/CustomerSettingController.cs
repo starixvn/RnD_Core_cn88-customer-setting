@@ -1,5 +1,6 @@
 ﻿namespace CN88.CustomerSetting.WebApi.Controllers
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Results;
@@ -51,6 +52,10 @@
         [HttpGet]
         public Task<IResult> CheckExistedUsername(string username)
             => createCustomerService.IsUsernameExisted(username);
+
+        [HttpGet]
+        public Task<IEnumerable<string>> GetMainShareHolderSuggestionNames()
+            => createCustomerService.GetMainShareHolderSuggestionNames();
 
         [HttpGet]
         public string GetTemplate()

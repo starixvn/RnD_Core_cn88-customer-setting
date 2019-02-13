@@ -1,5 +1,6 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Models
 {
+    using System;
     using System.Collections.Generic;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Results;
@@ -37,6 +38,10 @@
         public IEnumerable<SpreadGroup> SpreadGroups { get; set; }
 
         public IEnumerable<Currency> Currencies { get; set; }
+
+        public bool IsPTReadOnly { get; set; }
+
+        public DateTime PTEffectiveTime { get; set; }
     }
 
     public class MemberAccountDetail : AccountDetailSettingItem

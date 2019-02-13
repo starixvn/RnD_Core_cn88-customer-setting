@@ -12,11 +12,11 @@
 
         public decimal MaxBet { get; set; }
 
-        public decimal MaxPerMatch { get; set; }
+        public decimal MaxPerEvent { get; set; }
 
-        public decimal MaxMaxPerMatch { get; set; }
+        public decimal MaxMaxPerEvent { get; set; }
 
-        public decimal MinMaxPerMatch { get; set; }
+        public decimal MinMaxPerEvent { get; set; }
 
         public decimal MinComm { get; set; }
 

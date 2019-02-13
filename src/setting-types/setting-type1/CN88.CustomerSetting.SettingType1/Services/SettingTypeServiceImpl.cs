@@ -50,16 +50,11 @@
         public override async Task<SettingType> GetCustomerSettingType(
             ISettingContext settingContext,
             CustomerSettingQuery query)
-        {
-            if (query.IsCreateNew)
-            {
-                return await GetDefaultSettingForCreateNew(query).ConfigureAwait(false);
-            }
+            => query.IsCreateNew
+                ? await GetAccountDetailForCreateNew(query).ConfigureAwait(false)
+                : await GetAccountDetailForEdit(query).ConfigureAwait(false);
 
-            return await GetAccountDetail(query).ConfigureAwait(false);
-        }
-
-        private async Task<SettingType> GetAccountDetail(CustomerSettingQuery query)
+        private async Task<SettingType> GetAccountDetailForEdit(CustomerSettingQuery query)
         {
             var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.CustomerId, query.ProductId, false).ConfigureAwait(false);
             var customerInfo = (await DynamicRepository.GetAsync<CustomerInfoDto>(new GetGeneralInfoCriteria(query.CustomerLevel.Value, query.CustomerId)).ConfigureAwait(false))
@@ -89,7 +84,7 @@
             return CreateSettingType(settingItem);
         }
 
-        private async Task<SettingType> GetDefaultSettingForCreateNew(CustomerSettingQuery query)
+        private async Task<SettingType> GetAccountDetailForCreateNew(CustomerSettingQuery query)
         {
             var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.UplineId, query.ProductId, true).ConfigureAwait(false);
             var createCustomerInfo = await GetDefaultCreateCustomerInfo(query.CustomerLevel, query.UplineId).ConfigureAwait(false);

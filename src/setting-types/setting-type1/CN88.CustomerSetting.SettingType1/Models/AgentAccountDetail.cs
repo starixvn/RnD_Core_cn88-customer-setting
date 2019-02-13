@@ -9,13 +9,17 @@
 
         public decimal MaxAllowedPT { get; set; }
 
-        public decimal MasterPT { get; set; }
+        public decimal? MasterPT { get; set; }
+
+        public decimal CurrentMasterPT { get; set; }
 
         public decimal MinMasterPT { get; set; }
 
         public decimal MaxMasterPT { get; set; }
 
-        public decimal AgentPT { get; set; }
+        public decimal? AgentPT { get; set; }
+
+        public decimal CurrentAgentPT { get; set; }
 
         public decimal MinAgentPT { get; set; }
 

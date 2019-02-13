@@ -68,7 +68,7 @@
             Assert.AreEqual("D", firstSettingItem.CommissionGroups.ElementAt(3).Name);
             Assert.AreEqual(0.55m, firstSettingItem.CommissionGroups.ElementAt(3).Value);
             Assert.AreEqual(120, firstSettingItem.MaxBet);
-            Assert.AreEqual(1000, firstSettingItem.MaxPerMatch);
+            Assert.AreEqual(1000, firstSettingItem.MaxPerEvent);
             Assert.AreEqual(1, firstSettingItem.SportTypeId);
             Assert.AreEqual(1, firstSettingItem.BetTypeId);
             Assert.AreEqual(true, firstSettingItem.IsLive);
@@ -77,7 +77,7 @@
             Assert.AreEqual("C", secondSettingItem.CommissionGroups.ElementAt(2).Name);
             Assert.AreEqual(0.25m, secondSettingItem.CommissionGroups.ElementAt(2).Value);
             Assert.AreEqual(121, secondSettingItem.MaxBet);
-            Assert.AreEqual(10001, secondSettingItem.MaxPerMatch);
+            Assert.AreEqual(10001, secondSettingItem.MaxPerEvent);
             Assert.AreEqual(1, secondSettingItem.SportTypeId);
             Assert.AreEqual(1, secondSettingItem.BetTypeId);
             Assert.AreEqual(false, secondSettingItem.IsLive);
@@ -114,8 +114,8 @@
                 + "</ROOT>";
 
             var expectedBetSettingXlm = "<ROOT>"
-                + "<BetSetting SportType=\"1\" BetType=\"2\" IsLive=\"1\" MaxBet=\"111\" MaxPerMatch=\"2222\"/>"
-                + "<BetSetting SportType=\"1\" BetType=\"1\" IsLive=\"0\" MaxBet=\"222\" MaxPerMatch=\"3333\"/>"
+                + "<BetSetting SportType=\"1\" BetType=\"2\" IsLive=\"1\" MaxBet=\"111\" MaxPerEvent=\"2222\"/>"
+                + "<BetSetting SportType=\"1\" BetType=\"1\" IsLive=\"0\" MaxBet=\"222\" MaxPerEvent=\"3333\"/>"
                 + "</ROOT>";
 
             Assert.AreEqual(expectedCommXlm, createParams["commsetting"]);
@@ -158,8 +158,8 @@
 
             var expectedBetSettingXlm =
                   "<ROOT>"
-                    + "<BetSetting SportType=\"1\" BetType=\"2\" IsLive=\"1\" MaxBet=\"111\" MaxPerMatch=\"2222\"/>"
-                    + "<BetSetting SportType=\"1\" BetType=\"1\" IsLive=\"0\" MaxBet=\"222\" MaxPerMatch=\"3333\"/>"
+                    + "<BetSetting SportType=\"1\" BetType=\"2\" IsLive=\"1\" MaxBet=\"111\" MaxPerEvent=\"2222\"/>"
+                    + "<BetSetting SportType=\"1\" BetType=\"1\" IsLive=\"0\" MaxBet=\"222\" MaxPerEvent=\"3333\"/>"
                 + "</ROOT>";
 
             await dynamicRepository.Received().ExecuteAsync(Arg.Is<UpdateCommBetSettingCommand>(
@@ -199,7 +199,7 @@
                             new CommissionGroup { Id = 3, Value = 0.15m }
                         },
                         MaxBet = 111,
-                        MaxPerMatch = 2222
+                        MaxPerEvent = 2222
                     },
                     new CommBetSettingItem
                     {
@@ -212,7 +212,7 @@
                             new CommissionGroup { Id = 2, Value = 0.3m }
                         },
                         MaxBet = 222,
-                        MaxPerMatch = 3333
+                        MaxPerEvent = 3333
                     }
                 }
             };
@@ -246,22 +246,22 @@
         {
             IEnumerable<CommBetSettingDto> commBetSettings = new List<CommBetSettingDto>
             {
-                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = true, GroupId = 1, GroupName = "A", Comm = 0.0025m, MaxBet = 120, MaxPerMatch = 1000 },
-                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = true, GroupId = 2, GroupName = "B", Comm = 0.0035m, MaxBet = 120, MaxPerMatch = 1000 },
-                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = true, GroupId = 3, GroupName = "C", Comm = 0.0045m, MaxBet = 120, MaxPerMatch = 1000 },
-                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = true, GroupId = 4, GroupName = "D", Comm = 0.0055m, MaxBet = 120, MaxPerMatch = 1000 },
-                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = false, GroupId = 5, GroupName = "A", Comm = 0.0025m, MaxBet = 121, MaxPerMatch = 10001 },
-                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = false, GroupId = 6, GroupName = "B", Comm = 0.0035m, MaxBet = 121, MaxPerMatch = 10001 },
-                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = false, GroupId = 7, GroupName = "C", Comm = 0.0025m, MaxBet = 121, MaxPerMatch = 10001 },
-                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 2, IsLive = true, GroupId = 8, GroupName = "A", Comm = 0.0025m, MaxBet = 122, MaxPerMatch = 10002 },
-                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 2, IsLive = true, GroupId = 9, GroupName = "B", Comm = 0.0025m, MaxBet = 122, MaxPerMatch = 10002 },
-                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 2, IsLive = false, GroupId = 10, GroupName = "C", Comm = 0.0025m, MaxBet = 122, MaxPerMatch = 10002 },
-                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 2, IsLive = false, GroupId = 11, GroupName = "D", Comm = 0.0025m, MaxBet = 122, MaxPerMatch = 10002 },
-                new CommBetSettingDto { SportTypeId = 2, BetTypeId = 1, IsLive = true, GroupId = 12, GroupName = "A", Comm = 0.0025m, MaxBet = 123, MaxPerMatch = 10004 },
-                new CommBetSettingDto { SportTypeId = 2, BetTypeId = 1, IsLive = true, GroupId = 13, GroupName = "B", Comm = 0.0025m, MaxBet = 123, MaxPerMatch = 10004 },
-                new CommBetSettingDto { SportTypeId = 2, BetTypeId = 1, IsLive = true, GroupId = 14, GroupName = "C", Comm = 0.0025m, MaxBet = 123, MaxPerMatch = 10004 },
-                new CommBetSettingDto { SportTypeId = 2, BetTypeId = 1, IsLive = true, GroupId = 15, GroupName = "D", Comm = 0.0025m, MaxBet = 123, MaxPerMatch = 10004 },
-                new CommBetSettingDto { SportTypeId = 3, BetTypeId = 1, IsLive = true, GroupId = 16, GroupName = "A", Comm = 0.0025m, MaxBet = 124, MaxPerMatch = 10005 }
+                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = true, GroupId = 1, GroupName = "A", Comm = 0.0025m, MaxBet = 120, MaxPerEvent = 1000 },
+                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = true, GroupId = 2, GroupName = "B", Comm = 0.0035m, MaxBet = 120, MaxPerEvent = 1000 },
+                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = true, GroupId = 3, GroupName = "C", Comm = 0.0045m, MaxBet = 120, MaxPerEvent = 1000 },
+                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = true, GroupId = 4, GroupName = "D", Comm = 0.0055m, MaxBet = 120, MaxPerEvent = 1000 },
+                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = false, GroupId = 5, GroupName = "A", Comm = 0.0025m, MaxBet = 121, MaxPerEvent = 10001 },
+                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = false, GroupId = 6, GroupName = "B", Comm = 0.0035m, MaxBet = 121, MaxPerEvent = 10001 },
+                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 1, IsLive = false, GroupId = 7, GroupName = "C", Comm = 0.0025m, MaxBet = 121, MaxPerEvent = 10001 },
+                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 2, IsLive = true, GroupId = 8, GroupName = "A", Comm = 0.0025m, MaxBet = 122, MaxPerEvent = 10002 },
+                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 2, IsLive = true, GroupId = 9, GroupName = "B", Comm = 0.0025m, MaxBet = 122, MaxPerEvent = 10002 },
+                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 2, IsLive = false, GroupId = 10, GroupName = "C", Comm = 0.0025m, MaxBet = 122, MaxPerEvent = 10002 },
+                new CommBetSettingDto { SportTypeId = 1, BetTypeId = 2, IsLive = false, GroupId = 11, GroupName = "D", Comm = 0.0025m, MaxBet = 122, MaxPerEvent = 10002 },
+                new CommBetSettingDto { SportTypeId = 2, BetTypeId = 1, IsLive = true, GroupId = 12, GroupName = "A", Comm = 0.0025m, MaxBet = 123, MaxPerEvent = 10004 },
+                new CommBetSettingDto { SportTypeId = 2, BetTypeId = 1, IsLive = true, GroupId = 13, GroupName = "B", Comm = 0.0025m, MaxBet = 123, MaxPerEvent = 10004 },
+                new CommBetSettingDto { SportTypeId = 2, BetTypeId = 1, IsLive = true, GroupId = 14, GroupName = "C", Comm = 0.0025m, MaxBet = 123, MaxPerEvent = 10004 },
+                new CommBetSettingDto { SportTypeId = 2, BetTypeId = 1, IsLive = true, GroupId = 15, GroupName = "D", Comm = 0.0025m, MaxBet = 123, MaxPerEvent = 10004 },
+                new CommBetSettingDto { SportTypeId = 3, BetTypeId = 1, IsLive = true, GroupId = 16, GroupName = "A", Comm = 0.0025m, MaxBet = 124, MaxPerEvent = 10005 }
             };
 
             dynamicRepository.FetchAsync<CommBetSettingDto>(
