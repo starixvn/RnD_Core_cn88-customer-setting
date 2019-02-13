@@ -8,7 +8,7 @@
     labels["en-us"] = {
         "CommissionAndBetLimit": "Commission & Bet Limit",
         "MaxBet": "Max per Bet",
-        "MaxPerMatch": "Max per Event",
+        "MaxPerEvent": "Max per Event",
         "MemberCommission": "Member Commission"
     };
 
@@ -38,10 +38,10 @@
         "MaxBetNote": "Maximum bet for each wager.",
         "MaxBetMustBeGreaterThanOrEqualTo": "Max per Bet must be greater than or equal to {0}.",
         "MaxBetMustBeLessThanOrEqualTo": "Max per Bet must be less than or equal to {0}.",
-        "MaxBetMustBeLessThanOrEqualToMaxPerMatch": "Max per Bet must be less than or equal to Max per Event.",
-        "MaxPerMatchNote": "Maximum bet amount will vary depending on the bet type and event ID, except for Odd/Even.",
-        "MaxPerMatchMustBeGreaterThanOrEqualTo": "Max per Event must be greater than or equal to {0}.",
-        "MaxPerMatchMustBeLessThanOrEqualTo": "Max per Event must be less than or equal to {0}."
+        "MaxBetMustBeLessThanOrEqualToMaxPerEvent": "Max per Bet must be less than or equal to Max per Event.",
+        "MaxPerEventNote": "Maximum bet amount will vary depending on the bet type and event ID, except for Odd/Even.",
+        "MaxPerEventMustBeGreaterThanOrEqualTo": "Max per Event must be greater than or equal to {0}.",
+        "MaxPerEventMustBeLessThanOrEqualTo": "Max per Event must be less than or equal to {0}."
     };
 
     messages["zh-cn"] = {

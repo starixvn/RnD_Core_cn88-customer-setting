@@ -21,7 +21,7 @@ module CustomerSetting {
         availableLayoutTypes: Object;
         eachGroupStyle: {};
         hasMaxBetConstraint: boolean;
-        hasMaxPerMatchConstraint: boolean;
+        hasMaxPerEventConstraint: boolean;
         commissionPrecision: number;
         betSettingPrecision: number;
     }
@@ -67,14 +67,14 @@ module CustomerSetting {
                         return settingType2Item.minMaxBet > 0 || settingType2Item.maxMaxBet > 0;
                     });
 
-                    scope.hasMaxPerMatchConstraint = scope.settingType.settingItems.some((settingItem: ISettingItem) => {
+                    scope.hasMaxPerEventConstraint = scope.settingType.settingItems.some((settingItem: ISettingItem) => {
                         var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
 
-                        return settingType2Item.minMaxPerMatch > 0 || settingType2Item.maxMaxPerMatch > 0;
+                        return settingType2Item.minMaxPerEvent > 0 || settingType2Item.maxMaxPerEvent > 0;
                     });
                 } else {
                     scope.hasMaxBetConstraint = true;
-                    scope.hasMaxPerMatchConstraint = true;
+                    scope.hasMaxPerEventConstraint = true;
                 }
             }
 

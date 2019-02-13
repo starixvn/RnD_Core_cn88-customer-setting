@@ -12,9 +12,9 @@ module CustomerSetting {
         public maxBet: number;
         public minMaxBet: number;
         public maxMaxBet: number;
-        public maxPerMatch: number;
-        public minMaxPerMatch: number;
-        public maxMaxPerMatch: number;
+        public maxPerEvent: number;
+        public minMaxPerEvent: number;
+        public maxMaxPerEvent: number;
 
         public mappedCommissionGroups: ICommissionGroup[];
         public memberSpreadGroupIndex: number;
@@ -32,9 +32,9 @@ module CustomerSetting {
                 this.maxBet = settingType2Item.maxBet;
                 this.minMaxBet = settingType2Item.minMaxBet;
                 this.maxMaxBet = settingType2Item.maxMaxBet;
-                this.maxPerMatch = settingType2Item.maxPerMatch;
-                this.minMaxPerMatch = settingType2Item.minMaxPerMatch;
-                this.maxMaxPerMatch = settingType2Item.maxMaxPerMatch;
+                this.maxPerEvent = settingType2Item.maxPerEvent;
+                this.minMaxPerEvent = settingType2Item.minMaxPerEvent;
+                this.maxMaxPerEvent = settingType2Item.maxMaxPerEvent;
             }
 
             if (this.customerLevel === Level.member) {
@@ -120,8 +120,8 @@ module CustomerSetting {
                 return false;
             }
 
-            if (this.maxPerMatch === undefined || this.maxPerMatch === null) {
-                this.validationState = new ValidationResult("RequiredField", "maxPerMatch");
+            if (this.maxPerEvent === undefined || this.maxPerEvent === null) {
+                this.validationState = new ValidationResult("RequiredField", "maxPerEvent");
 
                 return false;
             }
@@ -132,8 +132,8 @@ module CustomerSetting {
                 return false;
             }
 
-            if (this.maxPerMatch < this.minMaxPerMatch) {
-                this.validationState = new ValidationResult("MaxPerMatchMustBeGreaterThanOrEqualTo", "maxPerMatch", [this.minMaxPerMatch]);
+            if (this.maxPerEvent < this.minMaxPerEvent) {
+                this.validationState = new ValidationResult("MaxPerEventMustBeGreaterThanOrEqualTo", "maxPerEvent", [this.minMaxPerEvent]);
 
                 return false;
             }
@@ -145,15 +145,15 @@ module CustomerSetting {
                     return false;
                 }
 
-                if (this.maxPerMatch > this.maxMaxPerMatch) {
-                    this.validationState = new ValidationResult("MaxPerMatchMustBeLessThanOrEqualTo", "maxPerMatch", [this.maxMaxPerMatch]);
+                if (this.maxPerEvent > this.maxMaxPerEvent) {
+                    this.validationState = new ValidationResult("MaxPerEventMustBeLessThanOrEqualTo", "maxPerEvent", [this.maxMaxPerEvent]);
 
                     return false;
                 }
             }
 
-            if (this.maxBet > this.maxPerMatch) {
-                this.validationState = new ValidationResult("MaxBetMustBeLessThanOrEqualToMaxPerMatch", "maxBet");
+            if (this.maxBet > this.maxPerEvent) {
+                this.validationState = new ValidationResult("MaxBetMustBeLessThanOrEqualToMaxPerEvent", "maxBet");
 
                 return false;
             }
