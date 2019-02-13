@@ -15,5 +15,16 @@
 
         public override string ToXml()
             => string.Format(PTXmlFormat, base.ToXml(), SuperPT);
+
+        public override void AdjustPTForQuery()
+        {
+            if (CurrentSuperPT == SuperPT.Value)
+            {
+                SuperPT = null;
+            }
+        }
+
+        public override bool IsNoChangePT()
+            => SuperPT == null;
     }
 }

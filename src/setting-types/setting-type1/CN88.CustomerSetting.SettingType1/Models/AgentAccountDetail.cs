@@ -26,6 +26,26 @@
         public decimal MaxAgentPT { get; set; }
 
         public override string ToXml()
-            => string.Format(PTXmlFormat, base.ToXml(), MasterPT, AgentPT);
+            => string.Format(
+                PTXmlFormat, 
+                base.ToXml(), 
+                MasterPT == null ? CurrentMasterPT : MasterPT.Value, 
+                AgentPT == null ? CurrentAgentPT : AgentPT.Value);
+
+        public override void AdjustPTForQuery()
+        {
+            if (CurrentAgentPT == AgentPT.Value)
+            {
+                AgentPT = null;
+            }
+
+            if (CurrentMasterPT == MasterPT.Value)
+            {
+                MasterPT = null;
+            }
+        }
+
+        public override bool IsNoChangePT()
+            => AgentPT == null && MasterPT == null;
     }
 }

@@ -47,6 +47,8 @@
             MessageService = messageService ?? new MessageServiceImpl(ResourceService);
         }
 
+        private static DateTime GetServerTime() => DateTime.Now;
+
         public override async Task<SettingType> GetCustomerSettingType(
             ISettingContext settingContext,
             CustomerSettingQuery query)
@@ -152,8 +154,20 @@
                     break;
             }
 
-            return settingItem
-                ?? throw new InvalidOperationException($"Cannot get default setting to create new downline");
+            if(settingItem == null)
+            {
+                throw new InvalidOperationException($"Cannot get default setting to create new downline");
+            }
+
+            if (!isCreateNew)
+            {
+                settingItem.AdjustPTForQuery();
+                var editPTTime = await GetEditPTTime().ConfigureAwait(false);
+                settingItem.IsPTReadOnly = !editPTTime.IsEdittablePT;
+                settingItem.PTEffectiveTime = editPTTime.EffectiveDate;
+            }
+
+            return settingItem;
         }
 
         private async Task<AccountDetailSettingItem> GetSuperAccountDetail(int custId, bool isCreateNew)
@@ -241,7 +255,7 @@
             {
                 { "username", settingItem.Username ?? throw new InvalidOperationException("Username cannot be null") },
                 { "userpwd", settingItem.Password ?? throw new InvalidOperationException(Resources.PasswordCannotBeNullOrEmpty) },
-                { "firstname", WebUtility.HtmlEncode(settingItem.FirstName ?? string.Empty) },
+                { "firstname", EncodeHtml(settingItem.FirstName) },
                 { "credit", settingItem.Credit },
                 { "systemid", settingContext.System },
                 { "ip", settingContext.IP },
@@ -290,10 +304,10 @@
         {
             createNewParams.Add("site", CN88Site);
             createNewParams.Add("currency", settingItem.Currency?.Id);
-            createNewParams.Add("lastname", WebUtility.HtmlEncode(settingItem.LastName ?? string.Empty));
-            createNewParams.Add("phone", WebUtility.HtmlEncode(settingItem.Phone ?? string.Empty));
-            createNewParams.Add("mobilephone", WebUtility.HtmlEncode(settingItem.MobilePhone ?? string.Empty));
-            createNewParams.Add("fax", WebUtility.HtmlEncode(settingItem.Fax ?? string.Empty));
+            createNewParams.Add("lastname", EncodeHtml(settingItem.LastName));
+            createNewParams.Add("phone", EncodeHtml(settingItem.Phone));
+            createNewParams.Add("mobilephone", EncodeHtml(settingItem.MobilePhone));
+            createNewParams.Add("fax", EncodeHtml(settingItem.Fax));
 
             return createNewParams;
         }
@@ -308,8 +322,10 @@
 #pragma warning restore S3215 // "interface" instances should not be cast to concrete types
                 ?? throw new InvalidOperationException("AccountDetail cannot be null");
 
-            var updateCustomerInfoResult = await UpdateCustomerInfo(command, settingItem, settingContext.Language).ConfigureAwait(false);
-            if (updateCustomerInfoResult.IsFailed)
+            var updateCustomerInfoResult = await UpdateCustomerInfo(command, settingItem, settingType, settingContext.Language).ConfigureAwait(false);
+
+            if (updateCustomerInfoResult.IsFailed
+                || settingItem.IsNoChangePT())
             {
                 return updateCustomerInfoResult;
             }
@@ -355,26 +371,43 @@
         private async Task<SettingResult> UpdateCustomerInfo(
             UpdateCustomerSettingCommand command,
             AccountDetailSettingItem settingItem,
+            SettingType settingType,
             string language)
         {
-            var updateCustomerInfoCommand = new UpdateCustomerInfoCommand
+            var updateCommand = new UpdateCustomerInfoCommand
             {
                 RoleId = command.Setting.CustomerLevel.Value,
                 Credit = settingItem.Credit,
                 CustId = command.Setting.CustomerId,
-                Fax = WebUtility.HtmlEncode(settingItem.Fax ?? string.Empty),
-                FirstName = WebUtility.HtmlEncode(settingItem.FirstName ?? string.Empty),
-                LastName = WebUtility.HtmlEncode(settingItem.LastName ?? string.Empty),
-                MobilePhone = WebUtility.HtmlEncode(settingItem.MobilePhone ?? string.Empty),
-                Phone = WebUtility.HtmlEncode(settingItem.Phone ?? string.Empty),
+                Fax = EncodeHtml(settingItem.Fax),
+                FirstName = EncodeHtml(settingItem.FirstName),
+                LastName = EncodeHtml(settingItem.LastName),
+                MobilePhone = EncodeHtml(settingItem.MobilePhone),
+                Phone = EncodeHtml(settingItem.Phone),
                 Language = LanguageNameConverter.GetLanguageKey(language)
             };
 
-            await DynamicRepository.ExecuteAsync(updateCustomerInfoCommand).ConfigureAwait(false);
+            await DynamicRepository
+                .ExecuteAsync(updateCommand)
+                .ConfigureAwait(false);
 
-            return updateCustomerInfoCommand.ErrCode > 0
-                ? new SettingResult(Result.CreateErrorResult(updateCustomerInfoCommand.ErrMsg))
-                : new SettingResult(Result.Success);
+            var isSuccess = updateCommand.ErrCode == 0;
+
+            return new SettingResult(
+                updateCommand.ErrCode,
+                isSuccess 
+                    ? Resources.UpdateAccountDetailSuccess
+                    : updateCommand.ErrMsg,
+                0,
+                command.Setting.CustomerId,
+                settingType.Id,
+                settingType.Name);
         }
+
+        private static string EncodeHtml(string data)
+            => WebUtility.HtmlEncode(data ?? string.Empty);
+
+        private async Task<EditPTTimeDto> GetEditPTTime()
+            => await DynamicRepository.GetAsync<EditPTTimeDto>(new GetPTEditTimeCriteria()).ConfigureAwait(false);
     }
 }

@@ -61,7 +61,8 @@
                 return false;
             }
 
-            return Code == otherObj.Code && Message == otherObj.Message;
+            return Code == otherObj.Code 
+                && Message == otherObj.Message;
         }
 
         public override int GetHashCode()

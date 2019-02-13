@@ -33,5 +33,10 @@
     </Setting>
     <Setting Key="CS_SpreadGroupSel" SpName="CS_SpreadGroupSel" DbName="DBACC.bodb02.bodbAdminNet" TimeOut="600">
     </Setting>
+
+    <Setting Key="CS_EditablePTDateSel" SpName="CS_EditablePTDateSel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+    </Setting>
+
+    
   </Function>
 </Functions>

@@ -24,7 +24,11 @@ namespace CN88.CustomerSetting.SettingType1.Models
         public decimal MaxSuperMaxPT { get; set; }
 
         public override string ToXml()
-            => string.Format(PTXmlFormat, base.ToXml(), SuperMinPT, SuperMaxPT);
+            => string.Format(
+                PTXmlFormat, 
+                base.ToXml(), 
+                SuperMinPT == 0 ? CurrentSuperMinPT : SuperMinPT.Value,
+                SuperMaxPT == 0 ? CurrentSuperMaxPT : SuperMaxPT.Value);
 
         public override IResult Validate()
         {
@@ -35,5 +39,21 @@ namespace CN88.CustomerSetting.SettingType1.Models
 
             return base.Validate();
         }
+
+        public override void AdjustPTForQuery()
+        {
+            if (CurrentSuperMinPT == SuperMinPT.Value)
+            {
+                SuperMinPT = null;
+            }
+
+            if (CurrentSuperMaxPT == SuperMaxPT.Value)
+            {
+                SuperMaxPT = null;
+            }
+        }
+
+        public override bool IsNoChangePT()
+            => SuperMinPT == null && SuperMaxPT == null;
     }
 }

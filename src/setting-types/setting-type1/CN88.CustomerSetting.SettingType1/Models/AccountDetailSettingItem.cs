@@ -42,6 +42,10 @@
         public bool IsPTReadOnly { get; set; }
 
         public DateTime PTEffectiveTime { get; set; }
+
+        public virtual void AdjustPTForQuery() { }
+
+        public virtual bool IsNoChangePT() => true;
     }
 
     public class MemberAccountDetail : AccountDetailSettingItem
