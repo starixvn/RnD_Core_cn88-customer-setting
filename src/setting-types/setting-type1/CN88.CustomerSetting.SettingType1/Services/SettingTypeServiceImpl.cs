@@ -162,7 +162,7 @@
             if (!isCreateNew)
             {
                 var editPTTime = await GetEditPTTime().ConfigureAwait(false);
-                settingItem.IsPTReadOnly = !editPTTime.IsEdittablePT;
+                settingItem.IsPTReadOnly = !editPTTime.IsEditablePT;
                 settingItem.PTEffectiveTime = editPTTime.EffectiveDate;
             }
 
@@ -309,7 +309,7 @@
             createNewParams.Add("phone", EncodeHtml(settingItem.Phone));
             createNewParams.Add("mobilephone", EncodeHtml(settingItem.MobilePhone));
             createNewParams.Add("fax", EncodeHtml(settingItem.Fax));
-            //createNewParams.Add("uplineusername", EncodeHtml(settingItem.UplineUsername));
+            createNewParams.Add("mainshareholderusername", EncodeHtml(settingItem.UplineUsername));
 
             return createNewParams;
         }

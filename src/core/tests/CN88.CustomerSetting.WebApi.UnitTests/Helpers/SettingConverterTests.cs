@@ -11,7 +11,7 @@
     using Newtonsoft.Json.Serialization;
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture(Category = "Core-WebAPI")]
     public class SettingConverterTests
     {
         private const string SampleDataFilePath = @"\SampleData\settings.json";

@@ -3,7 +3,7 @@
     using CN88.CustomerSetting.SettingType1.Models;
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture(Category = "SettingType1-AccountDetail")]
     public class SuperAccountDetailTests
     {
         private SuperAccountDetail superAccountDetail;
@@ -15,7 +15,7 @@
         }
 
         [Test]
-        public void AdjustPTForQuery_CurrentSuperMinPTEqualsSuperMinPT_SetSuperPTToNull()
+        public void AdjustPTForQuery_WhenEditSetting_CurrentSuperMinPTEqualsSuperMinPT_SetSuperPTToNull()
         {
             superAccountDetail.CurrentSuperMinPT = 20;
             superAccountDetail.SuperMinPT = 20;
@@ -26,7 +26,7 @@
         }
 
         [Test]
-        public void AdjustPTForQuery_CurrentSuperMinPTNotEqualsSuperMinPT_SuperMinPTNoChange()
+        public void AdjustPTForQuery_WhenEditSetting_CurrentSuperMinPTNotEqualsSuperMinPT_SuperMinPTNoChange()
         {
             superAccountDetail.SuperMinPT = 30;
 
@@ -36,7 +36,7 @@
         }
 
         [Test]
-        public void AdjustPTForQuery_CurrentSuperMaxPTEqualsSuperMaxPT_SetSuperMaxPTToNull()
+        public void AdjustPTForQuery_WhenEditSetting_CurrentSuperMaxPTEqualsSuperMaxPT_SetSuperMaxPTToNull()
         {
             superAccountDetail.CurrentSuperMaxPT = 20;
             superAccountDetail.SuperMaxPT = 20;
@@ -47,7 +47,7 @@
         }
 
         [Test]
-        public void AdjustPTForQuery_CurrentSuperMaxPTNotEqualsSuperMaxPT_SuperMaxPTNoChange()
+        public void AdjustPTForQuery_WhenEditSetting_CurrentSuperMaxPTNotEqualsSuperMaxPT_SuperMaxPTNoChange()
         {
             superAccountDetail.SuperMaxPT = 30;
 

@@ -21,6 +21,7 @@
     using NSubstitute;
     using NUnit.Framework;
 
+    [TestFixture(Category = "SettingType1-AccountDetail")]
     public class SettingTypeServiceTests
     {
         private ISettingContext settingContext;
@@ -285,6 +286,7 @@
             Assert.AreEqual(settingContext.Actor.Id, createParams["creator"]);
             Assert.AreEqual("CN88", createParams["site"]);
             Assert.AreEqual(1, createParams["currency"]);
+            Assert.AreEqual("mainshareholderusername", createParams["mainshareholderusername"]);
             Assert.AreEqual("<ROOT><PT SportType=\"1\" BetType=\"2\" IsLive=\"1\" MinPT=\"11\" MaxPT=\"12\" /></ROOT>", createParams["ptsetting"]);
         }
 
@@ -490,7 +492,8 @@
                         Username = "CustomerName",
                         Phone = "Phone",
                         MobilePhone = "MobilePhone",
-                        Password = "Password"
+                        Password = "Password",
+                        UplineUsername = "mainshareholderusername"
                     }
                 }
             };

@@ -5,7 +5,7 @@
     using CN88.CustomerSetting.WebApi.Models.Requests;
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture(Category = "Core-WebAPI")]
     public class QuerySettingRequestTests
     {
         private QuerySettingRequest request;

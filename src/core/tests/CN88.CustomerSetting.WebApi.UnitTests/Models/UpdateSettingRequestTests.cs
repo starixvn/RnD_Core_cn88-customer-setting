@@ -7,7 +7,7 @@
     using CN88.CustomerSetting.WebApi.Models.Requests;
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture(Category = "Core-WebAPI")]
     public class UpdateSettingRequestTests
     {
         private static Setting sampleSetting;

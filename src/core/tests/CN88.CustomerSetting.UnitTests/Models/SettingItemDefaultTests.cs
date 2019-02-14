@@ -3,6 +3,7 @@
     using CustomerSetting.Models;
     using NUnit.Framework;
 
+    [TestFixture(Category = "Core")]
     public class SettingItemDefaultTests
     {
         

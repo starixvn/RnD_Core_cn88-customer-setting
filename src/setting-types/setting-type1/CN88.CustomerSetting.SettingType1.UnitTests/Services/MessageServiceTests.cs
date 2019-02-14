@@ -9,7 +9,7 @@
     using NSubstitute;
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture(Category = "SettingType1-AccountDetail")]
     public class MessageServiceTests : MessageServiceBaseTests
     {
         [SetUp]

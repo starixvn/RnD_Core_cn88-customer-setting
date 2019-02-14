@@ -17,6 +17,7 @@
     using NSubstitute;
     using NUnit.Framework;
 
+    [TestFixture(Category = "Core")]
     public class CreateCustomerServiceTests
     {
         private ISettingContext settingContext;

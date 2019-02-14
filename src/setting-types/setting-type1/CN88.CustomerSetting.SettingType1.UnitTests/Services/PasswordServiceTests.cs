@@ -1,12 +1,10 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.UnitTests.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.SettingType1.Services;
     using NUnit.Framework;
 
+    [TestFixture(Category = "SettingType1-AccountDetail")]
     public class PasswordServiceTests
     {
         private PasswordServiceImpl passwordService = new PasswordServiceImpl();
@@ -36,8 +34,8 @@
         public void ValidateAndHashPassword_PasswordIsValid_ReturnEncodedPassword(byte levelId)
         {
             var result = passwordService.ValidateAndHashPassword(
-                "761aa2b1cb964258", 
-                "w4yyuhre5d2xb4avwzgvxrye", 
+                "761aa2b1cb964258",
+                "w4yyuhre5d2xb4avwzgvxrye",
                 Enumeration.FromValue<Level>(levelId));
 
             // Password 1234aaAA

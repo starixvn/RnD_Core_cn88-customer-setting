@@ -1,12 +1,9 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.UnitTests.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using CN88.CustomerSetting.SettingType1.Models;
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture(Category = "SettingType1-AccountDetail")]
     public class AgentAccountDetailTests
     {
         private AgentAccountDetail agentAccountDetail;
@@ -18,7 +15,7 @@
         }
 
         [Test]
-        public void AdjustPTForQuery_CurrentMasterPTEqualsSuperMinPT_SetMasterPTToNull()
+        public void AdjustPTForQuery_WhenEditSetting_CurrentMasterPTEqualsSuperMinPT_SetMasterPTToNull()
         {
             agentAccountDetail.CurrentMasterPT = 20;
             agentAccountDetail.MasterPT = 20;
@@ -29,7 +26,7 @@
         }
 
         [Test]
-        public void AdjustPTForQuery_CurrentMasterPTNotEqualsSuperMinPT_MasterPTNoChange()
+        public void AdjustPTForQuery_WhenEditSetting_CurrentMasterPTNotEqualsSuperMinPT_MasterPTNoChange()
         {
             agentAccountDetail.MasterPT = 30;
 
@@ -39,7 +36,7 @@
         }
 
         [Test]
-        public void AdjustPTForQuery_CurrentAgentPTEqualsAgentPT_SetAgentPTToNull()
+        public void AdjustPTForQuery_WhenEditSetting_CurrentAgentPTEqualsAgentPT_SetAgentPTToNull()
         {
             agentAccountDetail.CurrentAgentPT = 20;
             agentAccountDetail.AgentPT = 20;
@@ -50,7 +47,7 @@
         }
 
         [Test]
-        public void AdjustPTForQuery_CurrentAgentPTNotEqualsSuperMaxPT_AgentPTNoChange()
+        public void AdjustPTForQuery_WhenEditSetting_CurrentAgentPTNotEqualsSuperMaxPT_AgentPTNoChange()
         {
             agentAccountDetail.AgentPT = 30;
 

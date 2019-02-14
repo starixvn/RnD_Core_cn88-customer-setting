@@ -20,6 +20,7 @@
     using NSubstitute;
     using NUnit.Framework;
 
+    [TestFixture(Category = "SettingType2-CommBetSetting")]
     public class SettingTypeServiceTests
     {
         private ISettingContext settingContext;

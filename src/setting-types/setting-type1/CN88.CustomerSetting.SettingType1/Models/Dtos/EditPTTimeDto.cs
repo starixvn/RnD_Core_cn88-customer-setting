@@ -4,7 +4,7 @@
 
     public class EditPTTimeDto
     {
-        public bool IsEdittablePT { get; set; }
+        public bool IsEditablePT { get; set; }
 
         public DateTime EffectiveDate { get; set; }
     }

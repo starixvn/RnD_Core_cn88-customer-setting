@@ -5,6 +5,7 @@
     using CustomerSetting.Models.Enumerations;
     using NUnit.Framework;
 
+    [TestFixture(Category = "Core")]
     public class UserTests
     {
         [TestCase(0)]

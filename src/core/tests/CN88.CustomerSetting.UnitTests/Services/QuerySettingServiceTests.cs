@@ -16,7 +16,7 @@
     using NSubstitute;
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture(Category = "Core")]
     public class QuerySettingServiceTests
     {
         private QuerySettingService querySettingService;

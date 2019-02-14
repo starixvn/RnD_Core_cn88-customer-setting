@@ -3,7 +3,7 @@
     using CN88.CustomerSetting.SpParams.Criteria;
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture(Category = "Core")]
     public class ProductSettingTypesQueryCriteriaTests
     {
         [TestCase(0)]

@@ -15,7 +15,7 @@
     using NSubstitute;
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture(Category = "Core")]
     public class ValidationServiceTestsValidateUpdateSettingAction
     {
         private ISettingContext settingContext;

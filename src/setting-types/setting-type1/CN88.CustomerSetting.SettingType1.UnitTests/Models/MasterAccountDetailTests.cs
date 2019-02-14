@@ -1,12 +1,9 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.UnitTests.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using CN88.CustomerSetting.SettingType1.Models;
     using NUnit.Framework;
 
-    [TestFixture]
+    [TestFixture(Category = "SettingType1-AccountDetail")]
     public class MasterAccountDetailTests
     {
         private MasterAccountDetail masterAccountDetail;
@@ -18,7 +15,7 @@
         }
 
         [Test]
-        public void AdjustPTForQuery_CurrentSuperPTEqualsSuperMinPT_SetSuperPTToNull()
+        public void AdjustPTForQuery_WhenEditSetting_CurrentSuperPTEqualsSuperMinPT_SetSuperPTToNull()
         {
             masterAccountDetail.CurrentSuperPT = 20;
             masterAccountDetail.SuperPT = 20;
@@ -29,7 +26,7 @@
         }
 
         [Test]
-        public void AdjustPTForQuery_CurrentSuperPTNotEqualsSuperMinPT_SuperPTNoChange()
+        public void AdjustPTForQuery_WhenEditSetting_CurrentSuperPTNotEqualsSuperMinPT_SuperPTNoChange()
         {
             masterAccountDetail.SuperPT = 30;
 
@@ -38,7 +35,6 @@
             Assert.AreEqual(30, masterAccountDetail.SuperPT.Value);
         }
 
-        
         [Test]
         public void IsNoChangePT_SuperPTIsNull_ReturnTrue()
         {
