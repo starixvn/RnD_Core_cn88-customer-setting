@@ -15,6 +15,15 @@
         }
 
         [Test]
+        public void AdjustPTForQuery_WhenCreateNew_SetSuperMinPTAndSuperMaxPTToZero()
+        {
+            superAccountDetail.AdjustPTForQuery(true);
+
+            Assert.AreEqual(0, superAccountDetail.SuperMinPT.Value);
+            Assert.AreEqual(0, superAccountDetail.SuperMaxPT.Value);
+        }
+
+        [Test]
         public void AdjustPTForQuery_WhenEditSetting_CurrentSuperMinPTEqualsSuperMinPT_SetSuperPTToNull()
         {
             superAccountDetail.CurrentSuperMinPT = 20;

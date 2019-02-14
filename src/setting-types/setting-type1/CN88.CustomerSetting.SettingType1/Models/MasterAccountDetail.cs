@@ -14,7 +14,10 @@
         public decimal MaxSuperPT { get; set; }
 
         public override string ToXml()
-            => string.Format(PTXmlFormat, base.ToXml(), SuperPT);
+            => string.Format(
+                PTXmlFormat, 
+                base.ToXml(), 
+                SuperPT.HasValue ? SuperPT.Value : CurrentSuperPT);
 
         public override void AdjustPTForQuery(bool isCreateNew)
         {

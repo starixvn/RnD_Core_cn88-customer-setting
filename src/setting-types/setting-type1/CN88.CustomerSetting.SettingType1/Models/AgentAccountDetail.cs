@@ -29,8 +29,8 @@
             => string.Format(
                 PTXmlFormat, 
                 base.ToXml(), 
-                MasterPT == null ? CurrentMasterPT : MasterPT.Value, 
-                AgentPT == null ? CurrentAgentPT : AgentPT.Value);
+                MasterPT.HasValue ? MasterPT.Value : CurrentMasterPT, 
+                AgentPT.HasValue ? AgentPT.Value : CurrentAgentPT);
 
         public override void AdjustPTForQuery(bool isCreateNew)
         {

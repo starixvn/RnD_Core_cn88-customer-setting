@@ -15,6 +15,15 @@
         }
 
         [Test]
+        public void AdjustPTForQuery_WhenCreateNew_SetMasterPTAndAgentPTToZero()
+        {
+            agentAccountDetail.AdjustPTForQuery(true);
+
+            Assert.AreEqual(0, agentAccountDetail.MasterPT.Value);
+            Assert.AreEqual(0, agentAccountDetail.AgentPT.Value);
+        }
+
+        [Test]
         public void AdjustPTForQuery_WhenEditSetting_CurrentMasterPTEqualsSuperMinPT_SetMasterPTToNull()
         {
             agentAccountDetail.CurrentMasterPT = 20;

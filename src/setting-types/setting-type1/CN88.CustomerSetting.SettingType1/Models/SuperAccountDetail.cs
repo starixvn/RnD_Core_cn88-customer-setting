@@ -27,8 +27,8 @@ namespace CN88.CustomerSetting.SettingType1.Models
             => string.Format(
                 PTXmlFormat, 
                 base.ToXml(), 
-                SuperMinPT == 0 ? CurrentSuperMinPT : SuperMinPT.Value,
-                SuperMaxPT == 0 ? CurrentSuperMaxPT : SuperMaxPT.Value);
+                SuperMinPT.HasValue ? SuperMinPT.Value : CurrentSuperMinPT,
+                SuperMaxPT.HasValue ? SuperMaxPT.Value : CurrentSuperMaxPT);
 
         public override IResult Validate()
         {

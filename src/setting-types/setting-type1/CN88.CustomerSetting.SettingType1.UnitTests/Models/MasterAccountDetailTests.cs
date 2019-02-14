@@ -15,6 +15,15 @@
         }
 
         [Test]
+        public void AdjustPTForQuery_WhenCreateNew_SetSuperPTToZero()
+        {
+            masterAccountDetail.AdjustPTForQuery(true);
+
+            Assert.AreEqual(0, masterAccountDetail.SuperPT.Value);
+        }
+
+
+        [Test]
         public void AdjustPTForQuery_WhenEditSetting_CurrentSuperPTEqualsSuperMinPT_SetSuperPTToNull()
         {
             masterAccountDetail.CurrentSuperPT = 20;
