@@ -8,11 +8,9 @@
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
                 </label>
                 <div class="w60-percent" data-ng-if="isNew">
-                    <input type="text"
-                           maxlength="30"
-                           class="setting-field setting-field--fullwidth"
-                           data-ng-model="accountDetail.uplineUsername"
-                           data-setting-field="uplineUsername" />
+                    <main-shareholder-suggestion class="setting-field setting-field--fullwidth"
+                                                 data-ng-model="accountDetail.uplineUsername"
+                                                 data-setting-field="uplineUsername" />
                 </div>
                 <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.uplineUsername}}</label>
             </div>

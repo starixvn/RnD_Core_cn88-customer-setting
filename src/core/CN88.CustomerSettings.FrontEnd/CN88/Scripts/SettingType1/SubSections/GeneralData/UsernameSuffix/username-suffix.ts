@@ -20,7 +20,7 @@ module CustomerSetting {
         public get scope(): any {
             return {
                 suffixIndex: "=",
-                suffix: "=",
+                suffix: "=?",
                 validateUsername: "="
             };
         }

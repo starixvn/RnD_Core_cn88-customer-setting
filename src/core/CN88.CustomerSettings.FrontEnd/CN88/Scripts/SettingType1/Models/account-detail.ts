@@ -1,4 +1,4 @@
-﻿/// <reference path="../../../libraries/hash.d.ts" />
+﻿/// <reference path="../../../libraries/Hash/hash.d.ts" />
 /// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
 /// <reference path="../../core/models/setting-item.ts" />
@@ -58,12 +58,12 @@ module CustomerSetting {
                 "usernameSuffixes",
                 "minCredit",
                 "maxCredit",
-                "uplineUsername",
                 "isPTReadOnly",
                 "ptEffectiveTime",
                 "hashKey"]);
 
             if (!this.isNew) {
+                this.ignoredProperties.push("uplineUsername");
                 this.ignoredProperties.push("username");
             }
         }

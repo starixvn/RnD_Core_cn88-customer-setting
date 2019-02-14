@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
+/// <reference path="../../core/helpers.ts" />
 /// <reference path="account-detail.ts" />
 /// <reference path="currency.ts" />
 
@@ -28,22 +29,26 @@ module CustomerSetting {
             if (accountDetail) {
                 super(accountDetail, backup, isNew, customerLevel, hashKey);
 
-                this.superMinPT = accountDetail.superMinPT;
                 this.currentSuperMinPT = accountDetail.currentSuperMinPT;
                 this.minSuperMinPT = accountDetail.minSuperMinPT;
                 this.maxSuperMinPT = accountDetail.maxSuperMinPT;
                 this.currentSuperMaxPT = accountDetail.currentSuperMaxPT;
-                this.superMaxPT = accountDetail.superMaxPT;
                 this.minSuperMaxPT = accountDetail.minSuperMaxPT;
                 this.maxSuperMaxPT = accountDetail.maxSuperMaxPT;
                 this.currencies = accountDetail.currencies;
                 this.currency = accountDetail.currency;
+
+                if (isNumber(accountDetail.superMinPT)) {
+                    this.superMinPT = accountDetail.superMinPT;
+                }
+
+                if (isNumber(accountDetail.superMaxPT)) {
+                    this.superMaxPT = accountDetail.superMaxPT;
+                }
             }
 
-            this.ignoredProperties.push("currentSuperMinPT");
             this.ignoredProperties.push("minSuperMinPT");
             this.ignoredProperties.push("maxSuperMinPT");
-            this.ignoredProperties.push("currentSuperMaxPT");
             this.ignoredProperties.push("minSuperMaxPT");
             this.ignoredProperties.push("maxSuperMaxPT");
             this.ignoredProperties.push("currencies");
@@ -53,7 +58,9 @@ module CustomerSetting {
             }
 
             if (this.isPTReadOnly) {
+                this.ignoredProperties.push("currentSuperMinPT");
                 this.ignoredProperties.push("superMinPT");
+                this.ignoredProperties.push("currentSuperMaxPT");
                 this.ignoredProperties.push("superMaxPT");
             }
         }
@@ -75,7 +82,7 @@ module CustomerSetting {
                 return false;
             }
 
-            if (!this.validatePT()) {
+            if (!this.isPTReadOnly && !this.validatePT()) {
                 return false;
             }
 
@@ -135,15 +142,18 @@ module CustomerSetting {
         }
 
         private validatePT(): boolean {
-            if (!this.validateSuperMinPT()) {
+            if (isNumber(this.superMinPT) && !this.validateSuperMinPT()) {
                 return false;
             }
 
-            if (!this.validateSuperMaxPT()) {
+            if (isNumber(this.superMaxPT) && !this.validateSuperMaxPT()) {
                 return false;
             }
 
-            if (this.superMinPT > this.superMaxPT) {
+            var actualSuperMinPT = this.superMinPT || this.currentSuperMinPT;
+            var actualSuperMaxPT = this.superMaxPT || this.currentSuperMaxPT;
+
+            if (actualSuperMinPT > actualSuperMaxPT) {
                 this.validationState = new ValidationResult("SuperMinPTMustBeLessThanOrEqualToSuperMaxPT", "superMinPT");
 
                 return false;

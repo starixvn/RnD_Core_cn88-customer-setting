@@ -73,4 +73,8 @@ module CustomerSetting {
     export function equals(first: any, second: any): boolean {
         return angular.equals(first, second);
     }
+
+    export function isNumber(value: any): boolean {
+        return typeof value === "number";
+    }
 }

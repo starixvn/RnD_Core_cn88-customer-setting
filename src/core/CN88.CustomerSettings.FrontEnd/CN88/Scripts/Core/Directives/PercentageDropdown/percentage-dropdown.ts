@@ -13,6 +13,7 @@ module CustomerSetting {
         factor: number;
         precision: number;
         placeholder: string;
+        placeholderVisible: boolean;
         autoRefresh: boolean;
         range: number[];
     }
@@ -30,10 +31,11 @@ module CustomerSetting {
                 value: "=ngModel",
                 min: "=",
                 max: "=",
-                step: "=",
-                precision: "=",
+                step: "=?",
+                precision: "=?",
                 placeholder: "@",
-                autoRefresh: "="
+                placeholderVisible:"=?",
+                autoRefresh: "=?"
             };
         }
 

@@ -8,7 +8,7 @@ module CustomerSetting {
     "use strict";
 
     interface IServerRequestCallback {
-        (response: ng.IHttpPromiseCallbackArg<any>): void;
+        (response: ng.IHttpPromiseCallbackArg<any>): any;
     }
 
     export class RequestService {
@@ -35,10 +35,10 @@ module CustomerSetting {
             this.sharedScope = sharedScope;
         }
 
-        public get(path: string, parameters: any, callback: IServerRequestCallback) {
+        public get(path: string, parameters: any, callback: IServerRequestCallback): ng.IPromise<any> {
             this.blockUiService.blockUi();
 
-            this.$http
+            return this.$http
                 .get(path, { params: parameters })
                 .then(
                     (response: ng.IHttpPromiseCallbackArg<any>) => this.handleSuccessfulResponse(response, callback),
@@ -48,10 +48,10 @@ module CustomerSetting {
                 });
         }
 
-        public post(path: string, parameters: any, callback: IServerRequestCallback) {
+        public post(path: string, parameters: any, callback: IServerRequestCallback): ng.IPromise<any> {
             this.blockUiService.blockUi();
 
-            this.$http
+            return this.$http
                 .post(path, parameters)
                 .then(
                     (response: ng.IHttpPromiseCallbackArg<any>) => this.handleSuccessfulResponse(response, callback),
@@ -67,7 +67,7 @@ module CustomerSetting {
             } else if (response.data.code === -302 && response.data.redirect) {
                 this.$window.location.href = this.$window.location.origin + response.data.redirect;
             } else {
-                callback(response);
+                return callback(response);
             }
         }
 

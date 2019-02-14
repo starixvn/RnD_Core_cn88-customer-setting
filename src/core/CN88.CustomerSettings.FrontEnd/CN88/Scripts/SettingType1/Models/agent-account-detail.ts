@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
+/// <reference path="../../core/helpers.ts" />
 /// <reference path="account-detail.ts" />
 
 module CustomerSetting {
@@ -27,30 +28,36 @@ module CustomerSetting {
             if (accountDetail) {
                 super(accountDetail, backup, isNew, customerLevel, hashKey);
 
-                this.masterPT = accountDetail.masterPT;
                 this.currentMasterPT = accountDetail.currentMasterPT;
                 this.minMasterPT = accountDetail.minMasterPT;
                 this.maxMasterPT = accountDetail.maxMasterPT;
-                this.agentPT = accountDetail.agentPT;
                 this.currentAgentPT = accountDetail.currentAgentPT;
                 this.minAgentPT = accountDetail.minAgentPT;
                 this.maxAgentPT = accountDetail.maxAgentPT;
                 this.minAllowedPT = accountDetail.minAllowedPT;
                 this.maxAllowedPT = accountDetail.maxAllowedPT;
 
-                this.ignoredProperties.push("currentMasterPT");
-                this.ignoredProperties.push("minMasterPT");
-                this.ignoredProperties.push("maxMasterPT");
-                this.ignoredProperties.push("currentAgentPT");
-                this.ignoredProperties.push("minAgentPT");
-                this.ignoredProperties.push("maxAgentPT");
-                this.ignoredProperties.push("minAllowedPT");
-                this.ignoredProperties.push("maxAllowedPT");
-
-                if (this.isPTReadOnly) {
-                    this.ignoredProperties.push("masterPT");
-                    this.ignoredProperties.push("agentPT");
+                if (isNumber(accountDetail.masterPT)) {
+                    this.masterPT = accountDetail.masterPT;
                 }
+
+                if (isNumber(accountDetail.agentPT)) {
+                    this.agentPT = accountDetail.agentPT;
+                }
+            }
+
+            this.ignoredProperties.push("minMasterPT");
+            this.ignoredProperties.push("maxMasterPT");
+            this.ignoredProperties.push("minAgentPT");
+            this.ignoredProperties.push("maxAgentPT");
+            this.ignoredProperties.push("minAllowedPT");
+            this.ignoredProperties.push("maxAllowedPT");
+
+            if (this.isPTReadOnly) {
+                this.ignoredProperties.push("currentMasterPT");
+                this.ignoredProperties.push("masterPT");
+                this.ignoredProperties.push("currentAgentPT");
+                this.ignoredProperties.push("agentPT");
             }
         }
 
@@ -59,7 +66,7 @@ module CustomerSetting {
                 return false;
             }
 
-            if (!this.validatePT()) {
+            if (!this.isPTReadOnly && !this.validatePT()) {
                 return false;
             }
 
@@ -69,19 +76,22 @@ module CustomerSetting {
         }
 
         private validatePT(): boolean {
-            if (this.masterPT > this.maxMasterPT) {
+            if (isNumber(this.masterPT) && (this.masterPT > this.maxMasterPT)) {
                 this.validationState = new ValidationResult("MasterPTMustBeLessThanOrEqualTo", "masterPT", [this.maxMasterPT]);
 
                 return false;
             }
 
-            if (this.agentPT > this.maxAgentPT) {
+            if (isNumber(this.agentPT) && (this.agentPT > this.maxAgentPT)) {
                 this.validationState = new ValidationResult("AgentPTMustBeLessThanOrEqualTo", "agentPT", [this.maxAgentPT]);
 
                 return false;
             }
 
-            if ((this.masterPT + this.agentPT > this.maxAllowedPT) || (this.masterPT + this.agentPT < this.minAllowedPT)) {
+            var actualMasterPT = this.masterPT || this.currentMasterPT;
+            var actualAgentPT = this.agentPT || this.currentAgentPT;
+
+            if ((actualMasterPT + actualAgentPT > this.maxAllowedPT) || (actualMasterPT + actualAgentPT < this.minAllowedPT)) {
                 this.validationState = new ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minAllowedPT, this.maxAllowedPT]);
                 this.validationState.addAffectedField("agentPT");
 

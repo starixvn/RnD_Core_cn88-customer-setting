@@ -1,0 +1,26 @@
+﻿@import "../Compass/_compass";
+@import "../_variables";
+
+%overlay {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 100;
+}
+
+.block-ui-overlay {
+    @extend %overlay;
+    background-color: $block-ui-overlay;
+}
+
+.block-ui-loading {
+    background: rgba(0, 0, 0, 0) url(images/ajax-loader.gif) no-repeat scroll center center;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 101;
+}

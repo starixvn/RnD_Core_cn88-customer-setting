@@ -1,4 +1,8 @@
 ﻿<select class="setting-field"
         data-ng-options="item as (item | formatPercentage:precision) for item in range">
-    <option selected disabled hidden data-ng-if="placeholder" value="">{{placeholder}}</option>
+    <option data-ng-if="placeholder"
+            data-ng-disabled="!placeholderVisible"
+            data-ng-hide="!placeholderVisible"
+            selected
+            value="">{{placeholder}}</option>
 </select>

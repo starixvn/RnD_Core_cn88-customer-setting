@@ -1,0 +1,29 @@
+﻿@import "../Compass/_compass";
+@import "../_variables";
+@import "../_other";
+
+.dropdown-menu {
+    @include border($color: $field-border-color);
+    background: $default-bg;
+    box-shadow: rgba(0, 0, 0, 0.3) 0 2px 2px;
+    display: none;
+    list-style: none;
+    min-width: 160px;
+    text-align: left;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+
+    > li > a {
+        display: block;
+        clear: both;
+        padding: 3px 10px;
+        white-space: nowrap;
+    }
+
+    > .active > a {
+        background-color: $typehead-selected-bg-color;
+        color: $typehead-selected-color;
+        outline: 0;
+    }
+}

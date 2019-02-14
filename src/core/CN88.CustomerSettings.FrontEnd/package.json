@@ -8,7 +8,8 @@
     "publish": "publish"
   },
   "dependencies": {
-    "angular": "1.4.7"
+    "angular": "1.5.11",
+    "@types/angular": "1.5.23"
   },
   "devDependencies": {
     "gulp": "^3.9.0",

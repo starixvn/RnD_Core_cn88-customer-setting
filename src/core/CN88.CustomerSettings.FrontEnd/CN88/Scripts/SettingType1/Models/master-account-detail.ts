@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
+/// <reference path="../../core/helpers.ts" />
 /// <reference path="account-detail.ts" />
 
 module CustomerSetting {
@@ -21,18 +22,21 @@ module CustomerSetting {
             if (accountDetail) {
                 super(accountDetail, backup, isNew, customerLevel, hashKey);
 
-                this.superPT = accountDetail.superPT;
                 this.currentSuperPT = accountDetail.currentSuperPT;
                 this.minSuperPT = accountDetail.minSuperPT;
                 this.maxSuperPT = accountDetail.maxSuperPT;
 
-                this.ignoredProperties.push("currentSuperPT");
-                this.ignoredProperties.push("minSuperPT");
-                this.ignoredProperties.push("maxSuperPT");
-
-                if (this.isPTReadOnly) {
-                    this.ignoredProperties.push("superPT");
+                if (isNumber(accountDetail.superPT)) {
+                    this.superPT = accountDetail.superPT;
                 }
+            }
+
+            this.ignoredProperties.push("minSuperPT");
+            this.ignoredProperties.push("maxSuperPT");
+
+            if (this.isPTReadOnly) {
+                this.ignoredProperties.push("currentSuperPT");
+                this.ignoredProperties.push("superPT");
             }
         }
 
@@ -41,7 +45,7 @@ module CustomerSetting {
                 return false;
             }
 
-            if (!this.validateSuperPT()) {
+            if (!this.isPTReadOnly && isNumber(this.superPT) && !this.validateSuperPT()) {
                 return false;
             }
 

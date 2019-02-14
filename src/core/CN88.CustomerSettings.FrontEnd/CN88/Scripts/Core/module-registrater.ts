@@ -1,9 +1,11 @@
 ﻿/// <reference path="../typings/angularjs/angular.d.ts" />
 
-var app: ng.IModule = angular.module("customerSetting", []);
+var app: ng.IModule = angular.module("customerSetting", ["ui.bootstrap"]);
 
-app.config(["$compileProvider", ($compileProvider: ng.ICompileProvider) => {
+app.config(["$compileProvider", ($compileProvider: any) => {
     $compileProvider.debugInfoEnabled(false);
+    $compileProvider.commentDirectivesEnabled(false);
+    $compileProvider.cssClassDirectivesEnabled(false);
 }]);
 
 module CustomerSetting {

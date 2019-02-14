@@ -1,4 +1,8 @@
 ﻿@import "_base";
 @import "_customer-setting-core";
-@import "_shame";
+@import "Directives/_block-ui";
+@import "Directives/_tooltip";
+@import "Directives/_message";
+@import "Directives/_typehead";
 @import "SettingTypes/_settingtype1";
+@import "_shame";
