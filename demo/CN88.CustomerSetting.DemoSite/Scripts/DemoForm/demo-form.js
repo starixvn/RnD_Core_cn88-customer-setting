@@ -82,7 +82,7 @@ var DemoFrom;
 
             $.ajax({
                 method: "GET",
-                url: this.resolveUrl("CN88CustomerSetting/CreateCN88Customer/GetMainShareHolderSuggestionNames"),
+                url: this.resolveUrl("CN88CustomerSetting/CreateCN88Customer/GetMainShareholderSuggestionNames"),
             }).done(function (result) { console.log(result); });
 
             //$.ajax({

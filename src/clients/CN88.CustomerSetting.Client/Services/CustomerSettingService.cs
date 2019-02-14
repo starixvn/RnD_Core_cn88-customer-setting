@@ -116,9 +116,9 @@
             return restClient.Execute(request);
         }
 
-        public IRestResponse GetMainShareHolderSuggestionNames()
+        public IRestResponse GetMainShareholderSuggestionNames()
         {
-            IRestRequest request = new RestRequest("/customersetting/GetMainShareHolderSuggestionNames", Method.GET);
+            IRestRequest request = new RestRequest("/customersetting/GetMainShareholderSuggestionNames", Method.GET);
 
             return restClient.Execute(request);
         }

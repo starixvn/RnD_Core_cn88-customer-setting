@@ -32,16 +32,26 @@
                 MasterPT == null ? CurrentMasterPT : MasterPT.Value, 
                 AgentPT == null ? CurrentAgentPT : AgentPT.Value);
 
-        public override void AdjustPTForQuery()
+        public override void AdjustPTForQuery(bool isCreateNew)
         {
-            if (CurrentAgentPT == AgentPT.Value)
+            if (isCreateNew)
             {
-                AgentPT = null;
+                AgentPT = 0;
+                MasterPT = 0;
             }
-
-            if (CurrentMasterPT == MasterPT.Value)
+            else
             {
-                MasterPT = null;
+                if (AgentPT.HasValue
+                    && CurrentAgentPT == AgentPT.Value)
+                {
+                    AgentPT = null;
+                }
+
+                if (MasterPT.HasValue
+                    && CurrentMasterPT == MasterPT.Value)
+                {
+                    MasterPT = null;
+                }
             }
         }
 

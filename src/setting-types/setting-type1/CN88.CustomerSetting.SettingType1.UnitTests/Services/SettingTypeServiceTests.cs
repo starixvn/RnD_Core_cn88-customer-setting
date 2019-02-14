@@ -578,6 +578,9 @@
                     .GetAsync<AgentAccountDetail>(Arg.Any<GetPTSettingCriteria>())
                     .Returns(Task.FromResult(new AgentAccountDetail()));
             }
+
+            dynamicRepository.GetAsync<EditPTTimeDto>(Arg.Any<GetPTEditTimeCriteria>())
+                .Returns(Task.FromResult(new EditPTTimeDto()));
         }
 
         private async Task AssertGetPTSetting(Level level, bool isCreateNew)

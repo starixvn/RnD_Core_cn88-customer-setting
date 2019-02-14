@@ -24,7 +24,7 @@
 
         Task<IResult> IsUsernameExisted(string username);
 
-        Task<IEnumerable<string>> GetMainShareHolderSuggestionNames();
+        Task<IEnumerable<string>> GetMainShareholderSuggestionNames();
     }
 
     public class CreateCustomerServiceImpl : CreateCustomerService
@@ -165,13 +165,13 @@
             logger.Error(ex.Message, ex);
         }
 
-        public async Task<IEnumerable<string>> GetMainShareHolderSuggestionNames()
+        public async Task<IEnumerable<string>> GetMainShareholderSuggestionNames()
             => await Task.FromResult(
                 new List<string>
                 {
-                    "ShareHolderName1",
-                    "ShareHolderName2",
-                    "ShareHolderName3"
+                    "ShareholderName1",
+                    "ShareholderName2",
+                    "ShareholderName3"
                 })
             .ConfigureAwait(false);
     }

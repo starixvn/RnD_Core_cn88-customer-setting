@@ -78,7 +78,7 @@
                 .ValidateUpdateSettingAction(settingContext, updateParam);
 
             //// Assert
-            productService.Received().GetProductSettingTypes(
+            await productService.Received().GetProductSettingTypes(
                 Arg.Is<byte>(productId => productId == updateParam.Setting.ProductId),
                 Arg.Any<byte>());
         }

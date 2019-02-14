@@ -40,16 +40,24 @@ namespace CN88.CustomerSetting.SettingType1.Models
             return base.Validate();
         }
 
-        public override void AdjustPTForQuery()
+        public override void AdjustPTForQuery(bool isCreateNew)
         {
-            if (CurrentSuperMinPT == SuperMinPT.Value)
+            if (isCreateNew)
             {
-                SuperMinPT = null;
+                SuperMinPT = 0;
+                SuperMaxPT = 0;
             }
-
-            if (CurrentSuperMaxPT == SuperMaxPT.Value)
+            else
             {
-                SuperMaxPT = null;
+                if (SuperMinPT.HasValue && CurrentSuperMinPT == SuperMinPT.Value)
+                {
+                    SuperMinPT = null;
+                }
+
+                if (SuperMaxPT.HasValue && CurrentSuperMaxPT == SuperMaxPT.Value)
+                {
+                    SuperMaxPT = null;
+                }
             }
         }
 

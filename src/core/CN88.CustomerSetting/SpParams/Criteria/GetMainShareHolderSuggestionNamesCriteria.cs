@@ -2,10 +2,10 @@
 {
     using Fanex.Data.Repository;
 
-    public class GetMainShareHolderSuggestionNamesCriteria : CriteriaBase
+    public class GetMainShareholderSuggestionNamesCriteria : CriteriaBase
     {
         public override string GetSettingKey()
-            => "GetMainShareHolderSuggestionNames";
+            => "GetMainShareholderSuggestionNames";
 
         public override bool IsValid()
             => true;

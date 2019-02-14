@@ -43,7 +43,7 @@
 
         public DateTime PTEffectiveTime { get; set; }
 
-        public virtual void AdjustPTForQuery() { }
+        public virtual void AdjustPTForQuery(bool isCreateNew) { }
 
         public virtual bool IsNoChangePT() => true;
     }
