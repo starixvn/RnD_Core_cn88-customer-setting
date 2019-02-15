@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using CN88.CustomerSetting.DataAccesses;
     using CN88.CustomerSetting.Models;
@@ -10,6 +11,7 @@
     using CN88.CustomerSetting.Models.Results;
     using CN88.CustomerSetting.Services;
     using CN88.CustomerSetting.SpParams.Commands;
+    using CN88.CustomerSetting.SpParams.Criteria;
     using CN88.CustomerSetting.Tests;
     using CN88.CustomerSetting.Tests.Models;
     using Fanex.Data.Repository;
@@ -205,6 +207,35 @@
                 });
 
             settingTypeServiceFactory.GetInstance(Arg.Any<SettingType>()).Returns(settingTypeService);
+        }
+
+        [Test]
+        public async Task GetMainShareholderSuggestionNames_Always_CallDynamicRepositoryFetch()
+        {
+            var username = "mshusername";
+
+            await createCustomerService.GetMainShareholderSuggestionNames(username);
+
+            await dynamicRepository
+                .Received()
+                .FetchAsync<string>(Arg.Is<GetMainShareholderSuggestionNamesCriteria>(
+                    criteria => criteria.Username == username));
+        }
+
+        [Test]
+        public async Task GetMainShareholderSuggestionNames_Always_ReturnDataFromDatabase()
+        {
+            var username = "mshusername";
+
+            dynamicRepository
+                .FetchAsync<string>(Arg.Is<GetMainShareholderSuggestionNamesCriteria>(
+                    criteria => criteria.Username == username))
+                .Returns(new List<string> { "MSH1" });
+
+            var mainshareholderNames = await createCustomerService.GetMainShareholderSuggestionNames(username);
+
+            Assert.AreEqual(1, mainshareholderNames.Count());
+            Assert.AreEqual("MSH1", mainshareholderNames.FirstOrDefault());
         }
     }
 }

@@ -62,15 +62,16 @@
                 ?? throw new InvalidOperationException($"Not found customer id {query.CustomerId} level {query.CustomerLevel.DisplayName}");
 
             settingItem.Username = customerInfo.Username;
-            settingItem.FirstName = WebUtility.HtmlDecode(customerInfo.FirstName);
-            settingItem.LastName = WebUtility.HtmlDecode(customerInfo.LastName);
-            settingItem.Phone = WebUtility.HtmlDecode(customerInfo.Phone);
-            settingItem.MobilePhone = WebUtility.HtmlDecode(customerInfo.MobilePhone);
-            settingItem.Fax = WebUtility.HtmlDecode(customerInfo.Fax);
+            settingItem.FirstName = DecodeHtml(customerInfo.FirstName);
+            settingItem.LastName = DecodeHtml(customerInfo.LastName);
+            settingItem.Phone = DecodeHtml(customerInfo.Phone);
+            settingItem.MobilePhone = DecodeHtml(customerInfo.MobilePhone);
+            settingItem.Fax = DecodeHtml(customerInfo.Fax);
             settingItem.Currency = new Currency { Name = customerInfo.Currency };
             settingItem.Credit = customerInfo.Credit;
             settingItem.MaxCredit = customerInfo.MaxCredit;
             settingItem.MinCredit = customerInfo.MinCredit;
+            settingItem.UplineUsername = DecodeHtml(customerInfo.MainShareholderUsername);
 
             if (query.CustomerLevel.IsMemberLevel()
                 && !string.IsNullOrEmpty(customerInfo.UGroup))
@@ -308,7 +309,6 @@
             createNewParams.Add("phone", EncodeHtml(settingItem.Phone));
             createNewParams.Add("mobilephone", EncodeHtml(settingItem.MobilePhone));
             createNewParams.Add("fax", EncodeHtml(settingItem.Fax));
-            //createNewParams.Add("mainshareholderusername", "MSHCN88");
             createNewParams.Add("mainshareholderusername",
                 EncodeHtml(
                     settingItem.UplineUsername
@@ -418,6 +418,9 @@
 
         private static string EncodeHtml(string data)
             => WebUtility.HtmlEncode(data ?? string.Empty);
+
+        private static string DecodeHtml(string data)
+            => WebUtility.HtmlDecode(data);
 
         private async Task<EditPTTimeDto> GetEditPTTime()
             => await DynamicRepository.GetAsync<EditPTTimeDto>(new GetPTEditTimeCriteria()).ConfigureAwait(false);

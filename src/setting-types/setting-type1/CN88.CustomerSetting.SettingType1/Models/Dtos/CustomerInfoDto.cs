@@ -23,5 +23,7 @@
         public decimal MinCredit { get; set; }
 
         public string UGroup { get; set; }
+
+        public string MainShareholderUsername { get; set; }
     }
 }
