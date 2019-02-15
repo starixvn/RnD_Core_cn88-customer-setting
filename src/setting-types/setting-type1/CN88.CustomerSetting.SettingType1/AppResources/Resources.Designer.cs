@@ -70,6 +70,24 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You cannot update new possess value at this moment..
+        /// </summary>
+        internal static string EditPossessTimeInvalid {
+            get {
+                return ResourceManager.GetString("EditPossessTimeInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Main Shareholder Name cannot be null or empty.
+        /// </summary>
+        internal static string MainShareholderUsernameCannotBeNullOrEmpty {
+            get {
+                return ResourceManager.GetString("MainShareholderUsernameCannotBeNullOrEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max.
         /// </summary>
         internal static string Max {
@@ -448,6 +466,15 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         internal static string UpdateAccountDetailSuccess {
             get {
                 return ResourceManager.GetString("UpdateAccountDetailSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username cannot be null or empty.
+        /// </summary>
+        internal static string UsernameCannotBeNullOrEmpty {
+            get {
+                return ResourceManager.GetString("UsernameCannotBeNullOrEmpty", resourceCulture);
             }
         }
     }

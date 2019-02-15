@@ -256,4 +256,13 @@ Notes: your password is cAsE sEnSiTiVe</value>
   <data name="MinLive" xml:space="preserve">
     <value>MinLive</value>
   </data>
+  <data name="UsernameCannotBeNullOrEmpty" xml:space="preserve">
+    <value>Username cannot be null or empty</value>
+  </data>
+  <data name="MainShareholderUsernameCannotBeNullOrEmpty" xml:space="preserve">
+    <value>Main Shareholder Name cannot be null or empty</value>
+  </data>
+  <data name="EditPossessTimeInvalid" xml:space="preserve">
+    <value>You cannot update new possess value at this moment.</value>
+  </data>
 </root>

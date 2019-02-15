@@ -6,6 +6,7 @@
     using System.Net;
     using System.Threading.Tasks;
     using CN88.CustomerSetting.Models;
+    using CN88.CustomerSetting.Models.Constants;
     using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.Models.Requests;
     using CN88.CustomerSetting.Models.Results;
@@ -46,8 +47,6 @@
             this.passwordService = passwordService ?? new PasswordServiceImpl();
             MessageService = messageService ?? new MessageServiceImpl(ResourceService);
         }
-
-        private static DateTime GetServerTime() => DateTime.Now;
 
         public override async Task<SettingType> GetCustomerSettingType(
             ISettingContext settingContext,
@@ -254,7 +253,7 @@
             AccountDetailSettingItem settingItem)
             => new Dictionary<string, object>
             {
-                { "username", settingItem.Username ?? throw new InvalidOperationException("Username cannot be null") },
+                { "username", settingItem.Username ?? throw new InvalidOperationException(Resources.UsernameCannotBeNullOrEmpty) },
                 { "userpwd", settingItem.Password ?? throw new InvalidOperationException(Resources.PasswordCannotBeNullOrEmpty) },
                 { "firstname", EncodeHtml(settingItem.FirstName) },
                 { "credit", settingItem.Credit },
@@ -309,7 +308,10 @@
             createNewParams.Add("phone", EncodeHtml(settingItem.Phone));
             createNewParams.Add("mobilephone", EncodeHtml(settingItem.MobilePhone));
             createNewParams.Add("fax", EncodeHtml(settingItem.Fax));
-            createNewParams.Add("mainshareholderusername", EncodeHtml(settingItem.UplineUsername));
+            createNewParams.Add("mainshareholderusername", 
+                EncodeHtml(
+                    settingItem.UplineUsername 
+                    ?? throw new InvalidOperationException(Resources.MainShareholderUsernameCannotBeNullOrEmpty)));
 
             return createNewParams;
         }
@@ -340,6 +342,13 @@
             UpdateCustomerSettingCommand command,
             SettingType settingType)
         {
+            var editPTTime = await GetEditPTTime().ConfigureAwait(false);
+
+            if(!editPTTime.IsEditablePT)
+            {
+                return new SettingResult(Result.CreateErrorResult(Resources.EditPossessTimeInvalid));
+            }
+
             var updatePTSettingCommand = new UpdatePTSettingCommand
             {
                 RoleId = command.Setting.CustomerLevel.Value,

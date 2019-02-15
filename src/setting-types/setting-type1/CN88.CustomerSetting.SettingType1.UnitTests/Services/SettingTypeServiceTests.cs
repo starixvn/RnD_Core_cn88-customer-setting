@@ -404,6 +404,7 @@
         {
             var updateCommand = InstanceFactory.CreateUpdateSettingParam(customerLevel: Level.Super);
             var updateSettingType = StubSuperAccountDetailSettingType();
+            StubEditablePTTime();
 
             await settingTypeServiceImpl.UpdateCustomerSettingType(settingContext, updateCommand, updateSettingType);
 
@@ -445,6 +446,7 @@
         {
             var updateCommand = InstanceFactory.CreateUpdateSettingParam(customerLevel: Level.Super);
             var updateSettingType = StubSuperAccountDetailSettingType();
+            StubEditablePTTime();
 
             await settingTypeServiceImpl.UpdateCustomerSettingType(settingContext, updateCommand, updateSettingType);
 
@@ -462,6 +464,7 @@
         {
             var updateCommand = InstanceFactory.CreateUpdateSettingParam(customerLevel: Level.Super);
             var updateSettingType = StubSuperAccountDetailSettingType();
+            StubEditablePTTime();
 
             var result = await settingTypeServiceImpl.UpdateCustomerSettingType(settingContext, updateCommand, updateSettingType);
 
@@ -582,8 +585,14 @@
                     .Returns(Task.FromResult(new AgentAccountDetail()));
             }
 
+            StubEditablePTTime();
+        }
+
+        private void StubEditablePTTime(bool isEditable = true)
+        {
             dynamicRepository.GetAsync<EditPTTimeDto>(Arg.Any<GetPTEditTimeCriteria>())
-                .Returns(Task.FromResult(new EditPTTimeDto()));
+                .Returns(Task.FromResult(
+                    new EditPTTimeDto { IsEditablePT = isEditable, EffectiveDate = new DateTime(2000, 11, 11) }));
         }
 
         private async Task AssertGetPTSetting(Level level, bool isCreateNew)
@@ -704,6 +713,47 @@
                 Arg.Any<string>(),
                 Arg.Any<Level>())
                 .Returns(Result.CreateSuccessResult("HashedPassword"));
+        }
+
+        [TestCase(2, 12)]
+        [TestCase(3, 13)]
+        [TestCase(4, 14)]
+        public async Task GetCustomerSettingType_WhenEditCustomer_GetEditPTTime(
+            byte downlineLevelId,
+            int uplineId)
+        {
+            var downlineLevel = Enumeration.FromValue<Level>(downlineLevelId);
+            var settingQuery = InstanceFactory.CreateQuerySettingParam(
+                false,
+                1,
+                downlineLevel,
+                1,
+                uplineId);
+
+            StubAccountDetail(downlineLevel);
+            StubGetCustomerInfoForEdit();
+
+            var settingType = await settingTypeServiceImpl.GetCustomerSettingType(
+                settingContext,
+                settingQuery);
+
+            var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem;
+
+            Assert.IsFalse(settingItem.IsPTReadOnly);
+            Assert.AreEqual(new DateTime(2000, 11, 11), settingItem.PTEffectiveTime);
+        }
+
+        [Test]
+        public async Task UpdateCustomerSettingType_OutOfEditPTTime_ReturnErrorResult()
+        {
+            var updateCommand = InstanceFactory.CreateUpdateSettingParam(customerLevel: Level.Super);
+            var updateSettingType = StubSuperAccountDetailSettingType();
+
+            StubEditablePTTime(false);
+
+            var result = await settingTypeServiceImpl.UpdateCustomerSettingType(settingContext, updateCommand, updateSettingType);
+
+            Assert.AreEqual("You cannot update new possess value at this moment.", result.Message);
         }
     }
 }
