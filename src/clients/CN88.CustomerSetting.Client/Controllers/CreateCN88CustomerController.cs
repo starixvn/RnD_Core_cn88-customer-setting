@@ -44,9 +44,9 @@
         }
 
         [HttpGet, CustomerSettingAuth(IsUpdate = false)]
-        public ContentResult GetMainShareholderSuggestionNames()
+        public ContentResult GetMainShareholderSuggestionNames(string username)
         {
-            IRestResponse result = _customerSettingService.GetMainShareholderSuggestionNames();
+            IRestResponse result = _customerSettingService.GetMainShareholderSuggestionNames(username);
 
             ModifyResponse(result);
 

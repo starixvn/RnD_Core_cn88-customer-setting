@@ -4,10 +4,17 @@
 
     public class GetMainShareholderSuggestionNamesCriteria : CriteriaBase
     {
+        public GetMainShareholderSuggestionNamesCriteria(string username)
+        {
+            Username = username;
+        }
+
+        public string Username { get; }
+
         public override string GetSettingKey()
-            => "GetMainShareholderSuggestionNames";
+            => "CS_MainShareholderUsernameSuggestion";
 
         public override bool IsValid()
-            => true;
+            => !string.IsNullOrWhiteSpace(Username);
     }
 }

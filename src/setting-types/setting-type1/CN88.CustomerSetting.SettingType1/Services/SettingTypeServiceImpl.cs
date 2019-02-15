@@ -308,9 +308,10 @@
             createNewParams.Add("phone", EncodeHtml(settingItem.Phone));
             createNewParams.Add("mobilephone", EncodeHtml(settingItem.MobilePhone));
             createNewParams.Add("fax", EncodeHtml(settingItem.Fax));
-            createNewParams.Add("mainshareholderusername", 
+            //createNewParams.Add("mainshareholderusername", "MSHCN88");
+            createNewParams.Add("mainshareholderusername",
                 EncodeHtml(
-                    settingItem.UplineUsername 
+                    settingItem.UplineUsername
                     ?? throw new InvalidOperationException(Resources.MainShareholderUsernameCannotBeNullOrEmpty)));
 
             return createNewParams;
