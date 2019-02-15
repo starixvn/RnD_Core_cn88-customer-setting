@@ -2,6 +2,10 @@
 @import "../_variables";
 @import "../_other";
 
+.dropdown-container {
+    position: relative;
+}
+
 .dropdown-menu {
     @include border($color: $field-border-color);
     background: $default-bg;
@@ -12,7 +16,8 @@
     text-align: left;
     padding: 5px 0;
     position: absolute;
-    z-index: 1;
+    width: 100%;
+    z-index: 3;
 
     > li > a {
         display: block;

@@ -66,11 +66,15 @@ module CustomerSetting {
         }
 
         public validate(): boolean {
-            if (!super.validateUsername()) {
+            if (this.isNew && !this.validateUplineUsername()) {
                 return false;
             }
 
-            if (!this.validatePassword()) {
+            if (this.isNew && !super.validateUsername()) {
+                return false;
+            }
+
+            if (this.isNew && !this.validatePassword()) {
                 return false;
             }
 
@@ -78,7 +82,7 @@ module CustomerSetting {
                 return false;
             }
 
-            if (!this.validateCurrency()) {
+            if (this.isNew && !this.validateCurrency()) {
                 return false;
             }
 
@@ -91,13 +95,21 @@ module CustomerSetting {
             return true;
         }
 
-        protected validatePassword(): boolean {
-            if (this.isNew) {
-                if (!this.password || this.password.length === 0) {
-                    this.validationState = new ValidationResult("RequiredField", "password");
+        private validateUplineUsername(): boolean {
+            if (!this.uplineUsername || this.uplineUsername.length === 0) {
+                this.validationState = new ValidationResult("RequiredField", "uplineUsername");
 
-                    return false;
-                }
+                return false;
+            }
+
+            return true;
+        }
+
+        protected validatePassword(): boolean {
+            if (!this.password || this.password.length === 0) {
+                this.validationState = new ValidationResult("RequiredField", "password");
+
+                return false;
             }
 
             return true;
@@ -124,18 +136,16 @@ module CustomerSetting {
         }
 
         private validateCurrency(): boolean {
-            if (this.isNew) {
-                if (!this.currency) {
-                    this.validationState = new ValidationResult("RequiredField", "currency");
+            if (!this.currency) {
+                this.validationState = new ValidationResult("RequiredField", "currency");
 
-                    return false;
-                }
+                return false;
+            }
 
-                if (this.currencies.every((currency: ICurrency) => this.currency.id !== currency.id)) {
-                    this.validationState = new ValidationResult("InvalidCurrency", "currency");
+            if (this.currencies.every((currency: ICurrency) => this.currency.id !== currency.id)) {
+                this.validationState = new ValidationResult("InvalidCurrency", "currency");
 
-                    return false;
-                }
+                return false;
             }
 
             return true;

@@ -69,11 +69,11 @@ module CustomerSetting {
         }
 
         public validate(): boolean {
-            if (!this.validateUsername()) {
+            if (this.isNew && !this.validateUsername()) {
                 return false;
             }
 
-            if (!this.validatePassword()) {
+            if (this.isNew && !this.validatePassword()) {
                 return false;
             }
 
@@ -87,39 +87,35 @@ module CustomerSetting {
         }
 
         protected validateUsername(): boolean {
-            if (this.isNew) {
-                if (!this.username || this.username.length === 0) {
-                    this.validationState = new ValidationResult("RequiredField", "username");
+            if (!this.username || this.username.length === 0) {
+                this.validationState = new ValidationResult("RequiredField", "username");
 
-                    return false;
-                }
+                return false;
             }
 
             return true;
         }
 
         protected validatePassword(): boolean {
-            if (this.isNew) {
-                if (!this.password || this.password.length === 0) {
-                    this.validationState = new ValidationResult("RequiredField", "password");
+            if (!this.password || this.password.length === 0) {
+                this.validationState = new ValidationResult("RequiredField", "password");
 
-                    return false;
-                }
+                return false;
+            }
 
-                var passwordPattern: RegExp
-                    = /^(((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]))(?!.*[\s])).{8,16}$/;
+            var passwordPattern: RegExp
+                = /^(((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]))(?!.*[\s])).{8,16}$/;
 
-                if (!passwordPattern.test(this.password)) {
-                    this.validationState = new ValidationResult("PasswordRules", "password");
+            if (!passwordPattern.test(this.password)) {
+                this.validationState = new ValidationResult("PasswordRules", "password");
 
-                    return false;
-                }
+                return false;
+            }
 
-                if (this.confirmPassword !== this.password) {
-                    this.validationState = new ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
+            if (this.confirmPassword !== this.password) {
+                this.validationState = new ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
 
-                    return false;
-                }
+                return false;
             }
 
             return true;

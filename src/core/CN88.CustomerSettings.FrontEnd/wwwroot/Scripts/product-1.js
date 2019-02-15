@@ -36373,10 +36373,10 @@ var CustomerSetting;
             }
         }
         AccountDetail.prototype.validate = function () {
-            if (!this.validateUsername()) {
+            if (this.isNew && !this.validateUsername()) {
                 return false;
             }
-            if (!this.validatePassword()) {
+            if (this.isNew && !this.validatePassword()) {
                 return false;
             }
             if (!this.validateCredit()) {
@@ -36386,29 +36386,25 @@ var CustomerSetting;
             return true;
         };
         AccountDetail.prototype.validateUsername = function () {
-            if (this.isNew) {
-                if (!this.username || this.username.length === 0) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "username");
-                    return false;
-                }
+            if (!this.username || this.username.length === 0) {
+                this.validationState = new CustomerSetting.ValidationResult("RequiredField", "username");
+                return false;
             }
             return true;
         };
         AccountDetail.prototype.validatePassword = function () {
-            if (this.isNew) {
-                if (!this.password || this.password.length === 0) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
-                    return false;
-                }
-                var passwordPattern = /^(((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]))(?!.*[\s])).{8,16}$/;
-                if (!passwordPattern.test(this.password)) {
-                    this.validationState = new CustomerSetting.ValidationResult("PasswordRules", "password");
-                    return false;
-                }
-                if (this.confirmPassword !== this.password) {
-                    this.validationState = new CustomerSetting.ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
-                    return false;
-                }
+            if (!this.password || this.password.length === 0) {
+                this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
+                return false;
+            }
+            var passwordPattern = /^(((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]))(?!.*[\s])).{8,16}$/;
+            if (!passwordPattern.test(this.password)) {
+                this.validationState = new CustomerSetting.ValidationResult("PasswordRules", "password");
+                return false;
+            }
+            if (this.confirmPassword !== this.password) {
+                this.validationState = new CustomerSetting.ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
+                return false;
             }
             return true;
         };
@@ -36726,16 +36722,19 @@ var CustomerSetting;
             }
         }
         SuperAccountDetail.prototype.validate = function () {
-            if (!_super.prototype.validateUsername.call(this)) {
+            if (this.isNew && !this.validateUplineUsername()) {
                 return false;
             }
-            if (!this.validatePassword()) {
+            if (this.isNew && !_super.prototype.validateUsername.call(this)) {
+                return false;
+            }
+            if (this.isNew && !this.validatePassword()) {
                 return false;
             }
             if (!this.validateCredit()) {
                 return false;
             }
-            if (!this.validateCurrency()) {
+            if (this.isNew && !this.validateCurrency()) {
                 return false;
             }
             if (!this.isPTReadOnly && !this.validatePT()) {
@@ -36744,12 +36743,17 @@ var CustomerSetting;
             this.resetValidationState();
             return true;
         };
+        SuperAccountDetail.prototype.validateUplineUsername = function () {
+            if (!this.uplineUsername || this.uplineUsername.length === 0) {
+                this.validationState = new CustomerSetting.ValidationResult("RequiredField", "uplineUsername");
+                return false;
+            }
+            return true;
+        };
         SuperAccountDetail.prototype.validatePassword = function () {
-            if (this.isNew) {
-                if (!this.password || this.password.length === 0) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
-                    return false;
-                }
+            if (!this.password || this.password.length === 0) {
+                this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
+                return false;
             }
             return true;
         };
@@ -36766,15 +36770,13 @@ var CustomerSetting;
         };
         SuperAccountDetail.prototype.validateCurrency = function () {
             var _this = this;
-            if (this.isNew) {
-                if (!this.currency) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "currency");
-                    return false;
-                }
-                if (this.currencies.every(function (currency) { return _this.currency.id !== currency.id; })) {
-                    this.validationState = new CustomerSetting.ValidationResult("InvalidCurrency", "currency");
-                    return false;
-                }
+            if (!this.currency) {
+                this.validationState = new CustomerSetting.ValidationResult("RequiredField", "currency");
+                return false;
+            }
+            if (this.currencies.every(function (currency) { return _this.currency.id !== currency.id; })) {
+                this.validationState = new CustomerSetting.ValidationResult("InvalidCurrency", "currency");
+                return false;
             }
             return true;
         };
@@ -36854,42 +36856,38 @@ var CustomerSetting;
             if (!this.validateUsername()) {
                 return false;
             }
-            if (!this.validateMemberPassword()) {
+            if (this.isNew && !this.validateMemberPassword()) {
                 return false;
             }
             if (!this.validateCredit()) {
                 return false;
             }
-            if (!this.validateOddsSpread()) {
+            if (this.isNew && !this.validateOddsSpread()) {
                 return false;
             }
             this.resetValidationState();
             return true;
         };
         MemberAccountDetail.prototype.validateMemberPassword = function () {
-            if (this.isNew) {
-                if (!this.password || this.password.length === 0) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
-                    return false;
-                }
-                var memberPasswordPattern = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*[\s])).{6,10}$/;
-                if (!memberPasswordPattern.test(this.password)) {
-                    this.validationState = new CustomerSetting.ValidationResult("MemberPasswordRules", "password");
-                    return false;
-                }
-                if (this.confirmPassword !== this.password) {
-                    this.validationState = new CustomerSetting.ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
-                    return false;
-                }
+            if (!this.password || this.password.length === 0) {
+                this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
+                return false;
+            }
+            var memberPasswordPattern = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*[\s])).{6,10}$/;
+            if (!memberPasswordPattern.test(this.password)) {
+                this.validationState = new CustomerSetting.ValidationResult("MemberPasswordRules", "password");
+                return false;
+            }
+            if (this.confirmPassword !== this.password) {
+                this.validationState = new CustomerSetting.ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
+                return false;
             }
             return true;
         };
         MemberAccountDetail.prototype.validateOddsSpread = function () {
-            if (this.isNew) {
-                if (!this.spreadGroup) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "spreadGroup");
-                    return false;
-                }
+            if (!this.spreadGroup) {
+                this.validationState = new CustomerSetting.ValidationResult("RequiredField", "spreadGroup");
+                return false;
             }
             return true;
         };
@@ -37086,7 +37084,7 @@ var CustomerSetting;
         function GeneralDataDirective(settingTypesSharedValuesService, crossingSettingTypesServiceBus) {
             var _this = this;
             _super.call(this, settingTypesSharedValuesService);
-            this.template = '<div class="general-data"><div class="sub-header">{{::(\'GeneralData\' | settingType1Label)}}</div><div data-ng-if="editable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent"><span>{{::(\'MainShareholder\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><main-shareholder-suggestion class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.uplineUsername" data-setting-field="uplineUsername"></main-shareholder-suggestion></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><input type="text" maxlength="30" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.username" data-setting-field="username"></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="30" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row"><label class="w40-percent">{{::(\'FirstName\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row"><label class="w40-percent">{{::(\'LastName\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.lastName"></div></div><div class="row"><label class="w40-percent">{{::(\'Phone\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.phone"></div></div><div class="row"><label class="w40-percent">{{::(\'MobilePhone\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.mobilePhone"></div></div><div class="row"><label class="w40-percent">{{::(\'Fax\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.fax"></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | settingType1Message}}" data-tooltip-type="warning" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row" data-ng-if="isNew"><label class="w40-percent">{{::(\'Master\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | settingType1Message}}" data-tooltip-type="warning" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.member"><div class="row" data-ng-if="isNew"><label class="w40-percent">{{::(\'Agent\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'SpreadGroup\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | settingType1Message}}" data-tooltip-type="warning" data-inner-tooltip="true"></span></label><div class="w60-percent" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'MemberPasswordRules\' | settingType1Message}}" data-tooltip-type="warning" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div></div><div data-ng-if="!editable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'MainShareholder\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'FirstName\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div><div class="row"><label class="w40-percent">{{::(\'LastName\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.lastName}}</label></div><div class="row"><label class="w40-percent">{{::(\'Phone\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.phone}}</label></div><div class="row"><label class="w40-percent">{{::(\'MobilePhone\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.mobilePhone}}</label></div><div class="row"><label class="w40-percent">{{::(\'Fax\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.fax}}</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.member"><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'SpreadGroup\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div></div></div>';
+            this.template = '<div class="general-data"><div class="sub-header">{{::(\'GeneralData\' | settingType1Label)}}</div><div data-ng-if="editable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent"><span>{{::(\'MainShareholder\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="dropdown-container w60-percent" data-ng-if="isNew"><main-shareholder-suggestion class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.uplineUsername" data-setting-field="uplineUsername"></main-shareholder-suggestion></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><input type="text" maxlength="30" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.username" data-setting-field="username"></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="30" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row"><label class="w40-percent">{{::(\'FirstName\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row"><label class="w40-percent">{{::(\'LastName\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.lastName"></div></div><div class="row"><label class="w40-percent">{{::(\'Phone\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.phone"></div></div><div class="row"><label class="w40-percent">{{::(\'MobilePhone\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.mobilePhone"></div></div><div class="row"><label class="w40-percent">{{::(\'Fax\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.fax"></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | settingType1Message}}" data-tooltip-type="warning" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row" data-ng-if="isNew"><label class="w40-percent">{{::(\'Master\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | settingType1Message}}" data-tooltip-type="warning" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.member"><div class="row" data-ng-if="isNew"><label class="w40-percent">{{::(\'Agent\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'SpreadGroup\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | settingType1Message}}" data-tooltip-type="warning" data-inner-tooltip="true"></span></label><div class="w60-percent" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'MemberPasswordRules\' | settingType1Message}}" data-tooltip-type="warning" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div></div><div data-ng-if="!editable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'MainShareholder\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'FirstName\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div><div class="row"><label class="w40-percent">{{::(\'LastName\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.lastName}}</label></div><div class="row"><label class="w40-percent">{{::(\'Phone\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.phone}}</label></div><div class="row"><label class="w40-percent">{{::(\'MobilePhone\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.mobilePhone}}</label></div><div class="row"><label class="w40-percent">{{::(\'Fax\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.fax}}</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.member"><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'SpreadGroup\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div></div></div>';
             this.link = function (scope) {
                 _this.linkInternal(scope);
                 if (scope.isNew && scope.customerLevel === CustomerSetting.Level.member) {

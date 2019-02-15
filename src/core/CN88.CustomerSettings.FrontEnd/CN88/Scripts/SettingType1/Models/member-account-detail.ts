@@ -36,7 +36,7 @@ module CustomerSetting {
                 return false;
             }
 
-            if (!this.validateMemberPassword()) {
+            if (this.isNew && !this.validateMemberPassword()) {
                 return false;
             }
 
@@ -44,7 +44,7 @@ module CustomerSetting {
                 return false;
             }
 
-            if (!this.validateOddsSpread()) {
+            if (this.isNew && !this.validateOddsSpread()) {
                 return false;
             }
 
@@ -54,38 +54,34 @@ module CustomerSetting {
         }
 
         protected validateMemberPassword(): boolean {
-            if (this.isNew) {
-                if (!this.password || this.password.length === 0) {
-                    this.validationState = new ValidationResult("RequiredField", "password");
+            if (!this.password || this.password.length === 0) {
+                this.validationState = new ValidationResult("RequiredField", "password");
 
-                    return false;
-                }
+                return false;
+            }
 
-                var memberPasswordPattern: RegExp = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*[\s])).{6,10}$/;
+            var memberPasswordPattern: RegExp = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*[\s])).{6,10}$/;
 
-                if (!memberPasswordPattern.test(this.password)) {
-                    this.validationState = new ValidationResult("MemberPasswordRules", "password");
+            if (!memberPasswordPattern.test(this.password)) {
+                this.validationState = new ValidationResult("MemberPasswordRules", "password");
 
-                    return false;
-                }
+                return false;
+            }
 
-                if (this.confirmPassword !== this.password) {
-                    this.validationState = new ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
+            if (this.confirmPassword !== this.password) {
+                this.validationState = new ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
 
-                    return false;
-                }
+                return false;
             }
 
             return true;
         }
 
         private validateOddsSpread(): boolean {
-            if (this.isNew) {
-                if (!this.spreadGroup) {
-                    this.validationState = new ValidationResult("RequiredField", "spreadGroup");
+            if (!this.spreadGroup) {
+                this.validationState = new ValidationResult("RequiredField", "spreadGroup");
 
-                    return false;
-                }
+                return false;
             }
 
             return true;

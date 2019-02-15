@@ -7,7 +7,7 @@
                     <span>{{::('MainShareholder' | settingType1Label)}}</span>
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
                 </label>
-                <div class="w60-percent" data-ng-if="isNew">
+                <div class="dropdown-container w60-percent" data-ng-if="isNew">
                     <main-shareholder-suggestion class="setting-field setting-field--fullwidth"
                                                  data-ng-model="accountDetail.uplineUsername"
                                                  data-setting-field="uplineUsername" />

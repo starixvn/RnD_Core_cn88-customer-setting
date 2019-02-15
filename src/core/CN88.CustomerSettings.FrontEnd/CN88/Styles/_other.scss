@@ -21,6 +21,14 @@
     }
 }
 
+@mixin clearfix() {
+    &::after {
+        display: block;
+        content: "";
+        clear: both;
+    }
+}
+
 [ng\:cloak],
 [ng-cloak],
 [data-ng-cloak],
