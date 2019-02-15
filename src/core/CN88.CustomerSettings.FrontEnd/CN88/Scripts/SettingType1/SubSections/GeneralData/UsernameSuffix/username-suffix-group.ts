@@ -47,7 +47,8 @@ module CustomerSetting {
 
                         scope.isValid = validatingResult.isSuccessful;
                         scope.isChanged = true;
-                    });
+                    },
+                    false);
             };
         };
 

@@ -28,7 +28,8 @@ module CustomerSetting {
                 return this.requestService.get(
                     requestPath,
                     { username: someFirstCharacters },
-                    (response: ng.IHttpPromiseCallbackArg<any>) => response.data);
+                    (response: ng.IHttpPromiseCallbackArg<any>) => response.data,
+                    false);
             };
         };
 

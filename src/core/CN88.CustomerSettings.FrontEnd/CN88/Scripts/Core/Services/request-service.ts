@@ -35,8 +35,10 @@ module CustomerSetting {
             this.sharedScope = sharedScope;
         }
 
-        public get(path: string, parameters: any, callback: IServerRequestCallback): ng.IPromise<any> {
-            this.blockUiService.blockUi();
+        public get(path: string, parameters: any, callback: IServerRequestCallback, blockUI: boolean = true): ng.IPromise<any> {
+            if (blockUI) {
+                this.blockUiService.blockUi();
+            }
 
             return this.$http
                 .get(path, { params: parameters })
@@ -44,12 +46,16 @@ module CustomerSetting {
                     (response: ng.IHttpPromiseCallbackArg<any>) => this.handleSuccessfulResponse(response, callback),
                     (response: ng.IHttpPromiseCallbackArg<any>) => this.handleErrorResponse(response))
                 .finally(() => {
-                    this.blockUiService.unblockUi();
+                    if (blockUI) {
+                        this.blockUiService.unblockUi();
+                    }
                 });
         }
 
-        public post(path: string, parameters: any, callback: IServerRequestCallback): ng.IPromise<any> {
-            this.blockUiService.blockUi();
+        public post(path: string, parameters: any, callback: IServerRequestCallback, blockUI: boolean = true): ng.IPromise<any> {
+            if (blockUI) {
+                this.blockUiService.blockUi();
+            }
 
             return this.$http
                 .post(path, parameters)
@@ -57,7 +63,9 @@ module CustomerSetting {
                     (response: ng.IHttpPromiseCallbackArg<any>) => this.handleSuccessfulResponse(response, callback),
                     (response: ng.IHttpPromiseCallbackArg<any>) => this.handleErrorResponse(response))
                 .finally(() => {
-                    this.blockUiService.unblockUi();
+                    if (blockUI) {
+                        this.blockUiService.unblockUi();
+                    }
                 });
         }
 
