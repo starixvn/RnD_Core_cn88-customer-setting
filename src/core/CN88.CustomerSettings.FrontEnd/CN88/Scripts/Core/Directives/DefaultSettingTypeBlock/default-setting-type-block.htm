@@ -6,11 +6,11 @@
     </div>
     <div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div>
     <div class="block__item-group"
+         data-ng-class="{ 'block__item-group--last': $last }"
          data-ng-if="settingType | validSettingType"
          data-ng-repeat="group in sportGroups">
         <div class="block__sub-header"
              data-ng-if="settingType.settingLevel === avaiSettingLevels.sportTypeBetType"
-             data-ng-class="{ 'block__sub-header--border-top': ($index > 0) }"
              data-sport-type="{{group[0].sportTypeId}}">
             {{group[0].sportTypeName}}
         </div>
@@ -22,6 +22,7 @@
                               'block__item--odd': $odd,
                               'block__item--full-width': group.length === 1 }">
             <div class="block__lbl"
+                 data-ng-class="{ 'block__lbl--padding-left': settingType.settingLevel === avaiSettingLevels.sportTypeBetType }"
                  data-product="{{productId}}"
                  data-sport-type="{{item.sportTypeId}}"
                  data-bet-type="{{item.betTypeId}}">

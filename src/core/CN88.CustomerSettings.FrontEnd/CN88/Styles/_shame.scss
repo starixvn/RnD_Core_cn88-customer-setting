@@ -6,7 +6,7 @@ input[type=checkbox].setting-field {
         outline: {
             style: $border-style;
             width: 2 * $border-size;
-            color: $error-color;
+            color: $field-error-border-color;
         }
     }
 
@@ -14,7 +14,7 @@ input[type=checkbox].setting-field {
         outline: {
             style: $border-style;
             width: 2 * $border-size;
-            color: $warning-color;
+            color: $field-warning-border-color;
         }
     }
 
@@ -22,7 +22,7 @@ input[type=checkbox].setting-field {
         outline: {
             style: $border-style;
             width: 2 * $border-size;
-            color: $success-color;
+            color: $field-success-border-color;
         }
     }
 }

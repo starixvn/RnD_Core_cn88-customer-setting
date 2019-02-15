@@ -1,5 +1,5 @@
 ﻿@import "../_variables";
-@import "../_other";
+@import "../_mixins";
 
 .msg-container {
     @include border($color: $msg-container-border-color);

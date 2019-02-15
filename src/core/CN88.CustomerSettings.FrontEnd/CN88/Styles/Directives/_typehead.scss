@@ -1,6 +1,6 @@
 ﻿@import "../Compass/_compass";
 @import "../_variables";
-@import "../_other";
+@import "../_mixins.scss";
 
 .dropdown-container {
     position: relative;
@@ -8,7 +8,7 @@
 
 .dropdown-menu {
     @include border($color: $field-border-color);
-    background: $default-bg;
+    background: $typehead-background-color;
     box-shadow: rgba(0, 0, 0, 0.3) 0 2px 2px;
     display: none;
     list-style: none;

@@ -1,63 +1,66 @@
-﻿$field-border-color: #cecece;
+﻿$field-border-color: #d2d2d2;
 $field-focus-border-color: #66afe9;
-$field-error-border-color: #e9322d;
-$field-warning-border-color: #c93;
-$field-success-border-color: #14b22a;
+$field-error-border-color: #7b0f0f;
+$field-warning-border-color: #f17507;
+$field-success-border-color: #2da57e;
 
-$button-background-color: #0b599c;
-$button-hover-background-color: #094b84;
+$button-background-color: #27a67b;
+$button-hover-background-color: #31c18e;
 $button-text-color: #fff;
-$cancel-button-background-color: #909090;
+$cancel-button-background-color: #fff;
+$cancel-button-hover-background-color: #a5a5a5;
+$cancel-button-border-color: #d2d2d2;
+$cancel-button-text-color: #737373;
 
 $block-ui-overlay: rgba(255, 255, 255, 0.5);
 
-$tooltip-text-color: #333;
-$tooltip-success-bg-color: #dfffe1;
-$tooltip-success-border-color: #14b22a;
-$tooltip-warning-bg-color: #ffc;
-$tooltip-warning-border-color: #c93;
-$tooltip-error-bg-color: #ffe8e8;
-$tooltip-error-border-color: #e9322d;
-$tooltip-info-bg-color: #f4f4f4;
-$tooltip-info-border-color: #666;
+$tooltip-border-radius: 5px;
+$tooltip-success-color: #2da57e;
+$tooltip-success-bg-color: #e7fff7;
+$tooltip-success-border-color: #2da57e;
+$tooltip-warning-color: #f17507;
+$tooltip-warning-bg-color: #ffeede;
+$tooltip-warning-border-color: #f17507;
+$tooltip-error-color: #7b0f0f;
+$tooltip-error-bg-color: #ffe2e2;
+$tooltip-error-border-color: #7b0f0f;
+$tooltip-info-color: #3b3b3b;
+$tooltip-info-bg-color: #ececec;
+$tooltip-info-border-color: #b7b7b7;
 
 $msg-container-bg: #fdfbec;
 $msg-container-border-color: #d9d9d9;
 
-$text-color: #333;
+$text-color: #3b3b3b;
 
 $msg-error-color: #fe0000;
 $msg-success-color: #52a220;
 $msg-warning-color: #7e3d00;
 
+$typehead-background-color: #fff;
 $typehead-selected-color: #fff;
 $typehead-selected-bg-color: #094b84;
 
-$border-color: #cecece;
-$border-radius: 1px;
+$border-color: #d2d2d2;
 $border-size: 1px;
 $border-style: solid;
 
-$default-bg: #fff;
-$default-background-color: #f4f4f4;
+$default-background-color: #fff;
 
-$block-background-color: #f8f0e5;
-$block-header-bg: #666;
-$block-item-lbl-bg: #f8f0e5;
+$block-background-color: #fff;
+$block-header-border-color: #575757;
+$block-sub-header-bg: #ececec;
+$block-sub-header-border-color: #bfbfbf;
 $block-error-header-bg: #ff6964;
 $block-error-header-color: #fff;
 $block-error-border-color: #fe8989;
 $block-error-color: #ff6964;
+$block-label-group-background-color: #f4f1f1;
 
-$error-color: #e9322d;
-$success-color: #618e11;
-$warning-color: #c28f06;
+$remark-color: #e9322d;
 
-$font-family: Tahoma, Arial, helvetica, sans-serif;
-$font-size-root: 13px;
-$font-size-base: 1rem !default;
+$font-family: Arial, helvetica, sans-serif;
+$font-size-root: 12px;
+$font-size-base: 1.167rem !default;
 
-$header-color: #fff;
 $line-height: 1.5 !default;
-
-$sub-header-bg: #fae7d3;

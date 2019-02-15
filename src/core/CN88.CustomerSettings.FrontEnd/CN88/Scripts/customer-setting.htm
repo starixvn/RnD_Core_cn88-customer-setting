@@ -17,8 +17,10 @@
         </div>
         <div class="customer-setting customer-level-{{ctrl.setting.customerLevel}}" data-ng-show="ctrl.setting">
             <setting-type-loader data-setting="ctrl.setting" data-update="ctrl.update(settingTypeId)"></setting-type-loader>
-            <button class="btn btn--update btn--margin-top" data-ng-if="ctrl.setting | editableForm" data-ng-click="ctrl.update()">{{'Save' | label}}</button>
-            <button class="btn btn--cancel btn--margin-top" data-ng-if="ctrl.cancelCallback" data-ng-click="ctrl.cancelCallback()">{{'Cancel' | label}}</button>
+            <div class="btn-container">
+                <button class="btn btn--update btn--margin-top" data-ng-if="ctrl.setting | editableForm" data-ng-click="ctrl.update()">{{'Save' | label}}</button>
+                <button class="btn btn--cancel btn--margin-top" data-ng-if="ctrl.cancelCallback" data-ng-click="ctrl.cancelCallback()">{{'Cancel' | label}}</button>
+            </div>
         </div>
     </div>
     <script type="text/javascript">

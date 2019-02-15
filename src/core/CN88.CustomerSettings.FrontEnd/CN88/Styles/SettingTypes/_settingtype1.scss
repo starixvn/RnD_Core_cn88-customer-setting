@@ -1,14 +1,13 @@
 ﻿@import "../other";
 @import "../variables";
 
-$sub-header-color: #97141e;
-$sub-header-border-color: #67151b;
+$sub-header-border-color: #7b0f0f;
 $pt-effective-date-warning-bg-color: $tooltip-error-bg-color;
 
 .setting-type-1 {
     .col {
         @include col(50%, true);
-        padding: 15px 3% 15px 30px;
+        padding: 30px 3% 15px 30px;
 
         &--last {
             padding-left: 3%;
@@ -28,10 +27,10 @@ $pt-effective-date-warning-bg-color: $tooltip-error-bg-color;
 
     .sub-header {
         border-bottom: 2 * $border-size solid $sub-header-border-color;
-        color: $sub-header-color;
-        font-weight: bold;
+        font-size: 1rem;
         margin-bottom: 15px;
         padding-left: 15px;
+        padding-bottom: 10px;
 
         &__title {
             margin-right: 20px;
@@ -58,7 +57,7 @@ $pt-effective-date-warning-bg-color: $tooltip-error-bg-color;
     }
 
     .customer-credit {
-        margin-bottom: 15px;
+        margin-bottom: 30px;
 
         .available-credit {
             padding-right: 4px;

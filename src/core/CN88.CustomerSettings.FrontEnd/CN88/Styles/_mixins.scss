@@ -1,0 +1,30 @@
+﻿@import "./Compass/_compass";
+@import "_variables";
+
+@mixin border($side: "", $color: $border-color) {
+    @if ($side != "") {
+        border-#{$side}: $border-size $border-style $color;
+    }
+    @else {
+        border: $border-size $border-style $color;
+    }
+}
+
+@mixin col($width: 20%, $important: false) {
+    @extend %col;
+
+    @if ($important) {
+        width: $width !important;
+    }
+    @else {
+        width: $width;
+    }
+}
+
+@mixin clearfix() {
+    &::after {
+        display: block;
+        content: "";
+        clear: both;
+    }
+}
