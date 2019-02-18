@@ -371,8 +371,6 @@ select.setting-field {
     display: block;
     content: "";
     clear: both; }
-  .block--error {
-    border-color: #fe8989; }
   .block__header {
     border-bottom: 1px solid #575757;
     font-size: 1.084rem;
@@ -383,9 +381,7 @@ select.setting-field {
     .block__header--no-border {
       border: none; }
     .block__header--error {
-      background-color: #ff6964;
-      border-bottom-color: #fe8989;
-      color: #fff; }
+      border-bottom-color: #7b0f0f; }
   .block__sub-header {
     border-top: 1px solid #bfbfbf;
     background-color: #ececec;
@@ -433,8 +429,7 @@ select.setting-field {
         display: none; }
     .block__item--error {
       border: none;
-      color: #ff6964;
-      font-weight: bold;
+      color: #7b0f0f;
       justify-content: center;
       line-height: 3rem;
       padding: 0 8px;

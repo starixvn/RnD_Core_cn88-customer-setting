@@ -130,10 +130,6 @@ select.setting-field {
     background-color: $block-background-color;
     padding-bottom: 10px;
 
-    &--error {
-        border-color: $block-error-border-color;
-    }
-
     &__header {
         @include border(bottom, $block-header-border-color);
         font-size: 1.084rem;
@@ -147,9 +143,7 @@ select.setting-field {
         }
 
         &--error {
-            background-color: $block-error-header-bg;
             border-bottom-color: $block-error-border-color;
-            color: $block-error-header-color;
         }
     }
 
@@ -219,7 +213,6 @@ select.setting-field {
         &--error {
             border: none;
             color: $block-error-color;
-            font-weight: bold;
             justify-content: center;
             line-height: 3rem;
             padding: 0 8px;
