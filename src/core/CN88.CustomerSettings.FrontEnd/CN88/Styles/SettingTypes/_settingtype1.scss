@@ -76,20 +76,26 @@ $pt-effective-date-warning-bg-color: $tooltip-error-bg-color;
             }
         }
 
-        .msg--pt-effective-date {
-            background-color: $pt-effective-date-warning-bg-color;
-            margin: 10px 25px;
-            padding: 4px 0;
+        .edit-pt {
+            .sub-header {
+                margin-bottom: 3px;
+            }
+
+            .msg--pt-effective-date {
+                .msg__icon {
+                    background-position: -3px -23px;
+                }
+            }
         }
     }
 
     .icon {
         &--valid-username {
-            background-position: -3px -109px;
+            background-position: -29px -23px;
         }
 
         &--invalid-username {
-            background-position: -3px -89px;
+            background-position: -28px -2px;
         }
     }
 

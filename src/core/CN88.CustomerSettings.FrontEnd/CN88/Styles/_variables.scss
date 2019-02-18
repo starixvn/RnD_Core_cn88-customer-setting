@@ -28,18 +28,22 @@ $tooltip-info-color: #3b3b3b;
 $tooltip-info-bg-color: #ececec;
 $tooltip-info-border-color: #b7b7b7;
 
-$msg-container-bg: #fdfbec;
-$msg-container-border-color: #d9d9d9;
-
-$text-color: #3b3b3b;
-
-$msg-error-color: #fe0000;
-$msg-success-color: #52a220;
-$msg-warning-color: #7e3d00;
+$msg-error-color: #7b0f0f;
+$msg-error-background-color: #ffe2e2;
+$msg-error-border-color: #fabbbb;
+$msg-success-color: #2da57e;
+$msg-success-background-color: #e7fff7;
+$msg-success-border-color: #62f1c3;
+$msg-warning-color: #f17507;
+$msg-warning-background-color: #ffeede;
+$msg-warning-border-color: #fdd8b7;
+$msg-info-color: #4885b4;
+$msg-info-background-color: #f0f9fe;
+$msg-info-border-color: #93dff7;
 
 $typehead-background-color: #fff;
-$typehead-selected-color: #fff;
-$typehead-selected-bg-color: #094b84;
+$typehead-border-color: #d2d2d2;
+$typehead-selected-background-color: #dbdbdb;
 
 $border-color: #d2d2d2;
 $border-size: 1px;
@@ -59,8 +63,9 @@ $block-label-group-background-color: #f4f1f1;
 
 $remark-color: #e9322d;
 
-$font-family: Arial, helvetica, sans-serif;
+$font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 $font-size-root: 12px;
 $font-size-base: 1.167rem !default;
 
+$text-color: #3b3b3b;
 $line-height: 1.5 !default;

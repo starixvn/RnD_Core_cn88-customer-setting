@@ -7,14 +7,14 @@
 }
 
 .dropdown-menu {
-    @include border($color: $field-border-color);
+    @include border($color: $typehead-border-color);
     background: $typehead-background-color;
     box-shadow: rgba(0, 0, 0, 0.3) 0 2px 2px;
     display: none;
     list-style: none;
     min-width: 160px;
     text-align: left;
-    padding: 5px 0;
+    padding: 0;
     position: absolute;
     width: 100%;
     z-index: 3;
@@ -27,8 +27,7 @@
     }
 
     > .active > a {
-        background-color: $typehead-selected-bg-color;
-        color: $typehead-selected-color;
+        background-color: $typehead-selected-background-color;
         outline: 0;
     }
 }

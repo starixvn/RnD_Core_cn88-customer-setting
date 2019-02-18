@@ -2,8 +2,6 @@
 @import "../_mixins";
 
 .msg-container {
-    @include border($color: $msg-container-border-color);
-    background-color: $msg-container-bg;
     margin-bottom: 10px;
     max-height: 500px;
     overflow-x: auto;
@@ -14,7 +12,7 @@
     display: -moz-box;
     display: -ms-flexbox;
     display: flex;
-    padding: 4px 16px;
+    padding: 4px;
 
     &__content {
         display: inline-block;
@@ -32,32 +30,42 @@
     }
 
     &--success {
+        @include border($color: $msg-success-border-color);
+        background-color: $msg-success-background-color;
         color: $msg-success-color;
 
         .msg__icon {
-            background-position: -3px -46px;
+            background-position: -3px -44px;
         }
     }
 
     &--warning {
+        @include border($color: $msg-warning-border-color);
+        background-color: $msg-warning-background-color;
         color: $msg-warning-color;
 
         .msg__icon {
-            background-position: -3px -67px;
+            background-position: -3px -65px;
         }
     }
 
     &--error {
+        @include border($color: $msg-error-border-color);
+        background-color: $msg-error-background-color;
         color: $msg-error-color;
 
         .msg__icon {
-            background-position: -3px -24px;
+            background-position: -29px -44px;
         }
     }
 
     &--info {
+        @include border($color: $msg-info-border-color);
+        background-color: $msg-info-background-color;
+        color: $msg-info-color;
+
         .msg__icon {
-            background-position: -3px -3px;
+            background-position: -29px -65px;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿<div class="position-taking">
-    <div data-ng-if="editable">
+    <div data-ng-if="editable"
+         data-ng-class="{ 'edit-pt': !isNew && !accountDetail.isPTReadOnly }">
         <div class="sub-header" data-ng-if="customerLevel !== avaiCustomerLevels.agent">{{::('PositionTaking' | settingType1Label)}}</div>
         <div class="sub-header" data-ng-if="customerLevel === avaiCustomerLevels.agent">
             <span class="sub-header__title">{{::('PositionTaking' | settingType1Label)}}</span>

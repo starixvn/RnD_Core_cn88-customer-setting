@@ -46,7 +46,6 @@
     }
 
     &--constraint {
-        line-height: 1.5rem;
         padding-left: 5px;
     }
 }
@@ -137,7 +136,7 @@ select.setting-field {
 
     &__header {
         @include border(bottom, $block-header-border-color);
-        font-size: 1rem;
+        font-size: 1.084rem;
         line-height: 3rem;
         padding-left: 18px;
         text-align: left;
@@ -236,7 +235,6 @@ select.setting-field {
         display: -moz-box;
         display: -ms-flexbox;
         display: flex;
-        line-height: 2.23rem;
         min-height: 3.2rem;
         padding: 0 3px;
 
