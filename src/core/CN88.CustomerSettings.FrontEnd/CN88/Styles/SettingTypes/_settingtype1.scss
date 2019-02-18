@@ -82,6 +82,8 @@ $pt-effective-date-warning-bg-color: $tooltip-error-bg-color;
             }
 
             .msg--pt-effective-date {
+                margin: initial;
+
                 .msg__icon {
                     background-position: -3px -23px;
                 }

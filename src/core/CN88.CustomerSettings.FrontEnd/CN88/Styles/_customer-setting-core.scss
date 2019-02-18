@@ -75,6 +75,7 @@ select.setting-field {
         @include border($color: $cancel-button-border-color);
         background-color: $cancel-button-background-color;
         color: $cancel-button-text-color;
+        margin-right: 10px;
 
         &:hover, &:focus {
             background-color: $cancel-button-hover-background-color;
@@ -229,7 +230,7 @@ select.setting-field {
         display: -ms-flexbox;
         display: flex;
         min-height: 3.2rem;
-        padding: 0 3px;
+        padding: 0 5px;
 
         &--no-border {
             border: none;
