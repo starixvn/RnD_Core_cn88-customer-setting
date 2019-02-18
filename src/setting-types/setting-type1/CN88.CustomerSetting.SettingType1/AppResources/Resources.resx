@@ -248,13 +248,13 @@ Notes: your password is cAsE sEnSiTiVe</value>
     <value>Max</value>
   </data>
   <data name="MaxLive" xml:space="preserve">
-    <value>MaxLive</value>
+    <value>Max In-Play </value>
   </data>
   <data name="Min" xml:space="preserve">
     <value>Min</value>
   </data>
   <data name="MinLive" xml:space="preserve">
-    <value>MinLive</value>
+    <value>Min In-Play </value>
   </data>
   <data name="UsernameCannotBeNullOrEmpty" xml:space="preserve">
     <value>Username cannot be null or empty</value>

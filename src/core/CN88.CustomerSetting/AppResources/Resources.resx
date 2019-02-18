@@ -169,21 +169,21 @@
     <value>Handicap, Over/Under, Odd/Even</value>
   </data>
   <data name="BetTypeName_1_1" xml:space="preserve">
-    <value>Live Handicap, Live Over/Under, Live Odd/Even</value>
+    <value>In-Play Handicap, In-Play Over/Under, In-Play Odd/Even</value>
   </data>
   <data name="BetTypeName_5_0" xml:space="preserve">
-    <value>1 X 2, Live 1 X 2</value>
+    <value>1 X 2, In-Play 1 X 2</value>
   </data>
   <data name="BetTypeName_9999_0" xml:space="preserve">
     <value>Other Bet Types</value>
   </data>
   <data name="BetTypeName_9999_1" xml:space="preserve">
-    <value>Live Other Bet Types</value>
+    <value>In-Play Other Bet Types</value>
   </data>
   <data name="Msg_90001" xml:space="preserve">
     <value>Update process is unsuccessful!</value>
   </data>
   <data name="Live" xml:space="preserve">
-    <value>Live</value>
+    <value>In-Play </value>
   </data>
 </root>

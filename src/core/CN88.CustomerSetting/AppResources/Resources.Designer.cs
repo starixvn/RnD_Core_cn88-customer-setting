@@ -88,7 +88,7 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Live Handicap, Live Over/Under, Live Odd/Even.
+        ///   Looks up a localized string similar to In-Play Handicap, In-Play Over/Under, In-Play Odd/Even.
         /// </summary>
         public static string BetTypeName_1_1 {
             get {
@@ -106,7 +106,7 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1 X 2, Live 1 X 2.
+        ///   Looks up a localized string similar to 1 X 2, In-Play 1 X 2.
         /// </summary>
         public static string BetTypeName_5_0 {
             get {
@@ -124,7 +124,7 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Live Other Bet Types.
+        ///   Looks up a localized string similar to In-Play Other Bet Types.
         /// </summary>
         public static string BetTypeName_9999_1 {
             get {
@@ -160,7 +160,7 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Live.
+        ///   Looks up a localized string similar to In-Play .
         /// </summary>
         public static string Live {
             get {

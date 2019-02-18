@@ -97,7 +97,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MaxLive.
+        ///   Looks up a localized string similar to Max In-Play .
         /// </summary>
         internal static string MaxLive {
             get {
@@ -115,7 +115,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MinLive.
+        ///   Looks up a localized string similar to Min In-Play .
         /// </summary>
         internal static string MinLive {
             get {
