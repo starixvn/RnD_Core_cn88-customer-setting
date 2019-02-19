@@ -4,13 +4,13 @@
         <div data-ng-if="customerLevel === avaiCustomerLevels.super">
             <div class="row">
                 <label class="w40-percent">
-                    <span>{{::('MainShareholder' | settingType1Label)}}</span>
+                    <span>{{::('Headline' | settingType1Label)}}</span>
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
                 </label>
                 <div class="dropdown-container w60-percent" data-ng-if="isNew">
-                    <main-shareholder-suggestion class="setting-field setting-field--fullwidth"
-                                                 data-ng-model="accountDetail.uplineUsername"
-                                                 data-setting-field="uplineUsername" />
+                    <headline-suggestion class="setting-field setting-field--fullwidth"
+                                         data-ng-model="accountDetail.uplineUsername"
+                                         data-setting-field="uplineUsername" />
                 </div>
                 <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.uplineUsername}}</label>
             </div>
@@ -275,7 +275,7 @@
     <div data-ng-if="!editable">
         <div data-ng-if="customerLevel === avaiCustomerLevels.super">
             <div class="row">
-                <label class="w40-percent">{{::('MainShareholder' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Headline' | settingType1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.uplineUsername}}</label>
             </div>
             <div class="row">

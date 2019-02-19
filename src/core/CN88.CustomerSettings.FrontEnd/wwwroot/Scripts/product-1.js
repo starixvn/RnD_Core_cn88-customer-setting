@@ -35898,6 +35898,100 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
+    var SettingResultDirective = (function () {
+        function SettingResultDirective($rootScope, $window) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
+            this.link = function (scope) {
+                scope.$watch("result", function (result) {
+                    _this.$rootScope.$emit("page-height-changed");
+                    if (result) {
+                        _this.$window.scrollTo(0, 0);
+                    }
+                });
+            };
+            this.$rootScope = $rootScope;
+            this.$window = $window;
+        }
+        Object.defineProperty(SettingResultDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    result: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingResultDirective.$inject = ["$rootScope", "$window"];
+        return SettingResultDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var SettingTypeDirectiveLoader = (function () {
+        function SettingTypeDirectiveLoader($compile) {
+            var _this = this;
+            this.replace = true;
+            this.link = function (scope, element) {
+                scope.$watch("setting.settingTypes", function () {
+                    _this.generateNodes(scope, element);
+                });
+            };
+            this.$compile = $compile;
+            this.loadedSettingTypes = [];
+        }
+        Object.defineProperty(SettingTypeDirectiveLoader.prototype, "scope", {
+            get: function () {
+                return {
+                    setting: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingTypeDirectiveLoader.prototype.generateNodes = function (scope, element) {
+            var _this = this;
+            if (scope.setting && scope.setting.settingTypes && angular.isArray(scope.setting.settingTypes)) {
+                scope.setting.settingTypes.forEach(function (settingType, index) {
+                    var loaded = _this.loadedSettingTypes.some(function (item) {
+                        return item === settingType.id;
+                    });
+                    if (!loaded) {
+                        var settingTypeName = CustomerSetting.StringFormater.format("settingtype{0}", settingType.id);
+                        var newNodeParts = [
+                            "<",
+                            settingTypeName,
+                            " data-setting-type=\"setting.settingTypes[",
+                            index,
+                            "]\"",
+                            "></",
+                            settingTypeName,
+                            ">"
+                        ];
+                        var settingTypeElement = angular.element(newNodeParts.join(""));
+                        if (index === scope.setting.settingTypes.length - 1) {
+                            settingTypeElement.addClass("last-setting-type");
+                        }
+                        element.append(settingTypeElement);
+                        _this.$compile(settingTypeElement)(scope);
+                        _this.loadedSettingTypes.push(settingType.id);
+                    }
+                });
+            }
+        };
+        SettingTypeDirectiveLoader.$inject = ["$compile"];
+        return SettingTypeDirectiveLoader;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
     var SettingFieldGroupDirective = (function () {
         function SettingFieldGroupDirective($injector, $filter) {
             var _this = this;
@@ -36057,100 +36151,6 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var SettingResultDirective = (function () {
-        function SettingResultDirective($rootScope, $window) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
-            this.link = function (scope) {
-                scope.$watch("result", function (result) {
-                    _this.$rootScope.$emit("page-height-changed");
-                    if (result) {
-                        _this.$window.scrollTo(0, 0);
-                    }
-                });
-            };
-            this.$rootScope = $rootScope;
-            this.$window = $window;
-        }
-        Object.defineProperty(SettingResultDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    result: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingResultDirective.$inject = ["$rootScope", "$window"];
-        return SettingResultDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var SettingTypeDirectiveLoader = (function () {
-        function SettingTypeDirectiveLoader($compile) {
-            var _this = this;
-            this.replace = true;
-            this.link = function (scope, element) {
-                scope.$watch("setting.settingTypes", function () {
-                    _this.generateNodes(scope, element);
-                });
-            };
-            this.$compile = $compile;
-            this.loadedSettingTypes = [];
-        }
-        Object.defineProperty(SettingTypeDirectiveLoader.prototype, "scope", {
-            get: function () {
-                return {
-                    setting: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingTypeDirectiveLoader.prototype.generateNodes = function (scope, element) {
-            var _this = this;
-            if (scope.setting && scope.setting.settingTypes && angular.isArray(scope.setting.settingTypes)) {
-                scope.setting.settingTypes.forEach(function (settingType, index) {
-                    var loaded = _this.loadedSettingTypes.some(function (item) {
-                        return item === settingType.id;
-                    });
-                    if (!loaded) {
-                        var settingTypeName = CustomerSetting.StringFormater.format("settingtype{0}", settingType.id);
-                        var newNodeParts = [
-                            "<",
-                            settingTypeName,
-                            " data-setting-type=\"setting.settingTypes[",
-                            index,
-                            "]\"",
-                            "></",
-                            settingTypeName,
-                            ">"
-                        ];
-                        var settingTypeElement = angular.element(newNodeParts.join(""));
-                        if (index === scope.setting.settingTypes.length - 1) {
-                            settingTypeElement.addClass("last-setting-type");
-                        }
-                        element.append(settingTypeElement);
-                        _this.$compile(settingTypeElement)(scope);
-                        _this.loadedSettingTypes.push(settingType.id);
-                    }
-                });
-            }
-        };
-        SettingTypeDirectiveLoader.$inject = ["$compile"];
-        return SettingTypeDirectiveLoader;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
     (function (PositionModel) {
         PositionModel[PositionModel["relative"] = 1] = "relative";
         PositionModel[PositionModel["absolute"] = 2] = "absolute";
@@ -36304,26 +36304,26 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var MainShareholderSuggestionDirective = (function () {
-        function MainShareholderSuggestionDirective(requestService, appConfigService) {
+    var HeadlineSuggestionDirective = (function () {
+        function HeadlineSuggestionDirective(requestService, appConfigService) {
             var _this = this;
             this.replace = true;
             this.require = "ngModel";
-            this.template = '<input type="text" maxlength="30" data-uib-typeahead="mainShareholder for mainShareholder in loadSuggestedMainShareholders($viewValue)" data-typeahead-min-length="2" data-typeahead-wait-ms="100">';
+            this.template = '<input type="text" maxlength="30" data-uib-typeahead="headline for headline in loadSuggestedHeadlines($viewValue)" data-typeahead-min-length="2" data-typeahead-wait-ms="100">';
             this.link = function (scope) {
-                scope.loadSuggestedMainShareholders = function (someFirstCharacters) {
-                    var requestPath = _this.appConfigService.buildPath(MainShareholderSuggestionDirective.suggestingMainShareholderPath);
+                scope.loadSuggestedHeadlines = function (someFirstCharacters) {
+                    var requestPath = _this.appConfigService.buildPath(HeadlineSuggestionDirective.suggestingHeadlinesPath);
                     return _this.requestService.get(requestPath, { username: someFirstCharacters }, function (response) { return response.data; }, false);
                 };
             };
             this.requestService = requestService;
             this.appConfigService = appConfigService;
         }
-        MainShareholderSuggestionDirective.$inject = ["requestService", "appConfigService"];
-        MainShareholderSuggestionDirective.suggestingMainShareholderPath = "CreateCN88Customer/GetMainShareholderSuggestionNames";
-        return MainShareholderSuggestionDirective;
+        HeadlineSuggestionDirective.$inject = ["requestService", "appConfigService"];
+        HeadlineSuggestionDirective.suggestingHeadlinesPath = "CreateCN88Customer/GetHeadlineSuggestionNames";
+        return HeadlineSuggestionDirective;
     }());
-    CustomerSetting.ModuleRegister.directive("mainShareholderSuggestion", MainShareholderSuggestionDirective);
+    CustomerSetting.ModuleRegister.directive("headlineSuggestion", HeadlineSuggestionDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var __extends = (this && this.__extends) || function (d, b) {
@@ -37079,31 +37079,12 @@ var __extends = (this && this.__extends) || function (d, b) {
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var PositionTakingDirective = (function (_super) {
-        __extends(PositionTakingDirective, _super);
-        function PositionTakingDirective() {
-            _super.apply(this, arguments);
-            this.template = '<div class="position-taking"><div data-ng-if="editable" data-ng-class="{ \'edit-pt\': !isNew && !accountDetail.isPTReadOnly }"><div class="sub-header" data-ng-if="customerLevel !== avaiCustomerLevels.agent">{{::(\'PositionTaking\' | settingType1Label)}}</div><div class="sub-header" data-ng-if="customerLevel === avaiCustomerLevels.agent"><span class="sub-header__title">{{::(\'PositionTaking\' | settingType1Label)}}</span> <span class="position-taking-constraint">{{\'MinAllowed\' | settingType1Label}} <span class="position-taking-constraint__value">{{accountDetail.minAllowedPT | formatPercentage}}</span></span> <span class="position-taking-constraint">{{\'MaxAllowed\' | settingType1Label}} <span class="position-taking-constraint__value">{{accountDetail.maxAllowedPT | formatPercentage}}</span></span></div><div data-ng-if="isNew"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | settingType1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMinPT" data-min="accountDetail.minSuperMinPT" data-max="accountDetail.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="superMinPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | settingType1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMaxPT" data-min="accountDetail.minSuperMaxPT" data-max="accountDetail.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="superMaxPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | settingType1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superPT" data-min="accountDetail.minSuperPT" data-max="accountDetail.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="superPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | settingType1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.masterPT" data-min="0" data-max="accountDetail.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="masterPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | settingType1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.agentPT" data-min="0" data-max="accountDetail.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="agentPT"></percentage-dropdown></div></div></div></div><div data-ng-if="!isNew"><div class="msg msg--error msg--pt-effective-date" data-ng-if="!accountDetail.isPTReadOnly"><div class="icon msg__icon"></div><div class="msg__content">{{\'PTEffectiveTime\' | settingType1Message:(accountDetail.ptEffectiveTime | formatDateTime)}}</div></div><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperMinPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMinPT" data-min="accountDetail.minSuperMinPT" data-max="accountDetail.maxSuperMinPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | settingType1Label)}}" data-placeholder-visible="true" data-setting-field="superMinPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperMaxPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMaxPT" data-min="accountDetail.minSuperMaxPT" data-max="accountDetail.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | settingType1Label)}}" data-placeholder-visible="true" data-setting-field="superMaxPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superPT" data-min="accountDetail.minSuperPT" data-max="accountDetail.maxSuperPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | settingType1Label)}}" data-placeholder-visible="true" data-setting-field="superPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.currentMasterPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.masterPT" data-min="0" data-max="accountDetail.maxMasterPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | settingType1Label)}}" data-placeholder-visible="true" data-setting-field="masterPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.currentAgentPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.agentPT" data-min="0" data-max="accountDetail.maxAgentPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | settingType1Label)}}" data-placeholder-visible="true" data-setting-field="agentPT"></percentage-dropdown></div></div></div></div></div><div data-ng-if="!editable"><div class="sub-header" data-ng-if="customerLevel !== avaiCustomerLevels.agent">{{::(\'PositionTaking\' | settingType1Label)}}</div><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.superMinPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.superMaxPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.superPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.masterPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.agentPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div></div></div>';
-        }
-        return PositionTakingDirective;
-    }(CustomerSetting.SubSectionBaseDirective));
-    CustomerSetting.ModuleRegister.directive("positionTaking", PositionTakingDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
     var GeneralDataDirective = (function (_super) {
         __extends(GeneralDataDirective, _super);
         function GeneralDataDirective(settingTypesSharedValuesService, crossingSettingTypesServiceBus) {
             var _this = this;
             _super.call(this, settingTypesSharedValuesService);
-            this.template = '<div class="general-data"><div class="sub-header">{{::(\'GeneralData\' | settingType1Label)}}</div><div data-ng-if="editable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent"><span>{{::(\'MainShareholder\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="dropdown-container w60-percent" data-ng-if="isNew"><main-shareholder-suggestion class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.uplineUsername" data-setting-field="uplineUsername"></main-shareholder-suggestion></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><input type="text" maxlength="30" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.username" data-setting-field="username"></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="30" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row"><label class="w40-percent">{{::(\'FirstName\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row"><label class="w40-percent">{{::(\'LastName\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.lastName"></div></div><div class="row"><label class="w40-percent">{{::(\'Phone\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.phone"></div></div><div class="row"><label class="w40-percent">{{::(\'MobilePhone\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.mobilePhone"></div></div><div class="row"><label class="w40-percent">{{::(\'Fax\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.fax"></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | settingType1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row" data-ng-if="isNew"><label class="w40-percent">{{::(\'Master\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | settingType1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.member"><div class="row" data-ng-if="isNew"><label class="w40-percent">{{::(\'Agent\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'SpreadGroup\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | settingType1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'MemberPasswordRules\' | settingType1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div></div><div data-ng-if="!editable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'MainShareholder\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'FirstName\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div><div class="row"><label class="w40-percent">{{::(\'LastName\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.lastName}}</label></div><div class="row"><label class="w40-percent">{{::(\'Phone\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.phone}}</label></div><div class="row"><label class="w40-percent">{{::(\'MobilePhone\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.mobilePhone}}</label></div><div class="row"><label class="w40-percent">{{::(\'Fax\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.fax}}</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.member"><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'SpreadGroup\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div></div></div>';
+            this.template = '<div class="general-data"><div class="sub-header">{{::(\'GeneralData\' | settingType1Label)}}</div><div data-ng-if="editable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent"><span>{{::(\'Headline\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="dropdown-container w60-percent" data-ng-if="isNew"><headline-suggestion class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.uplineUsername" data-setting-field="uplineUsername"></headline-suggestion></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><input type="text" maxlength="30" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.username" data-setting-field="username"></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="30" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row"><label class="w40-percent">{{::(\'FirstName\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row"><label class="w40-percent">{{::(\'LastName\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.lastName"></div></div><div class="row"><label class="w40-percent">{{::(\'Phone\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.phone"></div></div><div class="row"><label class="w40-percent">{{::(\'MobilePhone\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.mobilePhone"></div></div><div class="row"><label class="w40-percent">{{::(\'Fax\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.fax"></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | settingType1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row" data-ng-if="isNew"><label class="w40-percent">{{::(\'Master\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | settingType1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.member"><div class="row" data-ng-if="isNew"><label class="w40-percent">{{::(\'Agent\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><username-suffix-group></username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'SpreadGroup\' | settingType1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | settingType1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | settingType1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'MemberPasswordRules\' | settingType1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | settingType1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div></div><div data-ng-if="!editable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'Headline\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'FirstName\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div><div class="row"><label class="w40-percent">{{::(\'LastName\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.lastName}}</label></div><div class="row"><label class="w40-percent">{{::(\'Phone\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.phone}}</label></div><div class="row"><label class="w40-percent">{{::(\'MobilePhone\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.mobilePhone}}</label></div><div class="row"><label class="w40-percent">{{::(\'Fax\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.fax}}</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.member"><div class="row"><label class="w40-percent">{{::(\'Username\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'SpreadGroup\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | settingType1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div></div></div>';
             this.link = function (scope) {
                 _this.linkInternal(scope);
                 if (scope.isNew && scope.customerLevel === CustomerSetting.Level.member) {
@@ -37120,6 +37101,25 @@ var CustomerSetting;
         return GeneralDataDirective;
     }(CustomerSetting.SubSectionBaseDirective));
     CustomerSetting.ModuleRegister.directive("generalData", GeneralDataDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var PositionTakingDirective = (function (_super) {
+        __extends(PositionTakingDirective, _super);
+        function PositionTakingDirective() {
+            _super.apply(this, arguments);
+            this.template = '<div class="position-taking"><div data-ng-if="editable" data-ng-class="{ \'edit-pt\': !isNew && !accountDetail.isPTReadOnly }"><div class="sub-header" data-ng-if="customerLevel !== avaiCustomerLevels.agent">{{::(\'PositionTaking\' | settingType1Label)}}</div><div class="sub-header" data-ng-if="customerLevel === avaiCustomerLevels.agent"><span class="sub-header__title">{{::(\'PositionTaking\' | settingType1Label)}}</span> <span class="position-taking-constraint">{{\'MinAllowed\' | settingType1Label}} <span class="position-taking-constraint__value">{{accountDetail.minAllowedPT | formatPercentage}}</span></span> <span class="position-taking-constraint">{{\'MaxAllowed\' | settingType1Label}} <span class="position-taking-constraint__value">{{accountDetail.maxAllowedPT | formatPercentage}}</span></span></div><div data-ng-if="isNew"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | settingType1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMinPT" data-min="accountDetail.minSuperMinPT" data-max="accountDetail.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="superMinPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | settingType1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMaxPT" data-min="accountDetail.minSuperMaxPT" data-max="accountDetail.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="superMaxPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | settingType1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superPT" data-min="accountDetail.minSuperPT" data-max="accountDetail.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="superPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | settingType1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.masterPT" data-min="0" data-max="accountDetail.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="masterPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | settingType1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.agentPT" data-min="0" data-max="accountDetail.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="agentPT"></percentage-dropdown></div></div></div></div><div data-ng-if="!isNew"><div class="msg msg--error msg--pt-effective-date" data-ng-if="!accountDetail.isPTReadOnly"><div class="icon msg__icon"></div><div class="msg__content">{{\'PTEffectiveTime\' | settingType1Message:(accountDetail.ptEffectiveTime | formatDateTime)}}</div></div><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperMinPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMinPT" data-min="accountDetail.minSuperMinPT" data-max="accountDetail.maxSuperMinPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | settingType1Label)}}" data-placeholder-visible="true" data-setting-field="superMinPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperMaxPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMaxPT" data-min="accountDetail.minSuperMaxPT" data-max="accountDetail.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | settingType1Label)}}" data-placeholder-visible="true" data-setting-field="superMaxPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superPT" data-min="accountDetail.minSuperPT" data-max="accountDetail.maxSuperPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | settingType1Label)}}" data-placeholder-visible="true" data-setting-field="superPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.currentMasterPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.masterPT" data-min="0" data-max="accountDetail.maxMasterPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | settingType1Label)}}" data-placeholder-visible="true" data-setting-field="masterPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.currentAgentPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.agentPT" data-min="0" data-max="accountDetail.maxAgentPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | settingType1Label)}}" data-placeholder-visible="true" data-setting-field="agentPT"></percentage-dropdown></div></div></div></div></div><div data-ng-if="!editable"><div class="sub-header" data-ng-if="customerLevel !== avaiCustomerLevels.agent">{{::(\'PositionTaking\' | settingType1Label)}}</div><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.superMinPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.superMaxPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.superPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.masterPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | settingType1Label)}}</label> <label class="w30-percent">{{accountDetail.agentPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div></div></div>';
+        }
+        return PositionTakingDirective;
+    }(CustomerSetting.SubSectionBaseDirective));
+    CustomerSetting.ModuleRegister.directive("positionTaking", PositionTakingDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -37500,7 +37500,7 @@ $templateCache.put("setting-type2-value.html","<div class=\"block__cell-wrapper\
     var labels = {};
 
     labels["en-us"] = {
-        "MainShareholder": "Main Shareholder",
+        "Headline": "Headline",
         "Master": "Master Agent",
         "Agent": "Agent",
         "AccountDetail": "Account Detail",

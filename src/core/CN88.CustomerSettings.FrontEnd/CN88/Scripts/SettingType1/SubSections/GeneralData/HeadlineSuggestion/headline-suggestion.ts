@@ -6,26 +6,26 @@
 module CustomerSetting {
     "use strict";
 
-    interface ILoadSuggestedMainShareholder {
+    interface ILoadSuggestedHeadlines {
         (someFirstCharacters: string): ng.IPromise<string[]>;
     }
 
-    interface IMainShareholderSuggestion extends ng.IScope {
-        loadSuggestedMainShareholders: ILoadSuggestedMainShareholder;
+    interface IHeadlinesSuggestionScope extends ng.IScope {
+        loadSuggestedHeadlines: ILoadSuggestedHeadlines;
     }
 
-    class MainShareholderSuggestionDirective implements ng.IDirective {
+    class HeadlineSuggestionDirective implements ng.IDirective {
         public static $inject: string[] = ["requestService", "appConfigService"];
 
-        private static suggestingMainShareholderPath: string = "CreateCN88Customer/GetMainShareholderSuggestionNames";
+        private static suggestingHeadlinesPath: string = "CreateCN88Customer/GetHeadlineSuggestionNames";
 
         public replace: boolean = true;
         public require: string = "ngModel";
-        public templateUrl: string = "main-shareholder-suggestion.htm";
+        public templateUrl: string = "headline-suggestion.htm";
 
-        public link: ng.IDirectiveLinkFn = (scope: IMainShareholderSuggestion) => {
-            scope.loadSuggestedMainShareholders = (someFirstCharacters: string) => {
-                var requestPath: string = this.appConfigService.buildPath(MainShareholderSuggestionDirective.suggestingMainShareholderPath);
+        public link: ng.IDirectiveLinkFn = (scope: IHeadlinesSuggestionScope) => {
+            scope.loadSuggestedHeadlines = (someFirstCharacters: string) => {
+                var requestPath: string = this.appConfigService.buildPath(HeadlineSuggestionDirective.suggestingHeadlinesPath);
 
                 return this.requestService.get(
                     requestPath,
@@ -44,5 +44,5 @@ module CustomerSetting {
         }
     }
 
-    ModuleRegister.directive("mainShareholderSuggestion", MainShareholderSuggestionDirective);
+    ModuleRegister.directive("headlineSuggestion", HeadlineSuggestionDirective);
 }

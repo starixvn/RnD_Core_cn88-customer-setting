@@ -6,7 +6,7 @@
     var labels = {};
 
     labels["en-us"] = {
-        "MainShareholder": "Main Shareholder",
+        "Headline": "Headline",
         "Master": "Master Agent",
         "Agent": "Agent",
         "AccountDetail": "Account Detail",
