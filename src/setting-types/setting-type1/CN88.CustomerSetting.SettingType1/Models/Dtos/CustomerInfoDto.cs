@@ -24,6 +24,6 @@
 
         public string UGroup { get; set; }
 
-        public string MainShareholderUsername { get; set; }
+        public string HeadlineUsername { get; set; }
     }
 }

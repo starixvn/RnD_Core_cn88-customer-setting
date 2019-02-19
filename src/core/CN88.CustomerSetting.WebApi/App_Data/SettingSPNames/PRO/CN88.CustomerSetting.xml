@@ -41,7 +41,7 @@
       </Setting>
       <Setting Key="Age_CustomerCheckExists" SpName="Age_CustomerCheckExists" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0">
       </Setting>
-      <Setting Key="CS_MainShareholderUsernameSuggestion" SpName="CS_MainShareholderUsernameSuggestion" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0">
+      <Setting Key="CS_HeadlineUsernameSuggestion" SpName="CS_HeadlineUsernameSuggestion" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0">
       </Setting>
     </Function>
 </Functions>

@@ -286,7 +286,7 @@
             Assert.AreEqual(settingContext.Actor.Id, createParams["creator"]);
             Assert.AreEqual("CN88", createParams["site"]);
             Assert.AreEqual(1, createParams["currency"]);
-            Assert.AreEqual("mainshareholderusername", createParams["mainshareholderusername"]);
+            Assert.AreEqual("headlineusername", createParams["headlineusername"]);
             Assert.AreEqual("<ROOT><PT SportType=\"1\" BetType=\"2\" IsLive=\"1\" MinPT=\"11\" MaxPT=\"12\" /></ROOT>", createParams["ptsetting"]);
         }
 
@@ -496,7 +496,7 @@
                         Phone = "Phone",
                         MobilePhone = "MobilePhone",
                         Password = "Password",
-                        UplineUsername = "mainshareholderusername"
+                        UplineUsername = "headlineusername"
                     }
                 }
             };

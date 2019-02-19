@@ -210,32 +210,32 @@
         }
 
         [Test]
-        public async Task GetMainShareholderSuggestionNames_Always_CallDynamicRepositoryFetch()
+        public async Task GetHeadlineSuggestionNames_Always_CallDynamicRepositoryFetch()
         {
             var username = "mshusername";
 
-            await createCustomerService.GetMainShareholderSuggestionNames(username);
+            await createCustomerService.GetHeadlineSuggestionNames(username);
 
             await dynamicRepository
                 .Received()
-                .FetchAsync<string>(Arg.Is<GetMainShareholderSuggestionNamesCriteria>(
+                .FetchAsync<string>(Arg.Is<GetHeadlineSuggestionNamesCriteria>(
                     criteria => criteria.Username == username));
         }
 
         [Test]
-        public async Task GetMainShareholderSuggestionNames_Always_ReturnDataFromDatabase()
+        public async Task GetHeadlineSuggestionNames_Always_ReturnDataFromDatabase()
         {
             var username = "mshusername";
 
             dynamicRepository
-                .FetchAsync<string>(Arg.Is<GetMainShareholderSuggestionNamesCriteria>(
+                .FetchAsync<string>(Arg.Is<GetHeadlineSuggestionNamesCriteria>(
                     criteria => criteria.Username == username))
                 .Returns(new List<string> { "MSH1" });
 
-            var mainshareholderNames = await createCustomerService.GetMainShareholderSuggestionNames(username);
+            var headlineNames = await createCustomerService.GetHeadlineSuggestionNames(username);
 
-            Assert.AreEqual(1, mainshareholderNames.Count());
-            Assert.AreEqual("MSH1", mainshareholderNames.FirstOrDefault());
+            Assert.AreEqual(1, headlineNames.Count());
+            Assert.AreEqual("MSH1", headlineNames.FirstOrDefault());
         }
     }
 }

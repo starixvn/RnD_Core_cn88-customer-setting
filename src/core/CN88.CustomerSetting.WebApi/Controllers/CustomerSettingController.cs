@@ -54,8 +54,8 @@
             => createCustomerService.IsUsernameExisted(username);
 
         [HttpGet]
-        public Task<IEnumerable<string>> GetMainShareholderSuggestionNames(string username)
-            => createCustomerService.GetMainShareholderSuggestionNames(username);
+        public Task<IEnumerable<string>> GetHeadlineSuggestionNames(string username)
+            => createCustomerService.GetHeadlineSuggestionNames(username);
 
         [HttpGet]
         public string GetTemplate()

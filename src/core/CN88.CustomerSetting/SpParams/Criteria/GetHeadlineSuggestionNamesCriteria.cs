@@ -2,9 +2,9 @@
 {
     using Fanex.Data.Repository;
 
-    public class GetMainShareholderSuggestionNamesCriteria : CriteriaBase
+    public class GetHeadlineSuggestionNamesCriteria : CriteriaBase
     {
-        public GetMainShareholderSuggestionNamesCriteria(string username)
+        public GetHeadlineSuggestionNamesCriteria(string username)
         {
             Username = username;
         }
@@ -12,7 +12,7 @@
         public string Username { get; }
 
         public override string GetSettingKey()
-            => "CS_MainShareholderUsernameSuggestion";
+            => "CS_HeadlineUsernameSuggestion";
 
         public override bool IsValid()
             => !string.IsNullOrWhiteSpace(Username);

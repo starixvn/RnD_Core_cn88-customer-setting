@@ -81,9 +81,9 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to Main Shareholder Name cannot be null or empty.
         /// </summary>
-        internal static string MainShareholderUsernameCannotBeNullOrEmpty {
+        internal static string HeadlineUsernameCannotBeNullOrEmpty {
             get {
-                return ResourceManager.GetString("MainShareholderUsernameCannotBeNullOrEmpty", resourceCulture);
+                return ResourceManager.GetString("HeadlineUsernameCannotBeNullOrEmpty", resourceCulture);
             }
         }
         

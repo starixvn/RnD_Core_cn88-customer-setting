@@ -24,7 +24,7 @@
 
         Task<IResult> IsUsernameExisted(string username);
 
-        Task<IEnumerable<string>> GetMainShareholderSuggestionNames(string username);
+        Task<IEnumerable<string>> GetHeadlineSuggestionNames(string username);
     }
 
     public class CreateCustomerServiceImpl : CreateCustomerService
@@ -165,9 +165,9 @@
             logger.Error(ex.Message, ex);
         }
 
-        public async Task<IEnumerable<string>> GetMainShareholderSuggestionNames(string username)
+        public async Task<IEnumerable<string>> GetHeadlineSuggestionNames(string username)
             => await dynamicRepository
-                .FetchAsync<string>(new GetMainShareholderSuggestionNamesCriteria(username))
+                .FetchAsync<string>(new GetHeadlineSuggestionNamesCriteria(username))
                 .ConfigureAwait(false);
     }
 }

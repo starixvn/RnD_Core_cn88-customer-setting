@@ -71,7 +71,7 @@
             settingItem.Credit = customerInfo.Credit;
             settingItem.MaxCredit = customerInfo.MaxCredit;
             settingItem.MinCredit = customerInfo.MinCredit;
-            settingItem.UplineUsername = DecodeHtml(customerInfo.MainShareholderUsername);
+            settingItem.UplineUsername = DecodeHtml(customerInfo.HeadlineUsername);
 
             if (query.CustomerLevel.IsMemberLevel()
                 && !string.IsNullOrEmpty(customerInfo.UGroup))
@@ -309,10 +309,10 @@
             createNewParams.Add("phone", EncodeHtml(settingItem.Phone));
             createNewParams.Add("mobilephone", EncodeHtml(settingItem.MobilePhone));
             createNewParams.Add("fax", EncodeHtml(settingItem.Fax));
-            createNewParams.Add("mainshareholderusername",
+            createNewParams.Add("headlineusername",
                 EncodeHtml(
                     settingItem.UplineUsername
-                    ?? throw new InvalidOperationException(Resources.MainShareholderUsernameCannotBeNullOrEmpty)));
+                    ?? throw new InvalidOperationException(Resources.HeadlineUsernameCannotBeNullOrEmpty)));
 
             return createNewParams;
         }

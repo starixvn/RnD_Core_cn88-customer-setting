@@ -15,6 +15,6 @@
 
         IRestResponse CheckExistedUsername(string username);
 
-        IRestResponse GetMainShareholderSuggestionNames(string username);
+        IRestResponse GetHeadlineSuggestionNames(string username);
     }
 }

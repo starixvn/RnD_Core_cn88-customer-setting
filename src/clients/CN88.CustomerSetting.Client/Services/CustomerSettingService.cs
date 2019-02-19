@@ -116,9 +116,9 @@
             return restClient.Execute(request);
         }
 
-        public IRestResponse GetMainShareholderSuggestionNames(string username)
+        public IRestResponse GetHeadlineSuggestionNames(string username)
         {
-            IRestRequest request = new RestRequest("/customersetting/GetMainShareholderSuggestionNames", Method.GET);
+            IRestRequest request = new RestRequest("/customersetting/GetHeadlineSuggestionNames", Method.GET);
 
             request.AddParameter("username", username);
 
