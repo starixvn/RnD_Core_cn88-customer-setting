@@ -151,7 +151,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Existing masters exceed new Master Max PT..
+        ///   Looks up a localized string similar to Existing masters exceed new Master Max Possess..
         /// </summary>
         internal static string Msg_20021 {
             get {
@@ -160,7 +160,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Existing members exceed new Master Max PT..
+        ///   Looks up a localized string similar to Existing members exceed new Master Max Possess..
         /// </summary>
         internal static string Msg_20022 {
             get {
@@ -169,7 +169,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Existing agents exceed new Agent Max PT..
+        ///   Looks up a localized string similar to Existing agents exceed new Agent Max Possess..
         /// </summary>
         internal static string Msg_20023 {
             get {
@@ -178,7 +178,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Existing members exceed new Agent Max PT..
+        ///   Looks up a localized string similar to Existing members exceed new Agent Max Possess..
         /// </summary>
         internal static string Msg_20024 {
             get {
@@ -187,7 +187,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The position taking violates Upline Min/Max PT..
+        ///   Looks up a localized string similar to The position taking violates Upline Min/Max Possess..
         /// </summary>
         internal static string Msg_20025 {
             get {
@@ -196,7 +196,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Existing agents exceed new Master Max PT..
+        ///   Looks up a localized string similar to Existing agents exceed new Master Max Possess..
         /// </summary>
         internal static string Msg_20026 {
             get {
@@ -205,7 +205,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The position taking violates Master Max PT set by company..
+        ///   Looks up a localized string similar to The position taking violates Master Max Possess set by company..
         /// </summary>
         internal static string Msg_20027 {
             get {
@@ -232,7 +232,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Agent Min PT violates Master Max PT..
+        ///   Looks up a localized string similar to The Agent Min Possess violates Master Max Possess..
         /// </summary>
         internal static string Msg_20030 {
             get {
@@ -241,7 +241,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The position taking violates Master Max PT..
+        ///   Looks up a localized string similar to The position taking violates Master Max Possess..
         /// </summary>
         internal static string Msg_20031 {
             get {
@@ -250,7 +250,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The position taking violates Master Min PT..
+        ///   Looks up a localized string similar to The position taking violates Master Min Possess..
         /// </summary>
         internal static string Msg_20032 {
             get {
@@ -259,7 +259,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The position taking violates Agent Min/Max PT..
+        ///   Looks up a localized string similar to The position taking violates Agent Min/Max Possess..
         /// </summary>
         internal static string Msg_20033 {
             get {
@@ -268,7 +268,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The position taking violates Agent Max PT..
+        ///   Looks up a localized string similar to The position taking violates Agent Max Possess..
         /// </summary>
         internal static string Msg_20034 {
             get {
@@ -277,7 +277,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New SMA Possess is too low. It makes some lines&apos; Total Possess Taken become less than SMA Min Possess.
+        ///   Looks up a localized string similar to New SMA Possess is too low. It makes some lines&apos; Total Possess taken become less than SMA Min Possess.
         /// </summary>
         internal static string Msg_20035 {
             get {
@@ -286,7 +286,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New SMA Possess is too high. It makes some lines&apos; Total Possess Taken become greater than SMA Max Possess.
+        ///   Looks up a localized string similar to New SMA Possess is too high. It makes some lines&apos; Total Possess taken become greater than SMA Max Possess.
         /// </summary>
         internal static string Msg_20036 {
             get {
@@ -295,7 +295,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Master &amp; Agent&apos;s Total Possess is too low. It makes the line&apos;s Total Possess less than SMA Min Possess.
+        ///   Looks up a localized string similar to Master Agent &amp; Agent&apos;s Total Possess is too low. It makes the line&apos;s Total Possess less than SMA Min Possess.
         /// </summary>
         internal static string Msg_20037 {
             get {
@@ -304,7 +304,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Master &amp; Agent&apos;s Total Possess is too high. It makes the line&apos;s Total Possess greater than SMA Max Possess.
+        ///   Looks up a localized string similar to Master Agent &amp; Agent&apos;s Total Possess is too high. It makes the line&apos;s Total Possess greater than SMA Max Possess.
         /// </summary>
         internal static string Msg_20038 {
             get {
@@ -313,7 +313,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Master Agent Possess is too high. It makes the line&apos;&apos;s Total Possess greater than SMA Max Possess.
+        ///   Looks up a localized string similar to Master Agent Possess is too high. It makes the line&apos;s Total Possess greater than SMA Max Possess.
         /// </summary>
         internal static string Msg_20039 {
             get {
@@ -322,7 +322,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Agent Possess is too high. It makes the line&apos;&apos;s Total Possess greater than SMA Max Possess.
+        ///   Looks up a localized string similar to Agent Possess is too high. It makes the line&apos;s Total Possess greater than SMA Max Possess.
         /// </summary>
         internal static string Msg_20040 {
             get {
@@ -331,7 +331,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New SMA Min Possess is greater than the Total Possess Taken by some lines..
+        ///   Looks up a localized string similar to New SMA Min Possess is greater than the Total Possess taken by some lines..
         /// </summary>
         internal static string Msg_30007 {
             get {
@@ -340,7 +340,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New SMA Max Possess is less than the Total Possess Taken by some lines..
+        ///   Looks up a localized string similar to New SMA Max Possess is less than the Total Possess taken by some lines..
         /// </summary>
         internal static string Msg_30008 {
             get {
