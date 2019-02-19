@@ -403,10 +403,14 @@
                 .ExecuteAsync(updateCommand)
                 .ConfigureAwait(false);
 
-            return new SettingResult(
-                updateCommand.ErrCode == 0
+            var result = updateCommand.ErrCode == 0
                     ? Result.CreateSuccessResult(Resources.UpdateAccountDetailSuccess)
-                    : Result.CreateErrorResult(updateCommand.ErrMsg, updateCommand.ErrCode),
+                    : Result.CreateErrorResult(updateCommand.ErrMsg, updateCommand.ErrCode);
+
+            return new SettingResult(
+                result.Code,
+                result.Message,
+                result.MsgType,
                 command.Setting.CustomerId,
                 settingType.Id,
                 settingType.Name);
