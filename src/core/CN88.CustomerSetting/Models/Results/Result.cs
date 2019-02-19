@@ -68,8 +68,11 @@
         public override int GetHashCode()
             => Code.GetHashCode();
 
-        public static Result CreateErrorResult(string message)
-            => new Result(ResultValues.Error, message, MessageTypes.Error);
+        public static Result CreateErrorResult(string message, int errCode = 0)
+            => new Result(
+                errCode == 0 
+                    ? ResultValues.Error
+                    : errCode, message, MessageTypes.Error);
 
         public static Result CreateSuccessResult(string message)
             => new Result(ResultValues.Success, message);
