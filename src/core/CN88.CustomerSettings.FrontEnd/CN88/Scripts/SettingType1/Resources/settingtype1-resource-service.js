@@ -74,8 +74,8 @@
         "AgentPTMustBeLessThanOrEqualTo": "Agent Possess must be less than or equal to {0}.",
         "TotalPTMustBeInRange": "Total Possess must be between {0}% and {1}%. Please try again.",
         "PTEffectiveTime": "Effective after: {0}",
-        "CreditMustBeGreaterThanOrEqualTo": "Credit must be greater than or equal to {0}.",
-        "CreditMustBeLessThanOrEqualTo": "Credit must be less than or equal to {0}.",
+        "CreditsMustBeGreaterThanOrEqualTo": "Credits must be greater than or equal to {0}.",
+        "CreditsMustBeLessThanOrEqualTo": "Credits must be less than or equal to {0}.",
         "InvalidCurrency": "Invalid currency."
     };
 

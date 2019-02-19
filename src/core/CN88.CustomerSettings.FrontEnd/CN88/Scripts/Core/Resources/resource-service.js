@@ -19,12 +19,6 @@
     labels["zh-hans"] = {
     };
 
-    labels["ko-kr"] = {
-    };
-
-    labels["ja-jp"] = {
-    };
-
     labels["th-th"] = {
     };
 
@@ -52,14 +46,6 @@
         "NoChangeToUpdate": "没有任何的变化更新。",
         "SystemError": "哎哟..因为系统故障所以您会身在此处，请向管理层联系吧",
         "YouAreNotAuthorized": "您没有使用此功能的权限"
-    };
-
-    messages["ko-kr"] = {
-        "SystemError": "죄송합니다. 시스템에러가 발생했습니다. 관리자에게 문의 바랍니다.",
-        "YouAreNotAuthorized": "해당 기능에 대한 권한이 없습니다."
-    };
-
-    messages["ja-jp"] = {
     };
 
     messages["th-th"] = {

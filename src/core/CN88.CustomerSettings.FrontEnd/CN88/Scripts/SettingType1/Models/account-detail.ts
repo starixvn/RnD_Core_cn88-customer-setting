@@ -130,7 +130,7 @@ module CustomerSetting {
 
             if (this.credit < this.minCredit) {
                 this.validationState = new ValidationResult(
-                    "CreditMustBeGreaterThanOrEqualTo",
+                    "CreditsMustBeGreaterThanOrEqualTo",
                     "credit",
                     [this.minCredit],
                     { precision: 2 });
@@ -140,7 +140,7 @@ module CustomerSetting {
 
             if (this.credit > this.maxCredit) {
                 this.validationState = new ValidationResult(
-                    "CreditMustBeLessThanOrEqualTo",
+                    "CreditsMustBeLessThanOrEqualTo",
                     "credit",
                     [this.maxCredit],
                     { precision: 2 });

@@ -124,7 +124,7 @@ module CustomerSetting {
 
             if (this.credit < this.minCredit) {
                 this.validationState = new ValidationResult(
-                    "CreditMustBeGreaterThanOrEqualTo",
+                    "CreditsMustBeGreaterThanOrEqualTo",
                     "credit",
                     [this.minCredit],
                     { precision: 2 });
