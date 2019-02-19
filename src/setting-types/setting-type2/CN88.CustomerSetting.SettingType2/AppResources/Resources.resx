@@ -121,7 +121,7 @@
     <value>Commission &amp; Bet Limit</value>
   </data>
   <data name="UpdateCommBetSettingSuccess" xml:space="preserve">
-    <value>Commission &amp; Bet Setting are updated successfully.</value>
+    <value>Commission &amp; Bet Limit are updated successfully.</value>
   </data>
   <data name="Msg_10003" xml:space="preserve">
     <value>Invalid Min bet/ Max per Bet/ Max per Event.</value>

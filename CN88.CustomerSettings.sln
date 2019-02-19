@@ -35,9 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CN88.CustomerSetting.WebApi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CN88.CustomerSetting.UnitTests", "src\core\tests\CN88.CustomerSetting.UnitTests\CN88.CustomerSetting.UnitTests.csproj", "{11240F2C-6583-48D6-8090-86B1EEF21089}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CN88.CustomerSetting.SettingType1.UnitTests", "src\setting-types\setting-type1\CN88.CustomerSetting.SettingType1.UnitTests\CN88.CustomerSetting.SettingType1.UnitTests.csproj", "{6D96762D-7348-488D-A18F-F7C31B1AFD62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CN88.CustomerSetting.SettingType1.UnitTests", "src\setting-types\setting-type1\CN88.CustomerSetting.SettingType1.UnitTests\CN88.CustomerSetting.SettingType1.UnitTests.csproj", "{6D96762D-7348-488D-A18F-F7C31B1AFD62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CN88.CustomerSetting.SettingType2.UnitTests", "src\setting-types\setting-type2\CN88.CustomerSetting.SettingType2.UnitTests\CN88.CustomerSetting.SettingType2.UnitTests.csproj", "{08A85562-7A09-4B33-8F35-F44A62CCDBA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CN88.CustomerSetting.SettingType2.UnitTests", "src\setting-types\setting-type2\CN88.CustomerSetting.SettingType2.UnitTests\CN88.CustomerSetting.SettingType2.UnitTests.csproj", "{08A85562-7A09-4B33-8F35-F44A62CCDBA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

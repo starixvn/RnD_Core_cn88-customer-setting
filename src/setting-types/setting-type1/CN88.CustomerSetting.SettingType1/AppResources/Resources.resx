@@ -173,10 +173,10 @@ Notes: your password is cAsE sEnSiTiVe</value>
     <value>Existing members exceed new SMA Max Possess.</value>
   </data>
   <data name="Msg_20021" xml:space="preserve">
-    <value>Existing masters exceed new Master Max Possess.</value>
+    <value>Existing masters exceed new Master Agent Max Possess.</value>
   </data>
   <data name="Msg_20022" xml:space="preserve">
-    <value>Existing members exceed new Master Max Possess.</value>
+    <value>Existing members exceed new Master Agent Max Possess.</value>
   </data>
   <data name="Msg_20023" xml:space="preserve">
     <value>Existing agents exceed new Agent Max Possess.</value>
@@ -185,34 +185,34 @@ Notes: your password is cAsE sEnSiTiVe</value>
     <value>Existing members exceed new Agent Max Possess.</value>
   </data>
   <data name="Msg_20025" xml:space="preserve">
-    <value>The position taking violates Upline Min/Max Possess.</value>
+    <value>The Possess violates Upline Min/Max Possess.</value>
   </data>
   <data name="Msg_20026" xml:space="preserve">
-    <value>Existing agents exceed new Master Max Possess.</value>
+    <value>Existing agents exceed new Master Agent Max Possess.</value>
   </data>
   <data name="Msg_20027" xml:space="preserve">
-    <value>The position taking violates Master Max Possess set by company.</value>
+    <value>The Possess violates Master Agent Max Possess set by company.</value>
   </data>
   <data name="Msg_20028" xml:space="preserve">
-    <value>The position taking violates SMA Max Possess.</value>
+    <value>The Possess violates SMA Max Possess.</value>
   </data>
   <data name="Msg_20029" xml:space="preserve">
-    <value>The position taking violates SMA Min Possess.</value>
+    <value>The Possess violates SMA Min Possess.</value>
   </data>
   <data name="Msg_20030" xml:space="preserve">
-    <value>The Agent Min Possess violates Master Max Possess.</value>
+    <value>The Agent Min Possess violates Master Agent Max Possess.</value>
   </data>
   <data name="Msg_20031" xml:space="preserve">
-    <value>The position taking violates Master Max Possess.</value>
+    <value>The Possess violates Master Agent Max Possess.</value>
   </data>
   <data name="Msg_20032" xml:space="preserve">
-    <value>The position taking violates Master Min Possess.</value>
+    <value>The Possess violates Master Agent Min Possess.</value>
   </data>
   <data name="Msg_20033" xml:space="preserve">
-    <value>The position taking violates Agent Min/Max Possess.</value>
+    <value>The Possess violates Agent Min/Max Possess.</value>
   </data>
   <data name="Msg_20034" xml:space="preserve">
-    <value>The position taking violates Agent Max Possess.</value>
+    <value>The Possess violates Agent Max Possess.</value>
   </data>
   <data name="Msg_30007" xml:space="preserve">
     <value>New SMA Min Possess is greater than the Total Possess taken by some lines.</value>
