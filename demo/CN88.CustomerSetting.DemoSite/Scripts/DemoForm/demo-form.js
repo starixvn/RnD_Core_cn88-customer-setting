@@ -80,13 +80,13 @@ var DemoFrom;
             //    }
             //}).done(function (result) { console.log(result); });
 
-            $.ajax({
-                method: "GET",
-                url: this.resolveUrl("CN88CustomerSetting/CreateCN88Customer/GetHeadlineCurrency"),
-                    data: {
-                        username: "MSHCN88"
-                }
-            }).done(function (result) { console.log(result); });
+            //$.ajax({
+            //    method: "GET",
+            //    url: this.resolveUrl("CN88CustomerSetting/CreateCN88Customer/GetHeadlineCurrency"),
+            //        data: {
+            //            username: "MSHCN88"
+            //    }
+            //}).done(function (result) { console.log(result); });
 
             //$.ajax({
             //    method: "POST",

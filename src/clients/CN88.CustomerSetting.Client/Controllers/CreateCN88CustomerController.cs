@@ -7,7 +7,7 @@
     using CN88.CustomerSetting.Client.Services;
     using RestSharp;
 
-    //[ValidateAntiForgery]
+    [ValidateAntiForgery]
     public class CreateCN88CustomerController : Controller
     {
         private readonly ICustomerSettingService _customerSettingService;
