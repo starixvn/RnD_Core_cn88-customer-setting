@@ -24,15 +24,13 @@ module CustomerSetting {
         public templateUrl: string = "headline-suggestion.htm";
 
         public link: ng.IDirectiveLinkFn = (scope: IHeadlinesSuggestionScope) => {
-            scope.loadSuggestedHeadlines = (someFirstCharacters: string) => {
-                var requestPath: string = this.appConfigService.buildPath(HeadlineSuggestionDirective.suggestingHeadlinesPath);
+            var requestPath: string = this.appConfigService.buildPath(HeadlineSuggestionDirective.suggestingHeadlinesPath);
 
-                return this.requestService.get(
-                    requestPath,
-                    { username: someFirstCharacters },
-                    (response: ng.IHttpPromiseCallbackArg<any>) => response.data,
-                    false);
-            };
+            scope.loadSuggestedHeadlines = (someFirstCharacters: string) => this.requestService.get(
+                requestPath,
+                { username: someFirstCharacters },
+                (response: ng.IHttpPromiseCallbackArg<any>) => response.data,
+                false);
         };
 
         private requestService: RequestService;

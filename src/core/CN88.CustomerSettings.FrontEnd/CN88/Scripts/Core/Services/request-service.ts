@@ -86,7 +86,7 @@ module CustomerSetting {
                 if (response.status === 401) {
                     error = Result.notAuthorizedError;
                     error.message = this.resourceService.getMessage(error.message);
-                } else if (response.data) {
+                } else if (response.data.message) {
                     error = new Result(response.status, response.data.message, MessageType.error);
                 } else {
                     error = Result.systemError;

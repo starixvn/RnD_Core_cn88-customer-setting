@@ -16,7 +16,6 @@ module CustomerSetting {
         public currentSuperMaxPT: number;
         public minSuperMaxPT: number;
         public maxSuperMaxPT: number;
-        public currencies: ICurrency[];
         public currency: ICurrency;
 
         constructor();
@@ -35,7 +34,6 @@ module CustomerSetting {
                 this.currentSuperMaxPT = accountDetail.currentSuperMaxPT;
                 this.minSuperMaxPT = accountDetail.minSuperMaxPT;
                 this.maxSuperMaxPT = accountDetail.maxSuperMaxPT;
-                this.currencies = accountDetail.currencies;
                 this.currency = accountDetail.currency;
 
                 if (isNumber(accountDetail.superMinPT)) {
@@ -51,7 +49,6 @@ module CustomerSetting {
             this.ignoredProperties.push("maxSuperMinPT");
             this.ignoredProperties.push("minSuperMaxPT");
             this.ignoredProperties.push("maxSuperMaxPT");
-            this.ignoredProperties.push("currencies");
 
             if (!this.isNew) {
                 this.ignoredProperties.push("currency");
@@ -79,10 +76,6 @@ module CustomerSetting {
             }
 
             if (!this.validateCredit()) {
-                return false;
-            }
-
-            if (this.isNew && !this.validateCurrency()) {
                 return false;
             }
 
@@ -128,22 +121,6 @@ module CustomerSetting {
                     "credit",
                     [this.minCredit],
                     { precision: 2 });
-
-                return false;
-            }
-
-            return true;
-        }
-
-        private validateCurrency(): boolean {
-            if (!this.currency) {
-                this.validationState = new ValidationResult("RequiredField", "currency");
-
-                return false;
-            }
-
-            if (this.currencies.every((currency: ICurrency) => this.currency.id !== currency.id)) {
-                this.validationState = new ValidationResult("InvalidCurrency", "currency");
 
                 return false;
             }

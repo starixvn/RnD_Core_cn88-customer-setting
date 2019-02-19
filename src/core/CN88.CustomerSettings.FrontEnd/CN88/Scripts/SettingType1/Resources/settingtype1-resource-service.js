@@ -76,7 +76,7 @@
         "PTEffectiveTime": "Effective after: {0}",
         "CreditsMustBeGreaterThanOrEqualTo": "Credits must be greater than or equal to {0}.",
         "CreditsMustBeLessThanOrEqualTo": "Credits must be less than or equal to {0}.",
-        "InvalidCurrency": "Invalid currency."
+        "InvalidHeadline": "Invalid headline."
     };
 
     messages["zh-cn"] = {
