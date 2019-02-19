@@ -7,7 +7,7 @@
     using CN88.CustomerSetting.Client.Services;
     using RestSharp;
 
-    [ValidateAntiForgery]
+    //[ValidateAntiForgery]
     public class CreateCN88CustomerController : Controller
     {
         private readonly ICustomerSettingService _customerSettingService;
@@ -52,6 +52,17 @@
 
             return Content(result.Content);
         }
+
+        [HttpGet, CustomerSettingAuth(IsUpdate = false)]
+        public ContentResult GetHeadlineCurrency(string username)
+        {
+            IRestResponse result = _customerSettingService.GetHeadlineCurrency(username);
+
+            ModifyResponse(result);
+
+            return Content(result.Content);
+        }
+
 
         private void ModifyResponse(IRestResponse result)
         {

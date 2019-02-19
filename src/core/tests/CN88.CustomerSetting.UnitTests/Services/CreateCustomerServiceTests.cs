@@ -237,5 +237,34 @@
             Assert.AreEqual(1, headlineNames.Count());
             Assert.AreEqual("MSH1", headlineNames.FirstOrDefault());
         }
+
+        [Test]
+        public async Task GetHeadlineCurrency_Always_CallDynamicRepositoryFetch()
+        {
+            var username = "mshusername";
+
+            await createCustomerService.GetHeadlineCurrency(username);
+
+            await dynamicRepository
+                .Received()
+                .GetAsync<Currency>(Arg.Is<GetHeadlineCurrencyCriteria>(
+                    criteria => criteria.Username == username));
+        }
+
+        [Test]
+        public async Task GetHeadlineCurrency_Always_ReturnDataFromDatabase()
+        {
+            var username = "mshusername";
+
+            dynamicRepository
+                .GetAsync<Currency>(Arg.Is<GetHeadlineCurrencyCriteria>(
+                    criteria => criteria.Username == username))
+                .Returns(new Currency { Id = 1, Code = "UUS" });
+
+            var actualCurrency = await createCustomerService.GetHeadlineCurrency(username);
+
+            Assert.AreEqual("UUS", actualCurrency.Code);
+            Assert.AreEqual(1, actualCurrency.Id);
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace CN88.CustomerSetting.SettingType1.Models
+﻿namespace CN88.CustomerSetting.Models
 {
     public class Currency
     {

@@ -37,8 +37,6 @@
 
         public IEnumerable<SpreadGroup> SpreadGroups { get; set; }
 
-        public IEnumerable<Currency> Currencies { get; set; }
-
         public bool IsPTReadOnly { get; set; }
 
         public DateTime PTEffectiveTime { get; set; }

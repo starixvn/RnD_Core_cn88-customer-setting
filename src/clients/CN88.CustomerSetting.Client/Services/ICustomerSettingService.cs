@@ -16,5 +16,7 @@
         IRestResponse CheckExistedUsername(string username);
 
         IRestResponse GetHeadlineSuggestionNames(string username);
+
+        IRestResponse GetHeadlineCurrency(string username);
     }
 }

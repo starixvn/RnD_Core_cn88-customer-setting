@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Functions SiteId="88" SiteName="CN88">
   <Function Name="Position_Taking">
-    <Setting Key="CS_CurrencyListSel" SpName="CS_CurrencyListSel" DbName="DBACC.bodb02.bodbAdminNet" TimeOut="600">
-      <Mapping DataField="exchangeid" ObjectProperty="Id" />
-      <Mapping DataField="currency" ObjectProperty="Name" />
-    </Setting>
     <Setting Key="CS_CustomerIns_Sel" SpName="CS_CustomerIns_GeneralInfo_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
     </Setting>
     <Setting Key="CS_PTSetting_CustomerIns_Sel" SpName="CS_CustomerIns_PTSetting_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">

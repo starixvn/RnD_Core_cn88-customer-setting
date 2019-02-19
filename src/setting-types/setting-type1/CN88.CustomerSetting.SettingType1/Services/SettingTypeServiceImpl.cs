@@ -95,9 +95,6 @@
             settingItem.MinCredit = createCustomerInfo.MinCredit;
             settingItem.UplineUsername = createCustomerInfo.UplineUsername;
             settingItem.UsernameSuffixes = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString());
-            settingItem.Currencies = query.CustomerLevel.IsSuperLevel()
-                                ? await GetCurrencies().ConfigureAwait(false)
-                                : Enumerable.Empty<Currency>();
 
             if (query.CustomerLevel.IsMemberLevel())
             {
@@ -184,12 +181,6 @@
             => level.IsNotSuperLevel()
                 ? await DynamicRepository.GetAsync<CreateCustomerInfoDto>(new GetCustomerInfoForCreateCriteria(level.Value, uplineId)).ConfigureAwait(false)
                 : new CreateCustomerInfoDto();
-
-        private async Task<IEnumerable<Currency>> GetCurrencies()
-            => await CacheService.GetOrSetAsync(
-                       CurrencyCacheKey,
-                       () => DynamicRepository.Fetch<Currency>(new GetCurrencyListCriteria()),
-                        new CacheItemOptions().SetAbsoluteExpiration(new TimeSpan(0, CurrencyCacheTimeInMinutes, 0))).ConfigureAwait(false);
 
         private async Task<IEnumerable<SpreadGroup>> GetSpreadGroups()
             => await CacheService.GetOrSetAsync(

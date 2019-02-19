@@ -108,30 +108,6 @@
         }
 
         [Test]
-        public async Task GetCustomerSettingType_WhenCreateNewSuper_GetDefaultCustomerInforation()
-        {
-            var isCreateNew = true;
-            var downlineLevel = Level.Super;
-            var settingQuery = InstanceFactory.CreateQuerySettingParam(
-                isCreateNew,
-                1,
-                downlineLevel,
-                1);
-            StubAccountDetail(downlineLevel);
-            StubGetCustomerInfoForCreate();
-            StubCurrencyCached();
-
-            var accountDetailItem = (await settingTypeServiceImpl
-                .GetCustomerSettingType(settingContext, settingQuery))
-                .SettingItems
-                .FirstOrDefault() as AccountDetailSettingItem;
-
-            Assert.AreEqual(2, accountDetailItem.Currencies.Count());
-            Assert.AreEqual("UUS", accountDetailItem.Currencies.ElementAt(0).Name);
-            Assert.AreEqual("RM", accountDetailItem.Currencies.ElementAt(1).Name);
-        }
-
-        [Test]
         public async Task GetCustomerSettingType_WhenCreateNewMember_GetSpreadGroups()
         {
             var isCreateNew = true;

@@ -58,6 +58,10 @@
             => createCustomerService.GetHeadlineSuggestionNames(username);
 
         [HttpGet]
+        public Task<Currency> GetHeadlineCurrency(string username)
+            => createCustomerService.GetHeadlineCurrency(username);
+
+        [HttpGet]
         public string GetTemplate()
         {
             string template = templateCached;

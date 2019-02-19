@@ -25,6 +25,8 @@
         Task<IResult> IsUsernameExisted(string username);
 
         Task<IEnumerable<string>> GetHeadlineSuggestionNames(string username);
+
+        Task<Currency> GetHeadlineCurrency(string username);
     }
 
     public class CreateCustomerServiceImpl : CreateCustomerService
@@ -169,5 +171,14 @@
             => await dynamicRepository
                 .FetchAsync<string>(new GetHeadlineSuggestionNamesCriteria(username))
                 .ConfigureAwait(false);
+
+        public async Task<Currency> GetHeadlineCurrency(string username)
+        {
+            var currency = await dynamicRepository
+                .GetAsync<Currency>(new GetHeadlineCurrencyCriteria(username))
+                .ConfigureAwait(false);
+
+            return currency;
+        }
     }
 }

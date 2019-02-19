@@ -124,5 +124,14 @@
 
             return restClient.Execute(request);
         }
+
+        public IRestResponse GetHeadlineCurrency(string username)
+        {
+            IRestRequest request = new RestRequest("/customersetting/GetHeadlineCurrency", Method.GET);
+
+            request.AddParameter("username", username);
+
+            return restClient.Execute(request);
+        }
     }
 }
