@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using CN88.CustomerSetting.AppResources;
     using CN88.CustomerSetting.DataAccesses;
     using CN88.CustomerSetting.Exceptions;
     using CN88.CustomerSetting.Models;
@@ -84,7 +85,7 @@
             {
                 WriteLog(settingContext, command.Setting, new CustomerSettingException(ex.Message, ex));
 
-                return Result.CreateErrorResult(ex.Message);
+                return Result.CreateErrorResult(Resources.SystemError);
             }
         }
 

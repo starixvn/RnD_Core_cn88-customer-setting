@@ -43,7 +43,7 @@
       </Setting>
       <Setting Key="CS_HeadlineUsernameSuggestion" SpName="CS_HeadlineUsernameSuggestion_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0">
       </Setting>
-      <Setting Key="CS_GetHeadlineCurrency" SpName="CS_CheckAndGetHeadlineCurrency_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0">
+      <Setting Key="CS_GetHeadlineCurrency" SpName="CS_GetHeadlineCurrency_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0">
         <Mapping DataField="exchangeid" ObjectProperty="Id" />
         <Mapping DataField="currencyname" ObjectProperty="Name" />
       </Setting>
