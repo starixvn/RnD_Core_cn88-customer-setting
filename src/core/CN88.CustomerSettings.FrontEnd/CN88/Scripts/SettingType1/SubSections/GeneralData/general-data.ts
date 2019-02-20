@@ -45,8 +45,6 @@ module CustomerSetting {
                                 (response: ng.IHttpPromiseCallbackArg<ICurrency>) => {
                                     if (response.data) {
                                         superAccountDetail.currency = response.data;
-                                    } else {
-                                        superAccountDetail.validationState = new ValidationResult("InvalidHeadline", "uplineUsername");
                                     }
                                 },
                                 false);
