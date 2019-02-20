@@ -265,4 +265,7 @@ Notes: your password is cAsE sEnSiTiVe</value>
   <data name="EditPossessTimeInvalid" xml:space="preserve">
     <value>You cannot update new possess value at this moment.</value>
   </data>
+  <data name="Msg_40039" xml:space="preserve">
+    <value>Invalid Headline</value>
+  </data>
 </root>

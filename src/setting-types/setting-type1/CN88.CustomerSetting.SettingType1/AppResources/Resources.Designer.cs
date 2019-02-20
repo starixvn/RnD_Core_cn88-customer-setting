@@ -358,6 +358,15 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Headline.
+        /// </summary>
+        internal static string Msg_40039 {
+            get {
+                return ResourceManager.GetString("Msg_40039", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Insufficient credit..
         /// </summary>
         internal static string Msg_70024 {
