@@ -43,9 +43,7 @@ module CustomerSetting {
                                 requestPath,
                                 { username: superAccountDetail.uplineUsername },
                                 (response: ng.IHttpPromiseCallbackArg<ICurrency>) => {
-                                    if (response.data) {
-                                        superAccountDetail.currency = response.data;
-                                    }
+                                    superAccountDetail.currency = response.data ? response.data : null;
                                 },
                                 false);
                         }
