@@ -10,7 +10,7 @@
                 <div class="dropdown-container w60-percent" data-ng-if="isNew">
                     <headline-suggestion class="setting-field setting-field--fullwidth"
                                          data-ng-model="accountDetail.uplineUsername"
-                                         data-ng-blur="validateAndLoadHeadlineCurrency()"
+                                         data-ng-blur="validateAndLoadHeadlineCurrency($event)"
                                          data-setting-field="uplineUsername" />
                 </div>
                 <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.uplineUsername}}</label>

@@ -70,7 +70,7 @@ module CustomerSetting {
         }
 
         private handleSuccessfulResponse(response: ng.IHttpPromiseCallbackArg<any>, callback: IServerRequestCallback): any {
-            if (typeof response.data === "string") {
+            if (typeof response.data === "string" && response.data) {
                 this.$window.document.write(response.data);
             } else if (response.data.code === -302 && response.data.redirect) {
                 this.$window.location.href = this.$window.location.origin + response.data.redirect;

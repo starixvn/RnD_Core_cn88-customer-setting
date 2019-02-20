@@ -31,18 +31,27 @@ module CustomerSetting {
                 if (scope.customerLevel === Level.super) {
                     var requestPath: string = this.appConfigService.buildPath(GeneralDataDirective.validatingAndLoadingHeadlineCurrencyPath);
                     var superAccountDetail: SuperAccountDetail = <SuperAccountDetail>scope.accountDetail;
+                    var lastValidatedHeadline: string;
 
-                    scope.validateAndLoadHeadlineCurrency = () => this.requestService.get(
-                        requestPath,
-                        { username: scope.accountDetail.uplineUsername },
-                        (response: ng.IHttpPromiseCallbackArg<ICurrency>) => {
-                            if (response.data) {
-                                superAccountDetail.currency = response.data;
-                            } else {
-                                superAccountDetail.validationState = new ValidationResult("InvalidHeadline", "uplineUsername");
-                            }
-                        },
-                        false);
+                    scope.validateAndLoadHeadlineCurrency = ($event: JQueryEventObject) => {
+                        if (superAccountDetail.uplineUsername
+                            && lastValidatedHeadline !== superAccountDetail.uplineUsername
+                            && !($event.relatedTarget && $event.relatedTarget.hasAttribute("data-headline-suggestion-item"))) {
+                            lastValidatedHeadline = superAccountDetail.uplineUsername;
+
+                            this.requestService.get(
+                                requestPath,
+                                { username: superAccountDetail.uplineUsername },
+                                (response: ng.IHttpPromiseCallbackArg<ICurrency>) => {
+                                    if (response.data) {
+                                        superAccountDetail.currency = response.data;
+                                    } else {
+                                        superAccountDetail.validationState = new ValidationResult("InvalidHeadline", "uplineUsername");
+                                    }
+                                },
+                                false);
+                        }
+                    };
                 }
 
                 if (scope.customerLevel === Level.member) {

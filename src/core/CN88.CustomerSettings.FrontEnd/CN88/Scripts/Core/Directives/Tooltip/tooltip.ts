@@ -182,7 +182,7 @@ module CustomerSetting {
                     "visibility": "visible"
                 });
 
-                if (autoScrollTo) {
+                if (autoScrollTo && (top < this.$window.pageYOffset || left < this.$window.pageXOffset)) {
                     this.$window.scrollTo(left, top);
                 }
             });
