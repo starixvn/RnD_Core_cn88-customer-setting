@@ -6,35 +6,35 @@
       <Setting Key="CustSetting_SettingDetailSelect" SpName="Acc_CustSetting_SettingDetailSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
       <Setting Key="CustSetting_ActorStatusSelect" SpName="Acc_CustSetting_ActorStatusSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
       <Setting Key="CustSetting_CustomerLevelSelect" SpName="Acc_CustSetting_CustomerRoleSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
-      <Setting Key="CustSetting_ProductProfileSelect" SpName="CS_ProductProfileSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+      <Setting Key="CustSetting_ProductProfileSelect" SpName="CS_ProductProfileSelect_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
         <Parameters>
           <Parameter Name="IsTest" Value="true" />
         </Parameters>
         <Mapping DataField="SettingType" ObjectProperty="Id" />
       </Setting>
-      <Setting Key="CS_SettingTypeConfigSel" SpName="CS_SettingTypeConfigSel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+      <Setting Key="CS_SettingTypeConfigSel" SpName="CS_SettingTypeConfigSel_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
         <Parameters>
           <Parameter Name="IsTest" Value="true" />
         </Parameters>
         <Mapping DataField="SportType" ObjectProperty="SportTypeId" />
         <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
       </Setting>
-      <Setting Key="CS_CustomerIns_Com" SpName="CS_CustomerIns_Com" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+      <Setting Key="CS_CustomerIns_Com" SpName="CS_CustomerIns_Com_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
         <Parameters>
           <Parameter Name="IsTest" Value="true" />
         </Parameters>
       </Setting>
-      <Setting Key="CS_CustomerIns_SAg" SpName="CS_CustomerIns_SAg" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+      <Setting Key="CS_CustomerIns_SAg" SpName="CS_CustomerIns_SAg_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
         <Parameters>
           <Parameter Name="IsTest" Value="true" />
         </Parameters>
       </Setting>
-      <Setting Key="CS_CustomerIns_MAg" SpName="CS_CustomerIns_MAg" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+      <Setting Key="CS_CustomerIns_MAg" SpName="CS_CustomerIns_MAg_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
         <Parameters>
           <Parameter Name="IsTest" Value="true" />
         </Parameters>
       </Setting>
-      <Setting Key="CS_CustomerIns_Ag" SpName="CS_CustomerIns_Ag" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+      <Setting Key="CS_CustomerIns_Ag" SpName="CS_CustomerIns_Ag_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
         <Parameters>
           <Parameter Name="IsTest" Value="true" />
         </Parameters>

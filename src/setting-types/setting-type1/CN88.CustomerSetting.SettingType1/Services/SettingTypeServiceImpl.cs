@@ -295,7 +295,6 @@
             Dictionary<string, object> createNewParams)
         {
             createNewParams.Add("site", CN88Site);
-            createNewParams.Add("currency", settingItem.Currency?.Id);
             createNewParams.Add("lastname", EncodeHtml(settingItem.LastName));
             createNewParams.Add("phone", EncodeHtml(settingItem.Phone));
             createNewParams.Add("mobilephone", EncodeHtml(settingItem.MobilePhone));

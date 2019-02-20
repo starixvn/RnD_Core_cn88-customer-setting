@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Functions SiteId="88" SiteName="CN88">
   <Function Name="Position_Taking">
-    <Setting Key="CS_CustomerIns_Sel" SpName="CS_CustomerIns_GeneralInfo_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+    <Setting Key="CS_CustomerIns_Sel" SpName="CS_CustomerIns_GeneralInfo_Sel_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
     </Setting>
-    <Setting Key="CS_PTSetting_CustomerIns_Sel" SpName="CS_CustomerIns_PTSetting_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+    <Setting Key="CS_PTSetting_CustomerIns_Sel" SpName="CS_CustomerIns_PTSetting_Sel_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
       <Parameters>
         <Parameter Name="IsTest" Value="true" />
       </Parameters>
       <Mapping DataField="SportType" ObjectProperty="SportTypeId" />
       <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
     </Setting>
-    <Setting Key="CS_CustSetting_PTSetting_Sel" SpName="CS_CustSetting_PTSetting_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+    <Setting Key="CS_CustSetting_PTSetting_Sel" SpName="CS_CustSetting_PTSetting_Sel_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
       <Parameters>
         <Parameter Name="IsTest" Value="true" />
       </Parameters>
@@ -18,19 +18,19 @@
       <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
     </Setting>
 
-    <Setting Key="CS_CustSetting_GeneralInfo_Sel" SpName="CS_CustSetting_GeneralInfo_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+    <Setting Key="CS_CustSetting_GeneralInfo_Sel" SpName="CS_CustSetting_GeneralInfo_Sel_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
     </Setting>
-    <Setting Key="CS_CustSetting_GeneralInfo_Upd" SpName="CS_CustSetting_GeneralInfo_Upd" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+    <Setting Key="CS_CustSetting_GeneralInfo_Upd" SpName="CS_CustSetting_GeneralInfo_Upd_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
     </Setting>
-    <Setting Key="CS_CustSetting_PTSetting_Upd" SpName="CS_CustSetting_PTSetting_Upd" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+    <Setting Key="CS_CustSetting_PTSetting_Upd" SpName="CS_CustSetting_PTSetting_Upd_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
       <Parameters>
         <Parameter Name="IsTest" Value="true" />
       </Parameters>
     </Setting>
-    <Setting Key="CS_SpreadGroupSel" SpName="CS_SpreadGroupSel" DbName="DBACC.bodb02.bodbAdminNet" TimeOut="600">
+    <Setting Key="CS_SpreadGroupSel" SpName="CS_SpreadGroupSel_UAT3" DbName="DBACC.bodb02.bodbAdminNet" TimeOut="600">
     </Setting>
 
-    <Setting Key="CS_EditablePTDateSel" SpName="CS_EditablePTDateSel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+    <Setting Key="CS_EditablePTDateSel" SpName="CS_EditablePTDateSel_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
     </Setting>
 
     
