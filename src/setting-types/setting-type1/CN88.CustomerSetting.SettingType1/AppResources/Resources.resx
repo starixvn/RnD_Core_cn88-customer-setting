@@ -260,12 +260,12 @@ Notes: your password is cAsE sEnSiTiVe</value>
     <value>Username cannot be null or empty</value>
   </data>
   <data name="HeadlineUsernameCannotBeNullOrEmpty" xml:space="preserve">
-    <value>Main Shareholder Name cannot be null or empty</value>
+    <value>Headline Name cannot be null or empty</value>
   </data>
   <data name="EditPossessTimeInvalid" xml:space="preserve">
     <value>You cannot update new possess value at this moment.</value>
   </data>
-  <data name="Msg_40039" xml:space="preserve">
+  <data name="Msg_40041" xml:space="preserve">
     <value>Invalid Headline</value>
   </data>
 </root>

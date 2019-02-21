@@ -79,7 +79,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Main Shareholder Name cannot be null or empty.
+        ///   Looks up a localized string similar to Headline Name cannot be null or empty.
         /// </summary>
         internal static string HeadlineUsernameCannotBeNullOrEmpty {
             get {
@@ -360,9 +360,9 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         /// <summary>
         ///   Looks up a localized string similar to Invalid Headline.
         /// </summary>
-        internal static string Msg_40039 {
+        internal static string Msg_40041 {
             get {
-                return ResourceManager.GetString("Msg_40039", resourceCulture);
+                return ResourceManager.GetString("Msg_40041", resourceCulture);
             }
         }
         
