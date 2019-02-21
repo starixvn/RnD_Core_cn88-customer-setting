@@ -17,7 +17,8 @@
         </div>
         <div class="block__cell align-center w100-percent"
              data-ng-if="item.layoutType === availableLayoutTypes.singleGroup">
-            <percentage-dropdown data-ng-model="item.mappedCommissionGroups[0].value"
+            <percentage-dropdown data-ng-if="item.mappedCommissionGroups[0]"
+                                 data-ng-model="item.mappedCommissionGroups[0].value"
                                  data-setting-field="commissionGroups-0"
                                  data-min="item.mappedCommissionGroups[0].minValue"
                                  data-max="item.mappedCommissionGroups[0].maxValue"
@@ -38,7 +39,8 @@
     </div>
     <div class="block__cell w50-percent align-center"
          data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup">
-        <percentage-dropdown data-ng-model="item.mappedCommissionGroups[0].value"
+        <percentage-dropdown data-ng-if="item.mappedCommissionGroups[0]"
+                             data-ng-model="item.mappedCommissionGroups[0].value"
                              data-setting-field="commissionGroups-0"
                              data-min="item.mappedCommissionGroups[0].minValue"
                              data-max="item.mappedCommissionGroups[0].maxValue"

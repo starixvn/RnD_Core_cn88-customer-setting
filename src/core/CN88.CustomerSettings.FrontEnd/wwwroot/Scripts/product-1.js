@@ -35523,139 +35523,50 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    (function (SettingLevel) {
-        SettingLevel[SettingLevel["product"] = 1] = "product";
-        SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
-        SettingLevel[SettingLevel["betType"] = 3] = "betType";
-        SettingLevel[SettingLevel["sportTypeBetType"] = 4] = "sportTypeBetType";
-    })(CustomerSetting.SettingLevel || (CustomerSetting.SettingLevel = {}));
-    var SettingLevel = CustomerSetting.SettingLevel;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var SettingTypeBaseDirective = (function () {
-        function SettingTypeBaseDirective(appConfigService, settingTypesSharedValuesService, instantiateSettingItem) {
+    var PercentageDropdownDirective = (function () {
+        function PercentageDropdownDirective(valueRangeService) {
             var _this = this;
             this.replace = true;
+            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
+            this.restrict = "E";
             this.link = function (scope) {
-                _this.linkInternal(scope);
+                if (scope.autoRefresh) {
+                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
+                        _this.initializeRange(scope);
+                    });
+                }
+                else {
+                    _this.initializeRange(scope);
+                }
             };
-            this.appConfigService = appConfigService;
-            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
-            this.instantiateSettingItem = instantiateSettingItem;
+            this.valueRangeService = valueRangeService;
         }
-        Object.defineProperty(SettingTypeBaseDirective.prototype, "scope", {
+        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
             get: function () {
                 return {
-                    settingType: "="
+                    value: "=ngModel",
+                    min: "=",
+                    max: "=",
+                    step: "=?",
+                    precision: "=?",
+                    placeholder: "@",
+                    placeholderVisible: "=?",
+                    autoRefresh: "=?"
                 };
             },
             enumerable: true,
             configurable: true
         });
-        SettingTypeBaseDirective.prototype.linkInternal = function (scope) {
-            var _this = this;
-            scope.actorLevel = this.settingTypesSharedValuesService.actorLevel;
-            scope.customerId = this.settingTypesSharedValuesService.customerId;
-            scope.uplineId = this.settingTypesSharedValuesService.uplineId;
-            scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
-            scope.productId = this.settingTypesSharedValuesService.productId;
-            scope.productName = this.settingTypesSharedValuesService.productName;
-            scope.isNew = this.settingTypesSharedValuesService.isNew;
-            scope.editable = this.appConfigService.canUpdate() && scope.settingType.displayMode === CustomerSetting.DisplayMode.editable;
-            scope.avaiCustomerLevels = CustomerSetting.Level;
-            if (this.instantiateSettingItem) {
-                if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
-                    if (scope.settingType.isError) {
-                        if (scope.settingType.settingItems.length > 0) {
-                            scope.settingType.settingItems[0] = new CustomerSetting.ErrorSettingItem(scope.settingType.settingItems[0]);
-                        }
-                    }
-                    else {
-                        scope.settingType.settingItems.forEach(function (item, index) {
-                            if (item) {
-                                scope.settingType.settingItems[index] = _this.instantiateSettingItem(item, true, scope.isNew, scope.customerLevel, scope.uplineId);
-                            }
-                        });
-                    }
-                }
-            }
+        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
+            scope.precision = scope.precision || 0;
+            scope.factor = Math.pow(10, scope.precision);
+            scope.step = scope.step || 1;
+            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
         };
-        return SettingTypeBaseDirective;
+        PercentageDropdownDirective.$inject = ["valueRangeService"];
+        return PercentageDropdownDirective;
     }());
-    CustomerSetting.SettingTypeBaseDirective = SettingTypeBaseDirective;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var DefaultSettingTypeGroupingDirective = (function (_super) {
-        __extends(DefaultSettingTypeGroupingDirective, _super);
-        function DefaultSettingTypeGroupingDirective() {
-            var _this = this;
-            _super.apply(this, arguments);
-            this.template = '<div class="block setting-type-{{settingType.id}} {{cssClass}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div><div class="block__item-group" data-ng-class="{ \'block__item-group--last\': $last }" data-ng-if="settingType | validSettingType" data-ng-repeat="group in sportGroups"><div class="block__sub-header" data-ng-if="settingType.settingLevel === avaiSettingLevels.sportTypeBetType" data-sport-type="{{group[0].sportTypeId}}">{{group[0].sportTypeName}}</div><div class="block__item" data-ng-repeat="item in group" data-ng-class="{ \'block__item--last\': $last, \'block__item--near-last\': $index === group.length - 2 && $index % 2 === 0, \'block__item--before-extra-item\': $last && group.length % 2 === 1 && group.length > 1, \'block__item--odd\': $odd, \'block__item--full-width\': group.length === 1 }"><div class="block__lbl" data-ng-class="{ \'block__lbl--padding-left\': settingType.settingLevel === avaiSettingLevels.sportTypeBetType }" data-product="{{productId}}" data-sport-type="{{item.sportTypeId}}" data-bet-type="{{item.betTypeId}}">{{item | showingName:settingType.settingLevel:productName }}</div><div class="block__value" data-ng-include="valueTemplateUrl"></div></div></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{sportGroups[0][0].errorMessage}}</div></div>';
-            this.link = function (scope) {
-                _this.linkInternal(scope);
-            };
-        }
-        DefaultSettingTypeGroupingDirective.prototype.linkInternal = function (scope) {
-            _super.prototype.linkInternal.call(this, scope);
-            scope.avaiSettingLevels = CustomerSetting.SettingLevel;
-            if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
-                if (scope.settingType.settingLevel === CustomerSetting.SettingLevel.sportTypeBetType) {
-                    scope.sportGroups = this.groupSettingItemsBySportType(scope.settingType.settingItems);
-                }
-                else {
-                    scope.sportGroups = [scope.settingType.settingItems];
-                }
-            }
-        };
-        DefaultSettingTypeGroupingDirective.prototype.groupSettingItemsBySportType = function (settingItems) {
-            var currentSportTypeId = -1;
-            var result = [];
-            var group;
-            settingItems.forEach(function (item) {
-                var settingItem = item;
-                if (currentSportTypeId !== settingItem.sportTypeId) {
-                    if (group) {
-                        result.push(group);
-                    }
-                    currentSportTypeId = settingItem.sportTypeId;
-                    group = [];
-                }
-                group.push(settingItem);
-            });
-            if (group) {
-                result.push(group);
-            }
-            return result;
-        };
-        return DefaultSettingTypeGroupingDirective;
-    }(CustomerSetting.SettingTypeBaseDirective));
-    CustomerSetting.DefaultSettingTypeGroupingDirective = DefaultSettingTypeGroupingDirective;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    function ShowingName() {
-        return function (settingItem, settingLevel, productName) {
-            return settingLevel === CustomerSetting.SettingLevel.product
-                ? productName
-                : (settingLevel === CustomerSetting.SettingLevel.sportType
-                    ? settingItem.sportTypeName
-                    : settingItem.betTypeName);
-        };
-    }
-    CustomerSetting.ModuleRegister.filter("showingName", ShowingName);
+    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -35849,55 +35760,6 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
-    var PercentageDropdownDirective = (function () {
-        function PercentageDropdownDirective(valueRangeService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
-            this.restrict = "E";
-            this.link = function (scope) {
-                if (scope.autoRefresh) {
-                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
-                        _this.initializeRange(scope);
-                    });
-                }
-                else {
-                    _this.initializeRange(scope);
-                }
-            };
-            this.valueRangeService = valueRangeService;
-        }
-        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    value: "=ngModel",
-                    min: "=",
-                    max: "=",
-                    step: "=?",
-                    precision: "=?",
-                    placeholder: "@",
-                    placeholderVisible: "=?",
-                    autoRefresh: "=?"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
-            scope.precision = scope.precision || 0;
-            scope.factor = Math.pow(10, scope.precision);
-            scope.step = scope.step || 1;
-            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
-        };
-        PercentageDropdownDirective.$inject = ["valueRangeService"];
-        return PercentageDropdownDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
     var SettingFieldGroupDirective = (function () {
         function SettingFieldGroupDirective($injector, $filter) {
             var _this = this;
@@ -36086,6 +35948,62 @@ var CustomerSetting;
         return SettingResultDirective;
     }());
     CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var SettingTypeBaseDirective = (function () {
+        function SettingTypeBaseDirective(appConfigService, settingTypesSharedValuesService, instantiateSettingItem) {
+            var _this = this;
+            this.replace = true;
+            this.link = function (scope) {
+                _this.linkInternal(scope);
+            };
+            this.appConfigService = appConfigService;
+            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
+            this.instantiateSettingItem = instantiateSettingItem;
+        }
+        Object.defineProperty(SettingTypeBaseDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    settingType: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingTypeBaseDirective.prototype.linkInternal = function (scope) {
+            var _this = this;
+            scope.actorLevel = this.settingTypesSharedValuesService.actorLevel;
+            scope.customerId = this.settingTypesSharedValuesService.customerId;
+            scope.uplineId = this.settingTypesSharedValuesService.uplineId;
+            scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
+            scope.productId = this.settingTypesSharedValuesService.productId;
+            scope.productName = this.settingTypesSharedValuesService.productName;
+            scope.isNew = this.settingTypesSharedValuesService.isNew;
+            scope.editable = this.appConfigService.canUpdate() && scope.settingType.displayMode === CustomerSetting.DisplayMode.editable;
+            scope.avaiCustomerLevels = CustomerSetting.Level;
+            if (this.instantiateSettingItem) {
+                if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
+                    if (scope.settingType.isError) {
+                        if (scope.settingType.settingItems.length > 0) {
+                            scope.settingType.settingItems[0] = new CustomerSetting.ErrorSettingItem(scope.settingType.settingItems[0]);
+                        }
+                    }
+                    else {
+                        scope.settingType.settingItems.forEach(function (item, index) {
+                            if (item) {
+                                scope.settingType.settingItems[index] = _this.instantiateSettingItem(item, true, scope.isNew, scope.customerLevel, scope.uplineId);
+                            }
+                        });
+                    }
+                }
+            }
+        };
+        return SettingTypeBaseDirective;
+    }());
+    CustomerSetting.SettingTypeBaseDirective = SettingTypeBaseDirective;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36293,12 +36211,94 @@ var CustomerSetting;
 var CustomerSetting;
 (function (CustomerSetting) {
     "use strict";
+    (function (SettingLevel) {
+        SettingLevel[SettingLevel["product"] = 1] = "product";
+        SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
+        SettingLevel[SettingLevel["betType"] = 3] = "betType";
+        SettingLevel[SettingLevel["sportTypeBetType"] = 4] = "sportTypeBetType";
+    })(CustomerSetting.SettingLevel || (CustomerSetting.SettingLevel = {}));
+    var SettingLevel = CustomerSetting.SettingLevel;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
     (function (System) {
         System[System["nap"] = 1] = "nap";
         System[System["alpha"] = 2] = "alpha";
         System[System["internalAlpha"] = 3] = "internalAlpha";
     })(CustomerSetting.System || (CustomerSetting.System = {}));
     var System = CustomerSetting.System;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    var DefaultSettingTypeGroupingDirective = (function (_super) {
+        __extends(DefaultSettingTypeGroupingDirective, _super);
+        function DefaultSettingTypeGroupingDirective() {
+            var _this = this;
+            _super.apply(this, arguments);
+            this.template = '<div class="block setting-type-{{settingType.id}} {{cssClass}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div><div class="block__item-group" data-ng-class="{ \'block__item-group--last\': $last }" data-ng-if="settingType | validSettingType" data-ng-repeat="group in sportGroups"><div class="block__sub-header" data-ng-if="settingType.settingLevel === avaiSettingLevels.sportTypeBetType" data-sport-type="{{group[0].sportTypeId}}">{{group[0].sportTypeName}}</div><div class="block__item" data-ng-repeat="item in group" data-ng-class="{ \'block__item--last\': $last, \'block__item--near-last\': $index === group.length - 2 && $index % 2 === 0, \'block__item--before-extra-item\': $last && group.length % 2 === 1 && group.length > 1, \'block__item--odd\': $odd, \'block__item--full-width\': group.length === 1 }"><div class="block__lbl" data-ng-class="{ \'block__lbl--padding-left\': settingType.settingLevel === avaiSettingLevels.sportTypeBetType }" data-product="{{productId}}" data-sport-type="{{item.sportTypeId}}" data-bet-type="{{item.betTypeId}}">{{item | showingName:settingType.settingLevel:productName }}</div><div class="block__value" data-ng-include="valueTemplateUrl"></div></div></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{sportGroups[0][0].errorMessage}}</div></div>';
+            this.link = function (scope) {
+                _this.linkInternal(scope);
+            };
+        }
+        DefaultSettingTypeGroupingDirective.prototype.linkInternal = function (scope) {
+            _super.prototype.linkInternal.call(this, scope);
+            scope.avaiSettingLevels = CustomerSetting.SettingLevel;
+            if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
+                if (scope.settingType.settingLevel === CustomerSetting.SettingLevel.sportTypeBetType) {
+                    scope.sportGroups = this.groupSettingItemsBySportType(scope.settingType.settingItems);
+                }
+                else {
+                    scope.sportGroups = [scope.settingType.settingItems];
+                }
+            }
+        };
+        DefaultSettingTypeGroupingDirective.prototype.groupSettingItemsBySportType = function (settingItems) {
+            var currentSportTypeId = -1;
+            var result = [];
+            var group;
+            settingItems.forEach(function (item) {
+                var settingItem = item;
+                if (currentSportTypeId !== settingItem.sportTypeId) {
+                    if (group) {
+                        result.push(group);
+                    }
+                    currentSportTypeId = settingItem.sportTypeId;
+                    group = [];
+                }
+                group.push(settingItem);
+            });
+            if (group) {
+                result.push(group);
+            }
+            return result;
+        };
+        return DefaultSettingTypeGroupingDirective;
+    }(CustomerSetting.SettingTypeBaseDirective));
+    CustomerSetting.DefaultSettingTypeGroupingDirective = DefaultSettingTypeGroupingDirective;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    "use strict";
+    function ShowingName() {
+        return function (settingItem, settingLevel, productName) {
+            return settingLevel === CustomerSetting.SettingLevel.product
+                ? productName
+                : (settingLevel === CustomerSetting.SettingLevel.sportType
+                    ? settingItem.sportTypeName
+                    : settingItem.betTypeName);
+        };
+    }
+    CustomerSetting.ModuleRegister.filter("showingName", ShowingName);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -37429,7 +37429,7 @@ var CustomerSetting;
 angular.module("customerSetting").run(["$templateCache", function($templateCache) {$templateCache.put("Directives/Tooltip/tooltip.html","<div class=\"tooltip tooltip--{{tooltipType}}\" data-ng-show=\"tooltipMessage && beingShowed\"><div class=\"tooltip__content\" data-ng-bind-html=\"tooltipMessage | unsafe\"></div></div>");
 $templateCache.put("SubSections/GeneralData/HeadlineSuggestion/headline-suggestion-item-template.html","<a href=\"#\" data-headline-suggestion-item data-ng-bind-html=\"match.label | uibTypeaheadHighlight:query\" ng-attr-title=\"{{match.label}}\"></a>");
 $templateCache.put("setting-type2-header.html","<div class=\"block__lbl\"></div><div class=\"w80-percent\"><div class=\"w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__lbl\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"item in availableCommissionGroups\">{{item}}</div></div><div class=\"block__lbl w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member\">{{::(\'MemberCommission\' | settingType2Label)}}</div><div class=\"w50-percent\"><div class=\"block__lbl w50-percent\"><span>{{::(\'MaxPerEvent\' | settingType2Label)}}</span> <span class=\"icon icon--command icon--info icon--margin-left\" data-tooltip=\"{{\'MaxPerEventNote\' | settingType2Message}}\" data-tooltip-type=\"info\" data-inner-tooltip=\"info\"></span></div><div class=\"block__lbl block__lbl--no-border w50-percent\"><span>{{::(\'MaxBet\' | settingType2Label)}}</span> <span class=\"icon icon--command icon--info icon--margin-left\" data-tooltip=\"{{\'MaxBetNote\' | settingType2Message}}\" data-tooltip-type=\"info\" data-inner-tooltip=\"true\"></span></div></div></div>");
-$templateCache.put("setting-type2-value.html","<div class=\"block__cell-wrapper\" data-ng-if=\"editable\" data-setting-field-group=\"item\" data-resource-service-name=\"settingType2ResourceService\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups\"><percentage-dropdown data-ng-if=\"commissionGroup\" data-ng-model=\"commissionGroup.value\" data-setting-field=\"{{\'commissionGroups-\' + $index}}\" data-min=\"commissionGroup.minValue\" data-max=\"commissionGroup.maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell align-center w100-percent\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex]\" data-ng-model=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].value\" data-setting-field=\"{{\'commissionGroups-\' + item.memberSpreadGroupIndex}}\" data-min=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue\" data-max=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\" data-auto-refresh=\"true\"></percentage-dropdown></div><div class=\"block__cell w50-percent align-center\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell-wrapper w50-percent\"><div class=\"block__cell w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxPerEventConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxPerEvent\" data-setting-field=\"maxPerEvent\"> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxPerEvent > 0)\">[{{item.minMaxPerEvent | number:betSettingPrecision}}; {{item.maxMaxPerEvent | number:betSettingPrecision}}]</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && (item.maxMaxPerEvent === 0) && hasMaxPerEventConstraint\">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span></div><div class=\"block__cell block__cell--no-border w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxBetConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxBet\" data-setting-field=\"maxBet\"> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxBet > 0)\">[{{item.minMaxBet | number:betSettingPrecision}}; {{item.maxMaxBet | number:betSettingPrecision}}]</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && (item.maxMaxBet === 0) && hasMaxBetConstraint\">>={{item.minMaxBet | number:betSettingPrecision}}</span></div></div></div><div class=\"block__cell-wrapper\" data-ng-if=\"!editable\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups\">{{commissionGroup.value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\">{{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div><div class=\"w50-percent w50-percent\"><div class=\"block__cell align-center w50-percent\">{{item.maxPerEvent | number:betSettingPrecision}}</div><div class=\"block__cell align-center block__cell--no-border w50-percent\">{{item.maxBet | number:betSettingPrecision}}</div></div></div>");}]);
+$templateCache.put("setting-type2-value.html","<div class=\"block__cell-wrapper\" data-ng-if=\"editable\" data-setting-field-group=\"item\" data-resource-service-name=\"settingType2ResourceService\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups\"><percentage-dropdown data-ng-if=\"commissionGroup\" data-ng-model=\"commissionGroup.value\" data-setting-field=\"{{\'commissionGroups-\' + $index}}\" data-min=\"commissionGroup.minValue\" data-max=\"commissionGroup.maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell align-center w100-percent\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex]\" data-ng-model=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].value\" data-setting-field=\"{{\'commissionGroups-\' + item.memberSpreadGroupIndex}}\" data-min=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue\" data-max=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\" data-auto-refresh=\"true\"></percentage-dropdown></div><div class=\"block__cell w50-percent align-center\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell-wrapper w50-percent\"><div class=\"block__cell w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxPerEventConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxPerEvent\" data-setting-field=\"maxPerEvent\"> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxPerEvent > 0)\">[{{item.minMaxPerEvent | number:betSettingPrecision}}; {{item.maxMaxPerEvent | number:betSettingPrecision}}]</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && (item.maxMaxPerEvent === 0) && hasMaxPerEventConstraint\">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span></div><div class=\"block__cell block__cell--no-border w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxBetConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxBet\" data-setting-field=\"maxBet\"> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxBet > 0)\">[{{item.minMaxBet | number:betSettingPrecision}}; {{item.maxMaxBet | number:betSettingPrecision}}]</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && (item.maxMaxBet === 0) && hasMaxBetConstraint\">>={{item.minMaxBet | number:betSettingPrecision}}</span></div></div></div><div class=\"block__cell-wrapper\" data-ng-if=\"!editable\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups\">{{commissionGroup.value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\">{{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div><div class=\"w50-percent w50-percent\"><div class=\"block__cell align-center w50-percent\">{{item.maxPerEvent | number:betSettingPrecision}}</div><div class=\"block__cell align-center block__cell--no-border w50-percent\">{{item.maxBet | number:betSettingPrecision}}</div></div></div>");}]);
 /*jshint -W101,-W106,-W044,-W098*/
 
 (function () {
