@@ -4,7 +4,7 @@
 
 .setting-field {
     @include border($color: $field-border-color);
-    height: 2.5rem;
+    height: 28px;
     padding: 0 4px;
 
     &:focus {
@@ -133,8 +133,7 @@ select.setting-field {
 
     &__header {
         @include border(bottom, $block-header-border-color);
-        font-size: 1.084rem;
-        line-height: 3rem;
+        line-height: 3;
         padding-left: 18px;
         text-align: left;
         word-wrap: break-word;
@@ -151,8 +150,7 @@ select.setting-field {
     &__sub-header {
         @include border(top, $block-sub-header-border-color);
         background-color: $block-sub-header-bg;
-        font-size: 1rem;
-        line-height: 2.8rem;
+        line-height: 2.5;
         padding: 0 18px;
         text-align: left;
         width: 100%;
@@ -229,8 +227,7 @@ select.setting-field {
         display: -moz-box;
         display: -ms-flexbox;
         display: flex;
-        min-height: 3.2rem;
-        padding: 0 5px;
+        padding: 5px;
 
         &--no-border {
             border: none;
@@ -261,7 +258,6 @@ select.setting-field {
         display: -moz-box;
         display: -ms-flexbox;
         display: flex;
-        padding: 0 8px;
 
         &--no-border {
             border: none;
@@ -279,13 +275,12 @@ select.setting-field {
     &__lbl-group {
         @include clearfix();
         background-color: $block-label-group-background-color;
-        font-size: 1rem !important;
-        line-height: 2.3rem;
         text-align: center;
         width: 100%;
 
         .block__lbl {
             justify-content: center;
+            min-height: 33px;
         }
     }
 
@@ -299,6 +294,7 @@ select.setting-field {
         display: -ms-flexbox;
         display: flex;
         height: auto !important;
+        padding: 0;
 
         > div {
             width: 100%;
