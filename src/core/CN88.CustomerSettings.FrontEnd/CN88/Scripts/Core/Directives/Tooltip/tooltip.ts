@@ -142,12 +142,13 @@ module CustomerSetting {
                 tooltip.css({ "left": "0px", "visibility": "hidden" });
 
                 var elementRect: ClientRect = target[0].getBoundingClientRect();
-                var tooltipRect: ClientRect = tooltip[0].getBoundingClientRect();
+                var tooltipRect: ClientRect = tooltip.children()[0].getBoundingClientRect();
 
                 var topOffset: number = 0;
                 var leftOffset: number = 0;
 
-                var arrowWidth: number = 5;
+                var arrowWidth: number = 7;
+                var scrollbarOffset: number = 17;
 
                 if ((+positionModel || PositionModel.relative) === PositionModel.relative) {
                     var bodyRect: ClientRect = this.$window.document.body.getBoundingClientRect();
@@ -156,23 +157,23 @@ module CustomerSetting {
                     leftOffset = bodyRect.left;
                 }
 
-                var top: number = elementRect.top - topOffset - tooltipRect.height + arrowWidth;
+                var top: number = elementRect.top - topOffset - tooltipRect.height - arrowWidth;
                 var left: number = elementRect.left + (elementRect.width - tooltipRect.width) / 2 - leftOffset;
 
-                if (this.$window.innerWidth < left + tooltipRect.width) {
-                    top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2 + arrowWidth;
+                if (this.$window.innerWidth - scrollbarOffset < left + tooltipRect.width) {
+                    top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2;
                     left = elementRect.left - tooltipRect.width - arrowWidth;
                     tooltip.addClass("tooltip--right");
                 }
 
                 if (left < 0) {
-                    top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2 + arrowWidth;
+                    top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2;
                     left = elementRect.left + elementRect.width;
                     tooltip.addClass("tooltip--left");
                 }
 
                 if (top < 0) {
-                    top = elementRect.bottom - topOffset - arrowWidth;
+                    top = elementRect.bottom - topOffset + arrowWidth;
                     tooltip.addClass("tooltip--bottom");
                 }
 
