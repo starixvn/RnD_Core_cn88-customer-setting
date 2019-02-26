@@ -160,7 +160,7 @@
     <value>Invalid Commission Rate.</value>
   </data>
   <data name="Msg_11" xml:space="preserve">
-    <value>Commission is out of range.</value>
+    <value>Please refresh the page and try again. Commission is out of range.</value>
   </data>
   <data name="Mgs_10040" xml:space="preserve">
     <value>Wrong Max per Bet/ Max per Event.</value>

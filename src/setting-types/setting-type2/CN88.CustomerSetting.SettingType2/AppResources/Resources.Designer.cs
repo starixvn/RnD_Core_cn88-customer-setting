@@ -214,7 +214,7 @@ namespace CN88.CustomerSetting.SettingType2.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Commission is out of range..
+        ///   Looks up a localized string similar to Please refresh the page and try again. Commission is out of range..
         /// </summary>
         internal static string Msg_11 {
             get {
