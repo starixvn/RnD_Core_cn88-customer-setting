@@ -22,6 +22,8 @@
 
         public string Language { get; set; }
 
+        public string IP { get; set; }
+
         public int ErrCode { get; set; }
 
         public string ErrMsg { get; set; }

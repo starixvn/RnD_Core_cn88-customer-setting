@@ -317,7 +317,12 @@
 #pragma warning restore S3215 // "interface" instances should not be cast to concrete types
                 ?? throw new InvalidOperationException("AccountDetail cannot be null");
 
-            var updateCustomerInfoResult = await UpdateCustomerInfo(command, settingItem, settingType, settingContext.Language).ConfigureAwait(false);
+            var updateCustomerInfoResult = await UpdateCustomerInfo(
+                command, 
+                settingItem, 
+                settingType, 
+                settingContext.Language,
+                settingContext.IP).ConfigureAwait(false);
 
             if (updateCustomerInfoResult.IsFailed
                 || settingItem.IsNoChangePT())
@@ -374,7 +379,8 @@
             UpdateCustomerSettingCommand command,
             AccountDetailSettingItem settingItem,
             SettingType settingType,
-            string language)
+            string language,
+            string ip)
         {
             var updateCommand = new UpdateCustomerInfoCommand
             {
@@ -386,6 +392,7 @@
                 LastName = EncodeHtml(settingItem.LastName),
                 MobilePhone = EncodeHtml(settingItem.MobilePhone),
                 Phone = EncodeHtml(settingItem.Phone),
+                IP = ip,
                 Language = LanguageNameConverter.GetLanguageKey(language)
             };
 
