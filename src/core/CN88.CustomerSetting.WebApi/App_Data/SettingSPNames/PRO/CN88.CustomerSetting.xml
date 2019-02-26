@@ -1,51 +1,49 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Functions SiteId="88" SiteName="CN88">
-    <Function Name="Customer_Setting_Core">
-      <Setting Key="CustSetting_SameLineCheck" SpName="Acc_CustSetting_SameLineCheck" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
-      <Setting Key="CustSetting_MultiCustPermissionValidate" SpName="Acc_CustSetting_MultiCustPermissionValidate" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
-      <Setting Key="CustSetting_SettingDetailSelect" SpName="Acc_CustSetting_SettingDetailSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
-      <Setting Key="CustSetting_ActorStatusSelect" SpName="Acc_CustSetting_ActorStatusSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
-      <Setting Key="CustSetting_CustomerLevelSelect" SpName="Acc_CustSetting_CustomerRoleSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
-      <Setting Key="CustSetting_ProductProfileSelect" SpName="CS_ProductProfileSelect_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
-        <Parameters>
-          <Parameter Name="IsTest" Value="true" />
-        </Parameters>
-        <Mapping DataField="SettingType" ObjectProperty="Id" />
-      </Setting>
-      <Setting Key="CS_SettingTypeConfigSel" SpName="CS_SettingTypeConfigSel_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
-        <Parameters>
-          <Parameter Name="IsTest" Value="true" />
-        </Parameters>
-        <Mapping DataField="SportType" ObjectProperty="SportTypeId" />
-        <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
-      </Setting>
-      <Setting Key="CS_CustomerIns_Com" SpName="CS_CustomerIns_Com_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
-        <Parameters>
-          <Parameter Name="IsTest" Value="true" />
-        </Parameters>
-      </Setting>
-      <Setting Key="CS_CustomerIns_SAg" SpName="CS_CustomerIns_SAg_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
-        <Parameters>
-          <Parameter Name="IsTest" Value="true" />
-        </Parameters>
-      </Setting>
-      <Setting Key="CS_CustomerIns_MAg" SpName="CS_CustomerIns_MAg_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
-        <Parameters>
-          <Parameter Name="IsTest" Value="true" />
-        </Parameters>
-      </Setting>
-      <Setting Key="CS_CustomerIns_Ag" SpName="CS_CustomerIns_Ag_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
-        <Parameters>
-          <Parameter Name="IsTest" Value="true" />
-        </Parameters>
-      </Setting>
-      <Setting Key="Age_CustomerCheckExists" SpName="Age_CustomerCheckExists" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0">
-      </Setting>
-      <Setting Key="CS_HeadlineUsernameSuggestion" SpName="CS_HeadlineUsernameSuggestion_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0">
-      </Setting>
-      <Setting Key="CS_GetHeadlineCurrency" SpName="CS_GetHeadlineCurrency_UAT3" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0">
-        <Mapping DataField="exchangeid" ObjectProperty="Id" />
-        <Mapping DataField="currencyname" ObjectProperty="Name" />
-      </Setting>
-    </Function>
+  <Function Name="Customer_Setting_Core">
+    <Setting Key="CustSetting_SameLineCheck" SpName="Acc_CustSetting_SameLineCheck" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
+    <Setting Key="CustSetting_MultiCustPermissionValidate" SpName="Acc_CustSetting_MultiCustPermissionValidate" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
+    <Setting Key="CustSetting_SettingDetailSelect" SpName="Acc_CustSetting_SettingDetailSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
+    <Setting Key="CustSetting_ActorStatusSelect" SpName="Acc_CustSetting_ActorStatusSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
+    <Setting Key="CustSetting_CustomerLevelSelect" SpName="Acc_CustSetting_CustomerRoleSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
+    <Setting Key="CustSetting_ProductProfileSelect" SpName="CS_ProductProfileSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+      <Parameters>
+        <Parameter Name="IsTest" Value="true" />
+      </Parameters>
+      <Mapping DataField="SettingType" ObjectProperty="Id" />
+    </Setting>
+    <Setting Key="CS_SettingTypeConfigSel" SpName="CS_SettingTypeConfigSel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+      <Parameters>
+        <Parameter Name="IsTest" Value="true" />
+      </Parameters>
+      <Mapping DataField="SportType" ObjectProperty="SportTypeId" />
+      <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
+    </Setting>
+    <Setting Key="CS_CustomerIns_Com" SpName="CS_CustomerIns_Com" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+      <Parameters>
+        <Parameter Name="IsTest" Value="true" />
+      </Parameters>
+    </Setting>
+    <Setting Key="CS_CustomerIns_SAg" SpName="CS_CustomerIns_SAg" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+      <Parameters>
+        <Parameter Name="IsTest" Value="true" />
+      </Parameters>
+    </Setting>
+    <Setting Key="CS_CustomerIns_MAg" SpName="CS_CustomerIns_MAg" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+      <Parameters>
+        <Parameter Name="IsTest" Value="true" />
+      </Parameters>
+    </Setting>
+    <Setting Key="CS_CustomerIns_Ag" SpName="CS_CustomerIns_Ag" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
+      <Parameters>
+        <Parameter Name="IsTest" Value="true" />
+      </Parameters>
+    </Setting>
+    <Setting Key="Age_CustomerCheckExists" SpName="Age_CustomerCheckExists" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0"></Setting>
+    <Setting Key="CS_HeadlineUsernameSuggestion" SpName="CS_HeadlineUsernameSuggestion" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0"></Setting>
+    <Setting Key="CS_GetHeadlineCurrency" SpName="CS_GetHeadlineCurrency" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0">
+      <Mapping DataField="exchangeid" ObjectProperty="Id" />
+      <Mapping DataField="currencyname" ObjectProperty="Name" />
+    </Setting>
+  </Function>
 </Functions>
