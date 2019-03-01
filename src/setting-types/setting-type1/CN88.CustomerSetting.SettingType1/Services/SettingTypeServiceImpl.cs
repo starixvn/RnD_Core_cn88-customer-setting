@@ -321,8 +321,7 @@
                 command, 
                 settingItem, 
                 settingType, 
-                settingContext.Language,
-                settingContext.IP).ConfigureAwait(false);
+                settingContext).ConfigureAwait(false);
 
             if (updateCustomerInfoResult.IsFailed
                 || settingItem.IsNoChangePT())
@@ -379,8 +378,7 @@
             UpdateCustomerSettingCommand command,
             AccountDetailSettingItem settingItem,
             SettingType settingType,
-            string language,
-            string ip)
+            ISettingContext settingContext)
         {
             var updateCommand = new UpdateCustomerInfoCommand
             {
@@ -392,8 +390,10 @@
                 LastName = EncodeHtml(settingItem.LastName),
                 MobilePhone = EncodeHtml(settingItem.MobilePhone),
                 Phone = EncodeHtml(settingItem.Phone),
-                IP = ip,
-                Language = LanguageNameConverter.GetLanguageKey(language)
+                IP = settingContext.IP,
+                UserId = settingContext.Actor.Id,
+                SubAccId = settingContext.Actor.SubAccountId,
+                Language = LanguageNameConverter.GetLanguageKey(settingContext.Language)
             };
 
             await DynamicRepository
