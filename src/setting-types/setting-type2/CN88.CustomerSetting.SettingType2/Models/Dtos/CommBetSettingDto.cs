@@ -26,8 +26,10 @@
 
         public decimal MaxCommPercent => MaxComm * OneHundredPercent;
 
-        public decimal Comm { get; set; }
+        public decimal? Comm { get; set; }
 
-        public decimal CommPercent => Comm * OneHundredPercent;
+        public decimal CommPercent => Comm.HasValue 
+            ? Comm.Value * OneHundredPercent
+            : 0;
     }
 }

@@ -107,15 +107,17 @@
                 MaxMaxPerEvent = firstSettingItemDto.MaxMaxPerEvent,
                 MinMaxPerEvent = firstSettingItemDto.MinMaxPerEvent,
 
-                CommissionGroups = settingItemDto.Select(
-                    dto => new CommissionGroup
-                    {
-                        Id = dto.GroupId,
-                        Name = dto.GroupName,
-                        MaxValue = dto.MaxCommPercent,
-                        MinValue = dto.MinCommPercent,
-                        Value = dto.CommPercent
-                    })
+                CommissionGroups = firstSettingItemDto.Comm.HasValue 
+                    ? settingItemDto.Select(
+                        dto => new CommissionGroup
+                        {
+                            Id = dto.GroupId,
+                            Name = dto.GroupName,
+                            MaxValue = dto.MaxCommPercent,
+                            MinValue = dto.MinCommPercent,
+                            Value = dto.CommPercent
+                        })
+                    : Enumerable.Empty<CommissionGroup>()
             };
         }
 
