@@ -88,16 +88,6 @@ module CustomerSetting {
             return true;
         }
 
-        private validateUplineUsername(): boolean {
-            if (!this.uplineUsername || this.uplineUsername.length === 0) {
-                this.validationState = new ValidationResult("RequiredField", "uplineUsername");
-
-                return false;
-            }
-
-            return true;
-        }
-
         protected validatePassword(): boolean {
             if (!this.password || this.password.length === 0) {
                 this.validationState = new ValidationResult("RequiredField", "password");
@@ -121,6 +111,16 @@ module CustomerSetting {
                     "credit",
                     [this.minCredit],
                     { precision: 2 });
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private validateUplineUsername(): boolean {
+            if (!this.uplineUsername || this.uplineUsername.length === 0) {
+                this.validationState = new ValidationResult("RequiredField", "uplineUsername");
 
                 return false;
             }

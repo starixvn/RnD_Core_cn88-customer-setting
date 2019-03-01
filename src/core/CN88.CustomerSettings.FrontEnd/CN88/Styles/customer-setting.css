@@ -431,7 +431,6 @@ select.setting-field {
       justify-content: center;
       line-height: 3rem;
       padding: 0 8px;
-      text-align: center;
       width: 100%; }
   .block__cell, .block__lbl, .block__value {
     border-right: 1px solid #d2d2d2;

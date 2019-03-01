@@ -6,7 +6,7 @@
         <div class="block__cell align-center"
              data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
              data-ng-style="eachGroupStyle"
-             data-ng-repeat="commissionGroup in item.mappedCommissionGroups">
+             data-ng-repeat="commissionGroup in item.mappedCommissionGroups track by $index">
             <percentage-dropdown data-ng-if="commissionGroup"
                                  data-ng-model="commissionGroup.value"
                                  data-setting-field="{{'commissionGroups-' + $index}}"

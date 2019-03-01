@@ -21,7 +21,7 @@ module CustomerSetting {
     }
 
     class NumericInputDirective implements ng.IDirective {
-        public static $inject: string[] = ["$filter", "$window", "appConfigService"];
+        public static $inject: string[] = ["$filter", "appConfigService"];
         public static defaultPrecision: number = 0;
 
         public restrict: string = "A";
@@ -36,8 +36,11 @@ module CustomerSetting {
 
         public link: ng.IDirectiveLinkFn = (scope: INumericInputScope, originalElement: ng.IAugmentedJQuery) => {
             var element: ng.IAugmentedJQuery = angular.element(originalElement[0]);
+            var input: HTMLInputElement = <HTMLInputElement>element[0];
             var maxLength: number = parseInt(element.attr("maxlength"), 10);
             var modelCtrl: any = element.controller("ngModel");
+            var latestValidValue: number;
+            var latestValidFormattedValue: string;
 
             scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
 
@@ -49,49 +52,23 @@ module CustomerSetting {
                 element.data("focused", false);
 
                 if (scope.strictFormat && scope.precision > 0) {
-                    element.val(this.numberFilter(modelCtrl.$modelValue, scope.precision));
+                    latestValidValue = modelCtrl.$modelValue;
+                    latestValidFormattedValue = this.numberFilter(modelCtrl.$modelValue, scope.precision);
+
+                    element.val(latestValidFormattedValue);
                 }
             });
 
             element.on("mouseup", () => {
                 if (element.data("focused")) {
-                    var input: HTMLInputElement = <HTMLInputElement>element[0];
-
                     input.select();
                     element.data("focused", false);
                 }
             });
 
-            element.on("keydown", (event: JQueryEventObject) => {
+            element.on("keydown", (event: JQueryKeyEventObject) => {
                 var value: string = element.val();
-                var decimalSeparatorPosition = value.indexOf(this.decimalSeparator);
-                var numberParts: string[] = value.split(this.decimalSeparator);
-                var input: HTMLInputElement = <HTMLInputElement>element[0];
                 var cursorPosition: number = input.selectionStart;
-
-                if (this.decimalKeyCodes.indexOf(event.keyCode) >= 0) {
-                    // Prevent more than one decimal character or do not allow decimal character in integer field
-                    if (numberParts.length > 1 || scope.precision === 0) {
-                        event.preventDefault();
-
-                        return;
-                    } else if (numberParts[0].length === 0) { // Integer part is required in decimal field
-                        event.preventDefault();
-
-                        return;
-                    } else {
-                        return;
-                    }
-                }
-
-                // In case that negative number allowed
-                if (scope.negativeAllowed && this.negativeKeyCodes.indexOf(event.keyCode) >= 0) {
-                    var selection: number = input.selectionEnd - input.selectionStart;
-
-                    if (cursorPosition === 0 || selection === value.length) {
-                        return;
-                    }
-                }
 
                 // Special check on backspace keydown
                 if (event.keyCode === 8) {
@@ -118,111 +95,67 @@ module CustomerSetting {
 
                     return;
                 }
-
-                if ([9, 27, 13].indexOf(event.keyCode) >= 0 // Allow: tab, escape, enter
-                    || (event.keyCode === 65 && event.ctrlKey) // Allow: Ctrl+A
-                    || (event.keyCode === 67 && event.ctrlKey) // Allow: Ctrl+C
-                    || (event.keyCode === 86 && event.ctrlKey) // Allow: Ctrl+V
-                    || (event.keyCode >= 35 && event.keyCode <= 40)) { // Allow: home, end, left, right, down, up
-                    // let it happen, don't do anything
-                    return;
-                }
-
-                // Only numeric characters are allowed
-                if ((event.shiftKey || (event.keyCode < 48 || event.keyCode > 57))
-                    && (event.keyCode < 96 || event.keyCode > 105)) {
-                    event.preventDefault();
-
-                    return;
-                }
-
-                // Do not allow number of numeric characters in decimal part exceeds the precision
-                if (decimalSeparatorPosition >= 0
-                    && decimalSeparatorPosition < cursorPosition
-                    && numberParts[1].length >= scope.precision) {
-                    event.preventDefault();
-
-                    return;
-                }
-
-                // In decimal fields, (precision + 1) characters are booked for decimal part
-                if (decimalSeparatorPosition < 0 && scope.precision > 0) {
-                    var allowedLength: number = maxLength - scope.precision - 1;
-
-                    if (value.length >= allowedLength) {
-                        event.preventDefault();
-                    }
-                }
-            });
-
-            element.on("paste", (event: JQueryEventObject) => {
-                var clipboardData: DataTransfer =
-                    (<ClipboardEvent><Event>event).clipboardData
-                    || this.$window.clipboardData
-                    || (<ClipboardEvent>event.originalEvent).clipboardData;
-                var clipboard: string = clipboardData.getData("Text");
-                var { formattedValue, value }: IOriginalAndFormattedValuePair = this.parseAndFormatViewValue(clipboard, scope.precision, true);
-                var input: HTMLInputElement = <HTMLInputElement>element[0];
-                var selection: number = input.selectionEnd - input.selectionStart;
-                var currentValue: string = element.val();
-
-                event.preventDefault();
-
-                if ((!currentValue || selection === currentValue.length)
-                    && (scope.negativeAllowed || value >= 0)
-                    && formattedValue
-                    && formattedValue.length <= maxLength) {
-                    modelCtrl.$setViewValue(formattedValue);
-                    modelCtrl.$render();
-                    input.selectionStart = formattedValue.length;
-                }
             });
 
             modelCtrl.$formatters.unshift(() => {
-                return this.numberFilter(modelCtrl.$modelValue, scope.precision);
+                latestValidValue = modelCtrl.$modelValue;
+                latestValidFormattedValue = this.numberFilter(modelCtrl.$modelValue, scope.precision);
+
+                return latestValidFormattedValue;
             });
 
             modelCtrl.$parsers.unshift((viewValue: string) => {
-                var input: HTMLInputElement = <HTMLInputElement>element[0];
+                if (modelCtrl.$isEmpty(viewValue)) {
+                    latestValidValue = null;
+                    latestValidFormattedValue = viewValue;
+
+                    return latestValidValue;
+                }
+
+                if (latestValidFormattedValue === viewValue) {
+                    return latestValidValue;
+                }
+
                 var caretPosition: number = input.selectionStart;
                 var { formattedValue, value }: IOriginalAndFormattedValuePair = this.parseAndFormatViewValue(viewValue, scope.precision, false);
 
-                if (!scope.negativeAllowed || viewValue !== this.negativePrefix) {
-                    element.val(formattedValue);
-                }
+                if (!isNaN(value) && (scope.negativeAllowed || value >= 0)) {
+                    var toBeValidValue: number = value;
+                    var toBeValidFormattedValue: string = formattedValue;
 
-                if (viewValue.length !== caretPosition) {
-                    var offset: number = viewValue.length - formattedValue.length;
+                    if (scope.precision > 0 && toBeValidFormattedValue.indexOf(this.decimalSeparator) < 0) {
+                        var allowedLength: number = maxLength - scope.precision - 1;
 
-                    caretPosition = Math.max(0, caretPosition - offset);
-
-                    if (input.selectionStart === input.selectionEnd) {
-                        input.selectionEnd = caretPosition;
+                        if (toBeValidFormattedValue.length >= allowedLength) {
+                            toBeValidValue = latestValidValue;
+                            toBeValidFormattedValue = latestValidFormattedValue;
+                        }
                     }
 
-                    input.selectionStart = caretPosition;
+                    latestValidValue = toBeValidValue;
+                    latestValidFormattedValue = toBeValidFormattedValue;
                 }
 
-                return value;
+                modelCtrl.$setViewValue(latestValidFormattedValue);
+                modelCtrl.$render();
+                this.setCaretPosition(
+                    input,
+                    caretPosition,
+                    viewValue,
+                    latestValidFormattedValue);
+
+                return latestValidValue;
             });
         };
 
-        private $window: IWindowService;
         private numberFilter: Function;
         private thousandSeparator: string;
         private decimalSeparator: string;
-        private decimalKeyCodes: number[];
-        private negativePrefix: string;
-        private negativeKeyCodes: number[];
 
-        constructor($filter: ng.IFilterService, $window: IWindowService, appConfigService: AppConfigService) {
-            this.$window = $window;
+        constructor($filter: ng.IFilterService, appConfigService: AppConfigService) {
             this.numberFilter = $filter("number");
             this.thousandSeparator = appConfigService.thousandSeparator;
             this.decimalSeparator = appConfigService.decimalSeparator;
-            this.decimalKeyCodes = appConfigService.decimalKeyCodes;
-            this.negativePrefix = appConfigService.negativePrefix;
-            this.negativeKeyCodes = appConfigService.negativeKeyCodes;
         }
 
         private parseAndFormatViewValue(viewValue: string, precision: number, rounding: boolean): IOriginalAndFormattedValuePair {
@@ -247,13 +180,36 @@ module CustomerSetting {
                 var plainNumber: string = numberParts[0].replace(/[\,]/g, "");
 
                 value = +plainNumber;
-                formattedValue = this.numberFilter(value);
+
+                if (!isNaN(value)) {
+                    formattedValue = this.numberFilter(value);
+                }
             }
 
             return {
                 formattedValue: formattedValue,
                 value: value
             };
+        }
+
+        private setCaretPosition(
+            input: HTMLInputElement,
+            originalCaretPosition: number,
+            originalValue: string,
+            formattedValue: string): void {
+            var caretPosition: number = originalCaretPosition;
+
+            if (originalValue.length !== caretPosition) {
+                var offset: number = originalValue.length - formattedValue.length;
+
+                caretPosition = Math.max(0, caretPosition - offset);
+
+                if (input.selectionStart === input.selectionEnd) {
+                    input.selectionEnd = caretPosition;
+                }
+
+                input.selectionStart = caretPosition;
+            }
         }
     }
 

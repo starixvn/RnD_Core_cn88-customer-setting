@@ -34,7 +34,7 @@ module CustomerSetting {
                 step: "=?",
                 precision: "=?",
                 placeholder: "@",
-                placeholderVisible:"=?",
+                placeholderVisible: "=?",
                 autoRefresh: "=?"
             };
         }
