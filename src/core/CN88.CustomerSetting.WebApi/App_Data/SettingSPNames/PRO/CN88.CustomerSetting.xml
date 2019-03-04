@@ -8,35 +8,35 @@
     <Setting Key="CustSetting_CustomerLevelSelect" SpName="Acc_CustSetting_CustomerRoleSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600" />
     <Setting Key="CustSetting_ProductProfileSelect" SpName="CS_ProductProfileSelect" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
       <Parameters>
-        <Parameter Name="IsTest" Value="true" />
+        <Parameter Name="IsTest" Value="false" />
       </Parameters>
       <Mapping DataField="SettingType" ObjectProperty="Id" />
     </Setting>
     <Setting Key="CS_SettingTypeConfigSel" SpName="CS_SettingTypeConfigSel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
       <Parameters>
-        <Parameter Name="IsTest" Value="true" />
+        <Parameter Name="IsTest" Value="false" />
       </Parameters>
       <Mapping DataField="SportType" ObjectProperty="SportTypeId" />
       <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
     </Setting>
     <Setting Key="CS_CustomerIns_Com" SpName="CS_CustomerIns_Com" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
       <Parameters>
-        <Parameter Name="IsTest" Value="true" />
+        <Parameter Name="IsTest" Value="false" />
       </Parameters>
     </Setting>
     <Setting Key="CS_CustomerIns_SAg" SpName="CS_CustomerIns_SAg" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
       <Parameters>
-        <Parameter Name="IsTest" Value="true" />
+        <Parameter Name="IsTest" Value="false" />
       </Parameters>
     </Setting>
     <Setting Key="CS_CustomerIns_MAg" SpName="CS_CustomerIns_MAg" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
       <Parameters>
-        <Parameter Name="IsTest" Value="true" />
+        <Parameter Name="IsTest" Value="false" />
       </Parameters>
     </Setting>
     <Setting Key="CS_CustomerIns_Ag" SpName="CS_CustomerIns_Ag" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
       <Parameters>
-        <Parameter Name="IsTest" Value="true" />
+        <Parameter Name="IsTest" Value="false" />
       </Parameters>
     </Setting>
     <Setting Key="Age_CustomerCheckExists" SpName="Age_CustomerCheckExists" DbName="DBCUST.CUSTDB.bodbAdminNet" Plain="0"></Setting>

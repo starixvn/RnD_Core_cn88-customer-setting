@@ -3,14 +3,14 @@
   <Function Name="Comm_BetSetting">
     <Setting Key="CS_CustomerIns_CommBetSetting_Sel" SpName="CS_CustomerIns_CommBetSetting_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
       <Parameters>
-        <Parameter Name="IsTest" Value="true" />
+        <Parameter Name="IsTest" Value="false" />
       </Parameters>
       <Mapping DataField="SportType" ObjectProperty="SportTypeId" />
       <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
     </Setting>
     <Setting Key="CS_CustSetting_CommBetSetting_Sel" SpName="CS_CustSetting_CommBetSetting_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
       <Parameters>
-        <Parameter Name="IsTest" Value="true" />
+        <Parameter Name="IsTest" Value="false" />
       </Parameters>
       <Mapping DataField="SportType" ObjectProperty="SportTypeId" />
       <Mapping DataField="BetType" ObjectProperty="BetTypeId" />
@@ -20,7 +20,7 @@
     </Setting>
     <Setting Key="CS_CustSetting_CommBetSetting_Upd" SpName="CS_CustSetting_CommBetSetting_Upd" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
       <Parameters>
-        <Parameter Name="IsTest" Value="true" />
+        <Parameter Name="IsTest" Value="false" />
       </Parameters>
     </Setting>
   </Function>

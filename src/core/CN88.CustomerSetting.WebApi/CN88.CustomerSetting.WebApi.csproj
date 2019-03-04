@@ -13,6 +13,36 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="App_Data\SettingSPNames\LOCAL1\CN88.CustomerSetting.SettingType1.xml" />
+    <None Remove="App_Data\SettingSPNames\LOCAL1\CN88.CustomerSetting.SettingType2.xml" />
+    <None Remove="App_Data\SettingSPNames\LOCAL1\CN88.CustomerSetting.xml" />
+    <None Remove="App_Data\SettingSPNames\PRO\CN88.CustomerSetting.SettingType1.xml" />
+    <None Remove="App_Data\SettingSPNames\PRO\CN88.CustomerSetting.SettingType2.xml" />
+    <None Remove="App_Data\SettingSPNames\PRO\CN88.CustomerSetting.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="App_Data\SettingSPNames\LOCAL1\CN88.CustomerSetting.SettingType1.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\SettingSPNames\LOCAL1\CN88.CustomerSetting.SettingType2.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\SettingSPNames\LOCAL1\CN88.CustomerSetting.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\SettingSPNames\PRO\CN88.CustomerSetting.SettingType1.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\SettingSPNames\PRO\CN88.CustomerSetting.SettingType2.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\SettingSPNames\PRO\CN88.CustomerSetting.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\Templates\customer-setting.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -36,18 +66,6 @@
     <ProjectReference Include="..\..\setting-types\setting-type1\CN88.CustomerSetting.SettingType1\CN88.CustomerSetting.SettingType1.csproj" />
     <ProjectReference Include="..\..\setting-types\setting-type2\CN88.CustomerSetting.SettingType2\CN88.CustomerSetting.SettingType2.csproj" />
     <ProjectReference Include="..\CN88.CustomerSetting\CN88.CustomerSetting.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="App_Data\SettingSPNames\PRO\CN88.CustomerSetting.SettingType2.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="App_Data\SettingSPNames\PRO\CN88.CustomerSetting.SettingType1.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="App_Data\SettingSPNames\PRO\CN88.CustomerSetting.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
