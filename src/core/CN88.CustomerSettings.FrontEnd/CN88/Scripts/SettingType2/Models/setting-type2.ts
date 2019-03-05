@@ -1,8 +1,6 @@
 ﻿/// <reference path="../../core/models/setting-type.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class SettingType2 extends SettingType {
         public commissionPrecision: number;
         public betSettingPrecision: number;

@@ -1,9 +1,7 @@
 ﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
 /// <reference path="../module-registrater.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class ValueRangeService {
         public generateRanges(value: number, min: number, max: number, step: number, roundingFactor: number): number[] {
             var ranges: number[] = [];

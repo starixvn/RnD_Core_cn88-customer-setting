@@ -1,6 +1,4 @@
-﻿module CustomerSetting {
-    "use strict";
-
+﻿namespace CustomerSetting {
     export enum PositionModel {
         relative = 1,
         absolute = 2,

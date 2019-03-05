@@ -1,6 +1,4 @@
-﻿module CustomerSetting {
-    "use strict";
-
+﻿namespace CustomerSetting {
     export enum SettingLevel {
         product = 1,
         sportType = 2,

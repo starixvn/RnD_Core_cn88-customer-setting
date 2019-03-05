@@ -3,9 +3,7 @@
 /// <reference path="../services/app-config-service.ts" />
 /// <reference path="../module-registrater.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     function EditableFormFilter(appConfigService: AppConfigService): Function {
         return (setting: { settingTypes: Array<{ displayMode: number }> }) => {
             var hasEditableSettingType: boolean = false;

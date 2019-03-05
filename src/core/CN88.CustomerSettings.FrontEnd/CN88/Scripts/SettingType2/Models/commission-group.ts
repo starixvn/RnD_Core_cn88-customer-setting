@@ -1,6 +1,4 @@
-﻿module CustomerSetting {
-    "use strict";
-
+﻿namespace CustomerSetting {
     export interface ICommissionGroup {
         id: string;
         name: string;

@@ -5,9 +5,7 @@
 /// <reference path="setting-type.ts" />
 /// <reference path="result.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class Setting {
         public customerId: number;
         public customerLevel: Level;
@@ -30,7 +28,8 @@ module CustomerSetting {
                 }
 
                 if (setting.settingTypes) {
-                    this.settingTypes = setting.settingTypes.map((settingType: any) => SettingTypeRegister.getInitializer(settingType.id)(settingType));
+                    this.settingTypes = setting.settingTypes.map(
+                        (settingType: any) => SettingTypeRegister.getInitializer(settingType.id)(settingType, this.customerLevel));
                 } else {
                     this.settingTypes = [];
                 }

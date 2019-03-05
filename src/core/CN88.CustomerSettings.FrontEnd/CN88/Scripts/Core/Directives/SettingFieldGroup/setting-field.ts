@@ -5,9 +5,7 @@
 /// <reference path="../../module-registrater.ts" />
 /// <reference path="setting-field-group.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     interface ISettingFieldAttributes extends ng.IAttributes {
         settingField: string;
     }

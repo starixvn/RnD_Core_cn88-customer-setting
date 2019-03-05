@@ -1,9 +1,7 @@
 ﻿/// <reference path="enums/message-type.ts" />
 /// <reference path="exceptions.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class Result {
         private static _normal: Result = new Result(0, "", MessageType.success);
         private static _systemError: Result = new Result(-1, "SystemError", MessageType.error);

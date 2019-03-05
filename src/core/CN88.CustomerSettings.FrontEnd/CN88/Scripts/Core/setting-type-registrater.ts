@@ -1,11 +1,10 @@
-﻿/// <reference path="models/key-value-pair.ts" />
+﻿/// <reference path="models/enums/level.ts" />
+/// <reference path="models/key-value-pair.ts" />
 /// <reference path="models/setting-type.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export interface ISettingTypeConstructor {
-        (settingType: any): SettingType;
+        (settingType: any, customerLevel?: Level): SettingType;
     }
 
     export class SettingTypeRegister {

@@ -5,9 +5,7 @@
 /// <reference path="../../../../core/module-registrater.ts" />
 /// <reference path="../../../models/account-detail.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export interface IValidateUsername {
         (suffixIndex: number, selectedSuffix: string): void;
     }

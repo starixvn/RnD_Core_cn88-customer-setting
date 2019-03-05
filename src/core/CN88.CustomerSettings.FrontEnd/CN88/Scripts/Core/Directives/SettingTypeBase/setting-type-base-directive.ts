@@ -7,9 +7,7 @@
 /// <reference path="../../services/app-config-service.ts" />
 /// <reference path="../../services/setting-types-shared-values-service.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     interface INewSettingItem {
         (settingItem: any, backup?: boolean, isNew?: boolean, customerLevel?: Level, uplineId?: number): ISettingItem;
     }

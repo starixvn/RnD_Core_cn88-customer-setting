@@ -1,6 +1,4 @@
-﻿module CustomerSetting {
-    "use strict";
-
+﻿namespace CustomerSetting {
     export enum MessageType {
         success = 0,
         warning = 1,

@@ -2,9 +2,7 @@
 /// <reference path="../models/key-value-pair.ts" />
 /// <reference path="../module-registrater.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export interface ICrossingSettingTypesPromise {
         (sharedData: any): ng.IPromise<void>;
     }

@@ -1,8 +1,6 @@
 ﻿/// <reference path="../helpers.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class Exceptions {
         public static notImplemented(funcName: string): string {
             return StringFormater.format("{0} is not implemented", funcName);

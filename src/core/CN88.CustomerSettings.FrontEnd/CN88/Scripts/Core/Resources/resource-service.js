@@ -1,8 +1,6 @@
 ﻿/*jshint -W101,-W106,-W044,-W098*/
 
 (function () {
-    "use strict";
-
     var labels = {};
 
     labels["en-us"] = {

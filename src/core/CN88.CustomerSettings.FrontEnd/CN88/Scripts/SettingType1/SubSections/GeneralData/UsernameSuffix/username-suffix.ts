@@ -3,9 +3,7 @@
 /// <reference path="../../../models/account-detail.ts" />
 /// <reference path="username-suffix-group.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export interface IUsernameSuffixScope extends ng.IScope {
         suffixIndex: number;
         suffix: string;

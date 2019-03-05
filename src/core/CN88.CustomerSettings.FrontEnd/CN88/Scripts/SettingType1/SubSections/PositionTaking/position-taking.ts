@@ -1,9 +1,7 @@
 ﻿/// <reference path="../../../core/module-registrater.ts" />
 /// <reference path="../sub-section-base.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     class PositionTakingDirective extends SubSectionBaseDirective {
         public templateUrl: string = "position-taking.htm";
     }

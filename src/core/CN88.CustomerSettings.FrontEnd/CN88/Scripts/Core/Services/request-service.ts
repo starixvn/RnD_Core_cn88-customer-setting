@@ -4,9 +4,7 @@
 /// <reference path="../resources/resource-service.ts" />
 /// <reference path="../module-registrater.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     interface IServerRequestCallback {
         (response: ng.IHttpPromiseCallbackArg<any>): any;
     }

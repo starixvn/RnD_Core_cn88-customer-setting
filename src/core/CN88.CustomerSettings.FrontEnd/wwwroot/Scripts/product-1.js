@@ -34026,7 +34026,6 @@ angular.module('ui.bootstrap.typeahead').run(function() {!angular.$$csp().noInli
 angular.module('ui.bootstrap.position').run(function() {!angular.$$csp().noInlineStyle && !angular.$$uibPositionCss && angular.element(document).find('head').prepend('<style type="text/css">.uib-position-measure{display:block !important;visibility:hidden !important;position:absolute !important;top:-9999px !important;left:-9999px !important;}.uib-position-scrollbar-measure{position:absolute !important;top:-9999px !important;width:50px !important;height:50px !important;overflow:scroll !important;}.uib-position-body-scrollbar-measure{overflow:scroll !important;}</style>'); angular.$$uibPositionCss = true; });
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var StringFormater = (function () {
         function StringFormater() {
         }
@@ -34111,31 +34110,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
-    var KeyValuePair = (function () {
-        function KeyValuePair(key, value) {
-            this.key = key;
-            this.value = value;
-        }
-        return KeyValuePair;
-    }());
-    CustomerSetting.KeyValuePair = KeyValuePair;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    (function (DisplayMode) {
-        DisplayMode[DisplayMode["editable"] = 1] = "editable";
-        DisplayMode[DisplayMode["readOnly"] = 2] = "readOnly";
-        DisplayMode[DisplayMode["hidden"] = 3] = "hidden";
-    })(CustomerSetting.DisplayMode || (CustomerSetting.DisplayMode = {}));
-    var DisplayMode = CustomerSetting.DisplayMode;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
     (function (Level) {
         Level[Level["company"] = 5] = "company";
         Level[Level["super"] = 4] = "super";
@@ -34148,7 +34122,28 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
+    var KeyValuePair = (function () {
+        function KeyValuePair(key, value) {
+            this.key = key;
+            this.value = value;
+        }
+        return KeyValuePair;
+    }());
+    CustomerSetting.KeyValuePair = KeyValuePair;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    (function (DisplayMode) {
+        DisplayMode[DisplayMode["editable"] = 1] = "editable";
+        DisplayMode[DisplayMode["readOnly"] = 2] = "readOnly";
+        DisplayMode[DisplayMode["hidden"] = 3] = "hidden";
+    })(CustomerSetting.DisplayMode || (CustomerSetting.DisplayMode = {}));
+    var DisplayMode = CustomerSetting.DisplayMode;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     (function (MessageType) {
         MessageType[MessageType["success"] = 0] = "success";
         MessageType[MessageType["warning"] = 1] = "warning";
@@ -34160,7 +34155,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var Exceptions = (function () {
         function Exceptions() {
         }
@@ -34194,7 +34188,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var Result = (function () {
         function Result(code, message, msgType) {
             this.code = code;
@@ -34418,7 +34411,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var DefaultSettingItem = (function () {
         function DefaultSettingItem(settingItem, backup, isNew, customerLevel) {
             if (backup === void 0) { backup = false; }
@@ -34519,7 +34511,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingType = (function () {
         function SettingType(settingType) {
             if (settingType) {
@@ -34592,7 +34583,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingTypeRegister = (function () {
         function SettingTypeRegister() {
         }
@@ -34611,9 +34601,9 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var Setting = (function () {
         function Setting(setting) {
+            var _this = this;
             if (setting) {
                 this.customerId = setting.customerId;
                 this.customerLevel = setting.customerLevel.value;
@@ -34623,7 +34613,7 @@ var CustomerSetting;
                     this.initializeWarningMessage(setting.warningMessage);
                 }
                 if (setting.settingTypes) {
-                    this.settingTypes = setting.settingTypes.map(function (settingType) { return CustomerSetting.SettingTypeRegister.getInitializer(settingType.id)(settingType); });
+                    this.settingTypes = setting.settingTypes.map(function (settingType) { return CustomerSetting.SettingTypeRegister.getInitializer(settingType.id)(settingType, _this.customerLevel); });
                 }
                 else {
                     this.settingTypes = [];
@@ -34713,7 +34703,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingCommand = (function () {
         function SettingCommand(uplineId, setting) {
             this.uplineId = uplineId;
@@ -34732,7 +34721,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingQuery = (function () {
         function SettingQuery(productId, uplineId, customerLevel, customerId, isNew) {
             this.customerId = customerId;
@@ -34784,7 +34772,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var Defaults = (function () {
         function Defaults() {
         }
@@ -34829,7 +34816,6 @@ app.config(["$compileProvider", function ($compileProvider) {
     }]);
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var ModuleRegister = (function () {
         function ModuleRegister() {
         }
@@ -34863,7 +34849,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var ParametersService = (function () {
         function ParametersService($window) {
             this.$window = $window;
@@ -34932,7 +34917,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var ResourceService = (function () {
         function ResourceService(customerSettingResources, parametersService) {
             this.resources = customerSettingResources;
@@ -35025,7 +35009,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var AppConfigService = (function () {
         function AppConfigService($window) {
             var appConfig;
@@ -35098,7 +35081,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var BlockUiDirective = (function () {
         function BlockUiDirective(blockUiService) {
             var _this = this;
@@ -35133,7 +35115,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var RequestService = (function () {
         function RequestService($http, $window, resourceService, blockUiService) {
             this.$http = $http;
@@ -35211,7 +35192,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingTypesSharedValuesService = (function () {
         function SettingTypesSharedValuesService(parametersService) {
             this.parametersService = parametersService;
@@ -35237,7 +35217,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var CustomerSettingController = (function () {
         function CustomerSettingController($window, $timeout, $locale, appConfigService, parametersService, resourceService, requestService, settingTypesSharedValuesService) {
             var _this = this;
@@ -35326,7 +35305,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     function EditableFormFilter(appConfigService) {
         return function (setting) {
             var hasEditableSettingType = false;
@@ -35344,7 +35322,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     function FormatDateTime($filter, appConfigService) {
         var dateFilter = $filter("date");
         return function (value) {
@@ -35357,7 +35334,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     function FormatPercentageFilter($filter) {
         var defaultPrecision = 0;
         var numberFilter = $filter("number");
@@ -35372,7 +35348,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     function FormatShortDate($filter, appConfigService) {
         var dateFilter = $filter("date");
         return function (value) {
@@ -35385,7 +35360,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     function MinValueFilter() {
         return function (numbers) {
             return Math.min.apply(Math, numbers);
@@ -35402,7 +35376,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     function UnsafeFilter($sce) {
         return function (value) {
             return $sce.trustAsHtml(value);
@@ -35414,7 +35387,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     function ValidSettingTypeFilter() {
         return function (settingType) {
             return !settingType.isError;
@@ -35425,7 +35397,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var CrossingSettingTypesServiceBus = (function () {
         function CrossingSettingTypesServiceBus($q) {
             this.$q = $q;
@@ -35472,7 +35443,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var ValueRangeService = (function () {
         function ValueRangeService() {
         }
@@ -35501,7 +35471,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     (function (SettingLevel) {
         SettingLevel[SettingLevel["product"] = 1] = "product";
         SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
@@ -35513,7 +35482,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingTypeBaseDirective = (function () {
         function SettingTypeBaseDirective(appConfigService, settingTypesSharedValuesService, instantiateSettingItem) {
             var _this = this;
@@ -35574,7 +35542,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var DefaultSettingTypeGroupingDirective = (function (_super) {
         __extends(DefaultSettingTypeGroupingDirective, _super);
         function DefaultSettingTypeGroupingDirective() {
@@ -35624,7 +35591,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     function ShowingName() {
         return function (settingItem, settingLevel, productName) {
             return settingLevel === CustomerSetting.SettingLevel.product
@@ -35639,56 +35605,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
-    var PercentageDropdownDirective = (function () {
-        function PercentageDropdownDirective(valueRangeService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
-            this.restrict = "E";
-            this.link = function (scope) {
-                if (scope.autoRefresh) {
-                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
-                        _this.initializeRange(scope);
-                    });
-                }
-                else {
-                    _this.initializeRange(scope);
-                }
-            };
-            this.valueRangeService = valueRangeService;
-        }
-        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    value: "=ngModel",
-                    min: "=",
-                    max: "=",
-                    step: "=?",
-                    precision: "=?",
-                    placeholder: "@",
-                    placeholderVisible: "=?",
-                    autoRefresh: "=?"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
-            scope.precision = scope.precision || 0;
-            scope.factor = Math.pow(10, scope.precision);
-            scope.step = scope.step || 1;
-            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
-        };
-        PercentageDropdownDirective.$inject = ["valueRangeService"];
-        return PercentageDropdownDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
     var NumericInputDirective = (function () {
         function NumericInputDirective($filter, appConfigService) {
             var _this = this;
@@ -35838,101 +35754,54 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
-    var SettingResultDirective = (function () {
-        function SettingResultDirective($rootScope, $window) {
+    var PercentageDropdownDirective = (function () {
+        function PercentageDropdownDirective(valueRangeService) {
             var _this = this;
             this.replace = true;
-            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
+            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
+            this.restrict = "E";
             this.link = function (scope) {
-                scope.$watch("result", function (result) {
-                    _this.$rootScope.$emit("page-height-changed");
-                    if (result) {
-                        _this.$window.scrollTo(0, 0);
-                    }
-                });
-            };
-            this.$rootScope = $rootScope;
-            this.$window = $window;
-        }
-        Object.defineProperty(SettingResultDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    result: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingResultDirective.$inject = ["$rootScope", "$window"];
-        return SettingResultDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-    var SettingTypeDirectiveLoader = (function () {
-        function SettingTypeDirectiveLoader($compile) {
-            var _this = this;
-            this.replace = true;
-            this.link = function (scope, element) {
-                scope.$watch("setting.settingTypes", function () {
-                    _this.generateNodes(scope, element);
-                });
-            };
-            this.$compile = $compile;
-            this.loadedSettingTypes = [];
-        }
-        Object.defineProperty(SettingTypeDirectiveLoader.prototype, "scope", {
-            get: function () {
-                return {
-                    setting: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingTypeDirectiveLoader.prototype.generateNodes = function (scope, element) {
-            var _this = this;
-            if (scope.setting && scope.setting.settingTypes && angular.isArray(scope.setting.settingTypes)) {
-                scope.setting.settingTypes.forEach(function (settingType, index) {
-                    var loaded = _this.loadedSettingTypes.some(function (item) {
-                        return item === settingType.id;
+                if (scope.autoRefresh) {
+                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
+                        _this.initializeRange(scope);
                     });
-                    if (!loaded) {
-                        var settingTypeName = CustomerSetting.StringFormater.format("settingtype{0}", settingType.id);
-                        var newNodeParts = [
-                            "<",
-                            settingTypeName,
-                            " data-setting-type=\"setting.settingTypes[",
-                            index,
-                            "]\"",
-                            "></",
-                            settingTypeName,
-                            ">"
-                        ];
-                        var settingTypeElement = angular.element(newNodeParts.join(""));
-                        if (index === scope.setting.settingTypes.length - 1) {
-                            settingTypeElement.addClass("last-setting-type");
-                        }
-                        element.append(settingTypeElement);
-                        _this.$compile(settingTypeElement)(scope);
-                        _this.loadedSettingTypes.push(settingType.id);
-                    }
-                });
-            }
+                }
+                else {
+                    _this.initializeRange(scope);
+                }
+            };
+            this.valueRangeService = valueRangeService;
+        }
+        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    value: "=ngModel",
+                    min: "=",
+                    max: "=",
+                    step: "=?",
+                    precision: "=?",
+                    placeholder: "@",
+                    placeholderVisible: "=?",
+                    autoRefresh: "=?"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
+            scope.precision = scope.precision || 0;
+            scope.factor = Math.pow(10, scope.precision);
+            scope.step = scope.step || 1;
+            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
         };
-        SettingTypeDirectiveLoader.$inject = ["$compile"];
-        return SettingTypeDirectiveLoader;
+        PercentageDropdownDirective.$inject = ["valueRangeService"];
+        return PercentageDropdownDirective;
     }());
-    CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
+    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingFieldGroupDirective = (function () {
         function SettingFieldGroupDirective($injector, $filter) {
             var _this = this;
@@ -36074,7 +35943,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingFieldDirective = (function () {
         function SettingFieldDirective() {
             this.require = "^settingFieldGroup";
@@ -36091,7 +35959,88 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
+    var SettingResultDirective = (function () {
+        function SettingResultDirective($rootScope, $window) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
+            this.link = function (scope) {
+                scope.$watch("result", function (result) {
+                    _this.$rootScope.$emit("page-height-changed");
+                    if (result) {
+                        _this.$window.scrollTo(0, 0);
+                    }
+                });
+            };
+            this.$rootScope = $rootScope;
+            this.$window = $window;
+        }
+        Object.defineProperty(SettingResultDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    result: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingResultDirective.$inject = ["$rootScope", "$window"];
+        return SettingResultDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingTypeDirectiveLoader = (function () {
+        function SettingTypeDirectiveLoader($compile) {
+            var _this = this;
+            this.replace = true;
+            this.link = function (scope, element) {
+                scope.$watch("setting.settingTypes", function () {
+                    _this.generateNodes(scope, element);
+                });
+            };
+            this.$compile = $compile;
+            this.loadedSettingTypes = [];
+        }
+        Object.defineProperty(SettingTypeDirectiveLoader.prototype, "scope", {
+            get: function () {
+                return {
+                    setting: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingTypeDirectiveLoader.prototype.generateNodes = function (scope, element) {
+            var _this = this;
+            if (scope.setting && scope.setting.settingTypes && angular.isArray(scope.setting.settingTypes)) {
+                scope.setting.settingTypes.forEach(function (settingType, index) {
+                    var loaded = _this.loadedSettingTypes.some(function (item) {
+                        return item === settingType.id;
+                    });
+                    if (!loaded) {
+                        var settingTypeName = CustomerSetting.StringFormater.format("settingtype{0}", settingType.id);
+                        var settingTypeElement = angular.element("<" + settingTypeName + " data-setting-type=\"setting.settingTypes[" + index + "]\"></" + settingTypeName + ">");
+                        if (index === scope.setting.settingTypes.length - 1) {
+                            settingTypeElement.addClass("last-setting-type");
+                        }
+                        element.append(settingTypeElement);
+                        _this.$compile(settingTypeElement)(scope);
+                        _this.loadedSettingTypes.push(settingType.id);
+                    }
+                });
+            }
+        };
+        SettingTypeDirectiveLoader.$inject = ["$compile"];
+        return SettingTypeDirectiveLoader;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     (function (PositionModel) {
         PositionModel[PositionModel["relative"] = 1] = "relative";
         PositionModel[PositionModel["absolute"] = 2] = "absolute";
@@ -36102,7 +36051,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var TooltipDirective = (function () {
         function TooltipDirective($window, $compile, $timeout, $templateCache, $rootScope) {
             var _this = this;
@@ -36234,7 +36182,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     (function (System) {
         System[System["nap"] = 1] = "nap";
         System[System["alpha"] = 2] = "alpha";
@@ -36245,7 +36192,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var HeadlineSuggestionDirective = (function () {
         function HeadlineSuggestionDirective(requestService, appConfigService) {
             var _this = this;
@@ -36273,7 +36219,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var AccountDetail = (function (_super) {
         __extends(AccountDetail, _super);
         function AccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
@@ -36378,7 +36323,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var UsernameSuffixGroupDirective = (function () {
         function UsernameSuffixGroupDirective(requestService, appConfigService) {
             var _this = this;
@@ -36410,7 +36354,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var UsernameSuffixDirective = (function () {
         function UsernameSuffixDirective() {
             var _this = this;
@@ -36462,7 +36405,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingType1 = (function (_super) {
         __extends(SettingType1, _super);
         function SettingType1(settingType) {
@@ -36481,7 +36423,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var AgentAccountDetail = (function (_super) {
         __extends(AgentAccountDetail, _super);
         function AgentAccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
@@ -36559,7 +36500,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var MasterAccountDetail = (function (_super) {
         __extends(MasterAccountDetail, _super);
         function MasterAccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
@@ -36609,10 +36549,7 @@ var CustomerSetting;
     CustomerSetting.MasterAccountDetail = MasterAccountDetail;
 })(CustomerSetting || (CustomerSetting = {}));
 
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-})(CustomerSetting || (CustomerSetting = {}));
+
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -36621,7 +36558,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SuperAccountDetail = (function (_super) {
         __extends(SuperAccountDetail, _super);
         function SuperAccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
@@ -36745,10 +36681,7 @@ var CustomerSetting;
     CustomerSetting.SuperAccountDetail = SuperAccountDetail;
 })(CustomerSetting || (CustomerSetting = {}));
 
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-})(CustomerSetting || (CustomerSetting = {}));
+
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -36757,7 +36690,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var MemberAccountDetail = (function (_super) {
         __extends(MemberAccountDetail, _super);
         function MemberAccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
@@ -36821,7 +36753,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingType1Item = (function () {
         function SettingType1Item() {
         }
@@ -36854,7 +36785,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingType1ResourceService = (function (_super) {
         __extends(SettingType1ResourceService, _super);
         function SettingType1ResourceService(settingType1Resources, parametersService) {
@@ -36893,7 +36823,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingType1Directive = (function (_super) {
         __extends(SettingType1Directive, _super);
         function SettingType1Directive(settingType1ResourceService, appConfigService, settingTypesSharedValuesService) {
@@ -36933,7 +36862,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SubSectionBaseDirective = (function () {
         function SubSectionBaseDirective(settingTypesSharedValuesService) {
             var _this = this;
@@ -36971,7 +36899,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var CustomerCreditDirective = (function (_super) {
         __extends(CustomerCreditDirective, _super);
         function CustomerCreditDirective() {
@@ -37001,7 +36928,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var GeneralDataDirective = (function (_super) {
         __extends(GeneralDataDirective, _super);
         function GeneralDataDirective(settingTypesSharedValuesService, appConfigService, crossingSettingTypesServiceBus, requestService) {
@@ -37053,7 +36979,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var PositionTakingDirective = (function (_super) {
         __extends(PositionTakingDirective, _super);
         function PositionTakingDirective() {
@@ -37067,7 +36992,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     (function (LayoutType) {
         LayoutType[LayoutType["multipleGroups"] = 1] = "multipleGroups";
         LayoutType[LayoutType["singleGroup"] = 2] = "singleGroup";
@@ -37082,7 +37006,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingType2 = (function (_super) {
         __extends(SettingType2, _super);
         function SettingType2(settingType) {
@@ -37095,10 +37018,7 @@ var CustomerSetting;
     CustomerSetting.SettingType2 = SettingType2;
 })(CustomerSetting || (CustomerSetting = {}));
 
-var CustomerSetting;
-(function (CustomerSetting) {
-    "use strict";
-})(CustomerSetting || (CustomerSetting = {}));
+
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -37107,7 +37027,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingType2Item = (function (_super) {
         __extends(SettingType2Item, _super);
         function SettingType2Item(settingType2Item, backup, isNew, customerLevel) {
@@ -37230,7 +37149,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingType2ResourceService = (function (_super) {
         __extends(SettingType2ResourceService, _super);
         function SettingType2ResourceService(settingType2Resources, parametersService) {
@@ -37269,7 +37187,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var CustomerSetting;
 (function (CustomerSetting) {
-    "use strict";
     var SettingType2Directive = (function (_super) {
         __extends(SettingType2Directive, _super);
         function SettingType2Directive($q, settingType2ResourceService, crossingSettingTypesServiceBus, appConfigService, settingTypesSharedValuesService) {
@@ -37375,8 +37292,6 @@ $templateCache.put("setting-type2-value.html","<div class=\"block__cell-wrapper\
 /*jshint -W101,-W106,-W044,-W098*/
 
 (function () {
-    "use strict";
-
     var labels = {};
 
     labels["en-us"] = {
@@ -37439,8 +37354,6 @@ $templateCache.put("setting-type2-value.html","<div class=\"block__cell-wrapper\
 /*jshint -W101,-W106,-W044,-W098*/
 
 (function () {
-    "use strict";
-
     var labels = {};
 
     labels["en-us"] = {
@@ -37545,8 +37458,6 @@ $templateCache.put("setting-type2-value.html","<div class=\"block__cell-wrapper\
 /*jshint -W101,-W106,-W044,-W098*/
 
 (function () {
-    "use strict";
-
     var labels = {};
 
     labels["en-us"] = {

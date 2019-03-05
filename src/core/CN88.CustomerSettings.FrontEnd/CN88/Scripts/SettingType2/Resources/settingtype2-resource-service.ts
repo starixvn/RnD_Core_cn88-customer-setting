@@ -2,9 +2,7 @@
 /// <reference path="../../Core/Resources/resource-service.ts" />
 /// <reference path="../../core/services/parameters-service.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class SettingType2ResourceService extends ResourceService {
         public static $inject: string[] = ["settingType2Resources", "parametersService"];
 

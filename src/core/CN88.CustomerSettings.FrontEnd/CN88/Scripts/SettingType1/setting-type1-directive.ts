@@ -10,9 +10,7 @@
 /// <reference path="models/setting-type1-item.ts" />
 /// <reference path="resources/settingtype1-resource-service.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     class SettingType1Directive extends SettingTypeBaseDirective {
         public static $inject: string[] = [
             "settingType1ResourceService",

@@ -9,9 +9,7 @@
 /// <reference path="../../models/super-account-detail.ts" />
 /// <reference path="../sub-section-base.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     interface IGeneralDataScope extends ISubSectionsSharedScopeScope {
         updateSpreadGroup: Function;
         validateAndLoadHeadlineCurrency: Function;

@@ -3,9 +3,7 @@
 /// <reference path="../../core/helpers.ts" />
 /// <reference path="account-detail.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class MasterAccountDetail extends AccountDetail {
         public superPT: number;
         public currentSuperPT: number;

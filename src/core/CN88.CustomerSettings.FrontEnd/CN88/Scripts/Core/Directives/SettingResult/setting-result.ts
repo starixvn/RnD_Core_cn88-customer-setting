@@ -2,9 +2,7 @@
 /// <reference path="../../models/result.ts" />
 /// <reference path="../../module-registrater.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     interface ISettingResultScope extends ng.IScope {
         result: UpdatingSettingResult;
     }

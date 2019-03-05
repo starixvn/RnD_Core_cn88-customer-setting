@@ -1,6 +1,4 @@
-﻿module CustomerSetting {
-    "use strict";
-
+﻿namespace CustomerSetting {
     export class KeyValuePair<T, K> {
         public key: T;
         public value: K;

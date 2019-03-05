@@ -3,9 +3,7 @@
 /// <reference path="../../core/services/setting-types-shared-values-service.ts" />
 /// <reference path="../models/account-detail.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export interface ISubSectionsSharedScopeScope extends ng.IScope {
         customerLevel: Level;
         accountDetail: AccountDetail;

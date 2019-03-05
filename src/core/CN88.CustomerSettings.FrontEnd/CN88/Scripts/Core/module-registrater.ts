@@ -8,9 +8,7 @@ app.config(["$compileProvider", ($compileProvider: any) => {
     $compileProvider.cssClassDirectivesEnabled(false);
 }]);
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class ModuleRegister {
         public static controller(name: string, target: Function) {
             app.controller(name, target);

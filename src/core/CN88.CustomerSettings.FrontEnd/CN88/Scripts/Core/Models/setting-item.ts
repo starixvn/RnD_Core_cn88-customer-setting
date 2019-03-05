@@ -2,9 +2,7 @@
 /// <reference path="enums/level.ts" />
 /// <reference path="result.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export interface ISettingItem {
         typeName: string;
         oldSetting: ISettingItem;

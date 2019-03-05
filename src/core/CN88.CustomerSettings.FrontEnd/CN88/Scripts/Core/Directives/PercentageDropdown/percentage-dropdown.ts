@@ -2,9 +2,7 @@
 /// <reference path="../../services/value-range-service.ts" />
 /// <reference path="../../module-registrater.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     interface IPercentageDropdownScope extends ng.IScope {
         value: number;
         min: number;

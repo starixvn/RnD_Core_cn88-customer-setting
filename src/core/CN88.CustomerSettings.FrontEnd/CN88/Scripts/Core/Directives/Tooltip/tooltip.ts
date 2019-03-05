@@ -3,9 +3,7 @@
 /// <reference path="../../models/result.ts" />
 /// <reference path="../../resources/resource-service.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     interface ITooltipScope extends ng.IScope {
         tooltipMessage: string;
         tooltipType: string;

@@ -1,8 +1,6 @@
 ﻿/// <reference path="../typings/angularjs/angular.d.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class StringFormater {
         public static format(originalString: string, ...replacements: any[]): string {
             return originalString.replace(/{(\d+)}/g, (match: string, index: number) => {

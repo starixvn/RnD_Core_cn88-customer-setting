@@ -4,9 +4,7 @@
 /// <reference path="commission-group.ts" />
 /// <reference path="layout-type.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class SettingType2Item extends DefaultSettingItem {
         public commissionGroups: ICommissionGroup[];
         public maxBet: number;

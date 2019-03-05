@@ -2,9 +2,7 @@
 /// <reference path="../../models/enums/setting-level.ts" />
 /// <reference path="../../models/setting-item.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     function ShowingName(): Function {
         return (settingItem: DefaultSettingItem, settingLevel: SettingLevel, productName: string) => {
             return settingLevel === SettingLevel.product

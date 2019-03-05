@@ -2,9 +2,7 @@
 /// <reference path="../../services/app-config-service.ts" />
 /// <reference path="../../module-registrater.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     interface IOriginalAndFormattedValuePair {
         formattedValue: string;
         value: number;

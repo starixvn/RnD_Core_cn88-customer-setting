@@ -4,9 +4,7 @@
 /// <reference path="account-detail.ts" />
 /// <reference path="currency.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class SuperAccountDetail extends AccountDetail {
         public superMinPT: number;
         public currentSuperMinPT: number;

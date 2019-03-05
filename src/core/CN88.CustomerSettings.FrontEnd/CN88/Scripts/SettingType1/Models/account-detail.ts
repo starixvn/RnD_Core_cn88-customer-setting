@@ -3,9 +3,7 @@
 /// <reference path="../../core/models/result.ts" />
 /// <reference path="../../core/models/setting-item.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class AccountDetail extends DefaultSettingItem {
         public username: string;
         public password: string;

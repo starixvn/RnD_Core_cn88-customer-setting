@@ -3,9 +3,7 @@
 /// <reference path="../../models/setting-item.ts" />
 /// <reference path="../settingtypebase/setting-type-base-directive.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export interface IDefaultSettingTypeDirectiveScope extends ISettingTypeDirectiveSharedScope {
         avaiSettingLevels: Object;
         sportGroups: DefaultSettingItem[][];

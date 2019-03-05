@@ -3,9 +3,7 @@
 /// <reference path="../../core/helpers.ts" />
 /// <reference path="account-detail.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class AgentAccountDetail extends AccountDetail {
         public masterPT: number;
         public currentMasterPT: number;

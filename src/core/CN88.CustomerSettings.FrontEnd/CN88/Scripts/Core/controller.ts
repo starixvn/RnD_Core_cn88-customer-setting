@@ -10,9 +10,7 @@
 /// <reference path="services/request-service.ts" />
 /// <reference path="services/setting-types-shared-values-service.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     interface ISuccessfulUpdatingCallback {
         (isSuccessful: boolean): any;
     }

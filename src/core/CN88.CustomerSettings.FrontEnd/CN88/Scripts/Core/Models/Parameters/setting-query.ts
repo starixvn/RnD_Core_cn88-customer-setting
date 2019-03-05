@@ -1,9 +1,7 @@
 ﻿/// <reference path="../enums/level.ts" />
 /// <reference path="../exceptions.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class SettingQuery {
         public customerId: number;
         public uplineId: number;

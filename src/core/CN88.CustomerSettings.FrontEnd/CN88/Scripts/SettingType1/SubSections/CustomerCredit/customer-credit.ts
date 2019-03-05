@@ -1,9 +1,7 @@
 ﻿/// <reference path="../../../core/module-registrater.ts" />
 /// <reference path="../sub-section-base.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     interface ICustomerCreditScope extends ISubSectionsSharedScopeScope {
         creditPrecision: number;
     }

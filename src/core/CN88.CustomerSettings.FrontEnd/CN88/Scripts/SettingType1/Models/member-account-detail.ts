@@ -3,9 +3,7 @@
 /// <reference path="account-detail.ts" />
 /// <reference path="spread-group.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class MemberAccountDetail extends AccountDetail {
         public spreadGroups: ISpreadGroup[];
         public spreadGroup: ISpreadGroup;

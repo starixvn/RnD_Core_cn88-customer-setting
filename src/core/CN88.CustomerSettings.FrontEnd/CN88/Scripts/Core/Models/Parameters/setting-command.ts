@@ -1,9 +1,7 @@
 ﻿/// <reference path="../../helpers.ts" />
 /// <reference path="../setting.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class SettingCommand {
         public uplineId: number;
         public setting: Setting;

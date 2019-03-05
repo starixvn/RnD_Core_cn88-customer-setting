@@ -3,9 +3,7 @@
 /// <reference path="../../../../core/services/request-service.ts" />
 /// <reference path="../../../../core/module-registrater.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     interface ILoadSuggestedHeadlines {
         (someFirstCharacters: string): ng.IPromise<string[]>;
     }

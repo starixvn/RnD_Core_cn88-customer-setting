@@ -5,9 +5,7 @@
 /// <reference path="super-account-detail.ts" />
 /// <reference path="member-account-detail.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class SettingType1Item {
         public static factory(settingItem: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string): ISettingItem {
             if (settingItem) {

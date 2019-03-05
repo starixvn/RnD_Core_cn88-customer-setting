@@ -3,9 +3,7 @@
 /// <reference path="../services/parameters-service.ts" />
 /// <reference path="../module-registrater.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class ResourceService {
         public static $inject: string[] = ["customerSettingResources", "parametersService"];
 

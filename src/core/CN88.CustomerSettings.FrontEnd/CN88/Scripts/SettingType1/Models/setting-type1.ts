@@ -1,8 +1,6 @@
 ﻿/// <reference path="../../core/models/setting-type.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class SettingType1 extends SettingType {
         public creditPrecision: number;
 

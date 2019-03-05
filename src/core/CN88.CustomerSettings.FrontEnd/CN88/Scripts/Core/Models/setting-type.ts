@@ -2,9 +2,7 @@
 /// <reference path="key-value-pair.ts" />
 /// <reference path="setting-item.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class SettingType {
         public id: number;
         public name: string;

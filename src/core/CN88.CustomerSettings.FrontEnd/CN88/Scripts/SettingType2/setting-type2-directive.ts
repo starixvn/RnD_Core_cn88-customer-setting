@@ -13,9 +13,7 @@
 /// <reference path="models/setting-type2-item.ts" />
 /// <reference path="resources/settingtype2-resource-service.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     interface ISettingType2Scope extends IDefaultSettingTypeDirectiveScope {
         availableCommissionGroups: string[];
         availableLayoutTypes: Object;

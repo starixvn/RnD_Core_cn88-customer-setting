@@ -1,9 +1,7 @@
 ﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
 /// <reference path="../module-registrater.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     function MinValueFilter(): Function {
         return (numbers: number[]) => {
             return Math.min.apply(Math, numbers);

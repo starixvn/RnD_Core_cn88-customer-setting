@@ -6,9 +6,7 @@
 /// <reference path="../models/setting.ts" />
 /// <reference path="../module-registrater.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     export class ParametersService {
         public static $inject: string[] = ["$window"];
 

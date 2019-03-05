@@ -4,9 +4,7 @@
 /// <reference path="../../helpers.ts" />
 /// <reference path="../../module-registrater.ts" />
 
-module CustomerSetting {
-    "use strict";
-
+namespace CustomerSetting {
     interface ISettingTypeLoaderScope extends ng.IScope {
         setting: Setting;
     }
@@ -44,17 +42,7 @@ module CustomerSetting {
 
                     if (!loaded) {
                         var settingTypeName: string = StringFormater.format("settingtype{0}", settingType.id);
-                        var newNodeParts = [
-                            "<",
-                            settingTypeName,
-                            " data-setting-type=\"setting.settingTypes[",
-                            index,
-                            "]\"",
-                            "></",
-                            settingTypeName,
-                            ">"
-                        ];
-                        var settingTypeElement = angular.element(newNodeParts.join(""));
+                        var settingTypeElement = angular.element("<" + settingTypeName + " data-setting-type=\"setting.settingTypes[" + index + "]\"></" + settingTypeName + ">");
 
                         if (index === scope.setting.settingTypes.length - 1) {
                             settingTypeElement.addClass("last-setting-type");
