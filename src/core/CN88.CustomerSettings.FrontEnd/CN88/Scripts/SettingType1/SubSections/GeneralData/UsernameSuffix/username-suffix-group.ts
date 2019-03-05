@@ -5,7 +5,7 @@
 /// <reference path="../../../../core/module-registrater.ts" />
 /// <reference path="../../../models/account-detail.ts" />
 
-namespace CustomerSetting {
+namespace CustomerSetting.SettingType1 {
     export interface IValidateUsername {
         (suffixIndex: number, selectedSuffix: string): void;
     }
@@ -59,5 +59,5 @@ namespace CustomerSetting {
         }
     }
 
-    ModuleRegister.directive("usernameSuffixGroup", UsernameSuffixGroupDirective);
+    ModuleRegister.directive("st1UsernameSuffixGroup", UsernameSuffixGroupDirective);
 }

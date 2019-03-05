@@ -100,5 +100,5 @@
         "messages": messages
     };
 
-    angular.module("customerSetting").value("settingType1Resources", settingType1Resources);
+    angular.module("customerSetting").value("st1Resources", settingType1Resources);
 })();

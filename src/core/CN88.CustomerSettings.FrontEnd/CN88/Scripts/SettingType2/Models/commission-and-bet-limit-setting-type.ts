@@ -1,7 +1,7 @@
 ﻿/// <reference path="../../core/models/setting-type.ts" />
 
-namespace CustomerSetting {
-    export class SettingType2 extends SettingType {
+namespace CustomerSetting.SettingType2 {
+    export class CommissionAndBetLimitSettingType extends SettingType {
         public commissionPrecision: number;
         public betSettingPrecision: number;
 

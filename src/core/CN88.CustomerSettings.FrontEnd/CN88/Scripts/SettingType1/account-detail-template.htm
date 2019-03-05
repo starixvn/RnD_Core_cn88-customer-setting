@@ -3,23 +3,23 @@
          data-ng-show="settingType"
          data-ng-class="{ 'block--error': !(settingType | validSettingType) }"
          data-setting-field-group="settingType.settingItems[0]"
-         data-resource-service-name="settingType1ResourceService">
+         data-resource-service-name="st1ResourceService">
         <div class="block__header"
              data-setting-type="{{settingType.id}}"
              data-ng-class="{ 'block__header--error': !(settingType | validSettingType) }">
             {{settingTypeName}}
         </div>
         <div class="col" data-ng-if="settingType | validSettingType">
-            <general-data data-account-detail="settingType.settingItems[0]"
-                          data-editable="editable"></general-data>
+            <st1-general-data data-account-detail="settingType.settingItems[0]"
+                              data-editable="editable"></st1-general-data>
         </div>
         <div class="col col--last" data-ng-if="settingType | validSettingType">
-            <customer-credit data-account-detail="settingType.settingItems[0]"
-                             data-editable="editable"
-                             data-precision="settingType.creditPrecision"></customer-credit>
-            <position-taking data-ng-if="customerLevel !== avaiCustomerLevels.member"
-                             data-account-detail="settingType.settingItems[0]"
-                             data-editable="editable"></position-taking>
+            <st1-customer-credit data-account-detail="settingType.settingItems[0]"
+                                 data-editable="editable"
+                                 data-precision="settingType.creditPrecision"></st1-customer-credit>
+            <st1-position-taking data-ng-if="customerLevel !== avaiCustomerLevels.member"
+                                 data-account-detail="settingType.settingItems[0]"
+                                 data-editable="editable"></st1-position-taking>
         </div>
         <div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">
             {{settingType.settingItems[0].errorMessage}}

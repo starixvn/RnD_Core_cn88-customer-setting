@@ -7,8 +7,9 @@ module.exports = function (configs) {
 
     gulp.task("tslint:check", function () {
         var sourceDir = [
-            path.join(process.cwd(), configs.root, configs.scripts, "**/*.ts"),
-            path.join(process.cwd(), configs.root, configs.scripts, "!Typings/**/*.d.ts")
+            path.join(process.cwd(), configs.root, configs.scripts, "Core/**/*.ts"),
+            path.join(process.cwd(), configs.root, configs.scripts, "SettingType1/**/*.ts"),
+            path.join(process.cwd(), configs.root, configs.scripts, "SettingType2/**/*.ts")
         ];
 
         return gulp.src(sourceDir)

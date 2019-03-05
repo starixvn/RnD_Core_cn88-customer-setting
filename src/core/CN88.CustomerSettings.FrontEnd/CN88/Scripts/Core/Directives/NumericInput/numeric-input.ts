@@ -8,10 +8,6 @@ namespace CustomerSetting {
         value: number;
     }
 
-    interface IWindowService extends ng.IWindowService {
-        clipboardData: DataTransfer;
-    }
-
     interface INumericInputScope extends ng.IScope {
         precision: number;
         strictFormat: boolean;
@@ -124,7 +120,7 @@ namespace CustomerSetting {
                     if (scope.precision > 0 && toBeValidFormattedValue.indexOf(this.decimalSeparator) < 0) {
                         var allowedLength: number = maxLength - scope.precision - 1;
 
-                        if (toBeValidFormattedValue.length >= allowedLength) {
+                        if (toBeValidFormattedValue.length > allowedLength) {
                             toBeValidValue = latestValidValue;
                             toBeValidFormattedValue = latestValidFormattedValue;
                         }

@@ -65,5 +65,5 @@
         "messages": messages
     };
 
-    angular.module("customerSetting").value("settingType2Resources", settingType2Resources);
+    angular.module("customerSetting").value("st2Resources", settingType2Resources);
 })();

@@ -8,22 +8,22 @@
 /// <reference path="../core/module-registrater.ts" />
 /// <reference path="models/setting-type1.ts" />
 /// <reference path="models/setting-type1-item.ts" />
-/// <reference path="resources/settingtype1-resource-service.ts" />
+/// <reference path="resources/resource-service.ts" />
 
-namespace CustomerSetting {
-    class SettingType1Directive extends SettingTypeBaseDirective {
+namespace CustomerSetting.SettingType1 {
+    class AccountDetailDirective extends SettingTypeBaseDirective {
         public static $inject: string[] = [
-            "settingType1ResourceService",
+            "st1ResourceService",
             "appConfigService",
             "settingTypesSharedValuesService"
         ];
 
-        public templateUrl: string = "setting-type1-template.htm";
+        public templateUrl: string = "account-detail-template.htm";
 
         public link: ng.IDirectiveLinkFn = (scope: ISettingTypeDirectiveSharedScope) => {
             this.linkInternal(scope);
 
-            scope.settingTypeName = this.settingType1ResourceService.getLabel("AccountDetail");
+            scope.settingTypeName = this.resourceService.getLabel("AccountDetail");
 
             if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
                 if (scope.settingType.isError) {
@@ -45,19 +45,19 @@ namespace CustomerSetting {
             }
         };
 
-        private settingType1ResourceService: SettingType1ResourceService;
+        private resourceService: ResourceService;
 
         constructor(
-            settingType1ResourceService: SettingType1ResourceService,
+            resourceService: ResourceService,
             appConfigService: AppConfigService,
             settingTypesSharedValuesService: SettingTypesSharedValuesService) {
             super(appConfigService, settingTypesSharedValuesService, null);
 
-            this.settingType1ResourceService = settingType1ResourceService;
+            this.resourceService = resourceService;
         }
     }
 
-    ModuleRegister.directive("settingtype1", SettingType1Directive);
+    ModuleRegister.directive("st1", AccountDetailDirective);
 
     SettingTypeRegister.register(1, (settingType: any) => new SettingType1(settingType));
 }

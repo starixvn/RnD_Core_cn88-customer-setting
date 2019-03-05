@@ -1,23 +1,23 @@
 ﻿<div class="general-data">
-    <div class="sub-header">{{::('GeneralData' | settingType1Label)}}</div>
+    <div class="sub-header">{{::('GeneralData' | st1Label)}}</div>
     <div data-ng-if="editable">
         <div data-ng-if="customerLevel === avaiCustomerLevels.super">
             <div class="row">
                 <label class="w40-percent">
-                    <span>{{::('Headline' | settingType1Label)}}</span>
+                    <span>{{::('Headline' | st1Label)}}</span>
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
                 </label>
                 <div class="dropdown-container w60-percent" data-ng-if="isNew">
-                    <headline-suggestion class="setting-field setting-field--fullwidth"
-                                         data-ng-model="accountDetail.uplineUsername"
-                                         data-ng-blur="validateAndLoadHeadlineCurrency($event)"
-                                         data-setting-field="uplineUsername" />
+                    <st1-headline-suggestion class="setting-field setting-field--fullwidth"
+                                             data-ng-model="accountDetail.uplineUsername"
+                                             data-ng-blur="validateAndLoadHeadlineCurrency($event)"
+                                             data-setting-field="uplineUsername" />
                 </div>
                 <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.uplineUsername}}</label>
             </div>
             <div class="row">
                 <label class="w40-percent">
-                    <span>{{::('Username' | settingType1Label)}}</span>
+                    <span>{{::('Username' | st1Label)}}</span>
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
                 </label>
                 <div class="w60-percent" data-ng-if="isNew">
@@ -31,7 +31,7 @@
             </div>
             <div class="row" data-ng-if="isNew">
                 <label class="w40-percent">
-                    <span>{{::('Password' | settingType1Label)}}</span>
+                    <span>{{::('Password' | st1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
                 <div class="w60-percent">
@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('FirstName' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('FirstName' | st1Label)}}</label>
                 <div class="w60-percent">
                     <input type="text"
                            maxlength="50"
@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('LastName' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('LastName' | st1Label)}}</label>
                 <div class="w60-percent">
                     <input type="text"
                            maxlength="50"
@@ -61,7 +61,7 @@
                 </div>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('Phone' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Phone' | st1Label)}}</label>
                 <div class="w60-percent">
                     <input type="text"
                            maxlength="50"
@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('MobilePhone' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('MobilePhone' | st1Label)}}</label>
                 <div class="w60-percent">
                     <input type="text"
                            maxlength="50"
@@ -79,7 +79,7 @@
                 </div>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('Fax' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Fax' | st1Label)}}</label>
                 <div class="w60-percent">
                     <input type="text"
                            maxlength="50"
@@ -91,17 +91,17 @@
         <div data-ng-if="customerLevel === avaiCustomerLevels.master">
             <div class="row">
                 <label class="w40-percent">
-                    <span>{{::('Username' | settingType1Label)}}</span>
+                    <span>{{::('Username' | st1Label)}}</span>
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
                 </label>
                 <div class="w60-percent" data-ng-if="isNew">
                     <span class="upline-username">{{accountDetail.uplineUsername}}</span>
-                    <username-suffix-group></username-suffix-group>
+                    <st1-username-suffix-group></st1-username-suffix-group>
                 </div>
                 <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('Name' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Name' | st1Label)}}</label>
                 <div class="w60-percent">
                     <input type="text"
                            maxlength="50"
@@ -111,10 +111,10 @@
             </div>
             <div class="row" data-ng-if="isNew">
                 <label class="w40-percent">
-                    <span>{{::('Password' | settingType1Label)}}</span>
+                    <span>{{::('Password' | st1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                     <span class="icon icon--command icon--info"
-                          data-tooltip="{{'PasswordRules' | settingType1Message}}"
+                          data-tooltip="{{'PasswordRules' | st1Message}}"
                           data-tooltip-type="info"
                           data-inner-tooltip="true"></span>
                 </label>
@@ -128,7 +128,7 @@
             </div>
             <div class="row" data-ng-if="isNew">
                 <label class="w40-percent">
-                    <span>{{::('ConfirmPassword' | settingType1Label)}}</span>
+                    <span>{{::('ConfirmPassword' | st1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
                 <div class="w60-percent">
@@ -142,22 +142,22 @@
         </div>
         <div data-ng-if="customerLevel === avaiCustomerLevels.agent">
             <div class="row" data-ng-if="isNew">
-                <label class="w40-percent">{{::('Master' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Master' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.uplineUsername}}</label>
             </div>
             <div class="row">
                 <label class="w40-percent">
-                    <span>{{::('Username' | settingType1Label)}}</span>
+                    <span>{{::('Username' | st1Label)}}</span>
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
                 </label>
                 <div class="w60-percent" data-ng-if="isNew">
                     <span class="upline-username">{{accountDetail.uplineUsername}}</span>
-                    <username-suffix-group></username-suffix-group>
+                    <st1-username-suffix-group></st1-username-suffix-group>
                 </div>
                 <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('Name' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Name' | st1Label)}}</label>
                 <div class="w60-percent">
                     <input type="text"
                            maxlength="50"
@@ -167,10 +167,10 @@
             </div>
             <div class="row" data-ng-if="isNew">
                 <label class="w40-percent">
-                    <span>{{::('Password' | settingType1Label)}}</span>
+                    <span>{{::('Password' | st1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                     <span class="icon icon--command icon--info"
-                          data-tooltip="{{'PasswordRules' | settingType1Message}}"
+                          data-tooltip="{{'PasswordRules' | st1Message}}"
                           data-tooltip-type="info"
                           data-inner-tooltip="true">
                     </span>
@@ -185,7 +185,7 @@
             </div>
             <div class="row" data-ng-if="isNew">
                 <label class="w40-percent">
-                    <span>{{::('ConfirmPassword' | settingType1Label)}}</span>
+                    <span>{{::('ConfirmPassword' | st1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
                 <div class="w60-percent">
@@ -199,26 +199,26 @@
         </div>
         <div data-ng-if="customerLevel === avaiCustomerLevels.member">
             <div class="row" data-ng-if="isNew">
-                <label class="w40-percent">{{::('Agent' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Agent' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.uplineUsername}}</label>
             </div>
             <div class="row">
                 <label class="w40-percent">
-                    <span>{{::('Username' | settingType1Label)}}</span>
+                    <span>{{::('Username' | st1Label)}}</span>
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
                 </label>
                 <div class="w60-percent" data-ng-if="isNew">
                     <span class="upline-username">{{accountDetail.uplineUsername}}</span>
-                    <username-suffix-group></username-suffix-group>
+                    <st1-username-suffix-group></st1-username-suffix-group>
                 </div>
                 <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label>
             </div>
             <div class="row">
                 <label class="w40-percent">
-                    <span>{{::('SpreadGroup' | settingType1Label)}}</span>
+                    <span>{{::('SpreadGroup' | st1Label)}}</span>
                     <span class="required-field-mark" data-ng-if="isNew"> *</span>
                     <span class="icon icon--command icon--info"
-                          data-tooltip="{{'SpreadGroupRule' | settingType1Message}}"
+                          data-tooltip="{{'SpreadGroupRule' | st1Message}}"
                           data-tooltip-type="info"
                           data-inner-tooltip="true">
                     </span>
@@ -232,7 +232,7 @@
                 <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('Name' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Name' | st1Label)}}</label>
                 <div class="w60-percent">
                     <input type="text"
                            maxlength="50"
@@ -242,10 +242,10 @@
             </div>
             <div class="row" data-ng-if="isNew">
                 <label class="w40-percent">
-                    <span>{{::('Password' | settingType1Label)}}</span>
+                    <span>{{::('Password' | st1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                     <span class="icon icon--command icon--info"
-                          data-tooltip="{{'MemberPasswordRules' | settingType1Message}}"
+                          data-tooltip="{{'MemberPasswordRules' | st1Message}}"
                           data-tooltip-type="info"
                           data-inner-tooltip="true">
                     </span>
@@ -260,7 +260,7 @@
             </div>
             <div class="row" data-ng-if="isNew">
                 <label class="w40-percent">
-                    <span>{{::('ConfirmPassword' | settingType1Label)}}</span>
+                    <span>{{::('ConfirmPassword' | st1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
                 <div class="w60-percent">
@@ -276,65 +276,65 @@
     <div data-ng-if="!editable">
         <div data-ng-if="customerLevel === avaiCustomerLevels.super">
             <div class="row">
-                <label class="w40-percent">{{::('Headline' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Headline' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.uplineUsername}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('Username' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Username' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.username}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('FirstName' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('FirstName' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.firstName}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('LastName' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('LastName' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.lastName}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('Phone' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Phone' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.phone}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('MobilePhone' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('MobilePhone' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.mobilePhone}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('Fax' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Fax' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.fax}}</label>
             </div>
         </div>
         <div data-ng-if="customerLevel === avaiCustomerLevels.master">
             <div class="row">
-                <label class="w40-percent">{{::('Username' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Username' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.username}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('Name' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Name' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.firstName}}</label>
             </div>
         </div>
         <div data-ng-if="customerLevel === avaiCustomerLevels.agent">
             <div class="row">
-                <label class="w40-percent">{{::('Username' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Username' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.username}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('Name' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Name' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.firstName}}</label>
             </div>
         </div>
         <div data-ng-if="customerLevel === avaiCustomerLevels.member">
             <div class="row">
-                <label class="w40-percent">{{::('Username' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Username' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.username}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('SpreadGroup' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('SpreadGroup' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.spreadGroup.uGroup}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('Name' | settingType1Label)}}</label>
+                <label class="w40-percent">{{::('Name' | st1Label)}}</label>
                 <label class="w60-percent">{{accountDetail.firstName}}</label>
             </div>
         </div>

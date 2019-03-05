@@ -5,20 +5,20 @@
              data-ng-style="eachGroupStyle"
              data-ng-repeat="item in availableCommissionGroups">{{item}}</div>
     </div>
-    <div class="block__lbl w50-percent" data-ng-if="customerLevel === avaiCustomerLevels.member">{{::('MemberCommission' | settingType2Label)}}</div>
+    <div class="block__lbl w50-percent" data-ng-if="customerLevel === avaiCustomerLevels.member">{{::('MemberCommission' | st2Label)}}</div>
     <div class="w50-percent">
         <div class="block__lbl w50-percent">
-            <span>{{::('MaxPerEvent' | settingType2Label)}}</span>
+            <span>{{::('MaxPerEvent' | st2Label)}}</span>
             <span class="icon icon--command icon--info icon--margin-left"
-                  data-tooltip="{{'MaxPerEventNote' | settingType2Message}}"
+                  data-tooltip="{{'MaxPerEventNote' | st2Message}}"
                   data-tooltip-type="info"
                   data-inner-tooltip="info">
             </span>
         </div>
         <div class="block__lbl block__lbl--no-border w50-percent">
-            <span>{{::('MaxBet' | settingType2Label)}}</span>
+            <span>{{::('MaxBet' | st2Label)}}</span>
             <span class="icon icon--command icon--info icon--margin-left"
-                  data-tooltip="{{'MaxBetNote' | settingType2Message}}"
+                  data-tooltip="{{'MaxBetNote' | st2Message}}"
                   data-tooltip-type="info"
                   data-inner-tooltip="true">
             </span>

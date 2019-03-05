@@ -1,11 +1,7 @@
 ﻿/// <reference path="../../../core/module-registrater.ts" />
 /// <reference path="../sub-section-base.ts" />
 
-namespace CustomerSetting {
-    interface ICustomerCreditScope extends ISubSectionsSharedScopeScope {
-        creditPrecision: number;
-    }
-
+namespace CustomerSetting.SettingType1 {
     class CustomerCreditDirective extends SubSectionBaseDirective {
         public templateUrl: string = "customer-credit.htm";
 
@@ -18,5 +14,5 @@ namespace CustomerSetting {
         }
     }
 
-    ModuleRegister.directive("customerCredit", CustomerCreditDirective);
+    ModuleRegister.directive("st1CustomerCredit", CustomerCreditDirective);
 }

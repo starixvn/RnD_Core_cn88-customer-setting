@@ -3,7 +3,7 @@
 /// <reference path="../../../../core/services/request-service.ts" />
 /// <reference path="../../../../core/module-registrater.ts" />
 
-namespace CustomerSetting {
+namespace CustomerSetting.SettingType1 {
     interface ILoadSuggestedHeadlines {
         (someFirstCharacters: string): ng.IPromise<string[]>;
     }
@@ -40,5 +40,5 @@ namespace CustomerSetting {
         }
     }
 
-    ModuleRegister.directive("headlineSuggestion", HeadlineSuggestionDirective);
+    ModuleRegister.directive("st1HeadlineSuggestion", HeadlineSuggestionDirective);
 }

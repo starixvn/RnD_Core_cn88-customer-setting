@@ -9,14 +9,18 @@
 /// <reference path="../../models/super-account-detail.ts" />
 /// <reference path="../sub-section-base.ts" />
 
-namespace CustomerSetting {
+namespace CustomerSetting.SettingType1 {
     interface IGeneralDataScope extends ISubSectionsSharedScopeScope {
         updateSpreadGroup: Function;
         validateAndLoadHeadlineCurrency: Function;
     }
 
     class GeneralDataDirective extends SubSectionBaseDirective {
-        public static $inject: string[] = ["settingTypesSharedValuesService", "appConfigService", "crossingSettingTypesServiceBus", "requestService"];
+        public static $inject: string[] = [
+            "settingTypesSharedValuesService",
+            "appConfigService",
+            "crossingSettingTypesServiceBus",
+            "requestService"];
 
         private static validatingAndLoadingHeadlineCurrencyPath: string = "CreateCN88Customer/GetHeadlineCurrency";
 
@@ -77,5 +81,5 @@ namespace CustomerSetting {
         }
     }
 
-    ModuleRegister.directive("generalData", GeneralDataDirective);
+    ModuleRegister.directive("st1GeneralData", GeneralDataDirective);
 }

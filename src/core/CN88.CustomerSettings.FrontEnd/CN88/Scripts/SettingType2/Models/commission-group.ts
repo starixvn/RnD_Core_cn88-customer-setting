@@ -1,4 +1,4 @@
-﻿namespace CustomerSetting {
+﻿namespace CustomerSetting.SettingType2 {
     export interface ICommissionGroup {
         id: string;
         name: string;

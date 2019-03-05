@@ -4,8 +4,8 @@
 /// <reference path="commission-group.ts" />
 /// <reference path="layout-type.ts" />
 
-namespace CustomerSetting {
-    export class SettingType2Item extends DefaultSettingItem {
+namespace CustomerSetting.SettingType2 {
+    export class CommissionAndBetLimitSettingItem extends DefaultSettingItem {
         public commissionGroups: ICommissionGroup[];
         public maxBet: number;
         public minMaxBet: number;

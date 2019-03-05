@@ -57,7 +57,24 @@ module.exports = function (configs) {
             gulp.src(htmSources)
                 .pipe(minifyHTML({ empty: true, quotes: true }))
                 .pipe(templateCache({
-                    module: "customerSetting"
+                    module: "customerSetting",
+                    root: ".",
+                    base: function (file) {
+                        var fileBase = file.base.lastIndexOf(path.sep) === file.base.length - 1 ? file.base.substring(0, file.base.length - 1) : file.base;
+                        var splittedPathParts = fileBase.split(path.sep);
+
+                        if (splittedPathParts.length > 1) {
+                            var rootDirectory = splittedPathParts[splittedPathParts.length - 1];
+
+                            if (rootDirectory === "Core") {
+                                return path.basename(file.path);
+                            }
+
+                            return path.join(splittedPathParts[splittedPathParts.length - 1], path.basename(file.path));
+                        }
+
+                        return file.path.replace(file.base, "");
+                    }
                 }))
                 .pipe(concat("2htm-" + prodConfig.productId + ".js"))
                 .pipe(gulp.dest(productTempDir));

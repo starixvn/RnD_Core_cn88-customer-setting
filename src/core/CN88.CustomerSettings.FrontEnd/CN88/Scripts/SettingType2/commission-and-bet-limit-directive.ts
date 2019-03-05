@@ -9,12 +9,18 @@
 /// <reference path="../core/module-registrater.ts" />
 /// <reference path="../core/setting-type-registrater.ts" />
 /// <reference path="models/layout-type.ts" />
-/// <reference path="models/setting-type2.ts" />
-/// <reference path="models/setting-type2-item.ts" />
-/// <reference path="resources/settingtype2-resource-service.ts" />
+/// <reference path="models/commission-and-bet-limit-setting-item.ts" />
+/// <reference path="models/commission-and-bet-limit-setting-type.ts" />
+/// <reference path="resources/resource-service.ts" />
 
-namespace CustomerSetting {
-    interface ISettingType2Scope extends IDefaultSettingTypeDirectiveScope {
+namespace CustomerSetting.SettingType2 {
+    var commissionAndBetLimitItemFactory = (
+        settingItem: any,
+        backup?: boolean,
+        isNew?: boolean,
+        customerLevel?: Level) => new CommissionAndBetLimitSettingItem(settingItem, backup, isNew, customerLevel);
+
+    interface ICommissionAndBetLimitScope extends IDefaultSettingTypeDirectiveScope {
         availableCommissionGroups: string[];
         availableLayoutTypes: Object;
         eachGroupStyle: {};
@@ -24,34 +30,34 @@ namespace CustomerSetting {
         betSettingPrecision: number;
     }
 
-    class SettingType2Directive extends DefaultSettingTypeGroupingDirective {
+    class CommissionAndBetLimitDirective extends DefaultSettingTypeGroupingDirective {
         public static $inject: string[] = [
             "$q",
-            "settingType2ResourceService",
+            "st2ResourceService",
             "crossingSettingTypesServiceBus",
             "appConfigService",
             "settingTypesSharedValuesService"
         ];
 
-        public link: ng.IDirectiveLinkFn = (scope: ISettingType2Scope) => {
+        public link: ng.IDirectiveLinkFn = (scope: ICommissionAndBetLimitScope) => {
             this.linkInternal(scope);
 
-            scope.headerTemplateUrl = "setting-type2-header.html";
-            scope.valueTemplateUrl = "setting-type2-value.html";
+            scope.headerTemplateUrl = "./SettingType2/commission-and-bet-limit-header-template.html";
+            scope.valueTemplateUrl = "./SettingType2/commission-and-bet-limit-value-template.html";
             scope.cssClass = "full-width";
-            scope.settingTypeName = this.settingType2ResourceService.getLabel("CommissionAndBetLimit");
+            scope.settingTypeName = this.resourceService.getLabel("CommissionAndBetLimit");
             scope.availableLayoutTypes = LayoutType;
-            scope.commissionPrecision = (<SettingType2>scope.settingType).commissionPrecision;
-            scope.betSettingPrecision = (<SettingType2>scope.settingType).betSettingPrecision;
+            scope.commissionPrecision = (<CommissionAndBetLimitSettingType>scope.settingType).commissionPrecision;
+            scope.betSettingPrecision = (<CommissionAndBetLimitSettingType>scope.settingType).betSettingPrecision;
 
             if (scope.settingType.settingItems && scope.settingType.settingItems.length > 0) {
                 scope.availableCommissionGroups = this.getAllAvailableGroups(scope.settingType.settingItems);
 
                 if (scope.availableCommissionGroups.length > 0) {
                     scope.settingType.settingItems.forEach((settingItem: ISettingItem) => {
-                        var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
+                        var commissionAndBetLimitItem: CommissionAndBetLimitSettingItem = <CommissionAndBetLimitSettingItem>settingItem;
 
-                        settingType2Item.mapCommissionGroups(scope.availableCommissionGroups);
+                        commissionAndBetLimitItem.mapCommissionGroups(scope.availableCommissionGroups);
                     });
                     scope.eachGroupStyle = {
                         "min-width": (100 / scope.availableCommissionGroups.length) + "%"
@@ -60,15 +66,15 @@ namespace CustomerSetting {
 
                 if (scope.customerLevel === Level.super) {
                     scope.hasMaxBetConstraint = scope.settingType.settingItems.some((settingItem: ISettingItem) => {
-                        var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
+                        var commissionAndBetLimitItem: CommissionAndBetLimitSettingItem = <CommissionAndBetLimitSettingItem>settingItem;
 
-                        return settingType2Item.minMaxBet > 0 || settingType2Item.maxMaxBet > 0;
+                        return commissionAndBetLimitItem.minMaxBet > 0 || commissionAndBetLimitItem.maxMaxBet > 0;
                     });
 
                     scope.hasMaxPerEventConstraint = scope.settingType.settingItems.some((settingItem: ISettingItem) => {
-                        var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
+                        var commissionAndBetLimitItem: CommissionAndBetLimitSettingItem = <CommissionAndBetLimitSettingItem>settingItem;
 
-                        return settingType2Item.minMaxPerEvent > 0 || settingType2Item.maxMaxPerEvent > 0;
+                        return commissionAndBetLimitItem.minMaxPerEvent > 0 || commissionAndBetLimitItem.maxMaxPerEvent > 0;
                     });
                 } else {
                     scope.hasMaxBetConstraint = true;
@@ -83,9 +89,9 @@ namespace CustomerSetting {
                     var memberSelectedSpreadGroupIndex: number = scope.availableCommissionGroups.indexOf(newMemberGroupName);
 
                     scope.settingType.settingItems.forEach((settingItem: ISettingItem) => {
-                        var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
+                        var commissionAndBetLimitItem: CommissionAndBetLimitSettingItem = <CommissionAndBetLimitSettingItem>settingItem;
 
-                        settingType2Item.memberSpreadGroupIndex = memberSelectedSpreadGroupIndex;
+                        commissionAndBetLimitItem.memberSpreadGroupIndex = memberSelectedSpreadGroupIndex;
                     });
 
                     deferred.resolve();
@@ -96,22 +102,19 @@ namespace CustomerSetting {
         };
 
         private $q: ng.IQService;
-        private settingType2ResourceService: SettingType2ResourceService;
+        private resourceService: ResourceService;
         private crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus;
 
         constructor(
             $q: ng.IQService,
-            settingType2ResourceService: SettingType2ResourceService,
+            resourceService: ResourceService,
             crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus,
             appConfigService: AppConfigService,
             settingTypesSharedValuesService: SettingTypesSharedValuesService) {
-            super(
-                appConfigService,
-                settingTypesSharedValuesService,
-                (settingItem: any, backup?: boolean, isNew?: boolean, customerLevel?: Level) => new SettingType2Item(settingItem, backup, isNew, customerLevel));
+            super(appConfigService, settingTypesSharedValuesService, commissionAndBetLimitItemFactory);
 
             this.$q = $q;
-            this.settingType2ResourceService = settingType2ResourceService;
+            this.resourceService = resourceService;
             this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
         }
 
@@ -119,12 +122,12 @@ namespace CustomerSetting {
             var allAvailableGroups: string[] = [];
 
             settingItems.forEach((settingItem: ISettingItem) => {
-                var settingType2Item: SettingType2Item = <SettingType2Item>settingItem;
+                var commissionAndBetLimitItem: CommissionAndBetLimitSettingItem = <CommissionAndBetLimitSettingItem>settingItem;
 
-                if (settingType2Item
-                    && settingType2Item.commissionGroups
-                    && settingType2Item.commissionGroups.length > 0) {
-                    settingType2Item.commissionGroups.forEach((commissionGroup: ICommissionGroup) => {
+                if (commissionAndBetLimitItem
+                    && commissionAndBetLimitItem.commissionGroups
+                    && commissionAndBetLimitItem.commissionGroups.length > 0) {
+                    commissionAndBetLimitItem.commissionGroups.forEach((commissionGroup: ICommissionGroup) => {
                         if (commissionGroup.id && allAvailableGroups.indexOf(commissionGroup.name) < 0) {
                             allAvailableGroups.push(commissionGroup.name);
                         }
@@ -150,7 +153,7 @@ namespace CustomerSetting {
         }
     }
 
-    ModuleRegister.directive("settingtype2", SettingType2Directive);
+    ModuleRegister.directive("st2", CommissionAndBetLimitDirective);
 
-    SettingTypeRegister.register(2, (settingType: any) => new SettingType2(settingType));
+    SettingTypeRegister.register(2, (settingType: any) => new CommissionAndBetLimitSettingType(settingType));
 }

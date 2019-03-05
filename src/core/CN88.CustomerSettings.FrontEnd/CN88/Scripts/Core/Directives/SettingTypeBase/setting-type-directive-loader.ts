@@ -41,8 +41,11 @@ namespace CustomerSetting {
                     });
 
                     if (!loaded) {
-                        var settingTypeName: string = StringFormater.format("settingtype{0}", settingType.id);
-                        var settingTypeElement = angular.element("<" + settingTypeName + " data-setting-type=\"setting.settingTypes[" + index + "]\"></" + settingTypeName + ">");
+                        var settingTypeNodeTemplate: string = StringFormater.format(
+                            "<st{0} data-setting-type=\"setting.settingTypes[{1}]\"></st{0}>",
+                            settingType.id,
+                            index);
+                        var settingTypeElement: ng.IAugmentedJQuery = angular.element(settingTypeNodeTemplate);
 
                         if (index === scope.setting.settingTypes.length - 1) {
                             settingTypeElement.addClass("last-setting-type");

@@ -1,9 +1,9 @@
 ﻿<div class="username-selection">
-    <username-suffix data-ng-repeat="suffix in accountDetail.usernameSuffixes track by $index"
-                     data-ng-class="{ 'setting-field--first': $first }"
-                     data-suffix-index="$index"
-                     data-suffix="suffix"
-                     data-validate-username="validateUsername"></username-suffix>
+    <st1-username-suffix data-ng-repeat="suffix in accountDetail.usernameSuffixes track by $index"
+                         data-ng-class="{ 'setting-field--first': $first }"
+                         data-suffix-index="$index"
+                         data-suffix="suffix"
+                         data-validate-username="validateUsername"></st1-username-suffix>
     <span class="icon icon--valid-username" data-ng-if="isChanged && isValid"></span>
     <span class="icon icon--invalid-username" data-ng-if="isChanged && !isValid"></span>
 </div>

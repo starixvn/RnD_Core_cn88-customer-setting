@@ -5,7 +5,7 @@
 /// <reference path="super-account-detail.ts" />
 /// <reference path="member-account-detail.ts" />
 
-namespace CustomerSetting {
+namespace CustomerSetting.SettingType1 {
     export class SettingType1Item {
         public static factory(settingItem: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string): ISettingItem {
             if (settingItem) {

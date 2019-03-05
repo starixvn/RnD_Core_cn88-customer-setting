@@ -3,7 +3,7 @@
 /// <reference path="account-detail.ts" />
 /// <reference path="spread-group.ts" />
 
-namespace CustomerSetting {
+namespace CustomerSetting.SettingType1 {
     export class MemberAccountDetail extends AccountDetail {
         public spreadGroups: ISpreadGroup[];
         public spreadGroup: ISpreadGroup;
