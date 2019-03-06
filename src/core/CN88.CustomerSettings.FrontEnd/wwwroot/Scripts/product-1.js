@@ -35471,155 +35471,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    var NumericInputDirective = (function () {
-        function NumericInputDirective($filter, appConfigService) {
-            var _this = this;
-            this.restrict = "A";
-            this.link = function (scope, originalElement) {
-                var element = angular.element(originalElement[0]);
-                var input = element[0];
-                var maxLength = parseInt(element.attr("maxlength"), 10);
-                var modelCtrl = element.controller("ngModel");
-                var latestValidValue;
-                var latestValidFormattedValue;
-                scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
-                element.on("focus", function () {
-                    element.data("focused", true);
-                });
-                element.on("focusout", function () {
-                    element.data("focused", false);
-                    if (scope.strictFormat && scope.precision > 0) {
-                        latestValidValue = modelCtrl.$modelValue;
-                        latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
-                        element.val(latestValidFormattedValue);
-                    }
-                });
-                element.on("mouseup", function () {
-                    if (element.data("focused")) {
-                        input.select();
-                        element.data("focused", false);
-                    }
-                });
-                element.on("keydown", function (event) {
-                    var value = element.val();
-                    var cursorPosition = input.selectionStart;
-                    if (event.keyCode === 8) {
-                        if ((input.selectionStart === input.selectionEnd)
-                            && (cursorPosition > 0)
-                            && (value[cursorPosition - 1] === _this.thousandSeparator)) {
-                            input.selectionStart = cursorPosition - 1;
-                            input.selectionEnd = cursorPosition - 1;
-                        }
-                        return;
-                    }
-                    if (event.keyCode === 46) {
-                        if ((input.selectionStart === input.selectionEnd)
-                            && (cursorPosition > 0)
-                            && (value[cursorPosition] === _this.thousandSeparator)) {
-                            input.selectionStart = cursorPosition + 1;
-                            input.selectionEnd = cursorPosition + 1;
-                        }
-                        return;
-                    }
-                });
-                modelCtrl.$formatters.unshift(function () {
-                    latestValidValue = modelCtrl.$modelValue;
-                    latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
-                    return latestValidFormattedValue;
-                });
-                modelCtrl.$parsers.unshift(function (viewValue) {
-                    if (modelCtrl.$isEmpty(viewValue)) {
-                        latestValidValue = null;
-                        latestValidFormattedValue = viewValue;
-                        return latestValidValue;
-                    }
-                    if (latestValidFormattedValue === viewValue) {
-                        return latestValidValue;
-                    }
-                    var caretPosition = input.selectionStart;
-                    var _a = _this.parseAndFormatViewValue(viewValue, scope.precision, false), formattedValue = _a.formattedValue, value = _a.value;
-                    if (!isNaN(value) && (scope.negativeAllowed || value >= 0)) {
-                        var toBeValidValue = value;
-                        var toBeValidFormattedValue = formattedValue;
-                        if (scope.precision > 0 && toBeValidFormattedValue.indexOf(_this.decimalSeparator) < 0) {
-                            var allowedLength = maxLength - scope.precision - 1;
-                            if (toBeValidFormattedValue.length > allowedLength) {
-                                toBeValidValue = latestValidValue;
-                                toBeValidFormattedValue = latestValidFormattedValue;
-                            }
-                        }
-                        latestValidValue = toBeValidValue;
-                        latestValidFormattedValue = toBeValidFormattedValue;
-                    }
-                    modelCtrl.$setViewValue(latestValidFormattedValue);
-                    modelCtrl.$render();
-                    _this.setCaretPosition(input, caretPosition, viewValue, latestValidFormattedValue);
-                    return latestValidValue;
-                });
-            };
-            this.numberFilter = $filter("number");
-            this.thousandSeparator = appConfigService.thousandSeparator;
-            this.decimalSeparator = appConfigService.decimalSeparator;
-        }
-        Object.defineProperty(NumericInputDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    precision: "=?numericInput",
-                    strictFormat: "@",
-                    negativeAllowed: "@"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        NumericInputDirective.prototype.parseAndFormatViewValue = function (viewValue, precision, rounding) {
-            var value;
-            var formattedValue = "";
-            var numberParts = viewValue ? viewValue.split(this.decimalSeparator) : [];
-            if (numberParts.length > 1) {
-                if (precision > 0 && !/[\,\.]/.test(numberParts[1])) {
-                    var plainIntegerPart = numberParts[0].replace(/[\,]/g, "");
-                    var decimalPart = rounding ? numberParts[1] : numberParts[1].substring(0, precision);
-                    value = +(plainIntegerPart + this.decimalSeparator + decimalPart);
-                    if (!isNaN(value)) {
-                        formattedValue = rounding
-                            ? this.numberFilter(value, precision)
-                            : this.numberFilter(plainIntegerPart) + this.decimalSeparator + decimalPart;
-                    }
-                }
-            }
-            else if (numberParts.length > 0) {
-                var plainNumber = numberParts[0].replace(/[\,]/g, "");
-                value = +plainNumber;
-                if (!isNaN(value)) {
-                    formattedValue = this.numberFilter(value);
-                }
-            }
-            return {
-                formattedValue: formattedValue,
-                value: value
-            };
-        };
-        NumericInputDirective.prototype.setCaretPosition = function (input, originalCaretPosition, originalValue, formattedValue) {
-            var caretPosition = originalCaretPosition;
-            if (originalValue.length !== caretPosition) {
-                var offset = originalValue.length - formattedValue.length;
-                caretPosition = Math.max(0, caretPosition - offset);
-                if (input.selectionStart === input.selectionEnd) {
-                    input.selectionEnd = caretPosition;
-                }
-                input.selectionStart = caretPosition;
-            }
-        };
-        NumericInputDirective.$inject = ["$filter", "appConfigService"];
-        NumericInputDirective.defaultPrecision = 0;
-        return NumericInputDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     (function (SettingLevel) {
         SettingLevel[SettingLevel["product"] = 1] = "product";
         SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
@@ -35750,6 +35601,159 @@ var CustomerSetting;
         };
     }
     CustomerSetting.ModuleRegister.filter("showingName", ShowingName);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var NumericInputDirective = (function () {
+        function NumericInputDirective($filter, appConfigService) {
+            var _this = this;
+            this.restrict = "A";
+            this.link = function (scope, originalElement) {
+                var element = angular.element(originalElement[0]);
+                var input = element[0];
+                var maxLength = parseInt(element.attr("maxlength"), 10);
+                var modelCtrl = element.controller("ngModel");
+                var latestValidValue;
+                var latestValidFormattedValue;
+                scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
+                element.on("focus", function () {
+                    element.data("focused", true);
+                });
+                element.on("focusout", function () {
+                    element.data("focused", false);
+                    if (scope.strictFormat && scope.precision > 0) {
+                        latestValidValue = modelCtrl.$modelValue;
+                        latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
+                        element.val(latestValidFormattedValue);
+                    }
+                });
+                element.on("mouseup", function () {
+                    if (element.data("focused")) {
+                        input.select();
+                        element.data("focused", false);
+                    }
+                });
+                element.on("keydown", function (event) {
+                    var value = element.val();
+                    var cursorPosition = input.selectionStart;
+                    if (event.keyCode === 8) {
+                        if ((input.selectionStart === input.selectionEnd)
+                            && (cursorPosition > 0)
+                            && (value[cursorPosition - 1] === _this.thousandSeparator)) {
+                            input.selectionStart = cursorPosition - 1;
+                            input.selectionEnd = cursorPosition - 1;
+                        }
+                        return;
+                    }
+                    if (event.keyCode === 46) {
+                        if ((input.selectionStart === input.selectionEnd)
+                            && (cursorPosition > 0)
+                            && (value[cursorPosition] === _this.thousandSeparator)) {
+                            input.selectionStart = cursorPosition + 1;
+                            input.selectionEnd = cursorPosition + 1;
+                        }
+                        return;
+                    }
+                    if (event.keyCode === 69) {
+                        event.preventDefault();
+                        return;
+                    }
+                });
+                modelCtrl.$formatters.unshift(function () {
+                    latestValidValue = modelCtrl.$modelValue;
+                    latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
+                    return latestValidFormattedValue;
+                });
+                modelCtrl.$parsers.unshift(function (viewValue) {
+                    if (modelCtrl.$isEmpty(viewValue)) {
+                        latestValidValue = null;
+                        latestValidFormattedValue = viewValue;
+                        return latestValidValue;
+                    }
+                    if (latestValidFormattedValue === viewValue) {
+                        return latestValidValue;
+                    }
+                    var caretPosition = input.selectionStart;
+                    var _a = _this.parseAndFormatViewValue(viewValue, scope.precision, false), formattedValue = _a.formattedValue, value = _a.value;
+                    if (!isNaN(value) && (scope.negativeAllowed || value >= 0)) {
+                        var toBeValidValue = value;
+                        var toBeValidFormattedValue = formattedValue;
+                        if (scope.precision > 0 && toBeValidFormattedValue.indexOf(_this.decimalSeparator) < 0) {
+                            var allowedLength = maxLength - scope.precision - 1;
+                            if (toBeValidFormattedValue.length > allowedLength) {
+                                toBeValidValue = latestValidValue;
+                                toBeValidFormattedValue = latestValidFormattedValue;
+                            }
+                        }
+                        latestValidValue = toBeValidValue;
+                        latestValidFormattedValue = toBeValidFormattedValue;
+                    }
+                    modelCtrl.$setViewValue(latestValidFormattedValue);
+                    modelCtrl.$render();
+                    _this.setCaretPosition(input, caretPosition, viewValue, latestValidFormattedValue);
+                    return latestValidValue;
+                });
+            };
+            this.numberFilter = $filter("number");
+            this.thousandSeparator = appConfigService.thousandSeparator;
+            this.decimalSeparator = appConfigService.decimalSeparator;
+        }
+        Object.defineProperty(NumericInputDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    precision: "=?numericInput",
+                    strictFormat: "@",
+                    negativeAllowed: "@"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        NumericInputDirective.prototype.parseAndFormatViewValue = function (viewValue, precision, rounding) {
+            var value;
+            var formattedValue = "";
+            var numberParts = viewValue ? viewValue.split(this.decimalSeparator) : [];
+            if (numberParts.length > 1) {
+                if (precision > 0 && !/[\,\.]/.test(numberParts[1])) {
+                    var plainIntegerPart = numberParts[0].replace(/[\,]/g, "");
+                    var decimalPart = rounding ? numberParts[1] : numberParts[1].substring(0, precision);
+                    value = +(plainIntegerPart + this.decimalSeparator + decimalPart);
+                    if (!isNaN(value)) {
+                        formattedValue = rounding
+                            ? this.numberFilter(value, precision)
+                            : this.numberFilter(plainIntegerPart) + this.decimalSeparator + decimalPart;
+                    }
+                }
+            }
+            else if (numberParts.length > 0) {
+                var plainNumber = numberParts[0].replace(/[\,]/g, "");
+                value = +plainNumber;
+                if (!isNaN(value)) {
+                    formattedValue = this.numberFilter(value);
+                }
+            }
+            return {
+                formattedValue: formattedValue,
+                value: value
+            };
+        };
+        NumericInputDirective.prototype.setCaretPosition = function (input, originalCaretPosition, originalValue, formattedValue) {
+            var caretPosition = originalCaretPosition;
+            if (originalValue.length !== caretPosition) {
+                var offset = originalValue.length - formattedValue.length;
+                caretPosition = Math.max(0, caretPosition - offset);
+                if (input.selectionStart === input.selectionEnd) {
+                    input.selectionEnd = caretPosition;
+                }
+                input.selectionStart = caretPosition;
+            }
+        };
+        NumericInputDirective.$inject = ["$filter", "appConfigService"];
+        NumericInputDirective.defaultPrecision = 0;
+        return NumericInputDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -35959,6 +35963,39 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var SettingResultDirective = (function () {
+        function SettingResultDirective($rootScope, $window) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
+            this.link = function (scope) {
+                scope.$watch("result", function (result) {
+                    _this.$rootScope.$emit("page-height-changed");
+                    if (result) {
+                        _this.$window.scrollTo(0, 0);
+                    }
+                });
+            };
+            this.$rootScope = $rootScope;
+            this.$window = $window;
+        }
+        Object.defineProperty(SettingResultDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    result: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingResultDirective.$inject = ["$rootScope", "$window"];
+        return SettingResultDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var SettingTypeDirectiveLoader = (function () {
         function SettingTypeDirectiveLoader($compile) {
             var _this = this;
@@ -36004,39 +36041,6 @@ var CustomerSetting;
         return SettingTypeDirectiveLoader;
     }());
     CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingResultDirective = (function () {
-        function SettingResultDirective($rootScope, $window) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
-            this.link = function (scope) {
-                scope.$watch("result", function (result) {
-                    _this.$rootScope.$emit("page-height-changed");
-                    if (result) {
-                        _this.$window.scrollTo(0, 0);
-                    }
-                });
-            };
-            this.$rootScope = $rootScope;
-            this.$window = $window;
-        }
-        Object.defineProperty(SettingResultDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    result: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingResultDirective.$inject = ["$rootScope", "$window"];
-        return SettingResultDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36972,6 +36976,27 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
+        var PositionTakingDirective = (function (_super) {
+            __extends(PositionTakingDirective, _super);
+            function PositionTakingDirective() {
+                _super.apply(this, arguments);
+                this.template = '<div class="position-taking"><div data-ng-if="editable" data-ng-class="{ \'edit-pt\': !isNew && !accountDetail.isPTReadOnly }"><div class="sub-header" data-ng-if="customerLevel !== avaiCustomerLevels.agent">{{::(\'PositionTaking\' | st1Label)}}</div><div class="sub-header" data-ng-if="customerLevel === avaiCustomerLevels.agent"><span class="sub-header__title">{{::(\'PositionTaking\' | st1Label)}}</span> <span class="position-taking-constraint">{{\'MinAllowed\' | st1Label}} <span class="position-taking-constraint__value">{{accountDetail.minAllowedPT | formatPercentage}}</span></span> <span class="position-taking-constraint">{{\'MaxAllowed\' | st1Label}} <span class="position-taking-constraint__value">{{accountDetail.maxAllowedPT | formatPercentage}}</span></span></div><div data-ng-if="isNew"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMinPT" data-min="accountDetail.minSuperMinPT" data-max="accountDetail.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="superMinPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMaxPT" data-min="accountDetail.minSuperMaxPT" data-max="accountDetail.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="superMaxPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superPT" data-min="accountDetail.minSuperPT" data-max="accountDetail.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="superPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.masterPT" data-min="0" data-max="accountDetail.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="masterPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.agentPT" data-min="0" data-max="accountDetail.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="agentPT"></percentage-dropdown></div></div></div></div><div data-ng-if="!isNew"><div class="msg msg--error msg--pt-effective-date" data-ng-if="!accountDetail.isPTReadOnly"><div class="icon msg__icon"></div><div class="msg__content">{{\'PTEffectiveTime\' | st1Message:(accountDetail.ptEffectiveTime | formatDateTime)}}</div></div><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperMinPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMinPT" data-min="accountDetail.minSuperMinPT" data-max="accountDetail.maxSuperMinPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="superMinPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperMaxPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMaxPT" data-min="accountDetail.minSuperMaxPT" data-max="accountDetail.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="superMaxPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superPT" data-min="accountDetail.minSuperPT" data-max="accountDetail.maxSuperPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="superPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentMasterPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.masterPT" data-min="0" data-max="accountDetail.maxMasterPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="masterPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentAgentPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.agentPT" data-min="0" data-max="accountDetail.maxAgentPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="agentPT"></percentage-dropdown></div></div></div></div></div><div data-ng-if="!editable"><div class="sub-header" data-ng-if="customerLevel !== avaiCustomerLevels.agent">{{::(\'PositionTaking\' | st1Label)}}</div><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.superMinPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.superMaxPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.superPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.masterPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.agentPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div></div></div>';
+            }
+            return PositionTakingDirective;
+        }(SettingType1.SubSectionBaseDirective));
+        CustomerSetting.ModuleRegister.directive("st1PositionTaking", PositionTakingDirective);
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
         var GeneralDataDirective = (function (_super) {
             __extends(GeneralDataDirective, _super);
             function GeneralDataDirective(settingTypesSharedValuesService, appConfigService, crossingSettingTypesServiceBus, requestService) {
@@ -37018,27 +37043,6 @@ var CustomerSetting;
             return GeneralDataDirective;
         }(SettingType1.SubSectionBaseDirective));
         CustomerSetting.ModuleRegister.directive("st1GeneralData", GeneralDataDirective);
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var PositionTakingDirective = (function (_super) {
-            __extends(PositionTakingDirective, _super);
-            function PositionTakingDirective() {
-                _super.apply(this, arguments);
-                this.template = '<div class="position-taking"><div data-ng-if="editable" data-ng-class="{ \'edit-pt\': !isNew && !accountDetail.isPTReadOnly }"><div class="sub-header" data-ng-if="customerLevel !== avaiCustomerLevels.agent">{{::(\'PositionTaking\' | st1Label)}}</div><div class="sub-header" data-ng-if="customerLevel === avaiCustomerLevels.agent"><span class="sub-header__title">{{::(\'PositionTaking\' | st1Label)}}</span> <span class="position-taking-constraint">{{\'MinAllowed\' | st1Label}} <span class="position-taking-constraint__value">{{accountDetail.minAllowedPT | formatPercentage}}</span></span> <span class="position-taking-constraint">{{\'MaxAllowed\' | st1Label}} <span class="position-taking-constraint__value">{{accountDetail.maxAllowedPT | formatPercentage}}</span></span></div><div data-ng-if="isNew"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMinPT" data-min="accountDetail.minSuperMinPT" data-max="accountDetail.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="superMinPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMaxPT" data-min="accountDetail.minSuperMaxPT" data-max="accountDetail.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="superMaxPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superPT" data-min="accountDetail.minSuperPT" data-max="accountDetail.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="superPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.masterPT" data-min="0" data-max="accountDetail.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="masterPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.agentPT" data-min="0" data-max="accountDetail.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="agentPT"></percentage-dropdown></div></div></div></div><div data-ng-if="!isNew"><div class="msg msg--error msg--pt-effective-date" data-ng-if="!accountDetail.isPTReadOnly"><div class="icon msg__icon"></div><div class="msg__content">{{\'PTEffectiveTime\' | st1Message:(accountDetail.ptEffectiveTime | formatDateTime)}}</div></div><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperMinPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMinPT" data-min="accountDetail.minSuperMinPT" data-max="accountDetail.maxSuperMinPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="superMinPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperMaxPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMaxPT" data-min="accountDetail.minSuperMaxPT" data-max="accountDetail.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="superMaxPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superPT" data-min="accountDetail.minSuperPT" data-max="accountDetail.maxSuperPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="superPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentMasterPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.masterPT" data-min="0" data-max="accountDetail.maxMasterPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="masterPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentAgentPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.agentPT" data-min="0" data-max="accountDetail.maxAgentPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="agentPT"></percentage-dropdown></div></div></div></div></div><div data-ng-if="!editable"><div class="sub-header" data-ng-if="customerLevel !== avaiCustomerLevels.agent">{{::(\'PositionTaking\' | st1Label)}}</div><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.superMinPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.superMaxPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.superPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.masterPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.agentPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div></div></div>';
-            }
-            return PositionTakingDirective;
-        }(SettingType1.SubSectionBaseDirective));
-        CustomerSetting.ModuleRegister.directive("st1PositionTaking", PositionTakingDirective);
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 

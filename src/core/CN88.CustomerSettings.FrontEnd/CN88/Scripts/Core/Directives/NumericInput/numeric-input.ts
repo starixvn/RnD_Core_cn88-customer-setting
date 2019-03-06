@@ -89,6 +89,13 @@ namespace CustomerSetting {
 
                     return;
                 }
+
+                // Special case to prevent the user from inputting key 'E' which will result in exponent in float.
+                if (event.keyCode === 69) {
+                    event.preventDefault();
+
+                    return;
+                }
             });
 
             modelCtrl.$formatters.unshift(() => {
