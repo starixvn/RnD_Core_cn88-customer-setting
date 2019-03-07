@@ -10,6 +10,7 @@
     using CN88.CustomerSetting.Services;
     using CN88.CustomerSetting.SettingType1.Models;
     using CN88.CustomerSetting.SettingType1.Models.Dtos;
+    using CN88.CustomerSetting.SettingType1.Models.PTItems;
     using CN88.CustomerSetting.SettingType1.Params.Commands;
     using CN88.CustomerSetting.SettingType1.Params.Criteria;
     using CN88.CustomerSetting.SettingType1.Services;
@@ -99,7 +100,7 @@
             var accountDetailItem = (await settingTypeServiceImpl
                 .GetCustomerSettingType(settingContext, settingQuery))
                 .SettingItems
-                .FirstOrDefault() as AccountDetailSettingItem;
+                .FirstOrDefault() as AccountDetailSettingItem<BasePTItem>;
 
             Assert.AreEqual("UplineUsername", accountDetailItem.UplineUsername);
             Assert.AreEqual(1111, accountDetailItem.MinCredit);
@@ -124,7 +125,7 @@
             var accountDetailItem = (await settingTypeServiceImpl
                 .GetCustomerSettingType(settingContext, settingQuery))
                 .SettingItems
-                .FirstOrDefault() as AccountDetailSettingItem;
+                .FirstOrDefault() as AccountDetailSettingItem<BasePTItem>;
 
             Assert.AreEqual(2, accountDetailItem.SpreadGroups.Count());
             Assert.AreEqual("CNA", accountDetailItem.SpreadGroups.ElementAt(0).GroupName);
@@ -179,7 +180,7 @@
                 settingContext,
                 settingQuery))
                 .SettingItems
-                .FirstOrDefault() as AccountDetailSettingItem;
+                .FirstOrDefault() as AccountDetailSettingItem<BasePTItem>;
 
             Assert.AreEqual(123, accountDetailItem.Credit);
             Assert.AreEqual(1111, accountDetailItem.MinCredit);
@@ -209,7 +210,7 @@
             var accountDetailItem = (await settingTypeServiceImpl
                 .GetCustomerSettingType(settingContext, settingQuery))
                 .SettingItems
-                .FirstOrDefault() as AccountDetailSettingItem;
+                .FirstOrDefault() as AccountDetailSettingItem<BasePTItem>;
 
             Assert.AreEqual("CNB", accountDetailItem.SpreadGroup.GroupName);
         }
@@ -231,7 +232,7 @@
             var accountDetailItem = (await settingTypeServiceImpl
                 .GetCustomerSettingType(settingContext, settingQuery))
                 .SettingItems
-                .FirstOrDefault() as AccountDetailSettingItem;
+                .FirstOrDefault() as AccountDetailSettingItem<BasePTItem>;
 
             Assert.AreEqual(3, accountDetailItem.IntervalValue);
         }
@@ -449,9 +450,9 @@
         private static AccountDetailSettingType StubSuperAccountDetailSettingType()
             => new AccountDetailSettingType
             {
-                SettingItems = new List<SuperAccountDetail>
+                SettingItems = new List<AccountDetailSettingItem<BasePTItem>>
                 {
-                     new SuperAccountDetail
+                     new AccountDetailSettingItem<BasePTItem>
                     {
                         Currency = new Currency
                         {
@@ -461,12 +462,18 @@
                         Fax = "1212",
                         FirstName = "SuperName",
                         Credit = 3434,
-                        IsLive = true,
                         LastName = "LastName",
-                        SportTypeId = 1,
-                        BetTypeId = 2,
-                        SuperMaxPT = 12,
-                        SuperMinPT = 11,
+                        PTItems = new List<SuperPTItem>
+                        {
+                            new SuperPTItem
+                            {
+                                SportTypeId = 1,
+                                BetTypeId = 2,
+                                SuperMaxPT = 12,
+                                SuperMinPT = 11,
+                                IsLive = true
+                            }
+                        },
                         Username = "CustomerName",
                         Phone = "Phone",
                         MobilePhone = "MobilePhone",
@@ -479,18 +486,24 @@
         private static AccountDetailSettingType StubMasterAccountDetailSettingType()
             => new AccountDetailSettingType
             {
-                SettingItems = new List<MasterAccountDetail>
+                SettingItems = new List<AccountDetailSettingItem<BasePTItem>>
                 {
-                     new MasterAccountDetail
+                     new AccountDetailSettingItem<BasePTItem>
                     {
                         FirstName = "MasterName",
                         Credit = 3434,
-                        IsLive = true,
-                        SportTypeId = 2,
-                        BetTypeId = 1,
                         Username = "CustomerName",
                         Password = "Password",
-                        SuperPT = 20
+                        PTItems = new List<MasterPTItem>
+                        {
+                            new MasterPTItem
+                            {
+                                SuperPT = 20,
+                                IsLive = true,
+                                SportTypeId = 2,
+                                BetTypeId = 1
+                            }
+                        }
                     }
                 }
             };
@@ -498,19 +511,25 @@
         private static AccountDetailSettingType StubAgentAccountDetailSettingType()
             => new AccountDetailSettingType
             {
-                SettingItems = new List<AgentAccountDetail>
+                SettingItems = new List<AccountDetailSettingItem<BasePTItem>>
                 {
-                     new AgentAccountDetail
+                     new AccountDetailSettingItem<BasePTItem>
                     {
                         FirstName = "AgentName",
                         Credit = 3434,
-                        IsLive = true,
-                        SportTypeId = 2,
-                        BetTypeId = 1,
                         Username = "CustomerName",
                         Password = "Password",
-                        AgentPT = 23,
-                        MasterPT = 11
+                        PTItems = new List<AgentPTItem>
+                        {
+                            new AgentPTItem
+                            {
+                                SportTypeId = 2,
+                                BetTypeId = 1,
+                                AgentPT = 23,
+                                MasterPT = 11,
+                                IsLive = true
+                            }
+                        }
                     }
                 }
             };
@@ -518,9 +537,9 @@
         private static AccountDetailSettingType StubMemberAccountDetailSettingType()
             => new AccountDetailSettingType
             {
-                SettingItems = new List<AccountDetailSettingItem>
+                SettingItems = new List<AccountDetailSettingItem<BasePTItem>>
                 {
-                     new AccountDetailSettingItem
+                     new AccountDetailSettingItem<BasePTItem>
                     {
                         FirstName = "AgentName",
                         Credit = 3434,
@@ -542,22 +561,22 @@
             if (level.IsSuperLevel())
             {
                 dynamicRepository
-                    .GetAsync<SuperAccountDetail>(Arg.Any<GetPTSettingCriteria>())
-                    .Returns(Task.FromResult(new SuperAccountDetail()));
+                    .FetchAsync<SuperPTItem>(Arg.Any<GetPTSettingCriteria>())
+                    .Returns(new List<SuperPTItem> { new SuperPTItem() });
             }
 
             if (level.IsMasterLevel())
             {
                 dynamicRepository
-                    .GetAsync<MasterAccountDetail>(Arg.Any<GetPTSettingCriteria>())
-                    .Returns(Task.FromResult(new MasterAccountDetail()));
+                    .FetchAsync<MasterPTItem>(Arg.Any<GetPTSettingCriteria>())
+                    .Returns(new List<MasterPTItem> { new MasterPTItem() });
             }
 
             if (level.IsAgentLevel())
             {
                 dynamicRepository
-                    .GetAsync<AgentAccountDetail>(Arg.Any<GetPTSettingCriteria>())
-                    .Returns(Task.FromResult(new AgentAccountDetail()));
+                    .FetchAsync<AgentPTItem>(Arg.Any<GetPTSettingCriteria>())
+                    .Returns(new List<AgentPTItem> { new AgentPTItem() });
             }
 
             StubEditablePTTime();
@@ -574,7 +593,7 @@
         {
             if (level.IsSuperLevel())
             {
-                await dynamicRepository.Received().GetAsync<SuperAccountDetail>(
+                await dynamicRepository.Received().FetchAsync<SuperPTItem>(
                 Arg.Is<GetPTSettingCriteria>(
                     criteria => criteria.RoleId == level.Value
                                 && criteria.IsCreateNew == isCreateNew
@@ -583,7 +602,7 @@
 
             if (level.IsMasterLevel())
             {
-                await dynamicRepository.Received().GetAsync<MasterAccountDetail>(
+                await dynamicRepository.Received().FetchAsync<MasterPTItem>(
                 Arg.Is<GetPTSettingCriteria>(
                     criteria => criteria.RoleId == level.Value
                                 && criteria.IsCreateNew == isCreateNew
@@ -592,7 +611,7 @@
 
             if (level.IsAgentLevel())
             {
-                await dynamicRepository.Received().GetAsync<AgentAccountDetail>(
+                await dynamicRepository.Received().FetchAsync<AgentPTItem>(
                 Arg.Is<GetPTSettingCriteria>(
                     criteria => criteria.RoleId == level.Value
                                 && criteria.IsCreateNew == isCreateNew
@@ -669,14 +688,14 @@
 
         private void StubIntervalValue()
         {
-            IEnumerable<AccountDetailSettingItem> accountDetailSettingItems = new List<AccountDetailSettingItem>
+            IEnumerable<AccountDetailSettingItem<BasePTItem>> accountDetailSettingItems = new List<AccountDetailSettingItem<BasePTItem>>
             {
-                new AccountDetailSettingItem { IntervalValue = 3 }
+                new AccountDetailSettingItem<BasePTItem> { IntervalValue = 3 }
             };
 
             cacheService.GetOrSetAsync(
                        Arg.Any<string>(),
-                       Arg.Any<Func<IEnumerable<AccountDetailSettingItem>>>(),
+                       Arg.Any<Func<IEnumerable<AccountDetailSettingItem<BasePTItem>>>>(),
                        Arg.Any<CacheItemOptions>())
                        .Returns(accountDetailSettingItems);
         }
@@ -712,7 +731,7 @@
                 settingContext,
                 settingQuery);
 
-            var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem;
+            var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem<BasePTItem>;
 
             Assert.IsFalse(settingItem.IsPTReadOnly);
             Assert.AreEqual(new DateTime(2000, 11, 11), settingItem.PTEffectiveTime);

@@ -1,6 +1,6 @@
-﻿namespace CN88.CustomerSetting.SettingType1.Models
+﻿namespace CN88.CustomerSetting.SettingType1.Models.PTItems
 {
-    public class AgentAccountDetail : AccountDetailSettingItem
+    public class AgentPTItem : BasePTItem
     {
         private const string PTXmlFormat
             = "<PT {0} MasterPT=\"{1}\" AgentPT=\"{2}\" />";
@@ -27,9 +27,9 @@
 
         public override string ToXml()
             => string.Format(
-                PTXmlFormat, 
-                base.ToXml(), 
-                MasterPT.HasValue ? MasterPT.Value : CurrentMasterPT, 
+                PTXmlFormat,
+                base.ToXml(),
+                MasterPT.HasValue ? MasterPT.Value : CurrentMasterPT,
                 AgentPT.HasValue ? AgentPT.Value : CurrentAgentPT);
 
         public override void AdjustPTForQuery(bool isCreateNew)

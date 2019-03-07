@@ -1,8 +1,8 @@
-﻿using CN88.CustomerSetting.Models.Results;
-
-namespace CN88.CustomerSetting.SettingType1.Models
+﻿namespace CN88.CustomerSetting.SettingType1.Models.PTItems
 {
-    public class SuperAccountDetail : AccountDetailSettingItem
+    using CN88.CustomerSetting.Models.Results;
+
+    public class SuperPTItem : BasePTItem
     {
         private const string PTXmlFormat
             = "<PT {0} MinPT=\"{1}\" MaxPT=\"{2}\" />";
@@ -25,8 +25,8 @@ namespace CN88.CustomerSetting.SettingType1.Models
 
         public override string ToXml()
             => string.Format(
-                PTXmlFormat, 
-                base.ToXml(), 
+                PTXmlFormat,
+                base.ToXml(),
                 SuperMinPT.HasValue ? SuperMinPT.Value : CurrentSuperMinPT,
                 SuperMaxPT.HasValue ? SuperMaxPT.Value : CurrentSuperMaxPT);
 

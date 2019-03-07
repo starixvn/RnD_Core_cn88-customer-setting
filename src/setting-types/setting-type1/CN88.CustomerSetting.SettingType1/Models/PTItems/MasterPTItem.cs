@@ -1,6 +1,6 @@
-﻿namespace CN88.CustomerSetting.SettingType1.Models
+﻿namespace CN88.CustomerSetting.SettingType1.Models.PTItems
 {
-    public class MasterAccountDetail : AccountDetailSettingItem
+    public class MasterPTItem : BasePTItem
     {
         private const string PTXmlFormat
             = "<PT {0} SuperPT=\"{1}\" />";
@@ -15,8 +15,8 @@
 
         public override string ToXml()
             => string.Format(
-                PTXmlFormat, 
-                base.ToXml(), 
+                PTXmlFormat,
+                base.ToXml(),
                 SuperPT.HasValue ? SuperPT.Value : CurrentSuperPT);
 
         public override void AdjustPTForQuery(bool isCreateNew)

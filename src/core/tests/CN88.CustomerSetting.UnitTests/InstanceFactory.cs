@@ -45,10 +45,10 @@
 
             var settingTypes = new List<SettingType>
                     {
-                        InstanceFactory.CreateCustomerSettingType(1),
-                        InstanceFactory.CreateCustomerSettingType(2),
-                        InstanceFactory.CreateCustomerSettingType(3),
-                        InstanceFactory.CreateCustomerSettingType(4)
+                        CreateCustomerSettingType(1),
+                        CreateCustomerSettingType(2),
+                        CreateCustomerSettingType(3),
+                        CreateCustomerSettingType(4)
                     };
             return new Setting(customerId, customerLevel, productId, settingTypes);
         }

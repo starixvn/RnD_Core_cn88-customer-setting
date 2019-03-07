@@ -14,6 +14,7 @@
     using CN88.CustomerSetting.SettingType1.AppResources;
     using CN88.CustomerSetting.SettingType1.Models;
     using CN88.CustomerSetting.SettingType1.Models.Dtos;
+    using CN88.CustomerSetting.SettingType1.Models.PTItems;
     using CN88.CustomerSetting.SettingType1.Params.Commands;
     using CN88.CustomerSetting.SettingType1.Params.Criteria;
     using Fanex.Caching;
@@ -24,8 +25,6 @@
     {
         private const string CN88Site = "CN88";
         private const int SettingTypeId = 1;
-        private const int CurrencyCacheTimeInMinutes = 5;
-        private const string CurrencyCacheKey = "CN88.CustomerSetting.CurrencyCacheKey";
         private const int SpreadGroupCacheTimeInHours = 5;
         private const string SpreadGroupCacheKey = "CN88.CustomerSetting.SpreadGroupCacheKey";
 
@@ -111,7 +110,7 @@
                 SettingItems = new List<ISettingItem> { settingItem }
             };
 
-        private async Task<AccountDetailSettingItem> GetAccountDetailSettingItem(
+        private async Task<AccountDetailSettingItem<BasePTItem>> GetAccountDetailSettingItem(
             Level level, int custId, int productId, bool isCreateNew)
         {
             if (level.IsMemberLevel())
@@ -120,7 +119,7 @@
             }
 
             var settingItem = await GetAccountDetailSettingItem(level, custId, isCreateNew).ConfigureAwait(false);
-            var settingTypeConfig = (await GetSettingTypeConfig<AccountDetailSettingItem>(productId, SettingTypeId).ConfigureAwait(false)).FirstOrDefault();
+            var settingTypeConfig = (await GetSettingTypeConfig<AccountDetailSettingItem<BasePTItem>>(productId, SettingTypeId).ConfigureAwait(false)).FirstOrDefault();
             if (settingTypeConfig != null)
             {
                 settingItem.IntervalValue = settingTypeConfig.IntervalValue;
@@ -129,12 +128,12 @@
             return settingItem;
         }
 
-        private async Task<AccountDetailSettingItem> GetAccountDetailSettingItem(
+        private async Task<AccountDetailSettingItem<BasePTItem>> GetAccountDetailSettingItem(
             Level level,
             int custId,
             bool isCreateNew)
         {
-            AccountDetailSettingItem settingItem;
+            AccountDetailSettingItem<BasePTItem> settingItem;
 
             switch (level.Value)
             {
@@ -168,14 +167,35 @@
             return settingItem;
         }
 
-        private async Task<AccountDetailSettingItem> GetSuperAccountDetail(int custId, bool isCreateNew)
-            => await DynamicRepository.GetAsync<SuperAccountDetail>(new GetPTSettingCriteria(Level.Super.Value, custId, isCreateNew)).ConfigureAwait(false);
+        private async Task<AccountDetailSettingItem<BasePTItem>> GetSuperAccountDetail(int custId, bool isCreateNew)
+        {
+            var pTItems = await DynamicRepository.FetchAsync<SuperPTItem>(new GetPTSettingCriteria(Level.Super.Value, custId, isCreateNew)).ConfigureAwait(false);
 
-        private async Task<AccountDetailSettingItem> GetMasterAccountDetail(int custId, bool isCreateNew)
-            => await DynamicRepository.GetAsync<MasterAccountDetail>(new GetPTSettingCriteria(Level.Master.Value, custId, isCreateNew)).ConfigureAwait(false);
+            return new AccountDetailSettingItem<BasePTItem>
+            {
+                PTItems = pTItems
+            };
+        }
 
-        private async Task<AccountDetailSettingItem> GetAgentAccountDetail(int custId, bool isCreateNew)
-            => await DynamicRepository.GetAsync<AgentAccountDetail>(new GetPTSettingCriteria(Level.Agent.Value, custId, isCreateNew)).ConfigureAwait(false);
+        private async Task<AccountDetailSettingItem<BasePTItem>> GetMasterAccountDetail(int custId, bool isCreateNew)
+        {
+            var pTItems = await DynamicRepository.FetchAsync<MasterPTItem>(new GetPTSettingCriteria(Level.Master.Value, custId, isCreateNew)).ConfigureAwait(false);
+
+            return new AccountDetailSettingItem<BasePTItem>
+            {
+                PTItems = pTItems
+            };
+        }
+
+        private async Task<AccountDetailSettingItem<BasePTItem>> GetAgentAccountDetail(int custId, bool isCreateNew)
+        {
+            var pTItems = await DynamicRepository.FetchAsync<AgentPTItem>(new GetPTSettingCriteria(Level.Agent.Value, custId, isCreateNew)).ConfigureAwait(false);
+
+            return new AccountDetailSettingItem<BasePTItem>
+            {
+                PTItems = pTItems
+            };
+        }
 
         private async Task<CreateCustomerInfoDto> GetDefaultCreateCustomerInfo(Level level, int uplineId)
             => level.IsNotSuperLevel()
@@ -194,7 +214,7 @@
             SettingType settingType)
         {
 #pragma warning disable S3215 // "interface" instances should not be cast to concrete types
-            var settingItem = settingType.SettingItems?.FirstOrDefault() as AccountDetailSettingItem
+            var settingItem = settingType.SettingItems?.FirstOrDefault() as AccountDetailSettingItem<BasePTItem>
 #pragma warning restore S3215 // "interface" instances should not be cast to concrete types
                 ?? throw new InvalidOperationException("Account Detail Item cannot be null");
 
@@ -225,7 +245,7 @@
 
         private string ValidateAndEncodePassword(
             CreateCustomerCommand command,
-            AccountDetailSettingItem settingItem)
+            AccountDetailSettingItem<BasePTItem> settingItem)
         {
             var passwordResult = passwordService.ValidateAndHashPassword(
                 settingItem.Password,
@@ -242,7 +262,7 @@
 
         private static Dictionary<string, object> BuildCreateNewParams(
             ISettingContext settingContext,
-            AccountDetailSettingItem settingItem)
+            AccountDetailSettingItem<BasePTItem> settingItem)
             => new Dictionary<string, object>
             {
                 { "username", settingItem.Username ?? throw new InvalidOperationException(Resources.UsernameCannotBeNullOrEmpty) },
@@ -258,7 +278,7 @@
         private static Dictionary<string, object> AddParamsForAddNewMember(
             ISettingContext settingContext,
             CreateCustomerCommand command,
-            AccountDetailSettingItem settingItem,
+            AccountDetailSettingItem<BasePTItem> settingItem,
             Dictionary<string, object> createNewParams)
         {
             createNewParams.Add("subaccid", settingContext.Actor.SubAccountId);
@@ -291,7 +311,7 @@
         }
 
         private static Dictionary<string, object> AddParamsForAddNewSuper(
-            AccountDetailSettingItem settingItem,
+            AccountDetailSettingItem<BasePTItem> settingItem,
             Dictionary<string, object> createNewParams)
         {
             createNewParams.Add("site", CN88Site);
@@ -313,7 +333,7 @@
             SettingType settingType)
         {
 #pragma warning disable S3215 // "interface" instances should not be cast to concrete types
-            var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem
+            var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem<BasePTItem>
 #pragma warning restore S3215 // "interface" instances should not be cast to concrete types
                 ?? throw new InvalidOperationException("AccountDetail cannot be null");
 
@@ -376,7 +396,7 @@
 
         private async Task<SettingResult> UpdateCustomerInfo(
             UpdateCustomerSettingCommand command,
-            AccountDetailSettingItem settingItem,
+            AccountDetailSettingItem<BasePTItem> settingItem,
             SettingType settingType,
             ISettingContext settingContext)
         {
