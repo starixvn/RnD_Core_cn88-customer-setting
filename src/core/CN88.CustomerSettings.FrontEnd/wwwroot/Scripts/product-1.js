@@ -35395,6 +35395,8 @@ var CustomerSetting;
     CustomerSetting.ModuleRegister.filter("validSettingType", ValidSettingTypeFilter);
 })(CustomerSetting || (CustomerSetting = {}));
 
+
+
 var CustomerSetting;
 (function (CustomerSetting) {
     var CrossingSettingTypesServiceBus = (function () {
@@ -35605,6 +35607,54 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var PercentageDropdownDirective = (function () {
+        function PercentageDropdownDirective(valueRangeService) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
+            this.restrict = "E";
+            this.link = function (scope) {
+                if (scope.autoRefresh) {
+                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
+                        _this.initializeRange(scope);
+                    });
+                }
+                else {
+                    _this.initializeRange(scope);
+                }
+            };
+            this.valueRangeService = valueRangeService;
+        }
+        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    value: "=ngModel",
+                    min: "=",
+                    max: "=",
+                    step: "=?",
+                    precision: "=?",
+                    placeholder: "@",
+                    placeholderVisible: "=?",
+                    autoRefresh: "=?"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
+            scope.precision = scope.precision || 0;
+            scope.factor = Math.pow(10, scope.precision);
+            scope.step = scope.step || 1;
+            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
+        };
+        PercentageDropdownDirective.$inject = ["valueRangeService"];
+        return PercentageDropdownDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var NumericInputDirective = (function () {
         function NumericInputDirective($filter, appConfigService) {
             var _this = this;
@@ -35754,54 +35804,6 @@ var CustomerSetting;
         return NumericInputDirective;
     }());
     CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var PercentageDropdownDirective = (function () {
-        function PercentageDropdownDirective(valueRangeService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
-            this.restrict = "E";
-            this.link = function (scope) {
-                if (scope.autoRefresh) {
-                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
-                        _this.initializeRange(scope);
-                    });
-                }
-                else {
-                    _this.initializeRange(scope);
-                }
-            };
-            this.valueRangeService = valueRangeService;
-        }
-        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    value: "=ngModel",
-                    min: "=",
-                    max: "=",
-                    step: "=?",
-                    precision: "=?",
-                    placeholder: "@",
-                    placeholderVisible: "=?",
-                    autoRefresh: "=?"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
-            scope.precision = scope.precision || 0;
-            scope.factor = Math.pow(10, scope.precision);
-            scope.step = scope.step || 1;
-            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
-        };
-        PercentageDropdownDirective.$inject = ["valueRangeService"];
-        return PercentageDropdownDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36976,27 +36978,6 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
-        var PositionTakingDirective = (function (_super) {
-            __extends(PositionTakingDirective, _super);
-            function PositionTakingDirective() {
-                _super.apply(this, arguments);
-                this.template = '<div class="position-taking"><div data-ng-if="editable" data-ng-class="{ \'edit-pt\': !isNew && !accountDetail.isPTReadOnly }"><div class="sub-header" data-ng-if="customerLevel !== avaiCustomerLevels.agent">{{::(\'PositionTaking\' | st1Label)}}</div><div class="sub-header" data-ng-if="customerLevel === avaiCustomerLevels.agent"><span class="sub-header__title">{{::(\'PositionTaking\' | st1Label)}}</span> <span class="position-taking-constraint">{{\'MinAllowed\' | st1Label}} <span class="position-taking-constraint__value">{{accountDetail.minAllowedPT | formatPercentage}}</span></span> <span class="position-taking-constraint">{{\'MaxAllowed\' | st1Label}} <span class="position-taking-constraint__value">{{accountDetail.maxAllowedPT | formatPercentage}}</span></span></div><div data-ng-if="isNew"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMinPT" data-min="accountDetail.minSuperMinPT" data-max="accountDetail.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="superMinPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMaxPT" data-min="accountDetail.minSuperMaxPT" data-max="accountDetail.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="superMaxPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superPT" data-min="accountDetail.minSuperPT" data-max="accountDetail.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="superPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.masterPT" data-min="0" data-max="accountDetail.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="masterPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.agentPT" data-min="0" data-max="accountDetail.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="agentPT"></percentage-dropdown></div></div></div></div><div data-ng-if="!isNew"><div class="msg msg--error msg--pt-effective-date" data-ng-if="!accountDetail.isPTReadOnly"><div class="icon msg__icon"></div><div class="msg__content">{{\'PTEffectiveTime\' | st1Message:(accountDetail.ptEffectiveTime | formatDateTime)}}</div></div><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperMinPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMinPT" data-min="accountDetail.minSuperMinPT" data-max="accountDetail.maxSuperMinPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="superMinPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperMaxPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMaxPT" data-min="accountDetail.minSuperMaxPT" data-max="accountDetail.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="superMaxPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superPT" data-min="accountDetail.minSuperPT" data-max="accountDetail.maxSuperPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="superPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentMasterPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.masterPT" data-min="0" data-max="accountDetail.maxMasterPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="masterPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentAgentPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.agentPT" data-min="0" data-max="accountDetail.maxAgentPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="agentPT"></percentage-dropdown></div></div></div></div></div><div data-ng-if="!editable"><div class="sub-header" data-ng-if="customerLevel !== avaiCustomerLevels.agent">{{::(\'PositionTaking\' | st1Label)}}</div><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.superMinPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.superMaxPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.superPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.masterPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.agentPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div></div></div>';
-            }
-            return PositionTakingDirective;
-        }(SettingType1.SubSectionBaseDirective));
-        CustomerSetting.ModuleRegister.directive("st1PositionTaking", PositionTakingDirective);
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
         var GeneralDataDirective = (function (_super) {
             __extends(GeneralDataDirective, _super);
             function GeneralDataDirective(settingTypesSharedValuesService, appConfigService, crossingSettingTypesServiceBus, requestService) {
@@ -37043,6 +37024,27 @@ var CustomerSetting;
             return GeneralDataDirective;
         }(SettingType1.SubSectionBaseDirective));
         CustomerSetting.ModuleRegister.directive("st1GeneralData", GeneralDataDirective);
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var PositionTakingDirective = (function (_super) {
+            __extends(PositionTakingDirective, _super);
+            function PositionTakingDirective() {
+                _super.apply(this, arguments);
+                this.template = '<div class="position-taking"><div data-ng-if="editable" data-ng-class="{ \'edit-pt\': !isNew && !accountDetail.isPTReadOnly }"><div class="sub-header" data-ng-if="customerLevel !== avaiCustomerLevels.agent">{{::(\'PositionTaking\' | st1Label)}}</div><div class="sub-header" data-ng-if="customerLevel === avaiCustomerLevels.agent"><span class="sub-header__title">{{::(\'PositionTaking\' | st1Label)}}</span> <span class="position-taking-constraint">{{\'MinAllowed\' | st1Label}} <span class="position-taking-constraint__value">{{accountDetail.minAllowedPT | formatPercentage}}</span></span> <span class="position-taking-constraint">{{\'MaxAllowed\' | st1Label}} <span class="position-taking-constraint__value">{{accountDetail.maxAllowedPT | formatPercentage}}</span></span></div><div data-ng-if="isNew"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMinPT" data-min="accountDetail.minSuperMinPT" data-max="accountDetail.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="superMinPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMaxPT" data-min="accountDetail.minSuperMaxPT" data-max="accountDetail.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="superMaxPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superPT" data-min="accountDetail.minSuperPT" data-max="accountDetail.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="superPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.masterPT" data-min="0" data-max="accountDetail.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="masterPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.agentPT" data-min="0" data-max="accountDetail.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="agentPT"></percentage-dropdown></div></div></div></div><div data-ng-if="!isNew"><div class="msg msg--error msg--pt-effective-date" data-ng-if="!accountDetail.isPTReadOnly"><div class="icon msg__icon"></div><div class="msg__content">{{\'PTEffectiveTime\' | st1Message:(accountDetail.ptEffectiveTime | formatDateTime)}}</div></div><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperMinPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMinPT" data-min="accountDetail.minSuperMinPT" data-max="accountDetail.maxSuperMinPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="superMinPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperMaxPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superMaxPT" data-min="accountDetail.minSuperMaxPT" data-max="accountDetail.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="superMaxPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentSuperPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.superPT" data-min="accountDetail.minSuperPT" data-max="accountDetail.maxSuperPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="superPT"></percentage-dropdown></div></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentMasterPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.masterPT" data-min="0" data-max="accountDetail.maxMasterPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="masterPT"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.currentAgentPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="accountDetail.agentPT" data-min="0" data-max="accountDetail.maxAgentPT" data-step="accountDetail.intervalValue" data-placeholder="{{::(\'NoChange\' | st1Label)}}" data-placeholder-visible="true" data-setting-field="agentPT"></percentage-dropdown></div></div></div></div></div><div data-ng-if="!editable"><div class="sub-header">{{::(\'PositionTaking\' | st1Label)}}</div><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.superMinPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.superMaxPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.master"><div class="row"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.superPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div><div data-ng-if="customerLevel === avaiCustomerLevels.agent"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.masterPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{accountDetail.agentPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div></div></div>';
+            }
+            return PositionTakingDirective;
+        }(SettingType1.SubSectionBaseDirective));
+        CustomerSetting.ModuleRegister.directive("st1PositionTaking", PositionTakingDirective);
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -37094,7 +37096,7 @@ var CustomerSetting;
             }
             CommissionAndBetLimitSettingItem.prototype.toJson = function () {
                 var json = _super.prototype.toJson.call(this);
-                if (this.isNew && this.customerLevel === CustomerSetting.Level.member) {
+                if (this.isNew && this.customerLevel === CustomerSetting.Level.member && this.mappedCommissionGroups.length > 0) {
                     if (this.layoutType === SettingType2.LayoutType.multipleGroups) {
                         json.commissionGroups = [this.mappedCommissionGroups[this.memberSpreadGroupIndex]];
                     }

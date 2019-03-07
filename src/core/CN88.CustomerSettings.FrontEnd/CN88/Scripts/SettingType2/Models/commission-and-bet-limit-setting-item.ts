@@ -48,7 +48,7 @@ namespace CustomerSetting.SettingType2 {
         public toJson(): any {
             var json: any = super.toJson();
 
-            if (this.isNew && this.customerLevel === Level.member) {
+            if (this.isNew && this.customerLevel === Level.member && this.mappedCommissionGroups.length > 0) {
                 if (this.layoutType === LayoutType.multipleGroups) {
                     json.commissionGroups = [this.mappedCommissionGroups[this.memberSpreadGroupIndex]];
                 } else {
