@@ -1,7 +1,7 @@
 ﻿/// <reference path="../../core/models/setting-type.ts" />
 
 namespace CustomerSetting.SettingType1 {
-    export class SettingType1 extends SettingType {
+    export class AccountDetailSettingType extends SettingType {
         public creditPrecision: number;
 
         constructor();

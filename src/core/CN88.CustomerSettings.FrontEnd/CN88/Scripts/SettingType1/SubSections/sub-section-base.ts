@@ -1,12 +1,12 @@
 ﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
 /// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/services/setting-types-shared-values-service.ts" />
-/// <reference path="../models/account-detail.ts" />
+/// <reference path="../Models/account-detail-setting-item.ts" />
 
 namespace CustomerSetting.SettingType1 {
     export interface ISubSectionsSharedScopeScope extends ng.IScope {
         customerLevel: Level;
-        accountDetail: AccountDetail;
+        accountDetail: AccountDetailSettingItem;
         isNew: boolean;
         editable: boolean;
         avaiCustomerLevels: Object;

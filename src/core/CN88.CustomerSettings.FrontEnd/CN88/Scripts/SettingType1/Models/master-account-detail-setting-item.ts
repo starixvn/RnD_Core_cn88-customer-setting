@@ -1,27 +1,16 @@
-﻿/// <reference path="../../../libraries/Hash/hash.d.ts" />
-/// <reference path="../../core/models/enums/level.ts" />
+﻿/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
-/// <reference path="../../core/models/setting-item.ts" />
+/// <reference path="../../core/helpers.ts" />
+/// <reference path="account-detail-setting-item.ts" />
+/// <reference path="master-pt-item.ts" />
+/// <reference path="pt-item.ts" />
 
 namespace CustomerSetting.SettingType1 {
-    export class AccountDetail extends DefaultSettingItem {
-        public username: string;
-        public password: string;
-        public confirmPassword: string;
-        public firstName: string;
-        public lastName: string;
-        public phone: string;
-        public mobilePhone: string;
-        public fax: string;
-        public credit: number;
-        public minCredit: number;
-        public maxCredit: number;
+    export class MasterAccountDetailSettingItem extends AccountDetailSettingItem {
         public usernameSuffixes: string[];
-        public uplineUsername: string;
         public isPTReadOnly: boolean;
         public ptEffectiveTime: Date;
-
-        protected hashKey: string;
+        public ptItems: PTItem[];
 
         constructor();
         constructor(accountDetail: any);
@@ -30,40 +19,19 @@ namespace CustomerSetting.SettingType1 {
         constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level)
         constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string)
         constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
-            super(accountDetail, backup, isNew, customerLevel);
-
-            this.hashKey = hashKey;
-
             if (accountDetail) {
-                this.username = accountDetail.username;
-                this.password = accountDetail.password;
-                this.firstName = accountDetail.firstName;
-                this.lastName = accountDetail.lastName;
-                this.phone = accountDetail.phone;
-                this.mobilePhone = accountDetail.mobilePhone;
-                this.fax = accountDetail.fax;
-                this.credit = accountDetail.credit;
-                this.minCredit = accountDetail.minCredit;
-                this.maxCredit = accountDetail.maxCredit;
+                super(accountDetail, backup, isNew, customerLevel, hashKey);
+
                 this.usernameSuffixes = accountDetail.usernameSuffixes;
-                this.uplineUsername = accountDetail.uplineUsername;
                 this.isPTReadOnly = accountDetail.isPTReadOnly;
                 this.ptEffectiveTime = accountDetail.ptEffectiveTime;
+                this.ptItems = accountDetail.ptItems.map((ptItem: any) => new MasterPTItem(ptItem, accountDetail.isPTReadOnly));
             }
 
             this.ignoredProperties = this.ignoredProperties.concat([
-                "confirmPassword",
                 "usernameSuffixes",
-                "minCredit",
-                "maxCredit",
                 "isPTReadOnly",
-                "ptEffectiveTime",
-                "hashKey"]);
-
-            if (!this.isNew) {
-                this.ignoredProperties.push("uplineUsername");
-                this.ignoredProperties.push("username");
-            }
+                "ptEffectiveTime"]);
         }
 
         public validate(): boolean {
@@ -79,22 +47,22 @@ namespace CustomerSetting.SettingType1 {
                 return false;
             }
 
+            if (!this.isPTReadOnly) {
+                var { isValid, validationState } = PTItem.validatePTItems(this.ptItems);
+
+                if (!isValid) {
+                    this.validationState = validationState;
+
+                    return false;
+                }
+            }
+
             this.resetValidationState();
 
             return true;
         }
 
-        protected validateUsername(): boolean {
-            if (!this.username || this.username.length === 0) {
-                this.validationState = new ValidationResult("RequiredField", "username");
-
-                return false;
-            }
-
-            return true;
-        }
-
-        protected validatePassword(): boolean {
+        private validatePassword(): boolean {
             if (!this.password || this.password.length === 0) {
                 this.validationState = new ValidationResult("RequiredField", "password");
 
@@ -119,7 +87,7 @@ namespace CustomerSetting.SettingType1 {
             return true;
         }
 
-        protected validateCredit(): boolean {
+        private validateCredit(): boolean {
             if (this.credit === undefined || this.credit === null) {
                 this.validationState = new ValidationResult("RequiredField", "credit");
 
@@ -147,18 +115,6 @@ namespace CustomerSetting.SettingType1 {
             }
 
             return true;
-        }
-
-        public toJson(): any {
-            var accountDetail: any = super.toJson();
-
-            if (this.isNew) {
-                var originalPassword: string = accountDetail.password;
-
-                accountDetail.password = originalPassword.encrypt(this.hashKey).hash();
-            }
-
-            return accountDetail;
         }
     }
 }

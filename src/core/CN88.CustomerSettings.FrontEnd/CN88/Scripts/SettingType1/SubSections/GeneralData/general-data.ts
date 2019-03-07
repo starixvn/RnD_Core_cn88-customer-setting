@@ -5,8 +5,8 @@
 /// <reference path="../../../core/services/request-service.ts" />
 /// <reference path="../../../core/module-registrater.ts" />
 /// <reference path="../../models/currency.ts" />
-/// <reference path="../../models/member-account-detail.ts" />
-/// <reference path="../../models/super-account-detail.ts" />
+/// <reference path="../../models/member-account-detail-setting-item.ts" />
+/// <reference path="../../models/super-account-detail-setting-item.ts" />
 /// <reference path="../sub-section-base.ts" />
 
 namespace CustomerSetting.SettingType1 {
@@ -32,7 +32,7 @@ namespace CustomerSetting.SettingType1 {
             if (scope.isNew) {
                 if (scope.customerLevel === Level.super) {
                     var requestPath: string = this.appConfigService.buildPath(GeneralDataDirective.validatingAndLoadingHeadlineCurrencyPath);
-                    var superAccountDetail: SuperAccountDetail = <SuperAccountDetail>scope.accountDetail;
+                    var superAccountDetail: SuperAccountDetailSettingItem = <SuperAccountDetailSettingItem>scope.accountDetail;
                     var lastValidatedHeadline: string;
 
                     scope.validateAndLoadHeadlineCurrency = ($event: JQueryEventObject) => {
@@ -57,7 +57,7 @@ namespace CustomerSetting.SettingType1 {
                         this.crossingSettingTypesServiceBus.execute(
                             "updateMemberSpreadGroup",
                             {
-                                newMemberGroup: (<MemberAccountDetail>scope.accountDetail).spreadGroup.groupName
+                                newMemberGroup: (<MemberAccountDetailSettingItem>scope.accountDetail).spreadGroup.groupName
                             });
                     };
                 }

@@ -1,6 +1,5 @@
 ﻿/// <reference path="../../../../typings/angularjs/angular.d.ts" />
 /// <reference path="../../../../core/module-registrater.ts" />
-/// <reference path="../../../models/account-detail.ts" />
 /// <reference path="username-suffix-group.ts" />
 
 namespace CustomerSetting.SettingType1 {

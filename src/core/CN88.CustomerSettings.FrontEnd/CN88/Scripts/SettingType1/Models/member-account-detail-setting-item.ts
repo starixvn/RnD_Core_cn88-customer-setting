@@ -1,10 +1,11 @@
 ﻿/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
-/// <reference path="account-detail.ts" />
+/// <reference path="account-detail-setting-item.ts" />
 /// <reference path="spread-group.ts" />
 
 namespace CustomerSetting.SettingType1 {
-    export class MemberAccountDetail extends AccountDetail {
+    export class MemberAccountDetailSettingItem extends AccountDetailSettingItem {
+        public usernameSuffixes: string[];
         public spreadGroups: ISpreadGroup[];
         public spreadGroup: ISpreadGroup;
 
@@ -18,11 +19,14 @@ namespace CustomerSetting.SettingType1 {
             if (accountDetail) {
                 super(accountDetail, backup, isNew, customerLevel, hashKey);
 
+                this.usernameSuffixes = accountDetail.usernameSuffixes;
                 this.spreadGroups = accountDetail.spreadGroups;
                 this.spreadGroup = accountDetail.spreadGroup;
             }
 
-            this.ignoredProperties.push("spreadGroups");
+            this.ignoredProperties = this.ignoredProperties.concat([
+                "usernameSuffixes",
+                "spreadGroups"]);
 
             if (!this.isNew) {
                 this.ignoredProperties.push("spreadGroup");
@@ -34,7 +38,7 @@ namespace CustomerSetting.SettingType1 {
                 return false;
             }
 
-            if (this.isNew && !this.validateMemberPassword()) {
+            if (this.isNew && !this.validatePassword()) {
                 return false;
             }
 
@@ -51,7 +55,7 @@ namespace CustomerSetting.SettingType1 {
             return true;
         }
 
-        protected validateMemberPassword(): boolean {
+        private validatePassword(): boolean {
             if (!this.password || this.password.length === 0) {
                 this.validationState = new ValidationResult("RequiredField", "password");
 
@@ -68,6 +72,36 @@ namespace CustomerSetting.SettingType1 {
 
             if (this.confirmPassword !== this.password) {
                 this.validationState = new ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private validateCredit(): boolean {
+            if (this.credit === undefined || this.credit === null) {
+                this.validationState = new ValidationResult("RequiredField", "credit");
+
+                return false;
+            }
+
+            if (this.credit < this.minCredit) {
+                this.validationState = new ValidationResult(
+                    "CreditsMustBeGreaterThanOrEqualTo",
+                    "credit",
+                    [this.minCredit],
+                    { precision: 2 });
+
+                return false;
+            }
+
+            if (this.credit > this.maxCredit) {
+                this.validationState = new ValidationResult(
+                    "CreditsMustBeLessThanOrEqualTo",
+                    "credit",
+                    [this.maxCredit],
+                    { precision: 2 });
 
                 return false;
             }

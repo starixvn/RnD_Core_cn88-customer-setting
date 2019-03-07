@@ -6,8 +6,8 @@
 /// <reference path="../core/services/app-config-service.ts" />
 /// <reference path="../core/services/setting-types-shared-values-service.ts" />
 /// <reference path="../core/module-registrater.ts" />
-/// <reference path="models/setting-type1.ts" />
-/// <reference path="models/setting-type1-item.ts" />
+/// <reference path="models/account-detail-setting-item-factory.ts" />
+/// <reference path="models/account-detail-setting-type.ts" />
 /// <reference path="resources/resource-service.ts" />
 
 namespace CustomerSetting.SettingType1 {
@@ -33,7 +33,7 @@ namespace CustomerSetting.SettingType1 {
                 } else {
                     scope.settingType.settingItems.forEach((item: any, index: number) => {
                         if (item) {
-                            scope.settingType.settingItems[index] = SettingType1Item.factory(
+                            scope.settingType.settingItems[index] = AccountDetailSettingItemFactory.create(
                                 item,
                                 true,
                                 scope.isNew,
@@ -59,5 +59,5 @@ namespace CustomerSetting.SettingType1 {
 
     ModuleRegister.directive("st1", AccountDetailDirective);
 
-    SettingTypeRegister.register(1, (settingType: any) => new SettingType1(settingType));
+    SettingTypeRegister.register(1, (settingType: any) => new AccountDetailSettingType(settingType));
 }

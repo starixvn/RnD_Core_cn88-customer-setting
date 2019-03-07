@@ -3,15 +3,20 @@
 /// <reference path="../../../../core/services/app-config-service.ts" />
 /// <reference path="../../../../core/services/request-service.ts" />
 /// <reference path="../../../../core/module-registrater.ts" />
-/// <reference path="../../../models/account-detail.ts" />
 
 namespace CustomerSetting.SettingType1 {
+    interface IAccountDetailWithFixedUsernameFormat {
+        uplineUsername: string;
+        usernameSuffixes: string[],
+        username: string;
+    }
+
     export interface IValidateUsername {
         (suffixIndex: number, selectedSuffix: string): void;
     }
 
     export interface IUsernameSuffixGroupScope extends ng.IScope {
-        accountDetail: AccountDetail;
+        accountDetail: IAccountDetailWithFixedUsernameFormat;
         validateUsername: IValidateUsername;
         isValid: boolean;
         isChanged: boolean;

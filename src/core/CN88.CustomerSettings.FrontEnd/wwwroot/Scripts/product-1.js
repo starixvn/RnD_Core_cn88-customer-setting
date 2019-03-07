@@ -35395,8 +35395,6 @@ var CustomerSetting;
     CustomerSetting.ModuleRegister.filter("validSettingType", ValidSettingTypeFilter);
 })(CustomerSetting || (CustomerSetting = {}));
 
-
-
 var CustomerSetting;
 (function (CustomerSetting) {
     var CrossingSettingTypesServiceBus = (function () {
@@ -35607,54 +35605,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    var PercentageDropdownDirective = (function () {
-        function PercentageDropdownDirective(valueRangeService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
-            this.restrict = "E";
-            this.link = function (scope) {
-                if (scope.autoRefresh) {
-                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
-                        _this.initializeRange(scope);
-                    });
-                }
-                else {
-                    _this.initializeRange(scope);
-                }
-            };
-            this.valueRangeService = valueRangeService;
-        }
-        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    value: "=ngModel",
-                    min: "=",
-                    max: "=",
-                    step: "=?",
-                    precision: "=?",
-                    placeholder: "@",
-                    placeholderVisible: "=?",
-                    autoRefresh: "=?"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
-            scope.precision = scope.precision || 0;
-            scope.factor = Math.pow(10, scope.precision);
-            scope.step = scope.step || 1;
-            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
-        };
-        PercentageDropdownDirective.$inject = ["valueRangeService"];
-        return PercentageDropdownDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     var NumericInputDirective = (function () {
         function NumericInputDirective($filter, appConfigService) {
             var _this = this;
@@ -35804,6 +35754,54 @@ var CustomerSetting;
         return NumericInputDirective;
     }());
     CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var PercentageDropdownDirective = (function () {
+        function PercentageDropdownDirective(valueRangeService) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
+            this.restrict = "E";
+            this.link = function (scope) {
+                if (scope.autoRefresh) {
+                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
+                        _this.initializeRange(scope);
+                    });
+                }
+                else {
+                    _this.initializeRange(scope);
+                }
+            };
+            this.valueRangeService = valueRangeService;
+        }
+        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    value: "=ngModel",
+                    min: "=",
+                    max: "=",
+                    step: "=?",
+                    precision: "=?",
+                    placeholder: "@",
+                    placeholderVisible: "=?",
+                    autoRefresh: "=?"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
+            scope.precision = scope.precision || 0;
+            scope.factor = Math.pow(10, scope.precision);
+            scope.step = scope.step || 1;
+            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
+        };
+        PercentageDropdownDirective.$inject = ["valueRangeService"];
+        return PercentageDropdownDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36230,9 +36228,9 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
-        var AccountDetail = (function (_super) {
-            __extends(AccountDetail, _super);
-            function AccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
+        var AccountDetailSettingItem = (function (_super) {
+            __extends(AccountDetailSettingItem, _super);
+            function AccountDetailSettingItem(accountDetail, backup, isNew, customerLevel, hashKey) {
                 if (backup === void 0) { backup = false; }
                 if (isNew === void 0) { isNew = false; }
                 if (customerLevel === void 0) { customerLevel = null; }
@@ -36264,11 +36262,12 @@ var CustomerSetting;
                     "ptEffectiveTime",
                     "hashKey"]);
                 if (!this.isNew) {
-                    this.ignoredProperties.push("uplineUsername");
                     this.ignoredProperties.push("username");
+                    this.ignoredProperties.push("password");
+                    this.ignoredProperties.push("uplineUsername");
                 }
             }
-            AccountDetail.prototype.validate = function () {
+            AccountDetailSettingItem.prototype.validate = function () {
                 if (this.isNew && !this.validateUsername()) {
                     return false;
                 }
@@ -36281,14 +36280,14 @@ var CustomerSetting;
                 this.resetValidationState();
                 return true;
             };
-            AccountDetail.prototype.validateUsername = function () {
+            AccountDetailSettingItem.prototype.validateUsername = function () {
                 if (!this.username || this.username.length === 0) {
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "username");
                     return false;
                 }
                 return true;
             };
-            AccountDetail.prototype.validatePassword = function () {
+            AccountDetailSettingItem.prototype.validatePassword = function () {
                 if (!this.password || this.password.length === 0) {
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
                     return false;
@@ -36304,7 +36303,7 @@ var CustomerSetting;
                 }
                 return true;
             };
-            AccountDetail.prototype.validateCredit = function () {
+            AccountDetailSettingItem.prototype.validateCredit = function () {
                 if (this.credit === undefined || this.credit === null) {
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "credit");
                     return false;
@@ -36319,7 +36318,7 @@ var CustomerSetting;
                 }
                 return true;
             };
-            AccountDetail.prototype.toJson = function () {
+            AccountDetailSettingItem.prototype.toJson = function () {
                 var accountDetail = _super.prototype.toJson.call(this);
                 if (this.isNew) {
                     var originalPassword = accountDetail.password;
@@ -36327,9 +36326,9 @@ var CustomerSetting;
                 }
                 return accountDetail;
             };
-            return AccountDetail;
+            return AccountDetailSettingItem;
         }(CustomerSetting.DefaultSettingItem));
-        SettingType1.AccountDetail = AccountDetail;
+        SettingType1.AccountDetailSettingItem = AccountDetailSettingItem;
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -36424,31 +36423,10 @@ var __extends = (this && this.__extends) || function (d, b) {
 var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
-    (function (SettingType1_1) {
-        var SettingType1 = (function (_super) {
-            __extends(SettingType1, _super);
-            function SettingType1(settingType) {
-                _super.call(this, settingType);
-                this.creditPrecision = 2;
-            }
-            return SettingType1;
-        }(CustomerSetting.SettingType));
-        SettingType1_1.SettingType1 = SettingType1;
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
     (function (SettingType1) {
-        var AgentAccountDetail = (function (_super) {
-            __extends(AgentAccountDetail, _super);
-            function AgentAccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
+        var AgentAccountDetailSettingItem = (function (_super) {
+            __extends(AgentAccountDetailSettingItem, _super);
+            function AgentAccountDetailSettingItem(accountDetail, backup, isNew, customerLevel, hashKey) {
                 if (backup === void 0) { backup = false; }
                 if (isNew === void 0) { isNew = false; }
                 if (customerLevel === void 0) { customerLevel = null; }
@@ -36483,7 +36461,7 @@ var CustomerSetting;
                     this.ignoredProperties.push("agentPT");
                 }
             }
-            AgentAccountDetail.prototype.validate = function () {
+            AgentAccountDetailSettingItem.prototype.validate = function () {
                 if (!_super.prototype.validate.call(this)) {
                     return false;
                 }
@@ -36493,7 +36471,7 @@ var CustomerSetting;
                 this.resetValidationState();
                 return true;
             };
-            AgentAccountDetail.prototype.validatePT = function () {
+            AgentAccountDetailSettingItem.prototype.validatePT = function () {
                 if (CustomerSetting.isNumber(this.masterPT) && (this.masterPT > this.maxMasterPT)) {
                     this.validationState = new CustomerSetting.ValidationResult("MasterPTMustBeLessThanOrEqualTo", "masterPT", [this.maxMasterPT]);
                     return false;
@@ -36511,9 +36489,9 @@ var CustomerSetting;
                 }
                 return true;
             };
-            return AgentAccountDetail;
-        }(SettingType1.AccountDetail));
-        SettingType1.AgentAccountDetail = AgentAccountDetail;
+            return AgentAccountDetailSettingItem;
+        }(SettingType1.AccountDetailSettingItem));
+        SettingType1.AgentAccountDetailSettingItem = AgentAccountDetailSettingItem;
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -36526,9 +36504,9 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
-        var MasterAccountDetail = (function (_super) {
-            __extends(MasterAccountDetail, _super);
-            function MasterAccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
+        var MasterAccountDetailSettingItem = (function (_super) {
+            __extends(MasterAccountDetailSettingItem, _super);
+            function MasterAccountDetailSettingItem(accountDetail, backup, isNew, customerLevel, hashKey) {
                 if (backup === void 0) { backup = false; }
                 if (isNew === void 0) { isNew = false; }
                 if (customerLevel === void 0) { customerLevel = null; }
@@ -36549,7 +36527,7 @@ var CustomerSetting;
                     this.ignoredProperties.push("superPT");
                 }
             }
-            MasterAccountDetail.prototype.validate = function () {
+            MasterAccountDetailSettingItem.prototype.validate = function () {
                 if (!_super.prototype.validate.call(this)) {
                     return false;
                 }
@@ -36559,7 +36537,7 @@ var CustomerSetting;
                 this.resetValidationState();
                 return true;
             };
-            MasterAccountDetail.prototype.validateSuperPT = function () {
+            MasterAccountDetailSettingItem.prototype.validateSuperPT = function () {
                 if (this.superPT < this.minSuperPT) {
                     this.validationState = new CustomerSetting.ValidationResult("SuperPTMustBeGreaterThanOrEqualTo", "superPT", [this.minSuperPT]);
                     return false;
@@ -36570,9 +36548,9 @@ var CustomerSetting;
                 }
                 return true;
             };
-            return MasterAccountDetail;
-        }(SettingType1.AccountDetail));
-        SettingType1.MasterAccountDetail = MasterAccountDetail;
+            return MasterAccountDetailSettingItem;
+        }(SettingType1.AccountDetailSettingItem));
+        SettingType1.MasterAccountDetailSettingItem = MasterAccountDetailSettingItem;
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -36587,9 +36565,9 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
-        var SuperAccountDetail = (function (_super) {
-            __extends(SuperAccountDetail, _super);
-            function SuperAccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
+        var SuperAccountDetailSettingItem = (function (_super) {
+            __extends(SuperAccountDetailSettingItem, _super);
+            function SuperAccountDetailSettingItem(accountDetail, backup, isNew, customerLevel, hashKey) {
                 if (backup === void 0) { backup = false; }
                 if (isNew === void 0) { isNew = false; }
                 if (customerLevel === void 0) { customerLevel = null; }
@@ -36624,7 +36602,7 @@ var CustomerSetting;
                     this.ignoredProperties.push("superMaxPT");
                 }
             }
-            SuperAccountDetail.prototype.validate = function () {
+            SuperAccountDetailSettingItem.prototype.validate = function () {
                 if (this.isNew && !this.validateUplineUsername()) {
                     return false;
                 }
@@ -36643,14 +36621,14 @@ var CustomerSetting;
                 this.resetValidationState();
                 return true;
             };
-            SuperAccountDetail.prototype.validatePassword = function () {
+            SuperAccountDetailSettingItem.prototype.validatePassword = function () {
                 if (!this.password || this.password.length === 0) {
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
                     return false;
                 }
                 return true;
             };
-            SuperAccountDetail.prototype.validateCredit = function () {
+            SuperAccountDetailSettingItem.prototype.validateCredit = function () {
                 if (this.credit === undefined || this.credit === null) {
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "credit");
                     return false;
@@ -36661,14 +36639,14 @@ var CustomerSetting;
                 }
                 return true;
             };
-            SuperAccountDetail.prototype.validateUplineUsername = function () {
+            SuperAccountDetailSettingItem.prototype.validateUplineUsername = function () {
                 if (!this.uplineUsername || this.uplineUsername.length === 0) {
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "uplineUsername");
                     return false;
                 }
                 return true;
             };
-            SuperAccountDetail.prototype.validatePT = function () {
+            SuperAccountDetailSettingItem.prototype.validatePT = function () {
                 if (CustomerSetting.isNumber(this.superMinPT) && !this.validateSuperMinPT()) {
                     return false;
                 }
@@ -36683,7 +36661,7 @@ var CustomerSetting;
                 }
                 return true;
             };
-            SuperAccountDetail.prototype.validateSuperMinPT = function () {
+            SuperAccountDetailSettingItem.prototype.validateSuperMinPT = function () {
                 if (this.superMinPT < this.minSuperMinPT) {
                     this.validationState = new CustomerSetting.ValidationResult("SuperMinPTMustBeGreaterThanOrEqualTo", "superMinPT", [this.minSuperMinPT]);
                     return false;
@@ -36694,7 +36672,7 @@ var CustomerSetting;
                 }
                 return true;
             };
-            SuperAccountDetail.prototype.validateSuperMaxPT = function () {
+            SuperAccountDetailSettingItem.prototype.validateSuperMaxPT = function () {
                 if (this.superMaxPT < this.minSuperMaxPT) {
                     this.validationState = new CustomerSetting.ValidationResult("SuperMaxPTMustBeGreaterThanOrEqualTo", "superMaxPT", [this.minSuperMaxPT]);
                     return false;
@@ -36705,9 +36683,9 @@ var CustomerSetting;
                 }
                 return true;
             };
-            return SuperAccountDetail;
-        }(SettingType1.AccountDetail));
-        SettingType1.SuperAccountDetail = SuperAccountDetail;
+            return SuperAccountDetailSettingItem;
+        }(SettingType1.AccountDetailSettingItem));
+        SettingType1.SuperAccountDetailSettingItem = SuperAccountDetailSettingItem;
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -36722,9 +36700,9 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
-        var MemberAccountDetail = (function (_super) {
-            __extends(MemberAccountDetail, _super);
-            function MemberAccountDetail(accountDetail, backup, isNew, customerLevel, hashKey) {
+        var MemberAccountDetailSettingItem = (function (_super) {
+            __extends(MemberAccountDetailSettingItem, _super);
+            function MemberAccountDetailSettingItem(accountDetail, backup, isNew, customerLevel, hashKey) {
                 if (backup === void 0) { backup = false; }
                 if (isNew === void 0) { isNew = false; }
                 if (customerLevel === void 0) { customerLevel = null; }
@@ -36739,7 +36717,7 @@ var CustomerSetting;
                     this.ignoredProperties.push("spreadGroup");
                 }
             }
-            MemberAccountDetail.prototype.validate = function () {
+            MemberAccountDetailSettingItem.prototype.validate = function () {
                 if (!this.validateUsername()) {
                     return false;
                 }
@@ -36755,7 +36733,7 @@ var CustomerSetting;
                 this.resetValidationState();
                 return true;
             };
-            MemberAccountDetail.prototype.validateMemberPassword = function () {
+            MemberAccountDetailSettingItem.prototype.validateMemberPassword = function () {
                 if (!this.password || this.password.length === 0) {
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
                     return false;
@@ -36771,16 +36749,16 @@ var CustomerSetting;
                 }
                 return true;
             };
-            MemberAccountDetail.prototype.validateOddsSpread = function () {
+            MemberAccountDetailSettingItem.prototype.validateOddsSpread = function () {
                 if (!this.spreadGroup) {
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "spreadGroup");
                     return false;
                 }
                 return true;
             };
-            return MemberAccountDetail;
-        }(SettingType1.AccountDetail));
-        SettingType1.MemberAccountDetail = MemberAccountDetail;
+            return MemberAccountDetailSettingItem;
+        }(SettingType1.AccountDetailSettingItem));
+        SettingType1.MemberAccountDetailSettingItem = MemberAccountDetailSettingItem;
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -36788,29 +36766,50 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
-        var SettingType1Item = (function () {
-            function SettingType1Item() {
+        var AccountDetailSettingItemFactory = (function () {
+            function AccountDetailSettingItemFactory() {
             }
-            SettingType1Item.factory = function (settingItem, backup, isNew, customerLevel, hashKey) {
+            AccountDetailSettingItemFactory.create = function (settingItem, backup, isNew, customerLevel, hashKey) {
                 if (settingItem) {
                     if (customerLevel === CustomerSetting.Level.super) {
-                        return new SettingType1.SuperAccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
+                        return new SettingType1.SuperAccountDetailSettingItem(settingItem, backup, isNew, customerLevel, hashKey);
                     }
                     if (customerLevel === CustomerSetting.Level.master) {
-                        return new SettingType1.MasterAccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
+                        return new SettingType1.MasterAccountDetailSettingItem(settingItem, backup, isNew, customerLevel, hashKey);
                     }
                     if (customerLevel === CustomerSetting.Level.agent) {
-                        return new SettingType1.AgentAccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
+                        return new SettingType1.AgentAccountDetailSettingItem(settingItem, backup, isNew, customerLevel, hashKey);
                     }
                     if (customerLevel === CustomerSetting.Level.member) {
-                        return new SettingType1.MemberAccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
+                        return new SettingType1.MemberAccountDetailSettingItem(settingItem, backup, isNew, customerLevel, hashKey);
                     }
-                    return new SettingType1.AccountDetail(settingItem, backup, isNew, customerLevel, hashKey);
+                    return new SettingType1.AccountDetailSettingItem(settingItem, backup, isNew, customerLevel, hashKey);
                 }
             };
-            return SettingType1Item;
+            return AccountDetailSettingItemFactory;
         }());
-        SettingType1.SettingType1Item = SettingType1Item;
+        SettingType1.AccountDetailSettingItemFactory = AccountDetailSettingItemFactory;
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var AccountDetailSettingType = (function (_super) {
+            __extends(AccountDetailSettingType, _super);
+            function AccountDetailSettingType(settingType) {
+                _super.call(this, settingType);
+                this.creditPrecision = 2;
+            }
+            return AccountDetailSettingType;
+        }(CustomerSetting.SettingType));
+        SettingType1.AccountDetailSettingType = AccountDetailSettingType;
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -36882,7 +36881,7 @@ var CustomerSetting;
                         else {
                             scope.settingType.settingItems.forEach(function (item, index) {
                                 if (item) {
-                                    scope.settingType.settingItems[index] = SettingType1.SettingType1Item.factory(item, true, scope.isNew, scope.customerLevel, _this.settingTypesSharedValuesService.hashKey);
+                                    scope.settingType.settingItems[index] = SettingType1.AccountDetailSettingItemFactory.create(item, true, scope.isNew, scope.customerLevel, _this.settingTypesSharedValuesService.hashKey);
                                 }
                             });
                         }
@@ -36898,7 +36897,7 @@ var CustomerSetting;
             return AccountDetailDirective;
         }(CustomerSetting.SettingTypeBaseDirective));
         CustomerSetting.ModuleRegister.directive("st1", AccountDetailDirective);
-        CustomerSetting.SettingTypeRegister.register(1, function (settingType) { return new SettingType1.SettingType1(settingType); });
+        CustomerSetting.SettingTypeRegister.register(1, function (settingType) { return new SettingType1.AccountDetailSettingType(settingType); });
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -37090,6 +37089,10 @@ var CustomerSetting;
                 if (this.customerLevel === CustomerSetting.Level.member) {
                     this.memberSpreadGroupIndex = 0;
                 }
+                this.ignoredProperties.push("minMaxBet");
+                this.ignoredProperties.push("maxMaxBet");
+                this.ignoredProperties.push("minMaxPerEvent");
+                this.ignoredProperties.push("maxMaxPerEvent");
                 this.ignoredProperties.push("mappedCommissionGroups");
                 this.ignoredProperties.push("memberSpreadGroupIndex");
                 this.resetValidationState();

@@ -39,6 +39,10 @@ namespace CustomerSetting.SettingType2 {
                 this.memberSpreadGroupIndex = 0;
             }
 
+            this.ignoredProperties.push("minMaxBet");
+            this.ignoredProperties.push("maxMaxBet");
+            this.ignoredProperties.push("minMaxPerEvent");
+            this.ignoredProperties.push("maxMaxPerEvent");
             this.ignoredProperties.push("mappedCommissionGroups");
             this.ignoredProperties.push("memberSpreadGroupIndex");
 
