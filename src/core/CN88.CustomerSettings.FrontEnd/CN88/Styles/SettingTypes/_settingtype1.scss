@@ -2,7 +2,8 @@
 @import "../variables";
 
 $sub-header-border-color: #7b0f0f;
-$pt-effective-date-warning-bg-color: $tooltip-error-bg-color;
+$position-taking-effective-date-warning-bg-color: $tooltip-error-bg-color;
+$position-taking-constraint-value-color: #737373;
 
 .setting-type-1 {
     .col {
@@ -65,28 +66,45 @@ $pt-effective-date-warning-bg-color: $tooltip-error-bg-color;
     }
 
     .position-taking {
-        .position-taking-constraint {
-            color: $text-color;
+        &__group-name {
+            font-weight: bold;
+            margin: 12px 0;
+        }
+
+        &--has-constraint {
+            display: -webkit-box;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        &__constraint {
+            color: $position-taking-constraint-value-color;
             font-weight: normal;
-            margin: 0 10px;
+            margin-left: 15px;
 
             &__value {
                 font-weight: bold;
             }
         }
 
-        .edit-pt {
+        &--edit {
             .sub-header {
                 margin-bottom: 3px;
             }
 
-            .msg--pt-effective-date {
+            .msg--error {
                 margin: initial;
 
                 .msg__icon {
                     background-position: -3px -23px;
                 }
             }
+        }
+
+        .row {
+            margin: 10px 0 10px 30px;
         }
     }
 

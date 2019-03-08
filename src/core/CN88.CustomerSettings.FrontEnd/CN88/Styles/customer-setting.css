@@ -989,20 +989,34 @@ select.setting-field {
     padding-right: 4px;
     text-align: right; }
 
-.setting-type-1 .position-taking .position-taking-constraint {
-  color: #3b3b3b;
+.setting-type-1 .position-taking__group-name {
+  font-weight: bold;
+  margin: 12px 0; }
+
+.setting-type-1 .position-taking--has-constraint {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-between; }
+
+.setting-type-1 .position-taking__constraint {
+  color: #737373;
   font-weight: normal;
-  margin: 0 10px; }
-  .setting-type-1 .position-taking .position-taking-constraint__value {
+  margin-left: 15px; }
+  .setting-type-1 .position-taking__constraint__value {
     font-weight: bold; }
 
-.setting-type-1 .position-taking .edit-pt .sub-header {
+.setting-type-1 .position-taking--edit .sub-header {
   margin-bottom: 3px; }
 
-.setting-type-1 .position-taking .edit-pt .msg--pt-effective-date {
+.setting-type-1 .position-taking--edit .msg--error {
   margin: initial; }
-  .setting-type-1 .position-taking .edit-pt .msg--pt-effective-date .msg__icon {
+  .setting-type-1 .position-taking--edit .msg--error .msg__icon {
     background-position: -3px -23px; }
+
+.setting-type-1 .position-taking .row {
+  margin: 10px 0 10px 30px; }
 
 .setting-type-1 .icon--valid-username {
   background-position: -29px -23px; }

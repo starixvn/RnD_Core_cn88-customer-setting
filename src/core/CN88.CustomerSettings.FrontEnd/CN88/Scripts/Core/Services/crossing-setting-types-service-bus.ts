@@ -3,60 +3,51 @@
 /// <reference path="../module-registrater.ts" />
 
 namespace CustomerSetting {
-    export interface ICrossingSettingTypesPromise {
-        (sharedData: any): ng.IPromise<void>;
+    interface ICrossingSettingTypesListener {
+        (sharedData: any): void;
     }
 
     export class CrossingSettingTypesServiceBus {
         public static $inject: string[] = ["$q"];
 
-        private promises: KeyValuePair<string, ICrossingSettingTypesPromise>[];
+        private listeners: KeyValuePair<string, ICrossingSettingTypesListener>[];
 
         private $q: ng.IQService;
 
         constructor($q: ng.IQService) {
             this.$q = $q;
-            this.promises = [];
+            this.listeners = [];
         }
 
         public reset(): void {
-            this.promises = [];
+            this.listeners = [];
         }
 
-        public register(channel: string, promise: ICrossingSettingTypesPromise): void {
-            var isNew: boolean = this.promises.every((promise: KeyValuePair<string, ICrossingSettingTypesPromise>) => {
-                return channel !== promise.key;
+        public register(channel: string, listener: ICrossingSettingTypesListener): void {
+            var isNew: boolean = this.listeners.every((registeredListener: KeyValuePair<string, ICrossingSettingTypesListener>) => {
+                return channel !== registeredListener.key;
             });
 
             if (isNew) {
-                this.promises.push(new KeyValuePair<string, ICrossingSettingTypesPromise>(channel, promise));
+                this.listeners.push(new KeyValuePair<string, ICrossingSettingTypesListener>(channel, listener));
             }
         }
 
         public execute(trigger: string, sharedData: any): ng.IPromise<void> {
             var deferred: ng.IDeferred<void> = this.$q.defer<void>();
-
-            if (sharedData) {
-                var current: ng.IPromise<void>;
-
-                this.promises.forEach((promise: KeyValuePair<string, ICrossingSettingTypesPromise>) => {
-                    if (promise.key === trigger) {
-                        if (!current) {
-                            current = promise.value(sharedData);
-                        } else {
-                            current = current.then<void>(() => promise.value(sharedData));
-                        }
-                    }
-                });
-
-                if (current) {
-                    return current;
-                }
-            }
+            var promise: ng.IPromise<void> = deferred.promise;
 
             deferred.resolve();
 
-            return deferred.promise;
+            if (sharedData) {
+                this.listeners.forEach((registeredPromise: KeyValuePair<string, ICrossingSettingTypesListener>) => {
+                    if (registeredPromise.key === trigger) {
+                        promise = promise.then<void>(() => registeredPromise.value(sharedData));
+                    }
+                });
+            }
+
+            return promise;
         }
     }
 

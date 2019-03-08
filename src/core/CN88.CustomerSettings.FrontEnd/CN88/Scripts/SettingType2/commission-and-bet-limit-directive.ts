@@ -32,7 +32,6 @@ namespace CustomerSetting.SettingType2 {
 
     class CommissionAndBetLimitDirective extends DefaultSettingTypeGroupingDirective {
         public static $inject: string[] = [
-            "$q",
             "st2ResourceService",
             "crossingSettingTypesServiceBus",
             "appConfigService",
@@ -84,7 +83,6 @@ namespace CustomerSetting.SettingType2 {
 
             if (scope.customerLevel === Level.member) {
                 this.crossingSettingTypesServiceBus.register("updateMemberSpreadGroup", (sharedData: any) => {
-                    var deferred: ng.IDeferred<void> = this.$q.defer<void>();
                     var newMemberGroupName: string = sharedData.newMemberGroup;
                     var memberSelectedSpreadGroupIndex: number = scope.availableCommissionGroups.indexOf(newMemberGroupName);
 
@@ -93,27 +91,20 @@ namespace CustomerSetting.SettingType2 {
 
                         commissionAndBetLimitItem.memberSpreadGroupIndex = memberSelectedSpreadGroupIndex;
                     });
-
-                    deferred.resolve();
-
-                    return deferred.promise;
                 });
             }
         };
 
-        private $q: ng.IQService;
         private resourceService: ResourceService;
         private crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus;
 
         constructor(
-            $q: ng.IQService,
             resourceService: ResourceService,
             crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus,
             appConfigService: AppConfigService,
             settingTypesSharedValuesService: SettingTypesSharedValuesService) {
             super(appConfigService, settingTypesSharedValuesService, commissionAndBetLimitItemFactory);
 
-            this.$q = $q;
             this.resourceService = resourceService;
             this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
         }
