@@ -1,4 +1,4 @@
-﻿/// <reference path="../../../libraries/Hash/hash.d.ts" />
+﻿/// <reference path="../../../Libraries/Cryptojs/cryptojs.d.ts" />
 /// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
 /// <reference path="../../core/models/setting-item.ts" />
@@ -76,7 +76,7 @@ namespace CustomerSetting.SettingType1 {
             if (this.isNew) {
                 var originalPassword: string = accountDetail.password;
 
-                accountDetail.password = originalPassword.encrypt(this.hashKey).hash();
+                accountDetail.password = originalPassword.encrypt(this.hashKey);
             }
 
             return accountDetail;
