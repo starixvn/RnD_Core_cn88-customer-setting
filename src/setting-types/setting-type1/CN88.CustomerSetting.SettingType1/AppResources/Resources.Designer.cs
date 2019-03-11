@@ -376,6 +376,15 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Credit is out of range..
+        /// </summary>
+        internal static string Msg_70025 {
+            get {
+                return ResourceManager.GetString("Msg_70025", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         internal static string Password {
@@ -466,6 +475,15 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         internal static string PasswordWrongRule {
             get {
                 return ResourceManager.GetString("PasswordWrongRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sportsbook.
+        /// </summary>
+        internal static string SportTypeName_1 {
+            get {
+                return ResourceManager.GetString("SportTypeName_1", resourceCulture);
             }
         }
         

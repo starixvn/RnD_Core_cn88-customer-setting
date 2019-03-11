@@ -10,6 +10,12 @@
     public class AccountDetailSettingItem<T> : SettingItemDefault
         where T : BasePTItem
     {
+        public AccountDetailSettingItem()
+        {
+            SportTypeId = 1;
+            BetTypeId = 1;
+        }
+
         public string Username { get; set; }
 
         public string Password { get; set; }

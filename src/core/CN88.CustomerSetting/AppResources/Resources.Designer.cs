@@ -106,11 +106,38 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Virtual Sports.
+        /// </summary>
+        public static string BetTypeName_1201_0 {
+            get {
+                return ResourceManager.GetString("BetTypeName_1201_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keno, Lottery.
+        /// </summary>
+        public static string BetTypeName_1501_0 {
+            get {
+                return ResourceManager.GetString("BetTypeName_1501_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 1 X 2, In-Play 1 X 2.
         /// </summary>
         public static string BetTypeName_5_0 {
             get {
                 return ResourceManager.GetString("BetTypeName_5_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number Game, Happy 5.
+        /// </summary>
+        public static string BetTypeName_81_0 {
+            get {
+                return ResourceManager.GetString("BetTypeName_81_0", resourceCulture);
             }
         }
         
@@ -201,6 +228,15 @@ namespace CN88.CustomerSetting.AppResources {
         public static string SettingTypeHasNoSettingItem {
             get {
                 return ResourceManager.GetString("SettingTypeHasNoSettingItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Non-Sport Products.
+        /// </summary>
+        public static string SportTypeName_9998 {
+            get {
+                return ResourceManager.GetString("SportTypeName_9998", resourceCulture);
             }
         }
         

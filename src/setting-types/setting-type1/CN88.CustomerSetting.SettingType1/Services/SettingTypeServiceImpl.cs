@@ -20,6 +20,7 @@
     using Fanex.Caching;
     using Fanex.Data.Repository;
     using Fanex.Logging;
+    using Fanex.RemotingRef;
 
     public class SettingTypeServiceImpl : SettingTypeServiceBase, SettingTypeService
     {
@@ -31,7 +32,7 @@
         private readonly PasswordService passwordService;
 
         public SettingTypeServiceImpl() :
-            this(null, null, null, null, null)
+            this(new SettingTypeResourceServiceImpl(new RemotingRefService()), null, null, null, null)
         { }
 
         internal SettingTypeServiceImpl(
@@ -51,12 +52,12 @@
             ISettingContext settingContext,
             CustomerSettingQuery query)
             => query.IsCreateNew
-                ? await GetAccountDetailForCreateNew(query).ConfigureAwait(false)
-                : await GetAccountDetailForEdit(query).ConfigureAwait(false);
+                ? await GetAccountDetailForCreateNew(query, settingContext.Language).ConfigureAwait(false)
+                : await GetAccountDetailForEdit(query, settingContext.Language).ConfigureAwait(false);
 
-        private async Task<SettingType> GetAccountDetailForEdit(CustomerSettingQuery query)
+        private async Task<SettingType> GetAccountDetailForEdit(CustomerSettingQuery query, string language)
         {
-            var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.CustomerId, query.ProductId, false).ConfigureAwait(false);
+            var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.CustomerId, query.ProductId, false, language).ConfigureAwait(false);
             var customerInfo = (await DynamicRepository.GetAsync<CustomerInfoDto>(new GetGeneralInfoCriteria(query.CustomerLevel.Value, query.CustomerId)).ConfigureAwait(false))
                 ?? throw new InvalidOperationException($"Not found customer id {query.CustomerId} level {query.CustomerLevel.DisplayName}");
 
@@ -85,9 +86,9 @@
             return CreateSettingType(settingItem);
         }
 
-        private async Task<SettingType> GetAccountDetailForCreateNew(CustomerSettingQuery query)
+        private async Task<SettingType> GetAccountDetailForCreateNew(CustomerSettingQuery query, string language)
         {
-            var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.UplineId, query.ProductId, true).ConfigureAwait(false);
+            var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.UplineId, query.ProductId, true, language).ConfigureAwait(false);
             var createCustomerInfo = await GetDefaultCreateCustomerInfo(query.CustomerLevel, query.UplineId).ConfigureAwait(false);
 
             settingItem.MaxCredit = createCustomerInfo.MaxCredit;
@@ -111,14 +112,14 @@
             };
 
         private async Task<AccountDetailSettingItem<BasePTItem>> GetAccountDetailSettingItem(
-            Level level, int custId, int productId, bool isCreateNew)
+            Level level, int custId, int productId, bool isCreateNew, string language)
         {
             if (level.IsMemberLevel())
             {
                 return new MemberAccountDetail();
             }
 
-            var settingItem = await GetAccountDetailSettingItem(level, custId, isCreateNew).ConfigureAwait(false);
+            var settingItem = await GetAccountDetailSettingItem(level, custId, isCreateNew, language).ConfigureAwait(false);
             var settingTypeConfig = (await GetSettingTypeConfig<AccountDetailSettingItem<BasePTItem>>(productId, SettingTypeId).ConfigureAwait(false)).FirstOrDefault();
             if (settingTypeConfig != null)
             {
@@ -131,22 +132,23 @@
         private async Task<AccountDetailSettingItem<BasePTItem>> GetAccountDetailSettingItem(
             Level level,
             int custId,
-            bool isCreateNew)
+            bool isCreateNew,
+            string language)
         {
             AccountDetailSettingItem<BasePTItem> settingItem;
 
             switch (level.Value)
             {
                 case Level.SuperLevelId:
-                    settingItem = await GetSuperAccountDetail(custId, isCreateNew).ConfigureAwait(false);
+                    settingItem = await GetSuperPTItems(custId, isCreateNew).ConfigureAwait(false);
                     break;
 
                 case Level.MasterLevelId:
-                    settingItem = await GetMasterAccountDetail(custId, isCreateNew).ConfigureAwait(false);
+                    settingItem = await GetMasterPTItems(custId, isCreateNew).ConfigureAwait(false);
                     break;
 
                 default:
-                    settingItem = await GetAgentAccountDetail(custId, isCreateNew).ConfigureAwait(false);
+                    settingItem = await GetAgentPTItems(custId, isCreateNew).ConfigureAwait(false);
                     break;
             }
 
@@ -164,10 +166,15 @@
 
             settingItem.AdjustPTForQuery(isCreateNew);
 
+            foreach (var ptItem in settingItem.PTItems)
+            {
+                ptItem.SportTypeName = ResourceService.GetSportTypeName(ptItem.SportTypeId, language);
+            }
+
             return settingItem;
         }
 
-        private async Task<AccountDetailSettingItem<BasePTItem>> GetSuperAccountDetail(int custId, bool isCreateNew)
+        private async Task<AccountDetailSettingItem<BasePTItem>> GetSuperPTItems(int custId, bool isCreateNew)
         {
             var pTItems = await DynamicRepository.FetchAsync<SuperPTItem>(new GetPTSettingCriteria(Level.Super.Value, custId, isCreateNew)).ConfigureAwait(false);
 
@@ -177,7 +184,7 @@
             };
         }
 
-        private async Task<AccountDetailSettingItem<BasePTItem>> GetMasterAccountDetail(int custId, bool isCreateNew)
+        private async Task<AccountDetailSettingItem<BasePTItem>> GetMasterPTItems(int custId, bool isCreateNew)
         {
             var pTItems = await DynamicRepository.FetchAsync<MasterPTItem>(new GetPTSettingCriteria(Level.Master.Value, custId, isCreateNew)).ConfigureAwait(false);
 
@@ -187,7 +194,7 @@
             };
         }
 
-        private async Task<AccountDetailSettingItem<BasePTItem>> GetAgentAccountDetail(int custId, bool isCreateNew)
+        private async Task<AccountDetailSettingItem<BasePTItem>> GetAgentPTItems(int custId, bool isCreateNew)
         {
             var pTItems = await DynamicRepository.FetchAsync<AgentPTItem>(new GetPTSettingCriteria(Level.Agent.Value, custId, isCreateNew)).ConfigureAwait(false);
 

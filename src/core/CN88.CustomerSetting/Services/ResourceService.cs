@@ -28,7 +28,7 @@
             this.remotingRef = remotingRef ?? new RemotingRefService();
         }
 
-        public string GetProductName(byte productId, string language)
+        public virtual string GetProductName(byte productId, string language)
         {
             if (productId <= 0)
             {
@@ -46,7 +46,7 @@
                 : resourceData;
         }
 
-        public string GetSportTypeName(int sportTypeId, string language)
+        public virtual string GetSportTypeName(int sportTypeId, string language)
         {
             if (sportTypeId <= 0)
             {
@@ -67,7 +67,7 @@
                 : sportTypeName;
         }
 
-        public string GetBetTypeName(int betTypeId, bool isLive, string language)
+        public virtual string GetBetTypeName(int betTypeId, bool isLive, string language)
         {
             if (betTypeId <= 0)
             {
@@ -91,7 +91,7 @@
                 : $"{liveText}{betTypeName}";
         }
 
-        public string GetResourceData(string refId, string resourceId, string language)
+        public virtual string GetResourceData(string refId, string resourceId, string language)
         {
             if (string.IsNullOrEmpty(refId) || string.IsNullOrEmpty(resourceId))
             {

@@ -186,4 +186,16 @@
   <data name="Live" xml:space="preserve">
     <value>In-Play </value>
   </data>
+  <data name="BetTypeName_81_0" xml:space="preserve">
+    <value>Number Game, Happy 5</value>
+  </data>
+  <data name="BetTypeName_1501_0" xml:space="preserve">
+    <value>Keno, Lottery</value>
+  </data>
+  <data name="BetTypeName_1201_0" xml:space="preserve">
+    <value>Virtual Sports</value>
+  </data>
+  <data name="SportTypeName_9998" xml:space="preserve">
+    <value>Non-Sport Products</value>
+  </data>
 </root>

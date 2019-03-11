@@ -268,4 +268,10 @@ Notes: your password is cAsE sEnSiTiVe</value>
   <data name="Msg_40041" xml:space="preserve">
     <value>Invalid Headline</value>
   </data>
+  <data name="SportTypeName_1" xml:space="preserve">
+    <value>Sportsbook</value>
+  </data>
+  <data name="Msg_70025" xml:space="preserve">
+    <value>Credit is out of range.</value>
+  </data>
 </root>
