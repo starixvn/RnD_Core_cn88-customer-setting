@@ -88,6 +88,15 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New Credit is out of range, please refresh the form and try again..
+        /// </summary>
+        internal static string InvalidCredit {
+            get {
+                return ResourceManager.GetString("InvalidCredit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max.
         /// </summary>
         internal static string Max {
@@ -376,7 +385,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Credit is out of range..
+        ///   Looks up a localized string similar to Credit must be positive..
         /// </summary>
         internal static string Msg_70025 {
             get {

@@ -73,18 +73,30 @@
             settingItem.MinCredit = customerInfo.MinCredit;
             settingItem.UplineUsername = DecodeHtml(customerInfo.HeadlineUsername);
 
-            if (query.CustomerLevel.IsMemberLevel()
-                && !string.IsNullOrEmpty(customerInfo.UGroup))
-            {
-                settingItem.SpreadGroup = (await GetSpreadGroups().ConfigureAwait(false))
-                    .FirstOrDefault(group =>
-#pragma warning disable S1449 // Culture should be specified for "string" operations
-                        string.Compare(customerInfo.UGroup, group.UGroup, true) == 0);
-#pragma warning restore S1449 // Culture should be specified for "string" operations
-            }
+            await GetMemberInfo(query, settingItem, customerInfo).ConfigureAwait(false);
 
             return CreateSettingType(settingItem);
         }
+
+        private async Task GetMemberInfo(CustomerSettingQuery query, AccountDetailSettingItem<BasePTItem> settingItem, CustomerInfoDto customerInfo)
+        {
+            if (query.CustomerLevel.IsMemberLevel())
+            {
+                if (!string.IsNullOrEmpty(customerInfo.UGroup))
+                {
+                    settingItem.SpreadGroup = (await GetSpreadGroups().ConfigureAwait(false))
+                        .FirstOrDefault(group =>
+#pragma warning disable S1449 // Culture should be specified for "string" operations
+                        string.Compare(customerInfo.UGroup, group.UGroup, true) == 0);
+#pragma warning restore S1449 // Culture should be specified for "string" operations
+                }
+
+                settingItem.MinCredit = await GetMemberUsedCredit(query.CustomerId).ConfigureAwait(false);
+            }
+        }
+
+        private async Task<decimal> GetMemberUsedCredit(int custId)
+            => await DynamicRepository.GetAsync<decimal>(new GetMemberUsedCreditCriteria(custId)).ConfigureAwait(false);
 
         private async Task<SettingType> GetAccountDetailForCreateNew(CustomerSettingQuery query, string language)
         {
@@ -407,6 +419,18 @@
             SettingType settingType,
             ISettingContext settingContext)
         {
+            if(command.Setting.CustomerLevel.IsMemberLevel()
+                && (await GetMemberUsedCredit(command.Setting.CustomerId).ConfigureAwait(false)) > settingItem.Credit)
+            {
+                return new SettingResult(
+                Result.SystemError.Code,
+                Resources.InvalidCredit,
+                Result.SystemError.MsgType,
+                command.Setting.CustomerId,
+                settingType.Id,
+                settingType.Name);
+            }
+
             var updateCommand = new UpdateCustomerInfoCommand
             {
                 RoleId = command.Setting.CustomerLevel.Value,

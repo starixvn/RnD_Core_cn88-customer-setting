@@ -80,6 +80,7 @@
                     .ConfigureAwait(false);
 
             return customerSettingTypes
+                .Where(settingType => settingType.SettingItems.Any())
                 .OrderBy(settingType => settingType.DisplayOrder)
                 .ToList();
         }

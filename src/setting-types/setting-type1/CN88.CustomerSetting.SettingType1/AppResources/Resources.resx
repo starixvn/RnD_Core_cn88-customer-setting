@@ -272,6 +272,9 @@ Notes: your password is cAsE sEnSiTiVe</value>
     <value>Sportsbook</value>
   </data>
   <data name="Msg_70025" xml:space="preserve">
-    <value>Credit is out of range.</value>
+    <value>Credit must be positive.</value>
+  </data>
+  <data name="InvalidCredit" xml:space="preserve">
+    <value>New Credit is out of range, please refresh the form and try again.</value>
   </data>
 </root>
