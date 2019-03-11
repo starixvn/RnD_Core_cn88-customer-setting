@@ -30,8 +30,7 @@
         "MasterPT": "Master Agent Possess",
         "AgentPT": "Agent Possess",
         "MinAllowed": "Min. Allowed:",
-        "MaxAllowed": "Max. Allowed:",
-        "NoChange": "No Change"
+        "MaxAllowed": "Max. Allowed:"
     };
 
     labels["zh-cn"] = {
