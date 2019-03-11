@@ -1,11 +1,13 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Models.PTItems
 {
-    public class MasterPTItem : BasePTItem
+    using CN88.CustomerSetting.Models;
+
+    public class MasterPTItem : SettingItemDefault
     {
         private const string PTXmlFormat
             = "<PT {0} SuperPT=\"{1}\" />";
 
-        public decimal? SuperPT { get; set; }
+        public decimal SuperPT { get; set; }
 
         public decimal CurrentSuperPT { get; set; }
 
@@ -17,24 +19,6 @@
             => string.Format(
                 PTXmlFormat,
                 base.ToXml(),
-                SuperPT.HasValue ? SuperPT.Value : CurrentSuperPT);
-
-        public override void AdjustPTForQuery(bool isCreateNew)
-        {
-            if (isCreateNew)
-            {
-                SuperPT = 0;
-            }
-            else
-            {
-                if (SuperPT.HasValue && CurrentSuperPT == SuperPT.Value)
-                {
-                    SuperPT = null;
-                }
-            }
-        }
-
-        public override bool IsNoChangePT()
-            => SuperPT == null;
+                SuperPT);
     }
 }

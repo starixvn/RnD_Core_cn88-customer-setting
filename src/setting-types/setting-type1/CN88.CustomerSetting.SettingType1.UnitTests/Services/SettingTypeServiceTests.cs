@@ -100,7 +100,7 @@
             var accountDetailItem = (await settingTypeServiceImpl
                 .GetCustomerSettingType(settingContext, settingQuery))
                 .SettingItems
-                .FirstOrDefault() as AccountDetailSettingItem<BasePTItem>;
+                .FirstOrDefault() as AccountDetailSettingItem<SettingItemDefault>;
 
             Assert.AreEqual("UplineUsername", accountDetailItem.UplineUsername);
             Assert.AreEqual(1111, accountDetailItem.MinCredit);
@@ -125,7 +125,7 @@
             var accountDetailItem = (await settingTypeServiceImpl
                 .GetCustomerSettingType(settingContext, settingQuery))
                 .SettingItems
-                .FirstOrDefault() as AccountDetailSettingItem<BasePTItem>;
+                .FirstOrDefault() as AccountDetailSettingItem<SettingItemDefault>;
 
             Assert.AreEqual(2, accountDetailItem.SpreadGroups.Count());
             Assert.AreEqual("CNA", accountDetailItem.SpreadGroups.ElementAt(0).GroupName);
@@ -180,7 +180,7 @@
                 settingContext,
                 settingQuery))
                 .SettingItems
-                .FirstOrDefault() as AccountDetailSettingItem<BasePTItem>;
+                .FirstOrDefault() as AccountDetailSettingItem<SettingItemDefault>;
 
             Assert.AreEqual(123, accountDetailItem.Credit);
             Assert.AreEqual(1111, accountDetailItem.MinCredit);
@@ -210,7 +210,7 @@
             var accountDetailItem = (await settingTypeServiceImpl
                 .GetCustomerSettingType(settingContext, settingQuery))
                 .SettingItems
-                .FirstOrDefault() as AccountDetailSettingItem<BasePTItem>;
+                .FirstOrDefault() as AccountDetailSettingItem<SettingItemDefault>;
 
             Assert.AreEqual("CNB", accountDetailItem.SpreadGroup.GroupName);
         }
@@ -232,7 +232,7 @@
             var accountDetailItem = (await settingTypeServiceImpl
                 .GetCustomerSettingType(settingContext, settingQuery))
                 .SettingItems
-                .FirstOrDefault() as AccountDetailSettingItem<BasePTItem>;
+                .FirstOrDefault() as AccountDetailSettingItem<SettingItemDefault>;
 
             Assert.AreEqual(3, accountDetailItem.IntervalValue);
         }
@@ -450,9 +450,9 @@
         private static AccountDetailSettingType StubSuperAccountDetailSettingType()
             => new AccountDetailSettingType
             {
-                SettingItems = new List<AccountDetailSettingItem<BasePTItem>>
+                SettingItems = new List<AccountDetailSettingItem<SettingItemDefault>>
                 {
-                     new AccountDetailSettingItem<BasePTItem>
+                     new AccountDetailSettingItem<SettingItemDefault>
                     {
                         Currency = new Currency
                         {
@@ -486,9 +486,9 @@
         private static AccountDetailSettingType StubMasterAccountDetailSettingType()
             => new AccountDetailSettingType
             {
-                SettingItems = new List<AccountDetailSettingItem<BasePTItem>>
+                SettingItems = new List<AccountDetailSettingItem<SettingItemDefault>>
                 {
-                     new AccountDetailSettingItem<BasePTItem>
+                     new AccountDetailSettingItem<SettingItemDefault>
                     {
                         FirstName = "MasterName",
                         Credit = 3434,
@@ -511,9 +511,9 @@
         private static AccountDetailSettingType StubAgentAccountDetailSettingType()
             => new AccountDetailSettingType
             {
-                SettingItems = new List<AccountDetailSettingItem<BasePTItem>>
+                SettingItems = new List<AccountDetailSettingItem<SettingItemDefault>>
                 {
-                     new AccountDetailSettingItem<BasePTItem>
+                     new AccountDetailSettingItem<SettingItemDefault>
                     {
                         FirstName = "AgentName",
                         Credit = 3434,
@@ -537,9 +537,9 @@
         private static AccountDetailSettingType StubMemberAccountDetailSettingType()
             => new AccountDetailSettingType
             {
-                SettingItems = new List<AccountDetailSettingItem<BasePTItem>>
+                SettingItems = new List<AccountDetailSettingItem<SettingItemDefault>>
                 {
-                     new AccountDetailSettingItem<BasePTItem>
+                     new AccountDetailSettingItem<SettingItemDefault>
                     {
                         FirstName = "AgentName",
                         Credit = 3434,
@@ -688,14 +688,14 @@
 
         private void StubIntervalValue()
         {
-            IEnumerable<AccountDetailSettingItem<BasePTItem>> accountDetailSettingItems = new List<AccountDetailSettingItem<BasePTItem>>
+            IEnumerable<AccountDetailSettingItem<SettingItemDefault>> accountDetailSettingItems = new List<AccountDetailSettingItem<SettingItemDefault>>
             {
-                new AccountDetailSettingItem<BasePTItem> { IntervalValue = 3 }
+                new AccountDetailSettingItem<SettingItemDefault> { IntervalValue = 3 }
             };
 
             cacheService.GetOrSetAsync(
                        Arg.Any<string>(),
-                       Arg.Any<Func<IEnumerable<AccountDetailSettingItem<BasePTItem>>>>(),
+                       Arg.Any<Func<IEnumerable<AccountDetailSettingItem<SettingItemDefault>>>>(),
                        Arg.Any<CacheItemOptions>())
                        .Returns(accountDetailSettingItems);
         }
@@ -731,7 +731,7 @@
                 settingContext,
                 settingQuery);
 
-            var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem<BasePTItem>;
+            var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem<SettingItemDefault>;
 
             Assert.IsFalse(settingItem.IsPTReadOnly);
             Assert.AreEqual(new DateTime(2000, 11, 11), settingItem.PTEffectiveTime);

@@ -1,13 +1,14 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Models.PTItems
 {
+    using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Results;
 
-    public class SuperPTItem : BasePTItem
+    public class SuperPTItem : SettingItemDefault
     {
         private const string PTXmlFormat
             = "<PT {0} MinPT=\"{1}\" MaxPT=\"{2}\" />";
 
-        public decimal? SuperMinPT { get; set; }
+        public decimal SuperMinPT { get; set; }
 
         public decimal CurrentSuperMinPT { get; set; }
 
@@ -15,7 +16,7 @@
 
         public decimal MaxSuperMinPT { get; set; }
 
-        public decimal? SuperMaxPT { get; set; }
+        public decimal SuperMaxPT { get; set; }
 
         public decimal CurrentSuperMaxPT { get; set; }
 
@@ -27,8 +28,8 @@
             => string.Format(
                 PTXmlFormat,
                 base.ToXml(),
-                SuperMinPT.HasValue ? SuperMinPT.Value : CurrentSuperMinPT,
-                SuperMaxPT.HasValue ? SuperMaxPT.Value : CurrentSuperMaxPT);
+                SuperMinPT,
+                SuperMaxPT);
 
         public override IResult Validate()
         {
@@ -39,29 +40,5 @@
 
             return base.Validate();
         }
-
-        public override void AdjustPTForQuery(bool isCreateNew)
-        {
-            if (isCreateNew)
-            {
-                SuperMinPT = 0;
-                SuperMaxPT = 0;
-            }
-            else
-            {
-                if (SuperMinPT.HasValue && CurrentSuperMinPT == SuperMinPT.Value)
-                {
-                    SuperMinPT = null;
-                }
-
-                if (SuperMaxPT.HasValue && CurrentSuperMaxPT == SuperMaxPT.Value)
-                {
-                    SuperMaxPT = null;
-                }
-            }
-        }
-
-        public override bool IsNoChangePT()
-            => SuperMinPT == null && SuperMaxPT == null;
     }
 }

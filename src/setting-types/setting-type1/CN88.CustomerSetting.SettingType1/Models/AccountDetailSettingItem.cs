@@ -5,10 +5,9 @@
     using System.Linq;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Results;
-    using CN88.CustomerSetting.SettingType1.Models.PTItems;
 
     public class AccountDetailSettingItem<T> : SettingItemDefault
-        where T : BasePTItem
+        where T : SettingItemDefault
     {
         public AccountDetailSettingItem()
         {
@@ -69,27 +68,9 @@
 
         public override string ToXml()
             => string.Join(string.Empty, PTItems.Select(item => item.ToXml()));
-
-        public virtual void AdjustPTForQuery(bool isCreateNew)
-        {
-            if (PTItems == null || !PTItems.Any())
-            {
-                return;
-            }
-
-            foreach (var item in PTItems)
-            {
-                item.AdjustPTForQuery(isCreateNew);
-            }
-        }
-
-        public virtual bool IsNoChangePT()
-            => PTItems == null 
-            || !PTItems.Any() 
-            || PTItems.All(item => item.IsNoChangePT());
     }
 
-    public class MemberAccountDetail : AccountDetailSettingItem<BasePTItem>
+    public class MemberAccountDetail : AccountDetailSettingItem<SettingItemDefault>
     {
         public override IResult Validate()
             => Result.Success;
