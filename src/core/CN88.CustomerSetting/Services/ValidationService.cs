@@ -77,6 +77,8 @@
                 else
                 {
                     await CheckBelonging(actor, uplineId).ConfigureAwait(false);
+
+                    await CheckUplineLevel(uplineId, customerLevel).ConfigureAwait(false);
                 }
             }
             catch (CustomerSettingException customerSettingException)
@@ -138,12 +140,25 @@
         /// <param name="customerLevel"></param>
         private async Task CheckCustomerLevel(int customerId, Level customerLevel)
         {
-            var actualCustomerLevel = await dynamicRepository.GetAsync<byte>(new CustomerLevelQueryCriteria
+            byte actualCustomerLevel = await GetCustomerLevel(customerId).ConfigureAwait(false);
+
+            if (actualCustomerLevel != customerLevel.Value)
+            {
+                throw new CustomerSettingException(Result.AccessDenied.Message);
+            }
+        }
+
+        private async Task<byte> GetCustomerLevel(int customerId)
+            => await dynamicRepository.GetAsync<byte>(new CustomerLevelQueryCriteria
             {
                 CustId = customerId
             }).ConfigureAwait(false);
 
-            if (actualCustomerLevel != customerLevel.Value)
+        private async Task CheckUplineLevel(int uplineId, Level customerLevel)
+        {
+            byte actualUplineLevel = await GetCustomerLevel(uplineId).ConfigureAwait(false);
+
+            if(actualUplineLevel <= customerLevel.Value)
             {
                 throw new CustomerSettingException(Result.AccessDenied.Message);
             }
