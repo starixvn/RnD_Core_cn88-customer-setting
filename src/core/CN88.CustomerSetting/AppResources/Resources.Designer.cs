@@ -295,6 +295,15 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value must be positive.
+        /// </summary>
+        public static string ValuePositive {
+            get {
+                return ResourceManager.GetString("ValuePositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You are not authorized on this function!.
         /// </summary>
         public static string YouAreNotAuthorized {

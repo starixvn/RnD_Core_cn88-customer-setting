@@ -1,6 +1,7 @@
 ﻿namespace CN88.CustomerSetting.SettingType1.Models.PTItems
 {
     using CN88.CustomerSetting.Models;
+    using CN88.CustomerSetting.Models.Results;
 
     public class AgentPTItem : SettingItemDefault
     {
@@ -26,6 +27,16 @@
         public decimal MinAgentPT { get; set; }
 
         public decimal MaxAgentPT { get; set; }
+
+        public override IResult Validate()
+        {
+            if (MasterPT < 0 || AgentPT < 0)
+            {
+                return Result.CreateErrorResult(CustomerSetting.AppResources.Resources.ValuePositive);
+            }
+
+            return base.Validate();
+        }
 
         public override string ToXml()
             => string.Format(

@@ -198,4 +198,7 @@
   <data name="SportTypeName_9998" xml:space="preserve">
     <value>Non-Sport Products</value>
   </data>
+  <data name="ValuePositive" xml:space="preserve">
+    <value>Value must be positive</value>
+  </data>
 </root>

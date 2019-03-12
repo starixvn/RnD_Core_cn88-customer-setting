@@ -33,6 +33,11 @@
 
         public override IResult Validate()
         {
+            if(SuperMinPT < 0 || SuperMaxPT < 0)
+            {
+                return Result.CreateErrorResult(CustomerSetting.AppResources.Resources.ValuePositive);
+            }
+
             if (SuperMinPT > SuperMaxPT)
             {
                 return Result.CreateErrorResult(AppResources.Resources.Msg_30009);

@@ -42,7 +42,7 @@
         {
             const HttpStatusCode code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
-            var result = JsonConvert.SerializeObject(Result.CreateErrorResult(exception.Message), serializerSettings);
+            var result = JsonConvert.SerializeObject(Result.SystemError, serializerSettings);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);

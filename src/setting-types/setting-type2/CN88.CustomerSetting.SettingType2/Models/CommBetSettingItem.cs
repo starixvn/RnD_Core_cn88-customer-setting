@@ -4,6 +4,7 @@
     using System.Linq;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Enumerations;
+    using CN88.CustomerSetting.Models.Results;
 
     public class CommBetSettingItem : SettingItemDefault
     {
@@ -37,6 +38,18 @@
         public decimal MaxComm { get; set; }
 
         public decimal MaxDiscount { get; set; }
+
+        public override IResult Validate()
+        {
+            if (MaxBet < 0
+                || MaxPerEvent < 0
+                || CommissionGroups.Any(comm => comm.Value < 0))
+            {
+                return Result.CreateErrorResult(CustomerSetting.AppResources.Resources.ValuePositive);
+            }
+
+            return base.Validate();
+        }
 
         public string ToCommXml(IEnumerable<CommTemplate> commTemplates, Level level)
             => level.IsMemberLevel()
