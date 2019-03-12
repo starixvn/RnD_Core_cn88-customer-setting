@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
+/// <reference path="../../core/helpers.ts" />
 /// <reference path="account-detail-setting-item.ts" />
 /// <reference path="spread-group.ts" />
 
@@ -9,24 +10,21 @@ namespace CustomerSetting.SettingType1 {
         public spreadGroups: ISpreadGroup[];
         public spreadGroup: ISpreadGroup;
 
-        constructor();
-        constructor(accountDetail: any);
-        constructor(accountDetail: any, backup: boolean)
-        constructor(accountDetail: any, backup: boolean, isNew: boolean)
-        constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level)
-        constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string)
-        constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
+        constructor()
+        constructor(accountDetail: any)
+        constructor(accountDetail: any, isNew: boolean)
+        constructor(accountDetail: any, isNew: boolean, customerLevel: Level)
+        constructor(accountDetail: any, isNew: boolean, customerLevel: Level, hashKey: string)
+        constructor(accountDetail?: any, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
             if (accountDetail) {
-                super(accountDetail, backup, isNew, customerLevel, hashKey);
+                super(accountDetail, isNew, customerLevel, hashKey);
 
                 this.usernameSuffixes = accountDetail.usernameSuffixes;
                 this.spreadGroups = accountDetail.spreadGroups;
                 this.spreadGroup = accountDetail.spreadGroup;
             }
 
-            this.ignoredProperties = this.ignoredProperties.concat([
-                "usernameSuffixes",
-                "spreadGroups"]);
+            this.ignoredProperties = this.ignoredProperties.concat(["usernameSuffixes", "spreadGroups"]);
 
             if (!this.isNew) {
                 this.ignoredProperties.push("spreadGroup");
@@ -80,7 +78,7 @@ namespace CustomerSetting.SettingType1 {
         }
 
         private validateCredit(): boolean {
-            if (this.credit === undefined || this.credit === null) {
+            if (!isNumber(this.credit)) {
                 this.validationState = new ValidationResult("RequiredField", "credit");
 
                 return false;

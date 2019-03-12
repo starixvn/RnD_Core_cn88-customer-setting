@@ -30,10 +30,10 @@ namespace CustomerSetting {
         protected ignoredProperties: string[];
 
         constructor()
-        constructor(settingItem: any, backup: boolean)
-        constructor(settingItem: any, backup: boolean, isNew: boolean)
-        constructor(settingItem: any, backup: boolean, isNew: boolean, customerLevel: Level)
-        constructor(settingItem?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null) {
+        constructor(settingItem: any)
+        constructor(settingItem: any, isNew: boolean)
+        constructor(settingItem: any, isNew: boolean, customerLevel: Level)
+        constructor(settingItem?: any, isNew: boolean = false, customerLevel: Level = null) {
             this.isNew = isNew;
             this.customerLevel = customerLevel;
 
@@ -51,9 +51,7 @@ namespace CustomerSetting {
                     this.isLive = settingItem.isLive;
                 }
 
-                if (backup) {
-                    this.oldSetting = clone(settingItem);
-                }
+                this.oldSetting = clone(settingItem);
             }
 
             this.resetValidationState();

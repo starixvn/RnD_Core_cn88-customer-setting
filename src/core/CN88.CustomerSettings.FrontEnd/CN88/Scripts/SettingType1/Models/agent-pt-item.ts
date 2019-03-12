@@ -3,12 +3,12 @@
 
 namespace CustomerSetting.SettingType1 {
     export class AgentPTItem extends PTItem {
-        public masterPT: number;
         public currentMasterPT: number;
+        public masterPT: number;
         public minMasterPT: number;
         public maxMasterPT: number;
-        public agentPT: number;
         public currentAgentPT: number;
+        public agentPT: number;
         public minAgentPT: number;
         public maxAgentPT: number;
         public minAllowedPT: number;
@@ -16,60 +16,51 @@ namespace CustomerSetting.SettingType1 {
 
         constructor(agentPTItem: any, isPTReadOnly: boolean) {
             if (agentPTItem) {
-                super(agentPTItem, isPTReadOnly);
+                super(agentPTItem);
 
                 this.currentMasterPT = agentPTItem.currentMasterPT;
+                this.masterPT = agentPTItem.masterPT;
                 this.minMasterPT = agentPTItem.minMasterPT;
                 this.maxMasterPT = agentPTItem.maxMasterPT;
                 this.currentAgentPT = agentPTItem.currentAgentPT;
+                this.agentPT = agentPTItem.agentPT;
                 this.minAgentPT = agentPTItem.minAgentPT;
                 this.maxAgentPT = agentPTItem.maxAgentPT;
                 this.minAllowedPT = agentPTItem.minAllowedPT;
                 this.maxAllowedPT = agentPTItem.maxAllowedPT;
-
-                if (isNumber(agentPTItem.masterPT)) {
-                    this.masterPT = agentPTItem.masterPT;
-                }
-
-                if (isNumber(agentPTItem.agentPT)) {
-                    this.agentPT = agentPTItem.agentPT;
-                }
             }
 
-            this.ignoredProperties.push("minMasterPT");
-            this.ignoredProperties.push("maxMasterPT");
-            this.ignoredProperties.push("minAgentPT");
-            this.ignoredProperties.push("maxAgentPT");
-            this.ignoredProperties.push("minAllowedPT");
-            this.ignoredProperties.push("maxAllowedPT");
+            this.ignoredProperties = this.ignoredProperties.concat([
+                "minMasterPT",
+                "maxMasterPT",
+                "minAgentPT",
+                "maxAgentPT",
+                "minAllowedPT",
+                "maxAllowedPT"]);
 
-            if (this.isPTReadOnly) {
-                this.ignoredProperties.push("currentMasterPT");
-                this.ignoredProperties.push("masterPT");
-                this.ignoredProperties.push("currentAgentPT");
-                this.ignoredProperties.push("agentPT");
+            if (isPTReadOnly) {
+                this.ignoredProperties = this.ignoredProperties.concat([
+                    "currentMasterPT",
+                    "masterPT",
+                    "currentAgentPT",
+                    "agentPT"]);
             }
         }
 
         public validate(): boolean {
-            if (!this.isPTReadOnly) {
-                if (isNumber(this.masterPT) && !this.validateMasterPT()) {
-                    return false;
-                }
+            if (!this.validateMasterPT()) {
+                return false;
+            }
 
-                if (isNumber(this.agentPT) && !this.validateAgentPT()) {
-                    return false;
-                }
+            if (!this.validateAgentPT()) {
+                return false;
+            }
 
-                var actualMasterPT = this.masterPT || this.currentMasterPT;
-                var actualAgentPT = this.agentPT || this.currentAgentPT;
+            if ((this.masterPT + this.agentPT > this.maxAllowedPT) || (this.masterPT + this.agentPT < this.minAllowedPT)) {
+                this.validationState = new ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minAllowedPT, this.maxAllowedPT]);
+                this.validationState.addAffectedField("agentPT");
 
-                if ((actualMasterPT + actualAgentPT > this.maxAllowedPT) || (actualMasterPT + actualAgentPT < this.minAllowedPT)) {
-                    this.validationState = new ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minAllowedPT, this.maxAllowedPT]);
-                    this.validationState.addAffectedField("agentPT");
-
-                    return false;
-                }
+                return false;
             }
 
             this.resetValidationState();
@@ -78,6 +69,12 @@ namespace CustomerSetting.SettingType1 {
         }
 
         private validateMasterPT(): boolean {
+            if (!isNumber(this.masterPT)) {
+                this.validationState = new ValidationResult("MasterPTIsOutOfRange", "masterPT");
+
+                return false;
+            }
+
             if (this.masterPT < this.minMasterPT) {
                 this.validationState = new ValidationResult("MasterPTMustBeGreaterThanOrEqualTo", "masterPT", [this.maxMasterPT]);
 
@@ -94,6 +91,12 @@ namespace CustomerSetting.SettingType1 {
         }
 
         private validateAgentPT(): boolean {
+            if (!isNumber(this.agentPT)) {
+                this.validationState = new ValidationResult("AgentPTIsOutOfRange", "agentPT");
+
+                return false;
+            }
+
             if (this.agentPT < this.minAgentPT) {
                 this.validationState = new ValidationResult("AgentPTMustBeGreaterThanOrEqualTo", "agentPT", [this.maxAgentPT]);
 

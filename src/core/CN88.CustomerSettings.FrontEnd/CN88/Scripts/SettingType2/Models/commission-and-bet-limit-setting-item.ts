@@ -1,6 +1,7 @@
 ﻿/// <reference path="../../core/models/enums/level.ts" />
 /// <reference path="../../core/models/result.ts" />
 /// <reference path="../../core/models/setting-item.ts" />
+/// <reference path="../../core/helpers.ts" />
 /// <reference path="commission-group.ts" />
 /// <reference path="layout-type.ts" />
 
@@ -17,13 +18,12 @@ namespace CustomerSetting.SettingType2 {
         public mappedCommissionGroups: ICommissionGroup[];
         public memberSpreadGroupIndex: number;
 
-        constructor();
-        constructor(settingType2Item: any);
-        constructor(settingType2Item: any, backup: boolean)
-        constructor(settingType2Item: any, backup: boolean, isNew: boolean)
-        constructor(settingType2Item: any, backup: boolean, isNew: boolean, customerLevel: Level)
-        constructor(settingType2Item?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null) {
-            super(settingType2Item, backup, isNew, customerLevel);
+        constructor()
+        constructor(settingType2Item: any)
+        constructor(settingType2Item: any, isNew: boolean)
+        constructor(settingType2Item: any, isNew: boolean, customerLevel: Level)
+        constructor(settingType2Item?: any, isNew: boolean = false, customerLevel: Level = null) {
+            super(settingType2Item, isNew, customerLevel);
 
             if (settingType2Item) {
                 this.commissionGroups = settingType2Item.commissionGroups;
@@ -39,14 +39,13 @@ namespace CustomerSetting.SettingType2 {
                 this.memberSpreadGroupIndex = 0;
             }
 
-            this.ignoredProperties.push("minMaxBet");
-            this.ignoredProperties.push("maxMaxBet");
-            this.ignoredProperties.push("minMaxPerEvent");
-            this.ignoredProperties.push("maxMaxPerEvent");
-            this.ignoredProperties.push("mappedCommissionGroups");
-            this.ignoredProperties.push("memberSpreadGroupIndex");
-
-            this.resetValidationState();
+            this.ignoredProperties = this.ignoredProperties.concat([
+                "minMaxBet",
+                "maxMaxBet",
+                "minMaxPerEvent",
+                "maxMaxPerEvent",
+                "mappedCommissionGroups",
+                "memberSpreadGroupIndex"]);
         }
 
         public toJson(): any {
@@ -104,15 +103,28 @@ namespace CustomerSetting.SettingType2 {
         }
 
         private validateCommission(): boolean {
-            this.mappedCommissionGroups.forEach((commissionGroup: ICommissionGroup, index: number) => {
-                if (commissionGroup.value > commissionGroup.maxValue || commissionGroup.value < commissionGroup.minValue) {
-                    this.validationState = new ValidationResult("CommissionIsOutOfRange", "commissionGroups-" + index);
+            var isValid: boolean = true;
+            var index: number = 0;
+            var commissionGroup: ICommissionGroup;
 
-                    return false;
+            if (this.mappedCommissionGroups.length > 0) {
+                while (isValid && index < this.mappedCommissionGroups.length) {
+                    commissionGroup = this.mappedCommissionGroups[index];
+
+                    if (commissionGroup
+                        && (
+                            !isNumber(commissionGroup.value)
+                            || commissionGroup.value > commissionGroup.maxValue
+                            || commissionGroup.value < commissionGroup.minValue)) {
+                        this.validationState = new ValidationResult("CommissionIsOutOfRange", "commissionGroups-" + index);
+                        isValid = false;
+                    }
+
+                    index++;
                 }
-            });
+            }
 
-            return true;
+            return isValid;
         }
 
         private validateBetLimit(): boolean {

@@ -1,68 +1,60 @@
 ﻿/// <reference path="../../core/models/result.ts" />
+/// <reference path="../../core/helpers.ts" />
 /// <reference path="pt-item.ts" />
 
 namespace CustomerSetting.SettingType1 {
     export class SuperPTItem extends PTItem {
-        public superMinPT: number;
         public currentSuperMinPT: number;
+        public superMinPT: number;
         public minSuperMinPT: number;
         public maxSuperMinPT: number;
-        public superMaxPT: number;
         public currentSuperMaxPT: number;
+        public superMaxPT: number;
         public minSuperMaxPT: number;
         public maxSuperMaxPT: number;
 
         constructor(superPTItem: any, isPTReadOnly: boolean) {
             if (superPTItem) {
-                super(superPTItem, isPTReadOnly);
+                super(superPTItem);
 
                 this.currentSuperMinPT = superPTItem.currentSuperMinPT;
+                this.superMinPT = superPTItem.superMinPT;
                 this.minSuperMinPT = superPTItem.minSuperMinPT;
                 this.maxSuperMinPT = superPTItem.maxSuperMinPT;
                 this.currentSuperMaxPT = superPTItem.currentSuperMaxPT;
+                this.superMaxPT = superPTItem.superMaxPT;
                 this.minSuperMaxPT = superPTItem.minSuperMaxPT;
                 this.maxSuperMaxPT = superPTItem.maxSuperMaxPT;
-
-                if (isNumber(superPTItem.superMinPT)) {
-                    this.superMinPT = superPTItem.superMinPT;
-                }
-
-                if (isNumber(superPTItem.superMaxPT)) {
-                    this.superMaxPT = superPTItem.superMaxPT;
-                }
             }
 
-            this.ignoredProperties.push("minSuperMinPT");
-            this.ignoredProperties.push("maxSuperMinPT");
-            this.ignoredProperties.push("minSuperMaxPT");
-            this.ignoredProperties.push("maxSuperMaxPT");
+            this.ignoredProperties = this.ignoredProperties.concat([
+                "minSuperMinPT",
+                "maxSuperMinPT",
+                "minSuperMaxPT",
+                "maxSuperMaxPT"]);
 
-            if (this.isPTReadOnly) {
-                this.ignoredProperties.push("currentSuperMinPT");
-                this.ignoredProperties.push("superMinPT");
-                this.ignoredProperties.push("currentSuperMaxPT");
-                this.ignoredProperties.push("superMaxPT");
+            if (isPTReadOnly) {
+                this.ignoredProperties = this.ignoredProperties.concat([
+                    "currentSuperMinPT",
+                    "superMinPT",
+                    "currentSuperMaxPT",
+                    "superMaxPT"]);
             }
         }
 
         public validate(): boolean {
-            if (!this.isPTReadOnly) {
-                if (isNumber(this.superMinPT) && !this.validateSuperMinPT()) {
-                    return false;
-                }
+            if (!this.validateSuperMinPT()) {
+                return false;
+            }
 
-                if (isNumber(this.superMaxPT) && !this.validateSuperMaxPT()) {
-                    return false;
-                }
+            if (!this.validateSuperMaxPT()) {
+                return false;
+            }
 
-                var actualSuperMinPT = this.superMinPT || this.currentSuperMinPT;
-                var actualSuperMaxPT = this.superMaxPT || this.currentSuperMaxPT;
+            if (this.superMinPT > this.superMaxPT) {
+                this.validationState = new ValidationResult("SuperMinPTMustBeLessThanOrEqualToSuperMaxPT", "superMinPT");
 
-                if (actualSuperMinPT > actualSuperMaxPT) {
-                    this.validationState = new ValidationResult("SuperMinPTMustBeLessThanOrEqualToSuperMaxPT", "superMinPT");
-
-                    return false;
-                }
+                return false;
             }
 
             this.resetValidationState();
@@ -71,6 +63,12 @@ namespace CustomerSetting.SettingType1 {
         }
 
         private validateSuperMinPT(): boolean {
+            if (!isNumber(this.superMinPT)) {
+                this.validationState = new ValidationResult("SuperMinPTIsOutOfRange", "superMinPT");
+
+                return false;
+            }
+
             if (this.superMinPT < this.minSuperMinPT) {
                 this.validationState = new ValidationResult("SuperMinPTMustBeGreaterThanOrEqualTo", "superMinPT", [this.minSuperMinPT]);
 
@@ -87,6 +85,12 @@ namespace CustomerSetting.SettingType1 {
         }
 
         private validateSuperMaxPT(): boolean {
+            if (!isNumber(this.superMaxPT)) {
+                this.validationState = new ValidationResult("SuperMaxPTIsOutOfRange", "superMaxPT");
+
+                return false;
+            }
+
             if (this.superMaxPT < this.minSuperMaxPT) {
                 this.validationState = new ValidationResult("SuperMaxPTMustBeGreaterThanOrEqualTo", "superMaxPT", [this.minSuperMaxPT]);
 

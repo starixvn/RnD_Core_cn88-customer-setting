@@ -7,15 +7,14 @@
 
 namespace CustomerSetting.SettingType1 {
     export class AgentAccountDetailSettingItem extends MasterAccountDetailSettingItem {
-        constructor();
-        constructor(accountDetail: any);
-        constructor(accountDetail: any, backup: boolean)
-        constructor(accountDetail: any, backup: boolean, isNew: boolean)
-        constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level)
-        constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string)
-        constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
+        constructor()
+        constructor(accountDetail: any)
+        constructor(accountDetail: any, isNew: boolean)
+        constructor(accountDetail: any, isNew: boolean, customerLevel: Level)
+        constructor(accountDetail: any, isNew: boolean, customerLevel: Level, hashKey: string)
+        constructor(accountDetail?: any, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
             if (accountDetail) {
-                super(accountDetail, backup, isNew, customerLevel, hashKey);
+                super(accountDetail, isNew, customerLevel, hashKey);
 
                 this.ptItems = accountDetail.ptItems.map((ptItem: any) => new AgentPTItem(ptItem, accountDetail.isPTReadOnly));
             }

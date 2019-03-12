@@ -19,9 +19,7 @@ namespace CustomerSetting {
             element: ng.IAugmentedJQuery,
             attributes: ISettingFieldAttributes,
             settingFieldGroupController: ISettingFieldGroupScopeController) => {
-            var fieldName: string = scope.$eval(attributes.settingField) || attributes.settingField;
-
-            settingFieldGroupController.register(fieldName, element);
+            settingFieldGroupController.register(attributes.settingField, element);
         };
     }
 

@@ -13,7 +13,7 @@ namespace CustomerSetting {
         public displayMode: number;
         public isError: boolean;
 
-        constructor();
+        constructor()
         constructor(settingType: any)
         constructor(settingType?: any) {
             if (settingType) {

@@ -14,7 +14,7 @@ namespace CustomerSetting {
         public settingTypes: SettingType[];
         public warningMessage: UpdatingSettingResult;
 
-        constructor();
+        constructor()
         constructor(setting: any)
         constructor(setting?: any) {
             if (setting) {

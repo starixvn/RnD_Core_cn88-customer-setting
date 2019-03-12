@@ -5,7 +5,7 @@ namespace CustomerSetting.SettingType2 {
         public commissionPrecision: number;
         public betSettingPrecision: number;
 
-        constructor();
+        constructor()
         constructor(settingType: any)
         constructor(settingType?: any) {
             super(settingType);

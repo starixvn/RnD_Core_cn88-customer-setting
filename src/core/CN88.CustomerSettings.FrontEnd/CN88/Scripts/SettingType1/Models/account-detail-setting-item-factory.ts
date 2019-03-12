@@ -8,25 +8,25 @@
 
 namespace CustomerSetting.SettingType1 {
     export class AccountDetailSettingItemFactory {
-        public static create(settingItem: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string): ISettingItem {
+        public static create(settingItem: any, isNew: boolean, customerLevel: Level, hashKey: string): ISettingItem {
             if (settingItem) {
                 if (customerLevel === Level.super) {
-                    return new SuperAccountDetailSettingItem(settingItem, backup, isNew, customerLevel, hashKey);
+                    return new SuperAccountDetailSettingItem(settingItem, isNew, customerLevel, hashKey);
                 }
 
                 if (customerLevel === Level.master) {
-                    return new MasterAccountDetailSettingItem(settingItem, backup, isNew, customerLevel, hashKey);
+                    return new MasterAccountDetailSettingItem(settingItem, isNew, customerLevel, hashKey);
                 }
 
                 if (customerLevel === Level.agent) {
-                    return new AgentAccountDetailSettingItem(settingItem, backup, isNew, customerLevel, hashKey);
+                    return new AgentAccountDetailSettingItem(settingItem, isNew, customerLevel, hashKey);
                 }
 
                 if (customerLevel === Level.member) {
-                    return new MemberAccountDetailSettingItem(settingItem, backup, isNew, customerLevel, hashKey);
+                    return new MemberAccountDetailSettingItem(settingItem, isNew, customerLevel, hashKey);
                 }
 
-                return new AccountDetailSettingItem(settingItem, backup, isNew, customerLevel, hashKey);
+                return new AccountDetailSettingItem(settingItem, isNew, customerLevel, hashKey);
             }
         }
     }

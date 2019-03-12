@@ -35,7 +35,6 @@ namespace CustomerSetting.SettingType1 {
                         if (item) {
                             scope.settingType.settingItems[index] = AccountDetailSettingItemFactory.create(
                                 item,
-                                true,
                                 scope.isNew,
                                 scope.customerLevel,
                                 this.settingTypesSharedValuesService.hashKey);

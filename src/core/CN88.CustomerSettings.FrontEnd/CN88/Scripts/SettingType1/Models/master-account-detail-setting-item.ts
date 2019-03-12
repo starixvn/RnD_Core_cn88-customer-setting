@@ -12,15 +12,14 @@ namespace CustomerSetting.SettingType1 {
         public ptEffectiveTime: Date;
         public ptItems: PTItem[];
 
-        constructor();
-        constructor(accountDetail: any);
-        constructor(accountDetail: any, backup: boolean)
-        constructor(accountDetail: any, backup: boolean, isNew: boolean)
-        constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level)
-        constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string)
-        constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
+        constructor()
+        constructor(accountDetail: any)
+        constructor(accountDetail: any, isNew: boolean)
+        constructor(accountDetail: any, isNew: boolean, customerLevel: Level)
+        constructor(accountDetail: any, isNew: boolean, customerLevel: Level, hashKey: string)
+        constructor(accountDetail?: any, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
             if (accountDetail) {
-                super(accountDetail, backup, isNew, customerLevel, hashKey);
+                super(accountDetail, isNew, customerLevel, hashKey);
 
                 this.usernameSuffixes = accountDetail.usernameSuffixes;
                 this.isPTReadOnly = accountDetail.isPTReadOnly;
@@ -31,7 +30,20 @@ namespace CustomerSetting.SettingType1 {
             this.ignoredProperties = this.ignoredProperties.concat([
                 "usernameSuffixes",
                 "isPTReadOnly",
-                "ptEffectiveTime"]);
+                "ptEffectiveTime",
+                "ptItems"]);
+        }
+
+        public isChanged(): boolean {
+            return super.isChanged() || this.ptItems.some((ptItem: PTItem) => ptItem.isChanged());
+        }
+
+        public toJson(): any {
+            var accountDetail: any = super.toJson();
+
+            accountDetail.ptItems = this.ptItems.map((ptItem: PTItem) => ptItem.toJson());
+
+            return accountDetail;
         }
 
         public validate(): boolean {
@@ -47,7 +59,7 @@ namespace CustomerSetting.SettingType1 {
                 return false;
             }
 
-            if (!this.isPTReadOnly) {
+            if (this.isNew || !this.isPTReadOnly) {
                 var { isValid, validationState } = PTItem.validatePTItems(this.ptItems);
 
                 if (!isValid) {
@@ -88,7 +100,7 @@ namespace CustomerSetting.SettingType1 {
         }
 
         private validateCredit(): boolean {
-            if (this.credit === undefined || this.credit === null) {
+            if (!isNumber(this.credit)) {
                 this.validationState = new ValidationResult("RequiredField", "credit");
 
                 return false;

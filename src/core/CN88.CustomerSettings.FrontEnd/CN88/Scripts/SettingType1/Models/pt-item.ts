@@ -1,17 +1,8 @@
-﻿/// <reference path="../../core/models/enums/level.ts" />
+﻿/// <reference path="../../core/models/result.ts" />
+/// <reference path="../../core/models/setting-item.ts" />
 
 namespace CustomerSetting.SettingType1 {
     export class PTItem extends DefaultSettingItem {
-        public isPTReadOnly: boolean;
-
-        constructor(ptItem: any, isPTReadOnly: boolean) {
-            if (ptItem) {
-                super(ptItem, true);
-
-                this.isPTReadOnly = isPTReadOnly;
-            }
-        }
-
         public static validatePTItems(ptItems: PTItem[]): { isValid: boolean, validationState: ValidationResult } {
             var isValid: boolean = ptItems.every((ptItem: PTItem) => ptItem.validate());
             var validationState: ValidationResult;

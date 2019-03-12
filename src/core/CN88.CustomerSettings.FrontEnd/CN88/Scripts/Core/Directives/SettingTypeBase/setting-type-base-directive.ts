@@ -9,7 +9,7 @@
 
 namespace CustomerSetting {
     interface INewSettingItem {
-        (settingItem: any, backup?: boolean, isNew?: boolean, customerLevel?: Level, uplineId?: number): ISettingItem;
+        (settingItem: any, isNew?: boolean, customerLevel?: Level, uplineId?: number): ISettingItem;
     }
 
     export interface ISettingTypeDirectiveSharedScope extends ng.IScope {
@@ -74,7 +74,6 @@ namespace CustomerSetting {
                             if (item) {
                                 scope.settingType.settingItems[index] = this.instantiateSettingItem(
                                     item,
-                                    true,
                                     scope.isNew,
                                     scope.customerLevel,
                                     scope.uplineId);

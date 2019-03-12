@@ -7,7 +7,7 @@
 namespace CustomerSetting.SettingType1 {
     interface IAccountDetailWithFixedUsernameFormat {
         uplineUsername: string;
-        usernameSuffixes: string[],
+        usernameSuffixes: string[];
         username: string;
     }
 

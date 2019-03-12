@@ -16,15 +16,14 @@ namespace CustomerSetting.SettingType1 {
         public ptEffectiveTime: Date;
         public ptItems: SuperPTItem[];
 
-        constructor();
-        constructor(accountDetail: any);
-        constructor(accountDetail: any, backup: boolean)
-        constructor(accountDetail: any, backup: boolean, isNew: boolean)
-        constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level)
-        constructor(accountDetail: any, backup: boolean, isNew: boolean, customerLevel: Level, hashKey: string)
-        constructor(accountDetail?: any, backup: boolean = false, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
+        constructor()
+        constructor(accountDetail: any)
+        constructor(accountDetail: any, isNew: boolean)
+        constructor(accountDetail: any, isNew: boolean, customerLevel: Level)
+        constructor(accountDetail: any, isNew: boolean, customerLevel: Level, hashKey: string)
+        constructor(accountDetail?: any, isNew: boolean = false, customerLevel: Level = null, hashKey: string = null) {
             if (accountDetail) {
-                super(accountDetail, backup, isNew, customerLevel, hashKey);
+                super(accountDetail, isNew, customerLevel, hashKey);
 
                 this.lastName = accountDetail.lastName;
                 this.phone = accountDetail.phone;
@@ -33,16 +32,26 @@ namespace CustomerSetting.SettingType1 {
                 this.currency = accountDetail.currency;
                 this.isPTReadOnly = accountDetail.isPTReadOnly;
                 this.ptEffectiveTime = accountDetail.ptEffectiveTime;
-                this.ptItems = accountDetail.ptItems.map((ptItem: any) => new SuperPTItem(ptItem, accountDetail.isPTReadOnly));
+                this.ptItems = accountDetail.ptItems.map((ptItem: any) => new SuperPTItem(ptItem, this.isPTReadOnly));
             }
 
-            this.ignoredProperties = this.ignoredProperties.concat([
-                "isPTReadOnly",
-                "ptEffectiveTime"]);
+            this.ignoredProperties = this.ignoredProperties.concat(["isPTReadOnly", "ptEffectiveTime", "ptItems"]);
 
             if (!this.isNew) {
                 this.ignoredProperties.push("currency");
             }
+        }
+
+        public isChanged(): boolean {
+            return super.isChanged() || this.ptItems.some((ptItem: SuperPTItem) => ptItem.isChanged());
+        }
+
+        public toJson(): any {
+            var superAccountDetail: any = super.toJson();
+
+            superAccountDetail.ptItems = this.ptItems.map((ptItem: SuperPTItem) => ptItem.toJson());
+
+            return superAccountDetail;
         }
 
         public validate(): boolean {
@@ -62,7 +71,7 @@ namespace CustomerSetting.SettingType1 {
                 return false;
             }
 
-            if (!this.isPTReadOnly) {
+            if (this.isNew || !this.isPTReadOnly) {
                 var { isValid, validationState } = PTItem.validatePTItems(this.ptItems);
 
                 if (!isValid) {
@@ -87,8 +96,8 @@ namespace CustomerSetting.SettingType1 {
             return true;
         }
 
-        protected validateCredit(): boolean {
-            if (this.credit === undefined || this.credit === null) {
+        private validateCredit(): boolean {
+            if (!isNumber(this.credit)) {
                 this.validationState = new ValidationResult("RequiredField", "credit");
 
                 return false;

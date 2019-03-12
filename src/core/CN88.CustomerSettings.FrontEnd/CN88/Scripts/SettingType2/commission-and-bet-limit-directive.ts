@@ -14,11 +14,7 @@
 /// <reference path="resources/resource-service.ts" />
 
 namespace CustomerSetting.SettingType2 {
-    var commissionAndBetLimitItemFactory = (
-        settingItem: any,
-        backup?: boolean,
-        isNew?: boolean,
-        customerLevel?: Level) => new CommissionAndBetLimitSettingItem(settingItem, backup, isNew, customerLevel);
+    var commissionAndBetLimitItemFactory = (settingItem: any, isNew: boolean, customerLevel?: Level) => new CommissionAndBetLimitSettingItem(settingItem, isNew, customerLevel);
 
     interface ICommissionAndBetLimitScope extends IDefaultSettingTypeDirectiveScope {
         availableCommissionGroups: string[];

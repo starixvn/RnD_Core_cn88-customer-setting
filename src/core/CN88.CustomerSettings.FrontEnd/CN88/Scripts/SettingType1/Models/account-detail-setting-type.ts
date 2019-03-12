@@ -4,7 +4,7 @@ namespace CustomerSetting.SettingType1 {
     export class AccountDetailSettingType extends SettingType {
         public creditPrecision: number;
 
-        constructor();
+        constructor()
         constructor(settingType: any)
         constructor(settingType?: any) {
             super(settingType);

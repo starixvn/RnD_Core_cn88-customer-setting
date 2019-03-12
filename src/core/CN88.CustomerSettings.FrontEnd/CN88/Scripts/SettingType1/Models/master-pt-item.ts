@@ -3,46 +3,45 @@
 
 namespace CustomerSetting.SettingType1 {
     export class MasterPTItem extends PTItem {
-        public superPT: number;
         public currentSuperPT: number;
+        public superPT: number;
         public minSuperPT: number;
         public maxSuperPT: number;
 
         constructor(masterPTItem: any, isPTReadOnly: boolean) {
             if (masterPTItem) {
-                super(masterPTItem, isPTReadOnly);
+                super(masterPTItem);
 
                 this.currentSuperPT = masterPTItem.currentSuperPT;
+                this.superPT = masterPTItem.superPT;
                 this.minSuperPT = masterPTItem.minSuperPT;
                 this.maxSuperPT = masterPTItem.maxSuperPT;
-
-                if (isNumber(masterPTItem.superPT)) {
-                    this.superPT = masterPTItem.superPT;
-                }
             }
 
-            this.ignoredProperties.push("minSuperPT");
-            this.ignoredProperties.push("maxSuperPT");
+            this.ignoredProperties = this.ignoredProperties.concat(["minSuperPT", "maxSuperPT"]);
 
-            if (this.isPTReadOnly) {
-                this.ignoredProperties.push("currentSuperPT");
-                this.ignoredProperties.push("superPT");
+            if (isPTReadOnly) {
+                this.ignoredProperties = this.ignoredProperties.concat(["currentSuperPT", "superPT"]);
             }
         }
 
         public validate(): boolean {
-            if (!this.isPTReadOnly && isNumber(this.superPT)) {
-                if (this.superPT < this.minSuperPT) {
-                    this.validationState = new ValidationResult("SuperPTMustBeGreaterThanOrEqualTo", "superPT", [this.minSuperPT]);
+            if (!isNumber(this.superPT)) {
+                this.validationState = new ValidationResult("SuperPTIsOutOfRange", "superPT");
 
-                    return false;
-                }
+                return false;
+            }
 
-                if (this.superPT > this.maxSuperPT) {
-                    this.validationState = new ValidationResult("SuperPTMustBeLessThanOrEqualTo", "superPT", [this.maxSuperPT]);
+            if (this.superPT < this.minSuperPT) {
+                this.validationState = new ValidationResult("SuperPTMustBeGreaterThanOrEqualTo", "superPT", [this.minSuperPT]);
 
-                    return false;
-                }
+                return false;
+            }
+
+            if (this.superPT > this.maxSuperPT) {
+                this.validationState = new ValidationResult("SuperPTMustBeLessThanOrEqualTo", "superPT", [this.maxSuperPT]);
+
+                return false;
             }
 
             this.resetValidationState();
