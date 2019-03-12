@@ -26,20 +26,8 @@ namespace CustomerSetting.SettingType1 {
         }
 
         public validate(): boolean {
-            if (!isNumber(this.superPT)) {
+            if (!isNumber(this.superPT) || this.superPT < this.minSuperPT || this.superPT > this.maxSuperPT) {
                 this.validationState = new ValidationResult("SuperPTIsOutOfRange", "superPT");
-
-                return false;
-            }
-
-            if (this.superPT < this.minSuperPT) {
-                this.validationState = new ValidationResult("SuperPTMustBeGreaterThanOrEqualTo", "superPT", [this.minSuperPT]);
-
-                return false;
-            }
-
-            if (this.superPT > this.maxSuperPT) {
-                this.validationState = new ValidationResult("SuperPTMustBeLessThanOrEqualTo", "superPT", [this.maxSuperPT]);
 
                 return false;
             }

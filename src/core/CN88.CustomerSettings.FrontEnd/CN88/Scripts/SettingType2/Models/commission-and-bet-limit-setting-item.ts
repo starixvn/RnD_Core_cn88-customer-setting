@@ -112,10 +112,7 @@ namespace CustomerSetting.SettingType2 {
                     commissionGroup = this.mappedCommissionGroups[index];
 
                     if (commissionGroup
-                        && (
-                            !isNumber(commissionGroup.value)
-                            || commissionGroup.value > commissionGroup.maxValue
-                            || commissionGroup.value < commissionGroup.minValue)) {
+                        && (!isNumber(commissionGroup.value) || commissionGroup.value > commissionGroup.maxValue || commissionGroup.value < commissionGroup.minValue)) {
                         this.validationState = new ValidationResult("CommissionIsOutOfRange", "commissionGroups-" + index);
                         isValid = false;
                     }

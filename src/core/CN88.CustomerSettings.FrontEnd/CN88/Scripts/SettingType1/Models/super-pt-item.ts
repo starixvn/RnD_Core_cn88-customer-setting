@@ -43,11 +43,15 @@ namespace CustomerSetting.SettingType1 {
         }
 
         public validate(): boolean {
-            if (!this.validateSuperMinPT()) {
+            if (!isNumber(this.superMinPT) || this.superMinPT < this.minSuperMinPT || this.superMinPT > this.maxSuperMinPT) {
+                this.validationState = new ValidationResult("SuperMinPTIsOutOfRange", "superMinPT");
+
                 return false;
             }
 
-            if (!this.validateSuperMaxPT()) {
+            if (!isNumber(this.superMaxPT) || this.superMaxPT < this.minSuperMaxPT || this.superMaxPT > this.maxSuperMaxPT) {
+                this.validationState = new ValidationResult("SuperMaxPTIsOutOfRange", "superMaxPT");
+
                 return false;
             }
 
@@ -58,50 +62,6 @@ namespace CustomerSetting.SettingType1 {
             }
 
             this.resetValidationState();
-
-            return true;
-        }
-
-        private validateSuperMinPT(): boolean {
-            if (!isNumber(this.superMinPT)) {
-                this.validationState = new ValidationResult("SuperMinPTIsOutOfRange", "superMinPT");
-
-                return false;
-            }
-
-            if (this.superMinPT < this.minSuperMinPT) {
-                this.validationState = new ValidationResult("SuperMinPTMustBeGreaterThanOrEqualTo", "superMinPT", [this.minSuperMinPT]);
-
-                return false;
-            }
-
-            if (this.superMinPT > this.maxSuperMinPT) {
-                this.validationState = new ValidationResult("SuperMinPTMustBeLessThanOrEqualTo", "superMinPT", [this.maxSuperMinPT]);
-
-                return false;
-            }
-
-            return true;
-        }
-
-        private validateSuperMaxPT(): boolean {
-            if (!isNumber(this.superMaxPT)) {
-                this.validationState = new ValidationResult("SuperMaxPTIsOutOfRange", "superMaxPT");
-
-                return false;
-            }
-
-            if (this.superMaxPT < this.minSuperMaxPT) {
-                this.validationState = new ValidationResult("SuperMaxPTMustBeGreaterThanOrEqualTo", "superMaxPT", [this.minSuperMaxPT]);
-
-                return false;
-            }
-
-            if (this.superMaxPT > this.maxSuperMaxPT) {
-                this.validationState = new ValidationResult("SuperMaxPTMustBeLessThanOrEqualTo", "superMaxPT", [this.maxSuperMaxPT]);
-
-                return false;
-            }
 
             return true;
         }

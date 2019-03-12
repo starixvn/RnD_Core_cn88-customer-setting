@@ -48,11 +48,15 @@ namespace CustomerSetting.SettingType1 {
         }
 
         public validate(): boolean {
-            if (!this.validateMasterPT()) {
+            if (!isNumber(this.masterPT) || this.masterPT < this.minMasterPT || this.masterPT > this.maxMasterPT) {
+                this.validationState = new ValidationResult("MasterPTIsOutOfRange", "masterPT");
+
                 return false;
             }
 
-            if (!this.validateAgentPT()) {
+            if (!isNumber(this.agentPT) || this.agentPT < this.minAgentPT || this.agentPT > this.maxAgentPT) {
+                this.validationState = new ValidationResult("AgentPTIsOutOfRange", "agentPT");
+
                 return false;
             }
 
@@ -64,50 +68,6 @@ namespace CustomerSetting.SettingType1 {
             }
 
             this.resetValidationState();
-
-            return true;
-        }
-
-        private validateMasterPT(): boolean {
-            if (!isNumber(this.masterPT)) {
-                this.validationState = new ValidationResult("MasterPTIsOutOfRange", "masterPT");
-
-                return false;
-            }
-
-            if (this.masterPT < this.minMasterPT) {
-                this.validationState = new ValidationResult("MasterPTMustBeGreaterThanOrEqualTo", "masterPT", [this.maxMasterPT]);
-
-                return false;
-            }
-
-            if (this.masterPT > this.maxMasterPT) {
-                this.validationState = new ValidationResult("MasterPTMustBeLessThanOrEqualTo", "masterPT", [this.maxMasterPT]);
-
-                return false;
-            }
-
-            return true;
-        }
-
-        private validateAgentPT(): boolean {
-            if (!isNumber(this.agentPT)) {
-                this.validationState = new ValidationResult("AgentPTIsOutOfRange", "agentPT");
-
-                return false;
-            }
-
-            if (this.agentPT < this.minAgentPT) {
-                this.validationState = new ValidationResult("AgentPTMustBeGreaterThanOrEqualTo", "agentPT", [this.maxAgentPT]);
-
-                return false;
-            }
-
-            if (this.agentPT > this.maxAgentPT) {
-                this.validationState = new ValidationResult("AgentPTMustBeLessThanOrEqualTo", "agentPT", [this.maxAgentPT]);
-
-                return false;
-            }
 
             return true;
         }
