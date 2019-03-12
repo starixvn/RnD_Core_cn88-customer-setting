@@ -6,6 +6,7 @@
     using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.Models.Results;
     using CN88.CustomerSetting.SettingType1.AppResources;
+    using CN88.CustomerSetting.SettingType1.Helpers;
 
     public interface PasswordService
     {
@@ -21,6 +22,15 @@
         private static readonly Regex PasswordRule4 = new Regex(@"^(?=.*[\[\]\^\$\.\|\?\*\+\(\)\\~`\!@#%&\-_+={}'""<>:;,]).{8,40}$");
         private static readonly Regex MemberPasswordRule = new Regex(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,10}$");
         private static readonly Regex NoWhiteSpace = new Regex(@"^\S*$");
+        private readonly IAseEncryptor aseEncryptor;
+
+        public PasswordServiceImpl() : this(null)
+        { }
+
+        public PasswordServiceImpl(IAseEncryptor aseEncryptor)
+        {
+            this.aseEncryptor = aseEncryptor ?? new AseEncryptor();
+        }
 
         public IResult ValidateAndHashPassword(string encryptedPassword, string encryptionKey, Level level)
         {
@@ -86,8 +96,8 @@
             return (r1 + r2 + r3 + r4 >= 3) && NoWhiteSpace.Match(password).Success;
         }
 
-        private static string Decrypt(string password, string encryptKey)
-            => RC4(encryptKey, HexDecode(password));
+        private string Decrypt(string encryptedPassword, string encryptKey)
+            => aseEncryptor.Decrypt(encryptedPassword, encryptKey);
 
         public static string CfsEnCode(string codeStr)
         {

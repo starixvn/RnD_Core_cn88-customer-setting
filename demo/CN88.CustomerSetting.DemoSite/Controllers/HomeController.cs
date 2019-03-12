@@ -46,7 +46,9 @@
             Session[SessionKeys.SubAccountIdSessionKey] = subAccountId;
             Session[SessionKeys.SystemIdSessionKey] = system;
             Session[SessionKeys.LanguageSessionKey] = language;
-            Session[SessionKeys.HashKeySessionKey] = Session.SessionID;
+
+
+            Session[SessionKeys.HashKeySessionKey] = RandomString(4);
 
             return Json(new
             {
@@ -54,6 +56,18 @@
                 Message = string.Empty,
                 IsSuccessful = true
             });
+        }
+        public static string RandomString(int length)
+        {
+            string chars = "qwertyuiopasdfghjklzxcvbnm0123456789";
+            var rndStr = string.Empty;
+            var rnd = new Random(DateTime.Now.Second + DateTime.Now.Millisecond);
+
+            for (var i = 0; i < length; ++i)
+            {
+                rndStr += chars[rnd.Next() % chars.Length];
+            }
+            return rndStr;
         }
 
         public ActionResult RedirectAction()

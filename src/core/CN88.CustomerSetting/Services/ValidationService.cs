@@ -78,7 +78,7 @@
                 {
                     await CheckBelonging(actor, uplineId).ConfigureAwait(false);
 
-                    await CheckUplineLevel(uplineId, customerLevel).ConfigureAwait(false);
+                    await CheckUplineLevel(actor, uplineId, customerLevel).ConfigureAwait(false);
                 }
             }
             catch (CustomerSettingException customerSettingException)
@@ -154,11 +154,16 @@
                 CustId = customerId
             }).ConfigureAwait(false);
 
-        private async Task CheckUplineLevel(int uplineId, Level customerLevel)
+        private async Task CheckUplineLevel(User actor, int uplineId, Level customerLevel)
         {
+            if (actor.IsCompany && uplineId == 0)
+            {
+                return;
+            }
+
             byte actualUplineLevel = await GetCustomerLevel(uplineId).ConfigureAwait(false);
 
-            if(actualUplineLevel <= customerLevel.Value)
+            if (Enumeration.FromValue<Level>(actualUplineLevel).IsNotDirectUplineOf(customerLevel.Value))
             {
                 throw new CustomerSettingException(Result.AccessDenied.Message);
             }
