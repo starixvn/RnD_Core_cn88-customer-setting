@@ -36,11 +36,15 @@
         {
             if (string.IsNullOrWhiteSpace(encryptedPassword))
             {
-                return Result.CreateErrorResult(Resources.PasswordCannotBeNullOrEmpty);
+                return Result.CreateErrorResult(string.Join(
+                    "\r\n",
+                    Resources.PasswordCannotBeNullOrEmpty,
+                    $"Encrypted Password: {encryptedPassword}",
+                    $"Encryption Key: {encryptionKey}"));
             }
 
             var rawPassword = Decrypt(encryptedPassword, encryptionKey);
-            var validationResult = Validate(rawPassword, level);
+            var validationResult = Validate(rawPassword, level, encryptedPassword, encryptionKey);
 
             return validationResult.IsOk
                 ? Result.CreateSuccessResult(CfsEnCode(rawPassword))
@@ -49,11 +53,17 @@
 
         private static Result Validate(
             string password,
-            Level customerLevel)
+            Level customerLevel, 
+            string encryptedPassword, 
+            string encryptionKey)
         {
             if (string.IsNullOrWhiteSpace(password))
             {
-                return Result.CreateErrorResult(Resources.PasswordCannotBeNullOrEmpty);
+                return Result.CreateErrorResult(string.Join(
+                    "\r\n",
+                    Resources.PasswordCannotBeNullOrEmpty,
+                    $"Encrypted Password: {encryptedPassword}",
+                    $"Encryption Key: {encryptionKey}"));
             }
 
             if (customerLevel.IsSuperLevel())
