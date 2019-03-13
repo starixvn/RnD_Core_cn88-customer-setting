@@ -360,7 +360,8 @@
                 settingType, 
                 settingContext).ConfigureAwait(false);
 
-            if (updateCustomerInfoResult.IsFailed)
+            if (updateCustomerInfoResult.IsFailed
+                || command.Setting.CustomerLevel.IsMemberLevel())
             {
                 return updateCustomerInfoResult;
             }

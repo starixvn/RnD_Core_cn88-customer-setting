@@ -70,12 +70,24 @@
 
         public abstract SettingContext FetchSettingContext();
 
-        private void RegisterRouteConfig(RouteCollection routes)
+        protected virtual void RegisterRouteConfig(RouteCollection routes)
         {
             routes.MapRoute(
-                name: "CN88_Setting",
-                url: UrlRootName + "/{controller}/{action}/{id}",
+                name: "CN88_Setting_View",
+                url: UrlRootName + "/ViewCN88CustomerSetting/{action}/{id}",
                 defaults: new { controller = "ViewCN88CustomerSetting", action = "Edit", id = UrlParameter.Optional },
+                namespaces: new string[] { "CN88.CustomerSetting.Client.Controllers" });
+
+            routes.MapRoute(
+                name: "CN88_Setting_Create",
+                url: UrlRootName + "/CreateCN88Customer/{action}/{id}",
+                defaults: new { controller = "CreateCN88Customer", action = "Create", id = UrlParameter.Optional },
+                namespaces: new string[] { "CN88.CustomerSetting.Client.Controllers" });
+
+            routes.MapRoute(
+                name: "CN88_Setting_Update",
+                url: UrlRootName + "/UpdateCN88CustomerSetting/{action}/{id}",
+                defaults: new { controller = "UpdateCN88CustomerSetting", action = "Update", id = UrlParameter.Optional },
                 namespaces: new string[] { "CN88.CustomerSetting.Client.Controllers" });
         }
 
