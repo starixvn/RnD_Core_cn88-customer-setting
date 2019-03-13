@@ -1,15 +1,8 @@
 ﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
-/// <reference path="../../models/key-value-pair.ts" />
-/// <reference path="../../models/result.ts" />
-/// <reference path="../../models/setting-item.ts" />
 /// <reference path="../../module-registrater.ts" />
 /// <reference path="setting-field-group.ts" />
 
 namespace CustomerSetting {
-    interface ISettingFieldAttributes extends ng.IAttributes {
-        settingField: string;
-    }
-
     class SettingFieldDirective implements ng.IDirective {
         public require: string = "^settingFieldGroup";
         public restrict: string = "A";
@@ -17,9 +10,11 @@ namespace CustomerSetting {
         public link: ng.IDirectiveLinkFn = (
             scope: ng.IScope,
             element: ng.IAugmentedJQuery,
-            attributes: ISettingFieldAttributes,
+            attributes: ng.IAttributes,
             settingFieldGroupController: ISettingFieldGroupScopeController) => {
-            settingFieldGroupController.register(attributes.settingField, element);
+            attributes.$observe("settingField", (settingField: string) => {
+                settingFieldGroupController.register(settingField, element);
+            });
         };
     }
 

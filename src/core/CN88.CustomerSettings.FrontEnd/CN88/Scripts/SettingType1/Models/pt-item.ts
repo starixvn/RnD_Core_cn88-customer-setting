@@ -18,6 +18,12 @@ namespace CustomerSetting.SettingType1 {
                         "ptItems-" + firstInvalidPtItemIndex + "-" + firstInvalidPtItemValidationState.triggeringFieldName,
                         firstInvalidPtItemValidationState.msgParams,
                         firstInvalidPtItemValidationState.extraData);
+
+                    if (firstInvalidPtItemValidationState.affectedFields.length > 0) {
+                        firstInvalidPtItemValidationState.affectedFields.forEach((affectedField: string) => {
+                            validationState.addAffectedField("ptItems-" + firstInvalidPtItemIndex + "-" + affectedField);
+                        });
+                    }
                 }
             }
 
