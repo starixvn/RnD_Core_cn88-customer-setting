@@ -123,14 +123,15 @@ namespace CustomerSetting {
                 if (!isNaN(value) && (scope.negativeAllowed || value >= 0)) {
                     var toBeValidValue: number = value;
                     var toBeValidFormattedValue: string = formattedValue;
+                    var allowedLength: number = maxLength;
 
                     if (scope.precision > 0 && toBeValidFormattedValue.indexOf(this.decimalSeparator) < 0) {
-                        var allowedLength: number = maxLength - scope.precision - 1;
+                        allowedLength = maxLength - scope.precision - 1;
+                    }
 
-                        if (toBeValidFormattedValue.length > allowedLength) {
-                            toBeValidValue = latestValidValue;
-                            toBeValidFormattedValue = latestValidFormattedValue;
-                        }
+                    if (toBeValidFormattedValue.length > allowedLength) {
+                        toBeValidValue = latestValidValue;
+                        toBeValidFormattedValue = latestValidFormattedValue;
                     }
 
                     latestValidValue = toBeValidValue;
