@@ -47,9 +47,6 @@
             Session[SessionKeys.SystemIdSessionKey] = system;
             Session[SessionKeys.LanguageSessionKey] = language;
 
-
-            Session[SessionKeys.HashKeySessionKey] = RandomString(4);
-
             return Json(new
             {
                 Code = 0,

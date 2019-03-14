@@ -27,5 +27,20 @@
 
             return selectedUri;
         }
+
+        public static string RandomString(int length)
+        {
+            string chars = "qwertyuiopasdfghjklzxcvbnm0123456789";
+            var rndStr = string.Empty;
+            var rnd = new Random(DateTime.Now.Second + DateTime.Now.Millisecond);
+
+            for (var i = 0; i < length; ++i)
+            {
+#pragma warning disable S1643 // Strings should not be concatenated using '+' in a loop
+                rndStr += chars[rnd.Next() % chars.Length];
+#pragma warning restore S1643 // Strings should not be concatenated using '+' in a loop
+            }
+            return rndStr;
+        }
     }
 }

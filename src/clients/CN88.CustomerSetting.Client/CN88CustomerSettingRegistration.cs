@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Exceptions;
@@ -12,19 +13,34 @@
     public abstract class CN88CustomerSettingRegistration
     {
         private static CN88CustomerSettingRegistration client;
-        public const string UrlRootName = "CN88CustomerSetting";
+        internal const string UrlRootName = "CN88CustomerSetting";
+        private const string EncryptionKeySessionName = "CN88.CustomerSetting.Client.EncryptionKey";
 
         internal static SettingContext SettingContext
         {
             get
             {
-                if (client != null)
-                {
-                    return client.FetchSettingContext();
-                }
+                var settingContext = client != null 
+                    ? client.FetchSettingContext()
+                    : new SettingContext();
 
-                return new SettingContext();
+                settingContext.HashKey = GetEncryptionKey();
+
+                return settingContext;
             }
+        }
+
+        private static string GetEncryptionKey()
+        {
+            var encryptionKey = HttpContext.Current.Session?[EncryptionKeySessionName];
+
+            if(string.IsNullOrWhiteSpace(encryptionKey as string))
+            {
+                encryptionKey = RandomHelper.RandomString(4);
+                HttpContext.Current.Session[EncryptionKeySessionName] = encryptionKey;
+            }
+
+            return encryptionKey.ToString();
         }
 
         public static void Init()

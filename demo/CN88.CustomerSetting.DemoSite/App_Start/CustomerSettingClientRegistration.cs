@@ -50,7 +50,6 @@
             settingContext.Language = (string)HttpContext.Current.Session[SessionKeys.LanguageSessionKey];
             settingContext.Domain = HttpContext.Current.Request.Url.Host;
             settingContext.IP = GetClientIp();
-            settingContext.HashKey = (string)HttpContext.Current.Session[SessionKeys.HashKeySessionKey];
 
             return settingContext;
         }
