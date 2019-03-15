@@ -361,7 +361,8 @@
                 settingContext).ConfigureAwait(false);
 
             if (updateCustomerInfoResult.IsFailed
-                || command.Setting.CustomerLevel.IsMemberLevel())
+                || command.Setting.CustomerLevel.IsMemberLevel()
+                || !settingItem.PTItems.Any())
             {
                 return updateCustomerInfoResult;
             }
