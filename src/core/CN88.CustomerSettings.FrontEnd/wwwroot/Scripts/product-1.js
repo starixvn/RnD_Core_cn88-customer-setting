@@ -35676,54 +35676,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    var PercentageDropdownDirective = (function () {
-        function PercentageDropdownDirective(valueRangeService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
-            this.restrict = "E";
-            this.link = function (scope) {
-                if (scope.autoRefresh) {
-                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
-                        _this.initializeRange(scope);
-                    });
-                }
-                else {
-                    _this.initializeRange(scope);
-                }
-            };
-            this.valueRangeService = valueRangeService;
-        }
-        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    value: "=ngModel",
-                    min: "=",
-                    max: "=",
-                    step: "=?",
-                    precision: "=?",
-                    placeholder: "@",
-                    placeholderVisible: "=?",
-                    autoRefresh: "=?"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
-            scope.precision = scope.precision || 0;
-            scope.factor = Math.pow(10, scope.precision);
-            scope.step = scope.step || 1;
-            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
-        };
-        PercentageDropdownDirective.$inject = ["valueRangeService"];
-        return PercentageDropdownDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     var NumericInputDirective = (function () {
         function NumericInputDirective($filter, appConfigService) {
             var _this = this;
@@ -36036,6 +35988,54 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var PercentageDropdownDirective = (function () {
+        function PercentageDropdownDirective(valueRangeService) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
+            this.restrict = "E";
+            this.link = function (scope) {
+                if (scope.autoRefresh) {
+                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
+                        _this.initializeRange(scope);
+                    });
+                }
+                else {
+                    _this.initializeRange(scope);
+                }
+            };
+            this.valueRangeService = valueRangeService;
+        }
+        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    value: "=ngModel",
+                    min: "=",
+                    max: "=",
+                    step: "=?",
+                    precision: "=?",
+                    placeholder: "@",
+                    placeholderVisible: "=?",
+                    autoRefresh: "=?"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
+            scope.precision = scope.precision || 0;
+            scope.factor = Math.pow(10, scope.precision);
+            scope.step = scope.step || 1;
+            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
+        };
+        PercentageDropdownDirective.$inject = ["valueRangeService"];
+        return PercentageDropdownDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var SettingResultDirective = (function () {
         function SettingResultDirective($rootScope, $window) {
             var _this = this;
@@ -36320,6 +36320,8 @@ var CustomerSetting;
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
+
+
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -36382,157 +36384,6 @@ var CustomerSetting;
         SettingType1.AccountDetailSettingItem = AccountDetailSettingItem;
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
-
-
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var MemberAccountDetailSettingItem = (function (_super) {
-            __extends(MemberAccountDetailSettingItem, _super);
-            function MemberAccountDetailSettingItem(accountDetail, isNew, customerLevel, hashKey) {
-                if (isNew === void 0) { isNew = false; }
-                if (customerLevel === void 0) { customerLevel = null; }
-                if (hashKey === void 0) { hashKey = null; }
-                if (accountDetail) {
-                    _super.call(this, accountDetail, isNew, customerLevel, hashKey);
-                    this.usernameSuffixes = accountDetail.usernameSuffixes;
-                    this.spreadGroups = accountDetail.spreadGroups;
-                    this.spreadGroup = accountDetail.spreadGroup;
-                }
-                this.ignoredProperties = this.ignoredProperties.concat(["usernameSuffixes", "spreadGroups"]);
-                if (!this.isNew) {
-                    this.ignoredProperties.push("spreadGroup");
-                }
-            }
-            MemberAccountDetailSettingItem.prototype.validate = function () {
-                if (!this.validateUsername()) {
-                    return false;
-                }
-                if (this.isNew && !this.validatePassword()) {
-                    return false;
-                }
-                if (!this.validateCredit()) {
-                    return false;
-                }
-                if (this.isNew && !this.validateOddsSpread()) {
-                    return false;
-                }
-                this.resetValidationState();
-                return true;
-            };
-            MemberAccountDetailSettingItem.prototype.validatePassword = function () {
-                if (!this.password || this.password.length === 0) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
-                    return false;
-                }
-                var memberPasswordPattern = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*[\s])).{6,10}$/;
-                if (!memberPasswordPattern.test(this.password)) {
-                    this.validationState = new CustomerSetting.ValidationResult("MemberPasswordRules", "password");
-                    return false;
-                }
-                if (this.confirmPassword !== this.password) {
-                    this.validationState = new CustomerSetting.ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
-                    return false;
-                }
-                return true;
-            };
-            MemberAccountDetailSettingItem.prototype.validateCredit = function () {
-                if (!CustomerSetting.isNumber(this.credit)) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "credit");
-                    return false;
-                }
-                if (this.credit < this.minCredit) {
-                    this.validationState = new CustomerSetting.ValidationResult("CreditsMustBeGreaterThanOrEqualTo", "credit", [this.minCredit], { precision: 2 });
-                    return false;
-                }
-                if (this.credit > this.maxCredit) {
-                    this.validationState = new CustomerSetting.ValidationResult("CreditsMustBeLessThanOrEqualTo", "credit", [this.maxCredit], { precision: 2 });
-                    return false;
-                }
-                return true;
-            };
-            MemberAccountDetailSettingItem.prototype.validateOddsSpread = function () {
-                if (!this.spreadGroup) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "spreadGroup");
-                    return false;
-                }
-                return true;
-            };
-            return MemberAccountDetailSettingItem;
-        }(SettingType1.AccountDetailSettingItem));
-        SettingType1.MemberAccountDetailSettingItem = MemberAccountDetailSettingItem;
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var SubSectionBaseDirective = (function () {
-            function SubSectionBaseDirective(settingTypesSharedValuesService) {
-                var _this = this;
-                this.replace = true;
-                this.link = function (scope) {
-                    _this.linkInternal(scope);
-                };
-                this.settingTypesSharedValuesService = settingTypesSharedValuesService;
-            }
-            Object.defineProperty(SubSectionBaseDirective.prototype, "scope", {
-                get: function () {
-                    return {
-                        accountDetail: "=",
-                        editable: "="
-                    };
-                },
-                enumerable: true,
-                configurable: true
-            });
-            SubSectionBaseDirective.prototype.linkInternal = function (scope) {
-                scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
-                scope.isNew = this.settingTypesSharedValuesService.isNew;
-                scope.avaiCustomerLevels = CustomerSetting.Level;
-            };
-            SubSectionBaseDirective.$inject = ["settingTypesSharedValuesService"];
-            return SubSectionBaseDirective;
-        }());
-        SettingType1.SubSectionBaseDirective = SubSectionBaseDirective;
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var MemberGeneralDataDirective = (function () {
-            function MemberGeneralDataDirective(crossingSettingTypesServiceBus) {
-                var _this = this;
-                this.template = '<div><div data-ng-if="editable"><div class="row" data-ng-if="isNew"><label class="w40-percent">{{::(\'Agent\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'SpreadGroup\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | st1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'MemberPasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!editable"><div class="row"><label class="w40-percent">{{::(\'Username\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'SpreadGroup\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div></div>';
-                this.link = function (scope) {
-                    if (scope.isNew) {
-                        scope.updateSpreadGroup = function () {
-                            _this.crossingSettingTypesServiceBus.execute("updateMemberSpreadGroup", {
-                                newMemberGroup: scope.accountDetail.spreadGroup.groupName
-                            });
-                        };
-                    }
-                };
-                this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
-            }
-            MemberGeneralDataDirective.$inject = ["crossingSettingTypesServiceBus"];
-            return MemberGeneralDataDirective;
-        }());
-        CustomerSetting.ModuleRegister.directive("st1MemberGeneralData", MemberGeneralDataDirective);
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -36670,7 +36521,9 @@ var CustomerSetting;
             };
             SuperAccountDetailSettingItem.prototype.toJson = function () {
                 var superAccountDetail = _super.prototype.toJson.call(this);
-                superAccountDetail.ptItems = this.ptItems.map(function (ptItem) { return ptItem.toJson(); });
+                superAccountDetail.ptItems = this.ptItems
+                    .filter(function (ptItem) { return ptItem.isChanged(); })
+                    .map(function (ptItem) { return ptItem.toJson(); });
                 return superAccountDetail;
             };
             SuperAccountDetailSettingItem.prototype.validate = function () {
@@ -36731,6 +36584,41 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
+        var SubSectionBaseDirective = (function () {
+            function SubSectionBaseDirective(settingTypesSharedValuesService) {
+                var _this = this;
+                this.replace = true;
+                this.link = function (scope) {
+                    _this.linkInternal(scope);
+                };
+                this.settingTypesSharedValuesService = settingTypesSharedValuesService;
+            }
+            Object.defineProperty(SubSectionBaseDirective.prototype, "scope", {
+                get: function () {
+                    return {
+                        accountDetail: "=",
+                        editable: "="
+                    };
+                },
+                enumerable: true,
+                configurable: true
+            });
+            SubSectionBaseDirective.prototype.linkInternal = function (scope) {
+                scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
+                scope.isNew = this.settingTypesSharedValuesService.isNew;
+                scope.avaiCustomerLevels = CustomerSetting.Level;
+            };
+            SubSectionBaseDirective.$inject = ["settingTypesSharedValuesService"];
+            return SubSectionBaseDirective;
+        }());
+        SettingType1.SubSectionBaseDirective = SubSectionBaseDirective;
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
         var SuperGeneralDataDirective = (function () {
             function SuperGeneralDataDirective(appConfigService, requestService) {
                 var _this = this;
@@ -36760,6 +36648,120 @@ var CustomerSetting;
             return SuperGeneralDataDirective;
         }());
         CustomerSetting.ModuleRegister.directive("st1SuperGeneralData", SuperGeneralDataDirective);
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var MemberAccountDetailSettingItem = (function (_super) {
+            __extends(MemberAccountDetailSettingItem, _super);
+            function MemberAccountDetailSettingItem(accountDetail, isNew, customerLevel, hashKey) {
+                if (isNew === void 0) { isNew = false; }
+                if (customerLevel === void 0) { customerLevel = null; }
+                if (hashKey === void 0) { hashKey = null; }
+                if (accountDetail) {
+                    _super.call(this, accountDetail, isNew, customerLevel, hashKey);
+                    this.usernameSuffixes = accountDetail.usernameSuffixes;
+                    this.spreadGroups = accountDetail.spreadGroups;
+                    this.spreadGroup = accountDetail.spreadGroup;
+                }
+                this.ignoredProperties = this.ignoredProperties.concat(["usernameSuffixes", "spreadGroups"]);
+                if (!this.isNew) {
+                    this.ignoredProperties.push("spreadGroup");
+                }
+            }
+            MemberAccountDetailSettingItem.prototype.validate = function () {
+                if (!this.validateUsername()) {
+                    return false;
+                }
+                if (this.isNew && !this.validatePassword()) {
+                    return false;
+                }
+                if (!this.validateCredit()) {
+                    return false;
+                }
+                if (this.isNew && !this.validateOddsSpread()) {
+                    return false;
+                }
+                this.resetValidationState();
+                return true;
+            };
+            MemberAccountDetailSettingItem.prototype.validatePassword = function () {
+                if (!this.password || this.password.length === 0) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
+                    return false;
+                }
+                var memberPasswordPattern = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*[\s])).{6,10}$/;
+                if (!memberPasswordPattern.test(this.password)) {
+                    this.validationState = new CustomerSetting.ValidationResult("MemberPasswordRules", "password");
+                    return false;
+                }
+                if (this.confirmPassword !== this.password) {
+                    this.validationState = new CustomerSetting.ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
+                    return false;
+                }
+                return true;
+            };
+            MemberAccountDetailSettingItem.prototype.validateCredit = function () {
+                if (!CustomerSetting.isNumber(this.credit)) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "credit");
+                    return false;
+                }
+                if (this.credit < this.minCredit) {
+                    this.validationState = new CustomerSetting.ValidationResult("CreditsMustBeGreaterThanOrEqualTo", "credit", [this.minCredit], { precision: 2 });
+                    return false;
+                }
+                if (this.credit > this.maxCredit) {
+                    this.validationState = new CustomerSetting.ValidationResult("CreditsMustBeLessThanOrEqualTo", "credit", [this.maxCredit], { precision: 2 });
+                    return false;
+                }
+                return true;
+            };
+            MemberAccountDetailSettingItem.prototype.validateOddsSpread = function () {
+                if (!this.spreadGroup) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "spreadGroup");
+                    return false;
+                }
+                return true;
+            };
+            return MemberAccountDetailSettingItem;
+        }(SettingType1.AccountDetailSettingItem));
+        SettingType1.MemberAccountDetailSettingItem = MemberAccountDetailSettingItem;
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var MemberGeneralDataDirective = (function () {
+            function MemberGeneralDataDirective(crossingSettingTypesServiceBus) {
+                var _this = this;
+                this.template = '<div><div data-ng-if="editable"><div class="row" data-ng-if="isNew"><label class="w40-percent">{{::(\'Agent\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'SpreadGroup\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | st1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'MemberPasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!editable"><div class="row"><label class="w40-percent">{{::(\'Username\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'SpreadGroup\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.firstName}}</label></div></div></div>';
+                this.link = function (scope) {
+                    if (scope.isNew) {
+                        scope.updateSpreadGroup = function () {
+                            _this.crossingSettingTypesServiceBus.execute("updateMemberSpreadGroup", {
+                                newMemberGroup: scope.accountDetail.spreadGroup.groupName
+                            });
+                        };
+                    }
+                };
+                this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
+            }
+            MemberGeneralDataDirective.$inject = ["crossingSettingTypesServiceBus"];
+            return MemberGeneralDataDirective;
+        }());
+        CustomerSetting.ModuleRegister.directive("st1MemberGeneralData", MemberGeneralDataDirective);
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -37025,7 +37027,9 @@ var CustomerSetting;
             };
             MasterAccountDetailSettingItem.prototype.toJson = function () {
                 var accountDetail = _super.prototype.toJson.call(this);
-                accountDetail.ptItems = this.ptItems.map(function (ptItem) { return ptItem.toJson(); });
+                accountDetail.ptItems = this.ptItems
+                    .filter(function (ptItem) { return ptItem.isChanged(); })
+                    .map(function (ptItem) { return ptItem.toJson(); });
                 return accountDetail;
             };
             MasterAccountDetailSettingItem.prototype.validate = function () {
