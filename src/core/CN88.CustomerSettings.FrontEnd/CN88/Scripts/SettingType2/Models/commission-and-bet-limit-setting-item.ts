@@ -165,6 +165,7 @@ namespace CustomerSetting.SettingType2 {
 
             if (this.maxBet > this.maxPerEvent) {
                 this.validationState = new ValidationResult("MaxBetMustBeLessThanOrEqualToMaxPerEvent", "maxBet");
+                this.validationState.addAffectedField("maxPerEvent");
 
                 return false;
             }
