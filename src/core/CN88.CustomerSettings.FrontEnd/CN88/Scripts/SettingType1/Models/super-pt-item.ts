@@ -57,6 +57,7 @@ namespace CustomerSetting.SettingType1 {
 
             if (this.superMinPT > this.superMaxPT) {
                 this.validationState = new ValidationResult("SuperMinPTMustBeLessThanOrEqualToSuperMaxPT", "superMinPT");
+                this.validationState.addAffectedField("superMaxPT");
 
                 return false;
             }

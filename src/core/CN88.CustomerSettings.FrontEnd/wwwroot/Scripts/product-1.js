@@ -35676,54 +35676,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    var PercentageDropdownDirective = (function () {
-        function PercentageDropdownDirective(valueRangeService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
-            this.restrict = "E";
-            this.link = function (scope) {
-                if (scope.autoRefresh) {
-                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
-                        _this.initializeRange(scope);
-                    });
-                }
-                else {
-                    _this.initializeRange(scope);
-                }
-            };
-            this.valueRangeService = valueRangeService;
-        }
-        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    value: "=ngModel",
-                    min: "=",
-                    max: "=",
-                    step: "=?",
-                    precision: "=?",
-                    placeholder: "@",
-                    placeholderVisible: "=?",
-                    autoRefresh: "=?"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
-            scope.precision = scope.precision || 0;
-            scope.factor = Math.pow(10, scope.precision);
-            scope.step = scope.step || 1;
-            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
-        };
-        PercentageDropdownDirective.$inject = ["valueRangeService"];
-        return PercentageDropdownDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     var NumericInputDirective = (function () {
         function NumericInputDirective($filter, appConfigService) {
             var _this = this;
@@ -35874,6 +35826,54 @@ var CustomerSetting;
         return NumericInputDirective;
     }());
     CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var PercentageDropdownDirective = (function () {
+        function PercentageDropdownDirective(valueRangeService) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
+            this.restrict = "E";
+            this.link = function (scope) {
+                if (scope.autoRefresh) {
+                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
+                        _this.initializeRange(scope);
+                    });
+                }
+                else {
+                    _this.initializeRange(scope);
+                }
+            };
+            this.valueRangeService = valueRangeService;
+        }
+        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    value: "=ngModel",
+                    min: "=",
+                    max: "=",
+                    step: "=?",
+                    precision: "=?",
+                    placeholder: "@",
+                    placeholderVisible: "=?",
+                    autoRefresh: "=?"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
+            scope.precision = scope.precision || 0;
+            scope.factor = Math.pow(10, scope.precision);
+            scope.step = scope.step || 1;
+            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
+        };
+        PercentageDropdownDirective.$inject = ["valueRangeService"];
+        return PercentageDropdownDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36622,6 +36622,7 @@ var CustomerSetting;
                 }
                 if (this.superMinPT > this.superMaxPT) {
                     this.validationState = new CustomerSetting.ValidationResult("SuperMinPTMustBeLessThanOrEqualToSuperMaxPT", "superMinPT");
+                    this.validationState.addAffectedField("superMaxPT");
                     return false;
                 }
                 this.resetValidationState();
@@ -37263,27 +37264,6 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
-        var GeneralDataDirective = (function (_super) {
-            __extends(GeneralDataDirective, _super);
-            function GeneralDataDirective() {
-                _super.apply(this, arguments);
-                this.template = '<div class="general-data"><div class="sub-header">{{::(\'GeneralData\' | st1Label)}}</div><st1-super-general-data data-ng-if="customerLevel === avaiCustomerLevels.super"></st1-super-general-data><st1-master-general-data data-ng-if="customerLevel === avaiCustomerLevels.master"></st1-master-general-data><st1-agent-general-data data-ng-if="customerLevel === avaiCustomerLevels.agent"></st1-agent-general-data><st1-member-general-data data-ng-if="customerLevel === avaiCustomerLevels.member"></st1-member-general-data></div>';
-            }
-            return GeneralDataDirective;
-        }(SettingType1.SubSectionBaseDirective));
-        CustomerSetting.ModuleRegister.directive("st1GeneralData", GeneralDataDirective);
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
         var CustomerCreditDirective = (function (_super) {
             __extends(CustomerCreditDirective, _super);
             function CustomerCreditDirective() {
@@ -37304,6 +37284,27 @@ var CustomerSetting;
             return CustomerCreditDirective;
         }(SettingType1.SubSectionBaseDirective));
         CustomerSetting.ModuleRegister.directive("st1CustomerCredit", CustomerCreditDirective);
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var GeneralDataDirective = (function (_super) {
+            __extends(GeneralDataDirective, _super);
+            function GeneralDataDirective() {
+                _super.apply(this, arguments);
+                this.template = '<div class="general-data"><div class="sub-header">{{::(\'GeneralData\' | st1Label)}}</div><st1-super-general-data data-ng-if="customerLevel === avaiCustomerLevels.super"></st1-super-general-data><st1-master-general-data data-ng-if="customerLevel === avaiCustomerLevels.master"></st1-master-general-data><st1-agent-general-data data-ng-if="customerLevel === avaiCustomerLevels.agent"></st1-agent-general-data><st1-member-general-data data-ng-if="customerLevel === avaiCustomerLevels.member"></st1-member-general-data></div>';
+            }
+            return GeneralDataDirective;
+        }(SettingType1.SubSectionBaseDirective));
+        CustomerSetting.ModuleRegister.directive("st1GeneralData", GeneralDataDirective);
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
