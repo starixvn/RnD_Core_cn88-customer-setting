@@ -15,7 +15,7 @@
         @include border-radius($tooltip-border-radius);
         @include opacity(1);
         font-weight: normal;
-        line-height: 1.5rem;
+        line-height: 1.5;
         margin-bottom: 8px;
         max-width: 300px;
         padding: 4px 8px;

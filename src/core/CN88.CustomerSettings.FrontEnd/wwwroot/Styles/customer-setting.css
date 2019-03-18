@@ -429,7 +429,7 @@ select.setting-field {
       border: none;
       color: #7b0f0f;
       justify-content: center;
-      line-height: 3rem;
+      line-height: 3;
       padding: 0 8px;
       width: 100%; }
   .block__cell, .block__lbl, .block__value {
@@ -576,7 +576,7 @@ select.setting-field {
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
     opacity: 1;
     font-weight: normal;
-    line-height: 1.5rem;
+    line-height: 1.5;
     margin-bottom: 8px;
     max-width: 300px;
     padding: 4px 8px;
