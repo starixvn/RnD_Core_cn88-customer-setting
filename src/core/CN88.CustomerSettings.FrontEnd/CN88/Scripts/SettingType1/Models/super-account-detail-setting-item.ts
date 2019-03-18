@@ -48,10 +48,9 @@ namespace CustomerSetting.SettingType1 {
 
         public toJson(): any {
             var superAccountDetail: any = super.toJson();
+            var changedPTItems: SuperPTItem[] = this.isNew ? this.ptItems : this.ptItems.filter((ptItem: SuperPTItem) => ptItem.isChanged());
 
-            superAccountDetail.ptItems = this.ptItems
-                .filter((ptItem: SuperPTItem) => ptItem.isChanged())
-                .map((ptItem: SuperPTItem) => ptItem.toJson());
+            superAccountDetail.ptItems = changedPTItems.map((ptItem: SuperPTItem) => ptItem.toJson());
 
             return superAccountDetail;
         }
