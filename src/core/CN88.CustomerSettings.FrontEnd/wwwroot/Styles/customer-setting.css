@@ -581,7 +581,7 @@ select.setting-field {
     max-width: 300px;
     padding: 4px 8px;
     position: relative;
-    text-align: center;
+    text-align: justify;
     text-decoration: none; }
     .tooltip__content:after, .tooltip__content:before {
       border-color: transparent;
@@ -639,8 +639,7 @@ select.setting-field {
 
 .tooltip--right .tooltip__content {
   margin-bottom: 0;
-  margin-right: 8px;
-  text-align: right; }
+  margin-right: 8px; }
   .tooltip--right .tooltip__content:after, .tooltip--right .tooltip__content:before {
     border-color: transparent;
     border-width: 8px;
@@ -679,8 +678,7 @@ select.setting-field {
 
 .tooltip--left .tooltip__content {
   margin-bottom: 0;
-  margin-left: 8px;
-  text-align: left; }
+  margin-left: 8px; }
   .tooltip--left .tooltip__content:after, .tooltip--left .tooltip__content:before {
     border-color: transparent;
     border-width: 8px;
@@ -1024,10 +1022,8 @@ select.setting-field {
 .setting-type-1 .icon--invalid-username {
   background-position: -28px -2px; }
 
-.setting-type-1 .password-rule {
-  text-align: left; }
-  .setting-type-1 .password-rule .note {
-    font-weight: bold; }
+.setting-type-1 .password-rule .note {
+  font-weight: bold; }
 
 /*
  * A partial implementation of the Ruby list functions from Compass:

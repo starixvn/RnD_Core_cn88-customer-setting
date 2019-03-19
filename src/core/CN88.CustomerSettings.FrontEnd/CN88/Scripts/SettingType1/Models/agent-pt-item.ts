@@ -60,8 +60,17 @@ namespace CustomerSetting.SettingType1 {
                 return false;
             }
 
-            if ((this.masterPT + this.agentPT > this.maxAllowedPT) || (this.masterPT + this.agentPT < this.minAllowedPT)) {
-                this.validationState = new ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minAllowedPT, this.maxAllowedPT]);
+            if (this.minAllowedPT <= this.maxAllowedPT) {
+                var totalPT: number = this.masterPT + this.agentPT;
+
+                if (totalPT > this.maxAllowedPT || totalPT < this.minAllowedPT) {
+                    this.validationState = new ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minAllowedPT, this.maxAllowedPT]);
+                    this.validationState.addAffectedField("agentPT");
+
+                    return false;
+                }
+            } else {
+                this.validationState = new ValidationResult("TotalPTRangeConflict", "masterPT");
                 this.validationState.addAffectedField("agentPT");
 
                 return false;

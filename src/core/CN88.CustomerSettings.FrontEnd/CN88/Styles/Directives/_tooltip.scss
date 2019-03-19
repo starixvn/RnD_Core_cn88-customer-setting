@@ -20,7 +20,7 @@
         max-width: 300px;
         padding: 4px 8px;
         position: relative;
-        text-align: center;
+        text-align: justify;
         text-decoration: none;
 
         &:after, &:before {
@@ -128,8 +128,6 @@
             right: 8px;
         }
 
-        text-align: right;
-
         &:after, &:before {
             border-color: transparent;
             border-width: 8px;
@@ -203,8 +201,6 @@
             bottom: 0;
             left: 8px;
         }
-
-        text-align: left;
 
         &:after, &:before {
             border-color: transparent;

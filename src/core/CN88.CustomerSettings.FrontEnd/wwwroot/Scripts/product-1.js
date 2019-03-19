@@ -35542,6 +35542,140 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    (function (SettingLevel) {
+        SettingLevel[SettingLevel["product"] = 1] = "product";
+        SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
+        SettingLevel[SettingLevel["betType"] = 3] = "betType";
+        SettingLevel[SettingLevel["sportTypeBetType"] = 4] = "sportTypeBetType";
+    })(CustomerSetting.SettingLevel || (CustomerSetting.SettingLevel = {}));
+    var SettingLevel = CustomerSetting.SettingLevel;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingTypeBaseDirective = (function () {
+        function SettingTypeBaseDirective(appConfigService, settingTypesSharedValuesService, instantiateSettingItem) {
+            var _this = this;
+            this.replace = true;
+            this.link = function (scope) {
+                _this.linkInternal(scope);
+            };
+            this.appConfigService = appConfigService;
+            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
+            this.instantiateSettingItem = instantiateSettingItem;
+        }
+        Object.defineProperty(SettingTypeBaseDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    settingType: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingTypeBaseDirective.prototype.linkInternal = function (scope) {
+            var _this = this;
+            scope.actorLevel = this.settingTypesSharedValuesService.actorLevel;
+            scope.customerId = this.settingTypesSharedValuesService.customerId;
+            scope.uplineId = this.settingTypesSharedValuesService.uplineId;
+            scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
+            scope.productId = this.settingTypesSharedValuesService.productId;
+            scope.productName = this.settingTypesSharedValuesService.productName;
+            scope.isNew = this.settingTypesSharedValuesService.isNew;
+            scope.editable = this.appConfigService.canUpdate() && scope.settingType.displayMode === CustomerSetting.DisplayMode.editable;
+            scope.avaiCustomerLevels = CustomerSetting.Level;
+            if (this.instantiateSettingItem) {
+                if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
+                    if (scope.settingType.isError) {
+                        if (scope.settingType.settingItems.length > 0) {
+                            scope.settingType.settingItems[0] = new CustomerSetting.ErrorSettingItem(scope.settingType.settingItems[0]);
+                        }
+                    }
+                    else {
+                        scope.settingType.settingItems.forEach(function (item, index) {
+                            if (item) {
+                                scope.settingType.settingItems[index] = _this.instantiateSettingItem(item, scope.isNew, scope.customerLevel, scope.uplineId);
+                            }
+                        });
+                    }
+                }
+            }
+        };
+        return SettingTypeBaseDirective;
+    }());
+    CustomerSetting.SettingTypeBaseDirective = SettingTypeBaseDirective;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    var DefaultSettingTypeGroupingDirective = (function (_super) {
+        __extends(DefaultSettingTypeGroupingDirective, _super);
+        function DefaultSettingTypeGroupingDirective() {
+            var _this = this;
+            _super.apply(this, arguments);
+            this.template = '<div class="block setting-type-{{settingType.id}} {{cssClass}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div><div class="block__item-group" data-ng-class="{ \'block__item-group--last\': $last }" data-ng-if="settingType | validSettingType" data-ng-repeat="group in sportGroups"><div class="block__sub-header" data-ng-if="settingType.settingLevel === avaiSettingLevels.sportTypeBetType" data-sport-type="{{group[0].sportTypeId}}">{{group[0].sportTypeName}}</div><div class="block__item" data-ng-repeat="item in group" data-ng-class="{ \'block__item--last\': $last, \'block__item--near-last\': $index === group.length - 2 && $index % 2 === 0, \'block__item--before-extra-item\': $last && group.length % 2 === 1 && group.length > 1, \'block__item--odd\': $odd, \'block__item--full-width\': group.length === 1 }"><div class="block__lbl" data-ng-class="{ \'block__lbl--padding-left\': settingType.settingLevel === avaiSettingLevels.sportTypeBetType }" data-product="{{productId}}" data-sport-type="{{item.sportTypeId}}" data-bet-type="{{item.betTypeId}}">{{item | showingName:settingType.settingLevel:productName }}</div><div class="block__value" data-ng-include="valueTemplateUrl"></div></div></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{sportGroups[0][0].errorMessage}}</div></div>';
+            this.link = function (scope) {
+                _this.linkInternal(scope);
+            };
+        }
+        DefaultSettingTypeGroupingDirective.prototype.linkInternal = function (scope) {
+            _super.prototype.linkInternal.call(this, scope);
+            scope.avaiSettingLevels = CustomerSetting.SettingLevel;
+            if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
+                if (scope.settingType.settingLevel === CustomerSetting.SettingLevel.sportTypeBetType) {
+                    scope.sportGroups = this.groupSettingItemsBySportType(scope.settingType.settingItems);
+                }
+                else {
+                    scope.sportGroups = [scope.settingType.settingItems];
+                }
+            }
+        };
+        DefaultSettingTypeGroupingDirective.prototype.groupSettingItemsBySportType = function (settingItems) {
+            var currentSportTypeId = -1;
+            var result = [];
+            var group;
+            settingItems.forEach(function (item) {
+                var settingItem = item;
+                if (currentSportTypeId !== settingItem.sportTypeId) {
+                    if (group) {
+                        result.push(group);
+                    }
+                    currentSportTypeId = settingItem.sportTypeId;
+                    group = [];
+                }
+                group.push(settingItem);
+            });
+            if (group) {
+                result.push(group);
+            }
+            return result;
+        };
+        return DefaultSettingTypeGroupingDirective;
+    }(CustomerSetting.SettingTypeBaseDirective));
+    CustomerSetting.DefaultSettingTypeGroupingDirective = DefaultSettingTypeGroupingDirective;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    function ShowingName() {
+        return function (settingItem, settingLevel, productName) {
+            return settingLevel === CustomerSetting.SettingLevel.product
+                ? productName
+                : (settingLevel === CustomerSetting.SettingLevel.sportType
+                    ? settingItem.sportTypeName
+                    : settingItem.betTypeName);
+        };
+    }
+    CustomerSetting.ModuleRegister.filter("showingName", ShowingName);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var NumericInputDirective = (function () {
         function NumericInputDirective($filter, appConfigService) {
             var _this = this;
@@ -35744,140 +35878,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    (function (SettingLevel) {
-        SettingLevel[SettingLevel["product"] = 1] = "product";
-        SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
-        SettingLevel[SettingLevel["betType"] = 3] = "betType";
-        SettingLevel[SettingLevel["sportTypeBetType"] = 4] = "sportTypeBetType";
-    })(CustomerSetting.SettingLevel || (CustomerSetting.SettingLevel = {}));
-    var SettingLevel = CustomerSetting.SettingLevel;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingTypeBaseDirective = (function () {
-        function SettingTypeBaseDirective(appConfigService, settingTypesSharedValuesService, instantiateSettingItem) {
-            var _this = this;
-            this.replace = true;
-            this.link = function (scope) {
-                _this.linkInternal(scope);
-            };
-            this.appConfigService = appConfigService;
-            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
-            this.instantiateSettingItem = instantiateSettingItem;
-        }
-        Object.defineProperty(SettingTypeBaseDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    settingType: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingTypeBaseDirective.prototype.linkInternal = function (scope) {
-            var _this = this;
-            scope.actorLevel = this.settingTypesSharedValuesService.actorLevel;
-            scope.customerId = this.settingTypesSharedValuesService.customerId;
-            scope.uplineId = this.settingTypesSharedValuesService.uplineId;
-            scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
-            scope.productId = this.settingTypesSharedValuesService.productId;
-            scope.productName = this.settingTypesSharedValuesService.productName;
-            scope.isNew = this.settingTypesSharedValuesService.isNew;
-            scope.editable = this.appConfigService.canUpdate() && scope.settingType.displayMode === CustomerSetting.DisplayMode.editable;
-            scope.avaiCustomerLevels = CustomerSetting.Level;
-            if (this.instantiateSettingItem) {
-                if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
-                    if (scope.settingType.isError) {
-                        if (scope.settingType.settingItems.length > 0) {
-                            scope.settingType.settingItems[0] = new CustomerSetting.ErrorSettingItem(scope.settingType.settingItems[0]);
-                        }
-                    }
-                    else {
-                        scope.settingType.settingItems.forEach(function (item, index) {
-                            if (item) {
-                                scope.settingType.settingItems[index] = _this.instantiateSettingItem(item, scope.isNew, scope.customerLevel, scope.uplineId);
-                            }
-                        });
-                    }
-                }
-            }
-        };
-        return SettingTypeBaseDirective;
-    }());
-    CustomerSetting.SettingTypeBaseDirective = SettingTypeBaseDirective;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomerSetting;
-(function (CustomerSetting) {
-    var DefaultSettingTypeGroupingDirective = (function (_super) {
-        __extends(DefaultSettingTypeGroupingDirective, _super);
-        function DefaultSettingTypeGroupingDirective() {
-            var _this = this;
-            _super.apply(this, arguments);
-            this.template = '<div class="block setting-type-{{settingType.id}} {{cssClass}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div><div class="block__item-group" data-ng-class="{ \'block__item-group--last\': $last }" data-ng-if="settingType | validSettingType" data-ng-repeat="group in sportGroups"><div class="block__sub-header" data-ng-if="settingType.settingLevel === avaiSettingLevels.sportTypeBetType" data-sport-type="{{group[0].sportTypeId}}">{{group[0].sportTypeName}}</div><div class="block__item" data-ng-repeat="item in group" data-ng-class="{ \'block__item--last\': $last, \'block__item--near-last\': $index === group.length - 2 && $index % 2 === 0, \'block__item--before-extra-item\': $last && group.length % 2 === 1 && group.length > 1, \'block__item--odd\': $odd, \'block__item--full-width\': group.length === 1 }"><div class="block__lbl" data-ng-class="{ \'block__lbl--padding-left\': settingType.settingLevel === avaiSettingLevels.sportTypeBetType }" data-product="{{productId}}" data-sport-type="{{item.sportTypeId}}" data-bet-type="{{item.betTypeId}}">{{item | showingName:settingType.settingLevel:productName }}</div><div class="block__value" data-ng-include="valueTemplateUrl"></div></div></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{sportGroups[0][0].errorMessage}}</div></div>';
-            this.link = function (scope) {
-                _this.linkInternal(scope);
-            };
-        }
-        DefaultSettingTypeGroupingDirective.prototype.linkInternal = function (scope) {
-            _super.prototype.linkInternal.call(this, scope);
-            scope.avaiSettingLevels = CustomerSetting.SettingLevel;
-            if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
-                if (scope.settingType.settingLevel === CustomerSetting.SettingLevel.sportTypeBetType) {
-                    scope.sportGroups = this.groupSettingItemsBySportType(scope.settingType.settingItems);
-                }
-                else {
-                    scope.sportGroups = [scope.settingType.settingItems];
-                }
-            }
-        };
-        DefaultSettingTypeGroupingDirective.prototype.groupSettingItemsBySportType = function (settingItems) {
-            var currentSportTypeId = -1;
-            var result = [];
-            var group;
-            settingItems.forEach(function (item) {
-                var settingItem = item;
-                if (currentSportTypeId !== settingItem.sportTypeId) {
-                    if (group) {
-                        result.push(group);
-                    }
-                    currentSportTypeId = settingItem.sportTypeId;
-                    group = [];
-                }
-                group.push(settingItem);
-            });
-            if (group) {
-                result.push(group);
-            }
-            return result;
-        };
-        return DefaultSettingTypeGroupingDirective;
-    }(CustomerSetting.SettingTypeBaseDirective));
-    CustomerSetting.DefaultSettingTypeGroupingDirective = DefaultSettingTypeGroupingDirective;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    function ShowingName() {
-        return function (settingItem, settingLevel, productName) {
-            return settingLevel === CustomerSetting.SettingLevel.product
-                ? productName
-                : (settingLevel === CustomerSetting.SettingLevel.sportType
-                    ? settingItem.sportTypeName
-                    : settingItem.betTypeName);
-        };
-    }
-    CustomerSetting.ModuleRegister.filter("showingName", ShowingName);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     var SettingFieldGroupDirective = (function () {
         function SettingFieldGroupDirective($injector, $filter) {
             var _this = this;
@@ -36032,6 +36032,39 @@ var CustomerSetting;
         return SettingFieldDirective;
     }());
     CustomerSetting.ModuleRegister.directive("settingField", SettingFieldDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingResultDirective = (function () {
+        function SettingResultDirective($rootScope, $window) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
+            this.link = function (scope) {
+                scope.$watch("result", function (result) {
+                    _this.$rootScope.$emit("page-height-changed");
+                    if (result) {
+                        _this.$window.scrollTo(0, 0);
+                    }
+                });
+            };
+            this.$rootScope = $rootScope;
+            this.$window = $window;
+        }
+        Object.defineProperty(SettingResultDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    result: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingResultDirective.$inject = ["$rootScope", "$window"];
+        return SettingResultDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36222,39 +36255,6 @@ var CustomerSetting;
         return TooltipDirective;
     }());
     CustomerSetting.ModuleRegister.directive("tooltip", TooltipDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingResultDirective = (function () {
-        function SettingResultDirective($rootScope, $window) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
-            this.link = function (scope) {
-                scope.$watch("result", function (result) {
-                    _this.$rootScope.$emit("page-height-changed");
-                    if (result) {
-                        _this.$window.scrollTo(0, 0);
-                    }
-                });
-            };
-            this.$rootScope = $rootScope;
-            this.$window = $window;
-        }
-        Object.defineProperty(SettingResultDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    result: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingResultDirective.$inject = ["$rootScope", "$window"];
-        return SettingResultDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36854,7 +36854,7 @@ var CustomerSetting;
     (function (SettingType1) {
         var AgentPositionTakingDirective = (function () {
             function AgentPositionTakingDirective() {
-                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name position-taking--has-constraint"><span>{{ptItem.sportTypeName}}</span> <span class="position-taking__constraint-group"><span class="position-taking__constraint">{{\'MinAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.minAllowedPT | formatPercentage}}</span></span> <span class="position-taking__constraint">{{\'MaxAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.maxAllowedPT | formatPercentage}}</span></span></span></div><div data-ng-if="editable && isNew"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div></div></div><div data-ng-if="editable && !isNew"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.currentMasterPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.currentAgentPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div></div></div><div data-ng-if="!editable"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.masterPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.agentPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div></div>';
+                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name position-taking--has-constraint"><span>{{ptItem.sportTypeName}}</span> <span class="position-taking__constraint-group"><span class="position-taking__constraint">{{\'MinAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.minAllowedPT | formatPercentage}}</span></span> <span class="position-taking__constraint">{{\'MaxAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.maxAllowedPT | formatPercentage}}</span></span></span></div><div data-ng-if="editable && isNew"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label><div class="w60-percent" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div><div class="w60-percent" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT"><select class="setting-field setting-field--fullwidth" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"><option>-</option></select></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label><div class="w60-percent" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div><div class="w60-percent" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT"><select class="setting-field setting-field--fullwidth" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"><option>-</option></select></div></div></div><div data-ng-if="editable && !isNew"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.currentMasterPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.currentAgentPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div></div></div><div data-ng-if="!editable"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.masterPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.agentPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div></div>';
                 this.replace = true;
             }
             return AgentPositionTakingDirective;
@@ -36942,8 +36942,16 @@ var CustomerSetting;
                     this.validationState = new CustomerSetting.ValidationResult("AgentPTIsOutOfRange", "agentPT");
                     return false;
                 }
-                if ((this.masterPT + this.agentPT > this.maxAllowedPT) || (this.masterPT + this.agentPT < this.minAllowedPT)) {
-                    this.validationState = new CustomerSetting.ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minAllowedPT, this.maxAllowedPT]);
+                if (this.minAllowedPT <= this.maxAllowedPT) {
+                    var totalPT = this.masterPT + this.agentPT;
+                    if (totalPT > this.maxAllowedPT || totalPT < this.minAllowedPT) {
+                        this.validationState = new CustomerSetting.ValidationResult("TotalPTMustBeInRange", "masterPT", [this.minAllowedPT, this.maxAllowedPT]);
+                        this.validationState.addAffectedField("agentPT");
+                        return false;
+                    }
+                }
+                else {
+                    this.validationState = new CustomerSetting.ValidationResult("TotalPTRangeConflict", "masterPT");
                     this.validationState.addAffectedField("agentPT");
                     return false;
                 }
@@ -37779,6 +37787,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "MasterPTIsOutOfRange": "Master Agent Possess is out of range.",
         "AgentPTIsOutOfRange": "Agent Possess is out of range.",
         "TotalPTMustBeInRange": "Total Possess must be between {0}% and {1}%. Please try again.",
+        "TotalPTRangeConflict": "Conflict between current possess and new possess values. Please try again after the new possess value takes effect.",
         "PTEffectiveTime": "Effective after: {0}",
         "CreditsMustBeGreaterThanOrEqualTo": "Credits must be greater than or equal to {0}.",
         "CreditsMustBeLessThanOrEqualTo": "Credits must be less than or equal to {0}.",

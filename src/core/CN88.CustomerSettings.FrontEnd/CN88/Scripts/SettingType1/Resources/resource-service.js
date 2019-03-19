@@ -67,6 +67,7 @@
         "MasterPTIsOutOfRange": "Master Agent Possess is out of range.",
         "AgentPTIsOutOfRange": "Agent Possess is out of range.",
         "TotalPTMustBeInRange": "Total Possess must be between {0}% and {1}%. Please try again.",
+        "TotalPTRangeConflict": "Conflict between current possess and new possess values. Please try again after the new possess value takes effect.",
         "PTEffectiveTime": "Effective after: {0}",
         "CreditsMustBeGreaterThanOrEqualTo": "Credits must be greater than or equal to {0}.",
         "CreditsMustBeLessThanOrEqualTo": "Credits must be less than or equal to {0}.",
