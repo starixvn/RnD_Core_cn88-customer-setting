@@ -277,4 +277,7 @@ Notes: your password is cAsE sEnSiTiVe</value>
   <data name="InvalidCredit" xml:space="preserve">
     <value>New Credit is out of range, please refresh the form and try again.</value>
   </data>
+  <data name="Msg_20043" xml:space="preserve">
+    <value>Conflict between current possess and new possess values. Please try again after the new possess value takes effect.</value>
+  </data>
 </root>

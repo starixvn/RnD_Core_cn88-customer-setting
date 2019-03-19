@@ -340,6 +340,15 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Conflict between current possess and new possess values. Please try again after the new possess value takes effect..
+        /// </summary>
+        internal static string Msg_20043 {
+            get {
+                return ResourceManager.GetString("Msg_20043", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New SMA Min Possess is greater than the Total Possess taken by some lines..
         /// </summary>
         internal static string Msg_30007 {
