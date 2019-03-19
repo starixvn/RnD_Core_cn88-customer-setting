@@ -201,4 +201,7 @@
   <data name="ValuePositive" xml:space="preserve">
     <value>Value must be positive</value>
   </data>
+  <data name="BetTypeName_20_0" xml:space="preserve">
+    <value>Money Line, In-Play Money Line</value>
+  </data>
 </root>
