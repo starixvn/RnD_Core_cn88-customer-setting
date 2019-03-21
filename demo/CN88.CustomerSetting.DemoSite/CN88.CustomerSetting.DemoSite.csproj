@@ -177,6 +177,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <Content Include="Web.local1.config" />
+    <Content Include="Web.sit.config" />
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
