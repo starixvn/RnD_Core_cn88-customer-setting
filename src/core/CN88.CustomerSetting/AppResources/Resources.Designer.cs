@@ -124,7 +124,7 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Money Line, In-Play Money Line.
+        ///   Looks up a localized string similar to Moneyline, In-Play Moneyline.
         /// </summary>
         public static string BetTypeName_20_0 {
             get {
