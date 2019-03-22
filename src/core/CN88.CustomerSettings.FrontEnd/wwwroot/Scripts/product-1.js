@@ -35676,160 +35676,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    var NumericInputDirective = (function () {
-        function NumericInputDirective($filter, appConfigService) {
-            var _this = this;
-            this.restrict = "A";
-            this.link = function (scope, originalElement) {
-                var element = angular.element(originalElement[0]);
-                var input = element[0];
-                var maxLength = parseInt(element.attr("maxlength"), 10);
-                var modelCtrl = element.controller("ngModel");
-                var latestValidValue;
-                var latestValidFormattedValue;
-                scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
-                element.on("focus", function () {
-                    element.data("focused", true);
-                });
-                element.on("focusout", function () {
-                    element.data("focused", false);
-                    if (scope.strictFormat && scope.precision > 0) {
-                        latestValidValue = modelCtrl.$modelValue;
-                        latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
-                        element.val(latestValidFormattedValue);
-                    }
-                });
-                element.on("mouseup", function () {
-                    if (element.data("focused")) {
-                        input.select();
-                        element.data("focused", false);
-                    }
-                });
-                element.on("keydown", function (event) {
-                    var value = element.val();
-                    var cursorPosition = input.selectionStart;
-                    if (event.keyCode === 8) {
-                        if ((input.selectionStart === input.selectionEnd)
-                            && (cursorPosition > 0)
-                            && (value[cursorPosition - 1] === _this.thousandSeparator)) {
-                            input.selectionStart = cursorPosition - 1;
-                            input.selectionEnd = cursorPosition - 1;
-                        }
-                        return;
-                    }
-                    if (event.keyCode === 46) {
-                        if ((input.selectionStart === input.selectionEnd)
-                            && (cursorPosition > 0)
-                            && (value[cursorPosition] === _this.thousandSeparator)) {
-                            input.selectionStart = cursorPosition + 1;
-                            input.selectionEnd = cursorPosition + 1;
-                        }
-                        return;
-                    }
-                    if (event.keyCode === 69) {
-                        event.preventDefault();
-                        return;
-                    }
-                });
-                modelCtrl.$formatters.unshift(function () {
-                    latestValidValue = modelCtrl.$modelValue;
-                    latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
-                    return latestValidFormattedValue;
-                });
-                modelCtrl.$parsers.unshift(function (viewValue) {
-                    if (modelCtrl.$isEmpty(viewValue)) {
-                        latestValidValue = null;
-                        latestValidFormattedValue = viewValue;
-                        return latestValidValue;
-                    }
-                    if (latestValidFormattedValue === viewValue) {
-                        return latestValidValue;
-                    }
-                    var caretPosition = input.selectionStart;
-                    var _a = _this.parseAndFormatViewValue(viewValue, scope.precision, false), formattedValue = _a.formattedValue, value = _a.value;
-                    if (!isNaN(value) && (scope.negativeAllowed || value >= 0)) {
-                        var toBeValidValue = value;
-                        var toBeValidFormattedValue = formattedValue;
-                        var allowedLength = maxLength;
-                        if (scope.precision > 0 && toBeValidFormattedValue.indexOf(_this.decimalSeparator) < 0) {
-                            allowedLength = maxLength - scope.precision - 1;
-                        }
-                        if (toBeValidFormattedValue.length > allowedLength) {
-                            toBeValidValue = latestValidValue;
-                            toBeValidFormattedValue = latestValidFormattedValue;
-                        }
-                        latestValidValue = toBeValidValue;
-                        latestValidFormattedValue = toBeValidFormattedValue;
-                    }
-                    modelCtrl.$setViewValue(latestValidFormattedValue);
-                    modelCtrl.$render();
-                    _this.setCaretPosition(input, caretPosition, viewValue, latestValidFormattedValue);
-                    return latestValidValue;
-                });
-            };
-            this.numberFilter = $filter("number");
-            this.thousandSeparator = appConfigService.thousandSeparator;
-            this.decimalSeparator = appConfigService.decimalSeparator;
-        }
-        Object.defineProperty(NumericInputDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    precision: "=?numericInput",
-                    strictFormat: "@",
-                    negativeAllowed: "@"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        NumericInputDirective.prototype.parseAndFormatViewValue = function (viewValue, precision, rounding) {
-            var value;
-            var formattedValue = "";
-            var numberParts = viewValue ? viewValue.split(this.decimalSeparator) : [];
-            if (numberParts.length > 1) {
-                if (precision > 0 && !/[\,\.]/.test(numberParts[1])) {
-                    var plainIntegerPart = numberParts[0].replace(/[\,]/g, "");
-                    var decimalPart = rounding ? numberParts[1] : numberParts[1].substring(0, precision);
-                    value = +(plainIntegerPart + this.decimalSeparator + decimalPart);
-                    if (!isNaN(value)) {
-                        formattedValue = rounding
-                            ? this.numberFilter(value, precision)
-                            : this.numberFilter(plainIntegerPart) + this.decimalSeparator + decimalPart;
-                    }
-                }
-            }
-            else if (numberParts.length > 0) {
-                var plainNumber = numberParts[0].replace(/[\,]/g, "");
-                value = +plainNumber;
-                if (!isNaN(value)) {
-                    formattedValue = this.numberFilter(value);
-                }
-            }
-            return {
-                formattedValue: formattedValue,
-                value: value
-            };
-        };
-        NumericInputDirective.prototype.setCaretPosition = function (input, originalCaretPosition, originalValue, formattedValue) {
-            var caretPosition = originalCaretPosition;
-            if (originalValue.length !== caretPosition) {
-                var offset = originalValue.length - formattedValue.length;
-                caretPosition = Math.max(0, caretPosition - offset);
-                if (input.selectionStart === input.selectionEnd) {
-                    input.selectionEnd = caretPosition;
-                }
-                input.selectionStart = caretPosition;
-            }
-        };
-        NumericInputDirective.$inject = ["$filter", "appConfigService"];
-        NumericInputDirective.defaultPrecision = 0;
-        return NumericInputDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     var PercentageDropdownDirective = (function () {
         function PercentageDropdownDirective(valueRangeService) {
             var _this = this;
@@ -36032,6 +35878,160 @@ var CustomerSetting;
         return SettingFieldDirective;
     }());
     CustomerSetting.ModuleRegister.directive("settingField", SettingFieldDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var NumericInputDirective = (function () {
+        function NumericInputDirective($filter, appConfigService) {
+            var _this = this;
+            this.restrict = "A";
+            this.link = function (scope, originalElement) {
+                var element = angular.element(originalElement[0]);
+                var input = element[0];
+                var maxLength = parseInt(element.attr("maxlength"), 10);
+                var modelCtrl = element.controller("ngModel");
+                var latestValidValue;
+                var latestValidFormattedValue;
+                scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
+                element.on("focus", function () {
+                    element.data("focused", true);
+                });
+                element.on("focusout", function () {
+                    element.data("focused", false);
+                    if (scope.strictFormat && scope.precision > 0) {
+                        latestValidValue = modelCtrl.$modelValue;
+                        latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
+                        element.val(latestValidFormattedValue);
+                    }
+                });
+                element.on("mouseup", function () {
+                    if (element.data("focused")) {
+                        input.select();
+                        element.data("focused", false);
+                    }
+                });
+                element.on("keydown", function (event) {
+                    var value = element.val();
+                    var cursorPosition = input.selectionStart;
+                    if (event.keyCode === 8) {
+                        if ((input.selectionStart === input.selectionEnd)
+                            && (cursorPosition > 0)
+                            && (value[cursorPosition - 1] === _this.thousandSeparator)) {
+                            input.selectionStart = cursorPosition - 1;
+                            input.selectionEnd = cursorPosition - 1;
+                        }
+                        return;
+                    }
+                    if (event.keyCode === 46) {
+                        if ((input.selectionStart === input.selectionEnd)
+                            && (cursorPosition > 0)
+                            && (value[cursorPosition] === _this.thousandSeparator)) {
+                            input.selectionStart = cursorPosition + 1;
+                            input.selectionEnd = cursorPosition + 1;
+                        }
+                        return;
+                    }
+                    if (event.keyCode === 69) {
+                        event.preventDefault();
+                        return;
+                    }
+                });
+                modelCtrl.$formatters.unshift(function () {
+                    latestValidValue = modelCtrl.$modelValue;
+                    latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
+                    return latestValidFormattedValue;
+                });
+                modelCtrl.$parsers.unshift(function (viewValue) {
+                    if (modelCtrl.$isEmpty(viewValue)) {
+                        latestValidValue = null;
+                        latestValidFormattedValue = viewValue;
+                        return latestValidValue;
+                    }
+                    if (latestValidFormattedValue === viewValue) {
+                        return latestValidValue;
+                    }
+                    var caretPosition = input.selectionStart;
+                    var _a = _this.parseAndFormatViewValue(viewValue, scope.precision, false), formattedValue = _a.formattedValue, value = _a.value;
+                    if (!isNaN(value) && (scope.negativeAllowed || value >= 0)) {
+                        var toBeValidValue = value;
+                        var toBeValidFormattedValue = formattedValue;
+                        var allowedLength = maxLength;
+                        if (scope.precision > 0 && toBeValidFormattedValue.indexOf(_this.decimalSeparator) < 0) {
+                            allowedLength = maxLength - scope.precision - 1;
+                        }
+                        if (toBeValidFormattedValue.length > allowedLength) {
+                            toBeValidValue = latestValidValue;
+                            toBeValidFormattedValue = latestValidFormattedValue;
+                        }
+                        latestValidValue = toBeValidValue;
+                        latestValidFormattedValue = toBeValidFormattedValue;
+                    }
+                    modelCtrl.$setViewValue(latestValidFormattedValue);
+                    modelCtrl.$render();
+                    _this.setCaretPosition(input, caretPosition, viewValue, latestValidFormattedValue);
+                    return latestValidValue;
+                });
+            };
+            this.numberFilter = $filter("number");
+            this.thousandSeparator = appConfigService.thousandSeparator;
+            this.decimalSeparator = appConfigService.decimalSeparator;
+        }
+        Object.defineProperty(NumericInputDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    precision: "=?numericInput",
+                    strictFormat: "@",
+                    negativeAllowed: "@"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        NumericInputDirective.prototype.parseAndFormatViewValue = function (viewValue, precision, rounding) {
+            var value;
+            var formattedValue = "";
+            var numberParts = viewValue ? viewValue.split(this.decimalSeparator) : [];
+            if (numberParts.length > 1) {
+                if (precision > 0 && !/[\,\.]/.test(numberParts[1])) {
+                    var plainIntegerPart = numberParts[0].replace(/[\,]/g, "");
+                    var decimalPart = rounding ? numberParts[1] : numberParts[1].substring(0, precision);
+                    value = +(plainIntegerPart + this.decimalSeparator + decimalPart);
+                    if (!isNaN(value)) {
+                        formattedValue = rounding
+                            ? this.numberFilter(value, precision)
+                            : this.numberFilter(plainIntegerPart) + this.decimalSeparator + decimalPart;
+                    }
+                }
+            }
+            else if (numberParts.length > 0) {
+                var plainNumber = numberParts[0].replace(/[\,]/g, "");
+                value = +plainNumber;
+                if (!isNaN(value)) {
+                    formattedValue = this.numberFilter(value);
+                }
+            }
+            return {
+                formattedValue: formattedValue,
+                value: value
+            };
+        };
+        NumericInputDirective.prototype.setCaretPosition = function (input, originalCaretPosition, originalValue, formattedValue) {
+            var caretPosition = originalCaretPosition;
+            if (originalValue.length !== caretPosition) {
+                var offset = originalValue.length - formattedValue.length;
+                caretPosition = Math.max(0, caretPosition - offset);
+                if (input.selectionStart === input.selectionEnd) {
+                    input.selectionEnd = caretPosition;
+                }
+                input.selectionStart = caretPosition;
+            }
+        };
+        NumericInputDirective.$inject = ["$filter", "appConfigService"];
+        NumericInputDirective.defaultPrecision = 0;
+        return NumericInputDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -37666,16 +37666,14 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "Save": "Save"
     };
 
-    labels["zh-cn"] = {
+    labels["zh-hans"] = {
+        "Cancel": "取消",
+        "Save": "保存"
     };
 
     labels["zh-tw"] = {
-    };
-
-    labels["zh-hans"] = {
-    };
-
-    labels["th-th"] = {
+        "Cancel": "取消",
+        "Save": "保存"
     };
 
     var messages = {};
@@ -37686,28 +37684,16 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "YouAreNotAuthorized": "You are not authorized on this function!"
     };
 
-    messages["zh-cn"] = {
-        "NoChangeToUpdate": "没有任何的变化更新。",
-        "SystemError": "哎哟..因为系统故障所以您会身在此处，请向管理层联系吧",
+    messages["zh-hans"] = {
+        "NoChangeToUpdate": "没有任何的异动需要更新。",
+        "SystemError": "不好意思…目前系统出错，请联系管理员！",
         "YouAreNotAuthorized": "您没有使用此功能的权限"
     };
 
     messages["zh-tw"] = {
-        "NoChangeToUpdate": "沒有任何的變化更新。",
-        "SystemError": "哎喲..因為系統故障所以您會身在此處，請向管理層聯繫吧",
+        "NoChangeToUpdate": "沒有任何的異動需要更新。",
+        "SystemError": "不好意思…目前系統故障，請聯絡系統管理員。",
         "YouAreNotAuthorized": "您沒有使用此功能的權限"
-    };
-
-    messages["zh-hans"] = {
-        "NoChangeToUpdate": "没有任何的变化更新。",
-        "SystemError": "哎哟..因为系统故障所以您会身在此处，请向管理层联系吧",
-        "YouAreNotAuthorized": "您没有使用此功能的权限"
-    };
-
-    messages["th-th"] = {
-        "NoChangeToUpdate": "ไม่มีการเปลี่ยนแปลงการอัพเดท",
-        "SystemError": "อุ้ย...คุณอยู่ที่นี่เนื่องจากระบบผิดพลาด กรุณาแจ้งผู้ให้บริการ",
-        "YouAreNotAuthorized": "คุณไม่มีอำนาจในการเข้าใช้งานฟังก์ชันนี้"
     };
 
     var resources = {
@@ -37717,7 +37703,6 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
 
     angular.module("customerSetting").value("customerSettingResources", resources);
 })();
-
 /*jshint -W101,-W106,-W044,-W098*/
 
 (function () {
@@ -37753,22 +37738,64 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "MaxAllowed": "Max. Allowed:"
     };
 
-    labels["zh-cn"] = {
+    labels["zh-hans"] = {
+        "Headline": "股东",
+        "Master": "总代理",
+        "Agent": "代理商",
+        "AccountDetail": "帐户详细设定",
+        "GeneralData": "基本资料",
+        "Name": "名称",
+        "Username": "帐户",
+        "Password": "密码",
+        "ConfirmPassword": "确认密码",
+        "FirstName": "名字",
+        "LastName": "姓",
+        "Phone": "电话",
+        "MobilePhone": "移动电话",
+        "Fax": "传真",
+        "SpreadGroup": "盘口种类",
+        "Credit": "信用额度",
+        "Credits": "信用额度",
+        "AvailableCreditRange": "剩余额度",
+        "Currency": "货币",
+        "PositionTaking": "占成数",
+        "SuperMinPT": "股東最低占成数",
+        "SuperMaxPT": "股東最高占成数",
+        "SuperPT": "股東占成数",
+        "MasterPT": "总代理占成数",
+        "AgentPT": "代理商占成数",
+        "MinAllowed": "最低可设:",
+        "MaxAllowed": "最高可设:"
     };
 
     labels["zh-tw"] = {
-    };
-
-    labels["zh-hans"] = {
-    };
-
-    labels["ko-kr"] = {
-    };
-
-    labels["ja-jp"] = {
-    };
-
-    labels["th-th"] = {
+        "Headline": "股東",
+        "Master": "總代理",
+        "Agent": "代理商",
+        "AccountDetail": "帳戶詳細設定",
+        "GeneralData": "基本資料",
+        "Name": "名稱",
+        "Username": "帳戶",
+        "Password": "密碼",
+        "ConfirmPassword": "確認密碼",
+        "FirstName": "名字",
+        "LastName": "姓",
+        "Phone": "電話",
+        "MobilePhone": "行動電話",
+        "Fax": "傳真",
+        "SpreadGroup": "盤口種類",
+        "Credit": "信用額度",
+        "Credits": "信用額度",
+        "AvailableCreditRange": "剩餘額度",
+        "Currency": "貨幣",
+        "PositionTaking": "佔成數",
+        "SuperMinPT": "股東最低佔成數",
+        "SuperMaxPT": "股東最高佔成數",
+        "SuperPT": "股東佔成數",
+        "MasterPT": "總代理佔成數",
+        "AgentPT": "代理商佔成數",
+        "MinAllowed": "最低可設:",
+        "MaxAllowed": "最高可設:"
     };
 
     var messages = {};
@@ -37794,22 +37821,46 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "InvalidHeadline": "Invalid headline."
     };
 
-    messages["zh-cn"] = {
+    messages["zh-hans"] = {
+        "RequiredField": "必填字段",
+        "ConfirmPasswordMustMatchPassword": "确认密码必须与密码匹配。",
+        "PasswordRules": "<div class='password-rule'><div>密码必须至少为8个字符且没有空格，并且至少包含以下3个条件：<ul><li>大写字母[A-Z]</li><li>小写字母[a-z]</li><li>数字[0-9]</li><li>特殊字符（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> 59D7!4$h, 493abcDE</div><div><span class='note'>注意：</span> 您的密码输入的时候要注意字母的大小写</div></div>",
+        "MemberPasswordRules": "<div class='password-rule'><div>密码必须是6-10个字符，没有空格，并且包含至少1个大写字母，1个小写字母，1个数字。（例如493abcDE，59D7!4$h）</div><div><span class='note'>注意：</span> 您的密码输入的时候要注意字母的大小写</div></div>",
+        "InvalidPassword": "无效的密码",
+        "SpreadGroupRule": "帐号一旦新增后, 此项目无法更改。",
+        "SuperMinPTIsOutOfRange": "股東最低占成数超出范围。",
+        "SuperMaxPTIsOutOfRange": "股東最高占成数超出范围。",
+        "SuperMinPTMustBeLessThanOrEqualToSuperMaxPT": "股東最低占成数必须小于或等于股東最高占成数",
+        "SuperPTIsOutOfRange": "股東占成数超出范围。",
+        "MasterPTIsOutOfRange": "总代理占成数超出范围。",
+        "AgentPTIsOutOfRange": "代理商占成数超出范围。",
+        "TotalPTMustBeInRange": "总占成数必须在{0}%和 {1}%之间。请重试",
+        "TotalPTRangeConflict": "Conflict between current possess and new possess values. Please try again after the new possess value takes effect.",
+        "PTEffectiveTime": "{0} 后生效",
+        "CreditsMustBeGreaterThanOrEqualTo": "信用额度必须大于或等于{0}。",
+        "CreditsMustBeLessThanOrEqualTo": "信用额度必须小于或等于{0}。",
+        "InvalidHeadline": "无效的股东。"
     };
 
     messages["zh-tw"] = {
-    };
-
-    messages["zh-hans"] = {
-    };
-
-    messages["ko-kr"] = {
-    };
-
-    messages["ja-jp"] = {
-    };
-
-    messages["th-th"] = {
+        "RequiredField": "必填欄位",
+        "ConfirmPasswordMustMatchPassword": "確認密碼必須與密碼相符。",
+        "PasswordRules": "<div class='password-rule'><div>密碼必須至少為8個字元且沒有空格，並且至少包含以下3個條件：<ul><li>大寫字母[A-Z]</li><li>小寫字母[a-z]</li><li>數字[0-9]</li><li>特殊字元（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> 59D7!4$h, 493abcDE</div><div><span class='note'>注意：</span> 您的密碼輸入的時候要注意字母的大小寫</div></div>",
+        "MemberPasswordRules": "<div class='password-rule'><div>密碼必須是6-10個字元，沒有空格，並且包含至少1個大寫字母，1個小寫字母，1個數字。 （例如493abcDE，59D7!4$h）</div><div><span class='note'>注意：</span> 您的密碼輸入的時候要注意字母的大小寫</div></div>",
+        "InvalidPassword": "無效的密碼",
+        "SpreadGroupRule": "帳號一旦新增後, 此項目即無法更改。",
+        "SuperMinPTIsOutOfRange": "股東最低佔成數超出範圍。",
+        "SuperMaxPTIsOutOfRange": "股東最高佔成數超出範圍。",
+        "SuperMinPTMustBeLessThanOrEqualToSuperMaxPT": "股東最低佔成數必須小於或等於股東最高佔成數",
+        "SuperPTIsOutOfRange": "股東佔成數超出範圍。",
+        "MasterPTIsOutOfRange": "總代理佔成數超出範圍。",
+        "AgentPTIsOutOfRange": "代理商佔成數超出範圍。",
+        "TotalPTMustBeInRange": "總佔成數必須在{0}%和 {1}%之間。請重試",
+        "TotalPTRangeConflict": "Conflict between current possess and new possess values. Please try again after the new possess value takes effect.",
+        "PTEffectiveTime": "{0} 後生效",
+        "CreditsMustBeGreaterThanOrEqualTo": "信用額度必須大於或等於{0}。",
+        "CreditsMustBeLessThanOrEqualTo": "信用額度必須小於或等於{0}。",
+        "InvalidHeadline": "無效的股東。"
     };
 
     var settingType1Resources = {
@@ -37831,22 +37882,18 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "MemberCommission": "Member Commission"
     };
 
-    labels["zh-cn"] = {
+    labels["zh-hans"] = {
+        "CommissionAndBetLimit": "退水和限额",
+        "MaxBet": "单注最高",
+        "MaxPerEvent": "单场最高",
+        "MemberCommission": "会员退水设定"
     };
 
     labels["zh-tw"] = {
-    };
-
-    labels["zh-hans"] = {
-    };
-
-    labels["ko-kr"] = {
-    };
-
-    labels["ja-jp"] = {
-    };
-
-    labels["th-th"] = {
+        "CommissionAndBetLimit": "退水和限額",
+        "MaxBet": "退水和限額",
+        "MaxPerEvent": "單場最高",
+        "MemberCommission": "會員退水設定"
     };
 
     var messages = {};
@@ -37863,22 +37910,28 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "MaxPerEventMustBeLessThanOrEqualTo": "Max per Event must be less than or equal to {0}."
     };
 
-    messages["zh-cn"] = {
+    messages["zh-hans"] = {
+        "RequiredField": "必填字段",
+        "CommissionIsOutOfRange": "退水设定超出范围。",
+        "MaxBetNote": "单注的最高投注额。",
+        "MaxBetMustBeGreaterThanOrEqualTo": "单注最高金额必须大于或等于{0}。",
+        "MaxBetMustBeLessThanOrEqualTo": "单注最高金额必须小于或等于{0}。",
+        "MaxBetMustBeLessThanOrEqualToMaxPerEvent": "单注最高金额必须小于或等于单场最高",
+        "MaxPerEventNote": "单场最高投注金额的限制是根据个别玩法和场次号, 单双除外。",
+        "MaxPerEventMustBeGreaterThanOrEqualTo": "单场最高金额必须大于或等于{0}。",
+        "MaxPerEventMustBeLessThanOrEqualTo": "单场最高金额必须小于或等于{0}。"
     };
 
     messages["zh-tw"] = {
-    };
-
-    messages["zh-hans"] = {
-    };
-
-    messages["ko-kr"] = {
-    };
-
-    messages["ja-jp"] = {
-    };
-
-    messages["th-th"] = {
+        "RequiredField": "必填欄位",
+        "CommissionIsOutOfRange": "退水設定超出範圍。",
+        "MaxBetNote": "單注的最高投注額。",
+        "MaxBetMustBeGreaterThanOrEqualTo": "單注最高金額必須大於或等於{0}。",
+        "MaxBetMustBeLessThanOrEqualTo": "單注最高金額必須小於或等於{0}。",
+        "MaxBetMustBeLessThanOrEqualToMaxPerEvent": "單注最高金額必須小於或等於單場最高",
+        "MaxPerEventNote": "單場最高投注金額的限制是根據個別玩法和場次號, 單雙除外。",
+        "MaxPerEventMustBeGreaterThanOrEqualTo": "單場最高金額必須大於或等於{0}。",
+        "MaxPerEventMustBeLessThanOrEqualTo": "單場最高金額必須小於或等於{0}。"
     };
 
     var settingType2Resources = {
