@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CommBetLimit" xml:space="preserve">
-    <value>佣金 &amp; 投注限額</value>
+    <value>退水和限額</value>
   </data>
   <data name="Msg_10003" xml:space="preserve">
     <value>最低投註/最高投註/單場限額無效</value>
@@ -154,6 +154,24 @@
     <value>單場限額必須少於或相等於總代理單場投註限額</value>
   </data>
   <data name="Msg_1" xml:space="preserve">
-    <value>傭金率無效</value>
+    <value>退水率無效</value>
+  </data>
+  <data name="UpdateCommBetSettingSuccess" xml:space="preserve">
+    <value>已成功更新佣金和限額設定。</value>
+  </data>
+  <data name="Msg_11" xml:space="preserve">
+    <value>請更新頁面然後重試。退水率超出範圍。</value>
+  </data>
+  <data name="Mgs_10040" xml:space="preserve">
+    <value>錯誤的單注最高金額/單場最高金額</value>
+  </data>
+  <data name="Msg_10041" xml:space="preserve">
+    <value>單注最高金額必須小於單場最高金額</value>
+  </data>
+  <data name="Msg_10042" xml:space="preserve">
+    <value>單注最高金額超出範圍。</value>
+  </data>
+  <data name="Msg_10043" xml:space="preserve">
+    <value>單場最高金額超出範圍。</value>
   </data>
 </root>

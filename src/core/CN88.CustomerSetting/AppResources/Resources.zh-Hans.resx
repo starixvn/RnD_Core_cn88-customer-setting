@@ -101,6 +101,60 @@
     <value>Sorry, You don't have permission to access this page.</value>
   </data>
   <data name="CreateSuccessfully" xml:space="preserve">
-    <value>Account {0} was created successfully zh-Hans</value>
+    <value>帐户{0}已成功创建。</value>
+  </data>
+  <data name="BetTypeName_1_1" xml:space="preserve">
+    <value>滚球让球, 滚球大小, 滚球单双</value>
+  </data>
+  <data name="BetTypeName_5_0" xml:space="preserve">
+    <value>独赢, 滚球独赢</value>
+  </data>
+  <data name="BetTypeName_9999_0" xml:space="preserve">
+    <value>其他玩法</value>
+  </data>
+  <data name="BetTypeName_9999_1" xml:space="preserve">
+    <value>滚球其他玩法</value>
+  </data>
+  <data name="SportTypeName_9999" xml:space="preserve">
+    <value>所有球类</value>
+  </data>
+  <data name="Live" xml:space="preserve">
+    <value>滚球</value>
+  </data>
+  <data name="BetTypeName_81_0" xml:space="preserve">
+    <value>百练赛 , 快乐5</value>
+  </data>
+  <data name="BetTypeName_1201_0" xml:space="preserve">
+    <value>虚拟运动</value>
+  </data>
+  <data name="BetTypeName_1501_0" xml:space="preserve">
+    <value>快乐彩/彩票</value>
+  </data>
+  <data name="SportTypeName_9998" xml:space="preserve">
+    <value>非体育产品</value>
+  </data>
+  <data name="AccountWasDisabled" xml:space="preserve">
+    <value>这个帐号禁用</value>
+  </data>
+  <data name="CustomersAreNotSameLine" xml:space="preserve">
+    <value>会员不同线！</value>
+  </data>
+  <data name="NoChangeToUpdate" xml:space="preserve">
+    <value>没有任何的异动需要更新。</value>
+  </data>
+  <data name="SettingTypeError" xml:space="preserve">
+    <value>由于技术故障导致加载设置类型失败。请稍后再试或联系系统管理员！</value>
+  </data>
+  <data name="SystemError" xml:space="preserve">
+    <value>不好意思…目前系统出错，请联系管理员！</value>
+  </data>
+  <data name="YouAreNotAuthorized" xml:space="preserve">
+    <value>您没有使用此功能的权限</value>
+  </data>
+  <data name="BetTypeName_10_0" xml:space="preserve">
+    <value>优胜冠军</value>
+  </data>
+  <data name="BetTypeName_1_0" xml:space="preserve">
+    <value>让球, 大小盘, 单双盘</value>
   </data>
 </root>

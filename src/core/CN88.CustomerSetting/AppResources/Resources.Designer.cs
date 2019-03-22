@@ -277,7 +277,7 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Upline Level cannot be null incase of editting member..
+        ///   Looks up a localized string similar to Upline Level cannot be null incase of editing member..
         /// </summary>
         public static string UplineLevelCannotBeNullIncaseOfEdittingMember {
             get {

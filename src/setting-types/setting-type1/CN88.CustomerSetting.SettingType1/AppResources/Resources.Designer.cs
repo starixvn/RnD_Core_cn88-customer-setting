@@ -322,7 +322,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Master Agent Possess is too high. It makes the line&apos;s Total Possess greater than SMA Max Possess.
+        ///   Looks up a localized string similar to Master Agent&apos;s Possess is too high. It makes the line&apos;s Total Possess greater than SMA Max Possess.
         /// </summary>
         internal static string Msg_20039 {
             get {

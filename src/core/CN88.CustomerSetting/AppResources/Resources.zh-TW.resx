@@ -101,10 +101,10 @@
     <value>Sorry, You don't have permission to access this page. - zh-tw</value>
   </data>
   <data name="CreateSuccessfully" xml:space="preserve">
-    <value>Account {0} was created successfully zh-TW</value>
+    <value>帳戶{0}已成功創建。</value>
   </data>
   <data name="SystemError" xml:space="preserve">
-    <value>哎喲..因為系統故障所以您會身在此處，請向管理層聯繫吧</value>
+    <value>不好意思…目前系統故障，請聯絡系統管理員。</value>
   </data>
   <data name="YouAreNotAuthorized" xml:space="preserve">
     <value>您沒有使用此功能的權限</value>
@@ -113,12 +113,48 @@
     <value>由於技術故障導致加載設置類型失敗。請稍後再試或聯系系統管理員！</value>
   </data>
   <data name="NoChangeToUpdate" xml:space="preserve">
-    <value>沒有任何的變化更新。</value>
+    <value>沒有任何的異動需要更新。</value>
   </data>
   <data name="AccountWasDisabled" xml:space="preserve">
     <value>這個帳號禁用</value>
   </data>
   <data name="CustomersAreNotSameLine" xml:space="preserve">
     <value>會員不同線！</value>
+  </data>
+  <data name="SportTypeName_9999" xml:space="preserve">
+    <value>所有球類</value>
+  </data>
+  <data name="BetTypeName_1_1" xml:space="preserve">
+    <value>滾球讓球, 滾球大小, 滾球單雙</value>
+  </data>
+  <data name="BetTypeName_5_0" xml:space="preserve">
+    <value>獨贏, 滾球獨贏</value>
+  </data>
+  <data name="BetTypeName_9999_0" xml:space="preserve">
+    <value>其他玩法</value>
+  </data>
+  <data name="BetTypeName_9999_1" xml:space="preserve">
+    <value>滾球其他玩法</value>
+  </data>
+  <data name="Live" xml:space="preserve">
+    <value>滾球</value>
+  </data>
+  <data name="BetTypeName_81_0" xml:space="preserve">
+    <value>百練賽 , 快樂5</value>
+  </data>
+  <data name="BetTypeName_1501_0" xml:space="preserve">
+    <value>快樂彩/彩票</value>
+  </data>
+  <data name="BetTypeName_1201_0" xml:space="preserve">
+    <value>虛擬運動</value>
+  </data>
+  <data name="SportTypeName_9998" xml:space="preserve">
+    <value>非體育產品</value>
+  </data>
+  <data name="BetTypeName_1_0" xml:space="preserve">
+    <value>讓球, 大小盤, 單雙盤</value>
+  </data>
+  <data name="BetTypeName_10_0" xml:space="preserve">
+    <value>優勝冠軍</value>
   </data>
 </root>

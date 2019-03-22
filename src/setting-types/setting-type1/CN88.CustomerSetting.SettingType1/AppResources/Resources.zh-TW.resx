@@ -121,7 +121,7 @@
     <value>密碼</value>
   </data>
   <data name="PasswordRules" xml:space="preserve">
-    <value>密碼條規</value>
+    <value>密碼規則</value>
   </data>
   <data name="PasswordHint01" xml:space="preserve">
     <value>密码必须至少 8 个字符没有空格和包含至少 3个 以下：</value>
@@ -155,57 +155,108 @@
     <value>您的密码不符合最低安全要求</value>
   </data>
   <data name="PasswordCannotBeNullOrEmpty" xml:space="preserve">
-    <value>密碼不能留空</value>
+    <value>對不起，密碼欄位不能為空！</value>
   </data>
   <data name="Msg_20001" xml:space="preserve">
-    <value>占成無效</value>
+    <value>無效的佔成數</value>
   </data>
   <data name="Msg_20019" xml:space="preserve">
     <value>現有總代理超過新增超級總代理的最高占成</value>
   </data>
   <data name="Msg_20020" xml:space="preserve">
-    <value>現有會員超過新增超級總代理的最高占成。</value>
+    <value>現有會員佔成數超出新設的股東最高佔成數</value>
   </data>
   <data name="Msg_20021" xml:space="preserve">
-    <value>現有總代理超過新增總代理的最高占成。</value>
+    <value>現有總代理佔成數超出新設的總代理最高佔成數</value>
   </data>
   <data name="Msg_20022" xml:space="preserve">
-    <value>現有會員超過新增總代理的最高占成。</value>
+    <value>現有會員佔成數超出新設的總代理最高佔成數</value>
   </data>
   <data name="Msg_20023" xml:space="preserve">
-    <value>現有代理超過新增代理的最高占成。</value>
+    <value>現有代理商佔成數超出新設的代理商最高佔成數</value>
   </data>
   <data name="Msg_20024" xml:space="preserve">
-    <value>現有會員超過新增代理的最高占成。</value>
+    <value>現有會員佔成數超出新設的代理商最高佔成數</value>
   </data>
   <data name="Msg_20025" xml:space="preserve">
-    <value>此占成違反上線的最低/最高占成.</value>
+    <value>違反上線最低/最高佔成數</value>
   </data>
   <data name="Msg_20026" xml:space="preserve">
-    <value>現有代理超過新增總代理的最高占成。</value>
+    <value>現有代理商佔成數超出新設的總代理最高佔成數</value>
   </data>
   <data name="Msg_20027" xml:space="preserve">
-    <value>此占成違反公司設置於總代理的最高占成。</value>
+    <value>違反公司所設的總代理最高佔成數</value>
   </data>
   <data name="Msg_20028" xml:space="preserve">
-    <value>此占成違反超級總代理的最高占成。</value>
+    <value>佔成數違反了股東最高佔成數</value>
   </data>
   <data name="Msg_20029" xml:space="preserve">
-    <value>此占成違反超級總代理的最低占成。</value>
+    <value>佔成數違反了股東最低佔成數</value>
   </data>
   <data name="Msg_20030" xml:space="preserve">
-    <value>此代理最低占成違反總代理的最高占成。</value>
+    <value>代理商最低佔成數違反了總代理最高佔成數</value>
   </data>
   <data name="Msg_20031" xml:space="preserve">
-    <value>此占成違反總代理的最高占成。</value>
+    <value>佔成數違反了總代理最高佔成數</value>
   </data>
   <data name="Msg_20032" xml:space="preserve">
-    <value>此占成違反總代理的最低占成。</value>
+    <value>佔成數違反了總代理最低佔成數</value>
   </data>
   <data name="Msg_20033" xml:space="preserve">
-    <value>此占成違反代理的最低/最高占成。</value>
+    <value>佔成數違反了代理商最低/最高佔成數</value>
   </data>
   <data name="Msg_20034" xml:space="preserve">
-    <value>此占成違反代理的最高占成。</value>
+    <value>佔成數違反了代理商最高佔成數</value>
+  </data>
+  <data name="AccountDetail" xml:space="preserve">
+    <value>帳戶詳細設定</value>
+  </data>
+  <data name="UpdateAccountDetailSuccess" xml:space="preserve">
+    <value>帳戶詳細設定已成功更新。</value>
+  </data>
+  <data name="Msg_30007" xml:space="preserve">
+    <value>新設的股東最低佔成數大於某幾條下線的總佔成數</value>
+  </data>
+  <data name="Msg_30008" xml:space="preserve">
+    <value>新設的股東最高佔成數小於某幾條下線的總佔成數</value>
+  </data>
+  <data name="Msg_30009" xml:space="preserve">
+    <value>股東最低佔成數必須小於或等於股東最高佔成數</value>
+  </data>
+  <data name="Msg_20035" xml:space="preserve">
+    <value>新設的股東佔成數過低，將導致某些下線的總佔成數低於股東最低佔成數</value>
+  </data>
+  <data name="Msg_20036" xml:space="preserve">
+    <value>新設的股東佔成數過高，將導致某些下線的總佔成數大於股東最高佔成數</value>
+  </data>
+  <data name="Msg_20037" xml:space="preserve">
+    <value>總代理及代理商的總佔成數過低，將導致此下線的總佔成數低於股東的最低佔成數</value>
+  </data>
+  <data name="Msg_20038" xml:space="preserve">
+    <value>總代理及代理商的總佔成數過高，將導致此下線的總佔成數大於股東的最高佔成數</value>
+  </data>
+  <data name="Msg_70024" xml:space="preserve">
+    <value>信用額度不足。</value>
+  </data>
+  <data name="Msg_20039" xml:space="preserve">
+    <value>總代理佔成數過高，導致其下線總佔成數大於股東的最高佔成數。</value>
+  </data>
+  <data name="Msg_20040" xml:space="preserve">
+    <value>代理商佔成數過高，導致其下線總佔成數大於股東的最高佔成數。</value>
+  </data>
+  <data name="EditPossessTimeInvalid" xml:space="preserve">
+    <value>目前無法更新佔成數。</value>
+  </data>
+  <data name="Msg_40041" xml:space="preserve">
+    <value>無效的股東</value>
+  </data>
+  <data name="SportTypeName_1" xml:space="preserve">
+    <value>體育博彩</value>
+  </data>
+  <data name="Msg_70025" xml:space="preserve">
+    <value>信用額度必須是正數</value>
+  </data>
+  <data name="InvalidCredit" xml:space="preserve">
+    <value>新的信用額度超出範圍，請更新表單後重試。</value>
   </data>
 </root>

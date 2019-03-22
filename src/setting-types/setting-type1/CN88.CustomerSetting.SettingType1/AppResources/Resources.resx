@@ -239,7 +239,7 @@ Notes: your password is cAsE sEnSiTiVe</value>
     <value>Insufficient credit.</value>
   </data>
   <data name="Msg_20039" xml:space="preserve">
-    <value>Master Agent Possess is too high. It makes the line's Total Possess greater than SMA Max Possess</value>
+    <value>Master Agent's Possess is too high. It makes the line's Total Possess greater than SMA Max Possess</value>
   </data>
   <data name="Msg_20040" xml:space="preserve">
     <value>Agent Possess is too high. It makes the line's Total Possess greater than SMA Max Possess</value>
