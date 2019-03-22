@@ -60,7 +60,7 @@
             </div>
             <div class="row">
                 <label class="w40-percent">{{::('AvailableCreditRange' | st1Label)}}</label>
-                <label class="w60-percent available-credit">>= {{accountDetail.minCredit | number:creditPrecision}}</label>
+                <label class="w60-percent">>= {{accountDetail.minCredit | number:creditPrecision}}</label>
             </div>
         </div>
         <div data-ng-if="customerLevel !== avaiCustomerLevels.super">
@@ -70,7 +70,7 @@
             </div>
             <div class="row">
                 <label class="w40-percent">{{::('AvailableCreditRange' | st1Label)}}</label>
-                <label class="w60-percent available-credit">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label>
+                <label class="w60-percent">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label>
             </div>
         </div>
     </div>

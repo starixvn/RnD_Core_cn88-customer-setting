@@ -17,7 +17,7 @@
             <st1-customer-credit data-account-detail="settingType.settingItems[0]"
                                  data-editable="editable"
                                  data-precision="settingType.creditPrecision"></st1-customer-credit>
-            <st1-position-taking data-ng-if="customerLevel !== avaiCustomerLevels.member"
+            <st1-position-taking data-ng-if="settingType.settingItems[0].ptItems.length > 0"
                                  data-account-detail="settingType.settingItems[0]"
                                  data-editable="editable"></st1-position-taking>
         </div>

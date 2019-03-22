@@ -35676,6 +35676,160 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var NumericInputDirective = (function () {
+        function NumericInputDirective($filter, appConfigService) {
+            var _this = this;
+            this.restrict = "A";
+            this.link = function (scope, originalElement) {
+                var element = angular.element(originalElement[0]);
+                var input = element[0];
+                var maxLength = parseInt(element.attr("maxlength"), 10);
+                var modelCtrl = element.controller("ngModel");
+                var latestValidValue;
+                var latestValidFormattedValue;
+                scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
+                element.on("focus", function () {
+                    element.data("focused", true);
+                });
+                element.on("focusout", function () {
+                    element.data("focused", false);
+                    if (scope.strictFormat && scope.precision > 0) {
+                        latestValidValue = modelCtrl.$modelValue;
+                        latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
+                        element.val(latestValidFormattedValue);
+                    }
+                });
+                element.on("mouseup", function () {
+                    if (element.data("focused")) {
+                        input.select();
+                        element.data("focused", false);
+                    }
+                });
+                element.on("keydown", function (event) {
+                    var value = element.val();
+                    var cursorPosition = input.selectionStart;
+                    if (event.keyCode === 8) {
+                        if ((input.selectionStart === input.selectionEnd)
+                            && (cursorPosition > 0)
+                            && (value[cursorPosition - 1] === _this.thousandSeparator)) {
+                            input.selectionStart = cursorPosition - 1;
+                            input.selectionEnd = cursorPosition - 1;
+                        }
+                        return;
+                    }
+                    if (event.keyCode === 46) {
+                        if ((input.selectionStart === input.selectionEnd)
+                            && (cursorPosition > 0)
+                            && (value[cursorPosition] === _this.thousandSeparator)) {
+                            input.selectionStart = cursorPosition + 1;
+                            input.selectionEnd = cursorPosition + 1;
+                        }
+                        return;
+                    }
+                    if (event.keyCode === 69) {
+                        event.preventDefault();
+                        return;
+                    }
+                });
+                modelCtrl.$formatters.unshift(function () {
+                    latestValidValue = modelCtrl.$modelValue;
+                    latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
+                    return latestValidFormattedValue;
+                });
+                modelCtrl.$parsers.unshift(function (viewValue) {
+                    if (modelCtrl.$isEmpty(viewValue)) {
+                        latestValidValue = null;
+                        latestValidFormattedValue = viewValue;
+                        return latestValidValue;
+                    }
+                    if (latestValidFormattedValue === viewValue) {
+                        return latestValidValue;
+                    }
+                    var caretPosition = input.selectionStart;
+                    var _a = _this.parseAndFormatViewValue(viewValue, scope.precision, false), formattedValue = _a.formattedValue, value = _a.value;
+                    if (!isNaN(value) && (scope.negativeAllowed || value >= 0)) {
+                        var toBeValidValue = value;
+                        var toBeValidFormattedValue = formattedValue;
+                        var allowedLength = maxLength;
+                        if (scope.precision > 0 && toBeValidFormattedValue.indexOf(_this.decimalSeparator) < 0) {
+                            allowedLength = maxLength - scope.precision - 1;
+                        }
+                        if (toBeValidFormattedValue.length > allowedLength) {
+                            toBeValidValue = latestValidValue;
+                            toBeValidFormattedValue = latestValidFormattedValue;
+                        }
+                        latestValidValue = toBeValidValue;
+                        latestValidFormattedValue = toBeValidFormattedValue;
+                    }
+                    modelCtrl.$setViewValue(latestValidFormattedValue);
+                    modelCtrl.$render();
+                    _this.setCaretPosition(input, caretPosition, viewValue, latestValidFormattedValue);
+                    return latestValidValue;
+                });
+            };
+            this.numberFilter = $filter("number");
+            this.thousandSeparator = appConfigService.thousandSeparator;
+            this.decimalSeparator = appConfigService.decimalSeparator;
+        }
+        Object.defineProperty(NumericInputDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    precision: "=?numericInput",
+                    strictFormat: "@",
+                    negativeAllowed: "@"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        NumericInputDirective.prototype.parseAndFormatViewValue = function (viewValue, precision, rounding) {
+            var value;
+            var formattedValue = "";
+            var numberParts = viewValue ? viewValue.split(this.decimalSeparator) : [];
+            if (numberParts.length > 1) {
+                if (precision > 0 && !/[\,\.]/.test(numberParts[1])) {
+                    var plainIntegerPart = numberParts[0].replace(/[\,]/g, "");
+                    var decimalPart = rounding ? numberParts[1] : numberParts[1].substring(0, precision);
+                    value = +(plainIntegerPart + this.decimalSeparator + decimalPart);
+                    if (!isNaN(value)) {
+                        formattedValue = rounding
+                            ? this.numberFilter(value, precision)
+                            : this.numberFilter(plainIntegerPart) + this.decimalSeparator + decimalPart;
+                    }
+                }
+            }
+            else if (numberParts.length > 0) {
+                var plainNumber = numberParts[0].replace(/[\,]/g, "");
+                value = +plainNumber;
+                if (!isNaN(value)) {
+                    formattedValue = this.numberFilter(value);
+                }
+            }
+            return {
+                formattedValue: formattedValue,
+                value: value
+            };
+        };
+        NumericInputDirective.prototype.setCaretPosition = function (input, originalCaretPosition, originalValue, formattedValue) {
+            var caretPosition = originalCaretPosition;
+            if (originalValue.length !== caretPosition) {
+                var offset = originalValue.length - formattedValue.length;
+                caretPosition = Math.max(0, caretPosition - offset);
+                if (input.selectionStart === input.selectionEnd) {
+                    input.selectionEnd = caretPosition;
+                }
+                input.selectionStart = caretPosition;
+            }
+        };
+        NumericInputDirective.$inject = ["$filter", "appConfigService"];
+        NumericInputDirective.defaultPrecision = 0;
+        return NumericInputDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var PercentageDropdownDirective = (function () {
         function PercentageDropdownDirective(valueRangeService) {
             var _this = this;
@@ -35882,193 +36036,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    var NumericInputDirective = (function () {
-        function NumericInputDirective($filter, appConfigService) {
-            var _this = this;
-            this.restrict = "A";
-            this.link = function (scope, originalElement) {
-                var element = angular.element(originalElement[0]);
-                var input = element[0];
-                var maxLength = parseInt(element.attr("maxlength"), 10);
-                var modelCtrl = element.controller("ngModel");
-                var latestValidValue;
-                var latestValidFormattedValue;
-                scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
-                element.on("focus", function () {
-                    element.data("focused", true);
-                });
-                element.on("focusout", function () {
-                    element.data("focused", false);
-                    if (scope.strictFormat && scope.precision > 0) {
-                        latestValidValue = modelCtrl.$modelValue;
-                        latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
-                        element.val(latestValidFormattedValue);
-                    }
-                });
-                element.on("mouseup", function () {
-                    if (element.data("focused")) {
-                        input.select();
-                        element.data("focused", false);
-                    }
-                });
-                element.on("keydown", function (event) {
-                    var value = element.val();
-                    var cursorPosition = input.selectionStart;
-                    if (event.keyCode === 8) {
-                        if ((input.selectionStart === input.selectionEnd)
-                            && (cursorPosition > 0)
-                            && (value[cursorPosition - 1] === _this.thousandSeparator)) {
-                            input.selectionStart = cursorPosition - 1;
-                            input.selectionEnd = cursorPosition - 1;
-                        }
-                        return;
-                    }
-                    if (event.keyCode === 46) {
-                        if ((input.selectionStart === input.selectionEnd)
-                            && (cursorPosition > 0)
-                            && (value[cursorPosition] === _this.thousandSeparator)) {
-                            input.selectionStart = cursorPosition + 1;
-                            input.selectionEnd = cursorPosition + 1;
-                        }
-                        return;
-                    }
-                    if (event.keyCode === 69) {
-                        event.preventDefault();
-                        return;
-                    }
-                });
-                modelCtrl.$formatters.unshift(function () {
-                    latestValidValue = modelCtrl.$modelValue;
-                    latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
-                    return latestValidFormattedValue;
-                });
-                modelCtrl.$parsers.unshift(function (viewValue) {
-                    if (modelCtrl.$isEmpty(viewValue)) {
-                        latestValidValue = null;
-                        latestValidFormattedValue = viewValue;
-                        return latestValidValue;
-                    }
-                    if (latestValidFormattedValue === viewValue) {
-                        return latestValidValue;
-                    }
-                    var caretPosition = input.selectionStart;
-                    var _a = _this.parseAndFormatViewValue(viewValue, scope.precision, false), formattedValue = _a.formattedValue, value = _a.value;
-                    if (!isNaN(value) && (scope.negativeAllowed || value >= 0)) {
-                        var toBeValidValue = value;
-                        var toBeValidFormattedValue = formattedValue;
-                        var allowedLength = maxLength;
-                        if (scope.precision > 0 && toBeValidFormattedValue.indexOf(_this.decimalSeparator) < 0) {
-                            allowedLength = maxLength - scope.precision - 1;
-                        }
-                        if (toBeValidFormattedValue.length > allowedLength) {
-                            toBeValidValue = latestValidValue;
-                            toBeValidFormattedValue = latestValidFormattedValue;
-                        }
-                        latestValidValue = toBeValidValue;
-                        latestValidFormattedValue = toBeValidFormattedValue;
-                    }
-                    modelCtrl.$setViewValue(latestValidFormattedValue);
-                    modelCtrl.$render();
-                    _this.setCaretPosition(input, caretPosition, viewValue, latestValidFormattedValue);
-                    return latestValidValue;
-                });
-            };
-            this.numberFilter = $filter("number");
-            this.thousandSeparator = appConfigService.thousandSeparator;
-            this.decimalSeparator = appConfigService.decimalSeparator;
-        }
-        Object.defineProperty(NumericInputDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    precision: "=?numericInput",
-                    strictFormat: "@",
-                    negativeAllowed: "@"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        NumericInputDirective.prototype.parseAndFormatViewValue = function (viewValue, precision, rounding) {
-            var value;
-            var formattedValue = "";
-            var numberParts = viewValue ? viewValue.split(this.decimalSeparator) : [];
-            if (numberParts.length > 1) {
-                if (precision > 0 && !/[\,\.]/.test(numberParts[1])) {
-                    var plainIntegerPart = numberParts[0].replace(/[\,]/g, "");
-                    var decimalPart = rounding ? numberParts[1] : numberParts[1].substring(0, precision);
-                    value = +(plainIntegerPart + this.decimalSeparator + decimalPart);
-                    if (!isNaN(value)) {
-                        formattedValue = rounding
-                            ? this.numberFilter(value, precision)
-                            : this.numberFilter(plainIntegerPart) + this.decimalSeparator + decimalPart;
-                    }
-                }
-            }
-            else if (numberParts.length > 0) {
-                var plainNumber = numberParts[0].replace(/[\,]/g, "");
-                value = +plainNumber;
-                if (!isNaN(value)) {
-                    formattedValue = this.numberFilter(value);
-                }
-            }
-            return {
-                formattedValue: formattedValue,
-                value: value
-            };
-        };
-        NumericInputDirective.prototype.setCaretPosition = function (input, originalCaretPosition, originalValue, formattedValue) {
-            var caretPosition = originalCaretPosition;
-            if (originalValue.length !== caretPosition) {
-                var offset = originalValue.length - formattedValue.length;
-                caretPosition = Math.max(0, caretPosition - offset);
-                if (input.selectionStart === input.selectionEnd) {
-                    input.selectionEnd = caretPosition;
-                }
-                input.selectionStart = caretPosition;
-            }
-        };
-        NumericInputDirective.$inject = ["$filter", "appConfigService"];
-        NumericInputDirective.defaultPrecision = 0;
-        return NumericInputDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingResultDirective = (function () {
-        function SettingResultDirective($rootScope, $window) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
-            this.link = function (scope) {
-                scope.$watch("result", function (result) {
-                    _this.$rootScope.$emit("page-height-changed");
-                    if (result) {
-                        _this.$window.scrollTo(0, 0);
-                    }
-                });
-            };
-            this.$rootScope = $rootScope;
-            this.$window = $window;
-        }
-        Object.defineProperty(SettingResultDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    result: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingResultDirective.$inject = ["$rootScope", "$window"];
-        return SettingResultDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     var SettingTypeDirectiveLoader = (function () {
         function SettingTypeDirectiveLoader($compile) {
             var _this = this;
@@ -36114,6 +36081,39 @@ var CustomerSetting;
         return SettingTypeDirectiveLoader;
     }());
     CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingResultDirective = (function () {
+        function SettingResultDirective($rootScope, $window) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
+            this.link = function (scope) {
+                scope.$watch("result", function (result) {
+                    _this.$rootScope.$emit("page-height-changed");
+                    if (result) {
+                        _this.$window.scrollTo(0, 0);
+                    }
+                });
+            };
+            this.$rootScope = $rootScope;
+            this.$window = $window;
+        }
+        Object.defineProperty(SettingResultDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    result: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingResultDirective.$inject = ["$rootScope", "$window"];
+        return SettingResultDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -37228,7 +37228,7 @@ var CustomerSetting;
             function AccountDetailDirective(resourceService, appConfigService, settingTypesSharedValuesService) {
                 var _this = this;
                 _super.call(this, appConfigService, settingTypesSharedValuesService, null);
-                this.template = '<div class="setting-type-1"><div class="block {{avaiCustomerLevels[actorLevel]}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }" data-setting-field-group="settingType.settingItems[0]" data-resource-service-name="st1ResourceService"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="col" data-ng-if="settingType | validSettingType"><st1-general-data data-account-detail="settingType.settingItems[0]" data-editable="editable"></st1-general-data></div><div class="col col--last" data-ng-if="settingType | validSettingType"><st1-customer-credit data-account-detail="settingType.settingItems[0]" data-editable="editable" data-precision="settingType.creditPrecision"></st1-customer-credit><st1-position-taking data-ng-if="customerLevel !== avaiCustomerLevels.member" data-account-detail="settingType.settingItems[0]" data-editable="editable"></st1-position-taking></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{settingType.settingItems[0].errorMessage}}</div></div></div>';
+                this.template = '<div class="setting-type-1"><div class="block {{avaiCustomerLevels[actorLevel]}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }" data-setting-field-group="settingType.settingItems[0]" data-resource-service-name="st1ResourceService"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="col" data-ng-if="settingType | validSettingType"><st1-general-data data-account-detail="settingType.settingItems[0]" data-editable="editable"></st1-general-data></div><div class="col col--last" data-ng-if="settingType | validSettingType"><st1-customer-credit data-account-detail="settingType.settingItems[0]" data-editable="editable" data-precision="settingType.creditPrecision"></st1-customer-credit><st1-position-taking data-ng-if="settingType.settingItems[0].ptItems.length > 0" data-account-detail="settingType.settingItems[0]" data-editable="editable"></st1-position-taking></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{settingType.settingItems[0].errorMessage}}</div></div></div>';
                 this.link = function (scope) {
                     _this.linkInternal(scope);
                     scope.settingTypeName = _this.resourceService.getLabel("AccountDetail");
@@ -37274,7 +37274,7 @@ var CustomerSetting;
             __extends(CustomerCreditDirective, _super);
             function CustomerCreditDirective() {
                 _super.apply(this, arguments);
-                this.template = '<div class="customer-credit"><div class="sub-header">{{::(\'Credit\' | st1Label)}}</div><div data-ng-if="editable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'Currency\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.currency.name}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Credits\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="text" maxlength="17" class="setting-field setting-field--fullwidth setting-field--number" data-numeric-input="creditPrecision" data-strict-format="true" data-ng-model="accountDetail.credit" data-setting-field="credit"></div></div><div class="row" data-ng-if="!isNew"><label class="w40-percent">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="available-credit w60-percent">>= {{accountDetail.minCredit | number:creditPrecision}}</label></div></div><div data-ng-if="customerLevel !== avaiCustomerLevels.super"><div class="row"><label class="w40-percent"><span>{{::(\'Credits\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="text" maxlength="17" class="setting-field setting-field--fullwidth setting-field--number" data-numeric-input="creditPrecision" data-strict-format="true" data-ng-model="accountDetail.credit" data-setting-field="credit"></div></div><div class="row"><label class="w40-percent">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="available-credit w60-percent">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label></div></div></div><div data-ng-if="!editable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'Currency\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.currency.name}}</label></div><div class="row"><label class="w40-percent">{{::(\'Credits\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label></div><div class="row"><label class="w40-percent">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="w60-percent available-credit">>= {{accountDetail.minCredit | number:creditPrecision}}</label></div></div><div data-ng-if="customerLevel !== avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'Credits\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label></div><div class="row"><label class="w40-percent">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="w60-percent available-credit">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label></div></div></div></div>';
+                this.template = '<div class="customer-credit"><div class="sub-header">{{::(\'Credit\' | st1Label)}}</div><div data-ng-if="editable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'Currency\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.currency.name}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Credits\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="text" maxlength="17" class="setting-field setting-field--fullwidth setting-field--number" data-numeric-input="creditPrecision" data-strict-format="true" data-ng-model="accountDetail.credit" data-setting-field="credit"></div></div><div class="row" data-ng-if="!isNew"><label class="w40-percent">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="available-credit w60-percent">>= {{accountDetail.minCredit | number:creditPrecision}}</label></div></div><div data-ng-if="customerLevel !== avaiCustomerLevels.super"><div class="row"><label class="w40-percent"><span>{{::(\'Credits\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="text" maxlength="17" class="setting-field setting-field--fullwidth setting-field--number" data-numeric-input="creditPrecision" data-strict-format="true" data-ng-model="accountDetail.credit" data-setting-field="credit"></div></div><div class="row"><label class="w40-percent">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="available-credit w60-percent">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label></div></div></div><div data-ng-if="!editable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'Currency\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.currency.name}}</label></div><div class="row"><label class="w40-percent">{{::(\'Credits\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label></div><div class="row"><label class="w40-percent">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="w60-percent">>= {{accountDetail.minCredit | number:creditPrecision}}</label></div></div><div data-ng-if="customerLevel !== avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'Credits\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label></div><div class="row"><label class="w40-percent">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="w60-percent">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label></div></div></div></div>';
             }
             Object.defineProperty(CustomerCreditDirective.prototype, "scope", {
                 get: function () {
@@ -37655,7 +37655,7 @@ var CustomerSetting;
 angular.module("customerSetting").run(["$templateCache", function($templateCache) {$templateCache.put("./tooltip.html","<div class=\"tooltip tooltip--{{tooltipType}}\" data-ng-show=\"tooltipMessage && beingShowed\"><div class=\"tooltip__content\" data-ng-bind-html=\"tooltipMessage | unsafe\"></div></div>");
 $templateCache.put("./SettingType1/headline-suggestion-item-template.html","<a href=\"#\" data-headline-suggestion-item data-ng-bind-html=\"match.label | uibTypeaheadHighlight:query\" ng-attr-title=\"{{match.label}}\"></a>");
 $templateCache.put("./SettingType2/commission-and-bet-limit-header-template.html","<div class=\"block__lbl\"></div><div class=\"w80-percent\"><div class=\"w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__lbl\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"item in availableCommissionGroups\">{{item}}</div></div><div class=\"block__lbl w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member\">{{::(\'MemberCommission\' | st2Label)}}</div><div class=\"w50-percent\"><div class=\"block__lbl w50-percent\"><span>{{::(\'MaxPerEvent\' | st2Label)}}</span> <span class=\"icon icon--command icon--info icon--margin-left\" data-tooltip=\"{{\'MaxPerEventNote\' | st2Message}}\" data-tooltip-type=\"info\" data-inner-tooltip=\"info\"></span></div><div class=\"block__lbl block__lbl--no-border w50-percent\"><span>{{::(\'MaxBet\' | st2Label)}}</span> <span class=\"icon icon--command icon--info icon--margin-left\" data-tooltip=\"{{\'MaxBetNote\' | st2Message}}\" data-tooltip-type=\"info\" data-inner-tooltip=\"true\"></span></div></div></div>");
-$templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html","<div class=\"block__cell-wrapper\" data-ng-if=\"editable\" data-setting-field-group=\"item\" data-resource-service-name=\"st2ResourceService\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups track by $index\"><percentage-dropdown data-ng-if=\"commissionGroup\" data-ng-model=\"commissionGroup.value\" data-setting-field=\"{{\'commissionGroups-\' + $index}}\" data-min=\"commissionGroup.minValue\" data-max=\"commissionGroup.maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell align-center w100-percent\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex]\" data-ng-model=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].value\" data-setting-field=\"{{\'commissionGroups-\' + item.memberSpreadGroupIndex}}\" data-min=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue\" data-max=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\" data-auto-refresh=\"true\"></percentage-dropdown></div><div class=\"block__cell w50-percent align-center\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell-wrapper w50-percent\"><div class=\"block__cell w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxPerEventConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxPerEvent\" data-setting-field=\"maxPerEvent\"> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxPerEvent > 0)\">[{{item.minMaxPerEvent | number:betSettingPrecision}}; {{item.maxMaxPerEvent | number:betSettingPrecision}}]</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && (item.maxMaxPerEvent === 0) && hasMaxPerEventConstraint\">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span></div><div class=\"block__cell block__cell--no-border w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxBetConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxBet\" data-setting-field=\"maxBet\"> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxBet > 0)\">[{{item.minMaxBet | number:betSettingPrecision}}; {{item.maxMaxBet | number:betSettingPrecision}}]</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && (item.maxMaxBet === 0) && hasMaxBetConstraint\">>={{item.minMaxBet | number:betSettingPrecision}}</span></div></div></div><div class=\"block__cell-wrapper\" data-ng-if=\"!editable\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups\">{{commissionGroup.value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\">{{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div><div class=\"w50-percent w50-percent\"><div class=\"block__cell align-center w50-percent\">{{item.maxPerEvent | number:betSettingPrecision}}</div><div class=\"block__cell align-center block__cell--no-border w50-percent\">{{item.maxBet | number:betSettingPrecision}}</div></div></div>");}]);
+$templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html","<div class=\"block__cell-wrapper\" data-ng-if=\"editable\" data-setting-field-group=\"item\" data-resource-service-name=\"st2ResourceService\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups track by $index\"><percentage-dropdown data-ng-if=\"commissionGroup\" data-ng-model=\"commissionGroup.value\" data-setting-field=\"{{\'commissionGroups-\' + $index}}\" data-min=\"commissionGroup.minValue\" data-max=\"commissionGroup.maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell align-center w100-percent\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex]\" data-ng-model=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].value\" data-setting-field=\"{{\'commissionGroups-\' + item.memberSpreadGroupIndex}}\" data-min=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue\" data-max=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\" data-auto-refresh=\"true\"></percentage-dropdown></div><div class=\"block__cell w50-percent align-center\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell-wrapper w50-percent\"><div class=\"block__cell w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxPerEventConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxPerEvent\" data-setting-field=\"maxPerEvent\"> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxPerEvent > 0)\">[{{item.minMaxPerEvent | number:betSettingPrecision}}; {{item.maxMaxPerEvent | number:betSettingPrecision}}]</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && (item.maxMaxPerEvent === 0) && hasMaxPerEventConstraint\">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span></div><div class=\"block__cell block__cell--no-border w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxBetConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxBet\" data-setting-field=\"maxBet\"> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxBet > 0)\">[{{item.minMaxBet | number:betSettingPrecision}}; {{item.maxMaxBet | number:betSettingPrecision}}]</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && (item.maxMaxBet === 0) && hasMaxBetConstraint\">>={{item.minMaxBet | number:betSettingPrecision}}</span></div></div></div><div class=\"block__cell-wrapper block__cell-wrapper--readonly\" data-ng-if=\"!editable\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups\">{{commissionGroup.value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center w100-percent\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\">{{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div><div class=\"w50-percent w50-percent\"><div class=\"block__cell align-center w50-percent\">{{item.maxPerEvent | number:betSettingPrecision}}</div><div class=\"block__cell align-center block__cell--no-border w50-percent\">{{item.maxBet | number:betSettingPrecision}}</div></div></div>");}]);
 /*jshint -W101,-W106,-W044,-W098*/
 
 (function () {

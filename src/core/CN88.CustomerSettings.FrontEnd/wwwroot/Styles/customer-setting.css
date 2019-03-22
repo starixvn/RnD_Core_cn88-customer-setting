@@ -452,6 +452,9 @@ select.setting-field {
     display: -ms-flexbox;
     display: flex;
     height: 100%; }
+    .block__cell-wrapper--readonly .block__cell, .block__cell-wrapper--readonly .block__lbl, .block__cell-wrapper--readonly .block__value {
+      height: 100%;
+      min-height: 38px; }
   .block__lbl {
     width: 40%;
     align-items: center;
