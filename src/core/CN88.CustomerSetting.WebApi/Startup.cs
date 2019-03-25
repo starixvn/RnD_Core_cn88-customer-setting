@@ -104,6 +104,8 @@ namespace CN88.CustomerSetting.WebApi
                 .UseConfig(new LoggingConfiguration()
                 .GetHttpHeaderInfo()
                 .UseGetDbExceptionInfo(DatabaseInfoGetters.GetDbExceptionInfo));
+
+            LogService.Info("CN88 Customer Setting has been started.");
         }
 
         private void InitRemotingRef()
