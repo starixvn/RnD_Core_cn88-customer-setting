@@ -340,6 +340,24 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid possess..
+        /// </summary>
+        internal static string Msg_20041 {
+            get {
+                return ResourceManager.GetString("Msg_20041", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot update new possess value at this moment..
+        /// </summary>
+        internal static string Msg_20042 {
+            get {
+                return ResourceManager.GetString("Msg_20042", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Conflict between current possess and new possess values. Please try again after the new possess value takes effect..
         /// </summary>
         internal static string Msg_20043 {

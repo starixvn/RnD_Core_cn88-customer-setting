@@ -280,4 +280,10 @@ Notes: your password is cAsE sEnSiTiVe</value>
   <data name="Msg_20043" xml:space="preserve">
     <value>Conflict between current possess and new possess values. Please try again after the new possess value takes effect.</value>
   </data>
+  <data name="Msg_20042" xml:space="preserve">
+    <value>You cannot update new possess value at this moment.</value>
+  </data>
+  <data name="Msg_20041" xml:space="preserve">
+    <value>Invalid possess.</value>
+  </data>
 </root>

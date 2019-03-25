@@ -259,4 +259,10 @@
   <data name="InvalidCredit" xml:space="preserve">
     <value>新的信用額度超出範圍，請更新表單後重試。</value>
   </data>
+  <data name="Msg_20042" xml:space="preserve">
+    <value>目前無法更新佔成數。</value>
+  </data>
+  <data name="Msg_20041" xml:space="preserve">
+    <value>無效的佔成數</value>
+  </data>
 </root>

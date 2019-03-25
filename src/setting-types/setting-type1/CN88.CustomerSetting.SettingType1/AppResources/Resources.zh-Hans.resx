@@ -233,4 +233,10 @@
   <data name="EditPossessTimeInvalid" xml:space="preserve">
     <value>目前无法更新占成数。</value>
   </data>
+  <data name="Msg_20042" xml:space="preserve">
+    <value>目前无法更新占成数。</value>
+  </data>
+  <data name="Msg_20041" xml:space="preserve">
+    <value>无效的占成数</value>
+  </data>
 </root>

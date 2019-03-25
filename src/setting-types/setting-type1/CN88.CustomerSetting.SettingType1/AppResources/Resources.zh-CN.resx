@@ -208,4 +208,7 @@
   <data name="Msg_20034" xml:space="preserve">
     <value>此占成违反代理的最高占成。</value>
   </data>
+  <data name="Msg_20041" xml:space="preserve">
+    <value>占成无效</value>
+  </data>
 </root>
