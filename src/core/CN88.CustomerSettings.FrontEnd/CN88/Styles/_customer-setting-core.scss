@@ -59,6 +59,7 @@ select.setting-field {
 }
 
 .btn-container {
+    margin: 10px 0;
     text-align: center;
 }
 
@@ -82,10 +83,6 @@ select.setting-field {
             border: none;
             color: $button-text-color;
         }
-    }
-
-    &--margin-top {
-        margin-top: 10px;
     }
 
     &:hover, &:focus {

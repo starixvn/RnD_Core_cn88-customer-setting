@@ -321,6 +321,7 @@ select.setting-field {
   color: #e9322d; }
 
 .btn-container {
+  margin: 10px 0;
   text-align: center; }
 
 .btn {
@@ -340,8 +341,6 @@ select.setting-field {
       background-color: #a5a5a5;
       border: none;
       color: #fff; }
-  .btn--margin-top {
-    margin-top: 10px; }
   .btn:hover, .btn:focus {
     background-color: #31c18e; }
 
