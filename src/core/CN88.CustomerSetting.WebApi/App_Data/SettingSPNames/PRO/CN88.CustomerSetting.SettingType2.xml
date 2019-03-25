@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Functions SiteId="88" SiteName="CN88">
-  <Function Name="Comm_BetSetting">
+  <Function Name="Setting_Type_2_Comm_BetSetting">
     <Setting Key="CS_CustomerIns_CommBetSetting_Sel" SpName="CS_CustomerIns_CommBetSetting_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600">
       <Parameters>
         <Parameter Name="IsTest" Value="false" />

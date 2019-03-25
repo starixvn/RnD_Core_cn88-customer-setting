@@ -186,7 +186,9 @@
 
         private async Task<AccountDetailSettingItem<SettingItemDefault>> GetSuperPTItems(int custId, bool isCreateNew)
         {
-            var pTItems = await DynamicRepository.FetchAsync<SuperPTItem>(new GetPTSettingCriteria(Level.Super.Value, custId, isCreateNew)).ConfigureAwait(false);
+            var pTItems = await DynamicRepository
+                .FetchAsync<SuperPTItem>(new GetPTSettingCriteria(Level.Super.Value, custId, isCreateNew))
+                .ConfigureAwait(false);
 
             return new AccountDetailSettingItem<SettingItemDefault>
             {
@@ -196,7 +198,9 @@
 
         private async Task<AccountDetailSettingItem<SettingItemDefault>> GetMasterPTItems(int custId, bool isCreateNew)
         {
-            var pTItems = await DynamicRepository.FetchAsync<MasterPTItem>(new GetPTSettingCriteria(Level.Master.Value, custId, isCreateNew)).ConfigureAwait(false);
+            var pTItems = await DynamicRepository
+                .FetchAsync<MasterPTItem>(new GetPTSettingCriteria(Level.Master.Value, custId, isCreateNew))
+                .ConfigureAwait(false);
 
             return new AccountDetailSettingItem<SettingItemDefault>
             {
@@ -206,7 +210,9 @@
 
         private async Task<AccountDetailSettingItem<SettingItemDefault>> GetAgentPTItems(int custId, bool isCreateNew)
         {
-            var pTItems = await DynamicRepository.FetchAsync<AgentPTItem>(new GetPTSettingCriteria(Level.Agent.Value, custId, isCreateNew)).ConfigureAwait(false);
+            var pTItems = await DynamicRepository
+                .FetchAsync<AgentPTItem>(new GetPTSettingCriteria(Level.Agent.Value, custId, isCreateNew))
+                .ConfigureAwait(false);
 
             return new AccountDetailSettingItem<SettingItemDefault>
             {
@@ -216,7 +222,9 @@
 
         private async Task<CreateCustomerInfoDto> GetDefaultCreateCustomerInfo(Level level, int uplineId)
             => level.IsNotSuperLevel()
-                ? await DynamicRepository.GetAsync<CreateCustomerInfoDto>(new GetCustomerInfoForCreateCriteria(level.Value, uplineId)).ConfigureAwait(false)
+                ? await DynamicRepository
+                    .GetAsync<CreateCustomerInfoDto>(new GetCustomerInfoForCreateCriteria(level.Value, uplineId))
+                    .ConfigureAwait(false)
                 : new CreateCustomerInfoDto();
 
         private async Task<IEnumerable<SpreadGroup>> GetSpreadGroups()
@@ -418,8 +426,8 @@
             SettingType settingType,
             ISettingContext settingContext)
         {
-            if(command.Setting.CustomerLevel.IsMemberLevel()
-                && (await GetMemberUsedCredit(command.Setting.CustomerId).ConfigureAwait(false)) > settingItem.Credit)
+            if (command.Setting.CustomerLevel.IsMemberLevel()
+                && await IsMemberCreditInvalid(command.Setting.CustomerId, settingItem.Credit).ConfigureAwait(false))
             {
                 return new SettingResult(
                 Result.SystemError.Code,
@@ -461,6 +469,17 @@
                 command.Setting.CustomerId,
                 settingType.Id,
                 settingType.Name);
+        }
+
+        private async Task<bool> IsMemberCreditInvalid(int customerId, decimal credit)
+        {
+            var memberMinCredit = await GetMemberUsedCredit(customerId).ConfigureAwait(false);
+            decimal memberMaxCredit = (await DynamicRepository
+                .GetAsync<dynamic>(new GetMemberCreditCriteria(customerId))
+                .ConfigureAwait(false))?.MaxCredit;
+
+            return memberMinCredit > credit
+                || credit > memberMaxCredit;
         }
 
         private static string EncodeHtml(string data)
