@@ -4,6 +4,7 @@
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Enumerations;
 
+#pragma warning disable S109 // Magic numbers should not be used
     public class SettingRequest
     {
         private SettingContext settingContext;
@@ -30,7 +31,7 @@
         public string Language { get; set; }
 
         public int UplineId { get; set; }
-
+#pragma warning restore S109 // Magic numbers should not be used
         internal ISettingContext GetSettingContext()
         {
             if (settingContext == null)

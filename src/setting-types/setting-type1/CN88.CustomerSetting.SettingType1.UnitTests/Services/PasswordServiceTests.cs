@@ -22,7 +22,7 @@
         [Test]
         public void ValidateAndHashPassword_SuperPasswordDoesNotMeetRule_ReturnFailedValidation()
         {
-            var failedResult = passwordService.ValidateAndHashPassword("6708b1a58a", "w4yyuhre5d2xb4avwzgvxrye", Level.Super);
+            var failedResult = passwordService.ValidateAndHashPassword("Y9gQnGWQnTO1O3yS2o+spg==", "v2e4", Level.Super);
 
             Assert.IsFalse(failedResult.IsOk);
         }
@@ -34,8 +34,8 @@
         public void ValidateAndHashPassword_PasswordIsValid_ReturnEncodedPassword(byte levelId)
         {
             var result = passwordService.ValidateAndHashPassword(
-                "761aa2b1cb964258",
-                "w4yyuhre5d2xb4avwzgvxrye",
+                "GngmtfNnjleecX2dhZqqHg==",
+                "v2e4",
                 Enumeration.FromValue<Level>(levelId));
 
             // Password 1234aaAA

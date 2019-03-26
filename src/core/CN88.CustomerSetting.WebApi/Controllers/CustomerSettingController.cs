@@ -65,11 +65,10 @@
         public string GetTemplate()
         {
             string template = templateCached;
-            string templatePath = templateFilePath;
 
             if (string.IsNullOrEmpty(template))
             {
-                var file = hostingEnvironment.WebRootFileProvider.GetFileInfo(templatePath);
+                var file = hostingEnvironment.WebRootFileProvider.GetFileInfo(templateFilePath);
                 template = System.IO.File.ReadAllText(file.PhysicalPath);
 #pragma warning disable S2696 // Instance members should not write to "static" fields
                 templateCached = template;

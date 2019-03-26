@@ -53,8 +53,8 @@
 
         private static Result Validate(
             string password,
-            Level customerLevel, 
-            string encryptedPassword, 
+            Level customerLevel,
+            string encryptedPassword,
             string encryptionKey)
         {
             if (string.IsNullOrWhiteSpace(password))
@@ -103,15 +103,20 @@
             var r3 = PasswordRule3.Match(password).Success ? 1 : 0;
             var r4 = PasswordRule4.Match(password).Success ? 1 : 0;
 
-            return (r1 + r2 + r3 + r4 >= 3) && NoWhiteSpace.Match(password).Success;
+            const int minRulesStatisfied = 3;
+            return (r1 + r2 + r3 + r4 >= minRulesStatisfied) && NoWhiteSpace.Match(password).Success;
         }
 
         private string Decrypt(string encryptedPassword, string encryptKey)
             => aseEncryptor.Decrypt(encryptedPassword, encryptKey);
 
+#pragma warning disable S109 // Magic numbers should not be used
+#pragma warning disable S3353 // Unchanged local variables should be "const"
+
         public static string CfsEnCode(string codeStr)
         {
             var num = 30;
+
             var num2 = num - codeStr.Length;
             var temp1 = codeStr;
 
@@ -152,9 +157,7 @@
                     length = temp2.Length - j + 1;
                 }
 
-
                 str += CfsCode(temp2.Substring(j - 1, length));
-
             }
 
             string str2 = string.Empty;
@@ -237,5 +240,8 @@
             }
             return new string(result.ToArray());
         }
+
+#pragma warning restore S109 // Magic numbers should not be used
+#pragma warning restore S3353 // Unchanged local variables should be "const"
     }
 }

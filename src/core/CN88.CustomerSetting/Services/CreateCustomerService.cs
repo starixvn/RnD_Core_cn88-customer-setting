@@ -85,7 +85,10 @@
             {
                 WriteLog(settingContext, command.Setting, new CustomerSettingException(ex.Message, ex));
 
-                return Result.CreateErrorResult(Resources.SystemError);
+                return Result.CreateErrorResult(
+                    ex is InvalidOperationException 
+                    ? ex.Message
+                    : Resources.SystemError);
             }
         }
 

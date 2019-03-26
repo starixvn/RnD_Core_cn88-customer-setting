@@ -34,11 +34,11 @@
             catch (Exception ex)
             {
                 await ExceptionHandler.HandleAsync(ex, context).ConfigureAwait(false);
-                await HandleExceptionAsync(context, ex).ConfigureAwait(false);
+                await HandleExceptionAsync(context).ConfigureAwait(false);
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static Task HandleExceptionAsync(HttpContext context)
         {
             const HttpStatusCode code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
