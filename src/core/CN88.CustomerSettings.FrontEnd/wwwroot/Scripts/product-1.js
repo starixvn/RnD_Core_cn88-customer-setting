@@ -36036,6 +36036,39 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var SettingResultDirective = (function () {
+        function SettingResultDirective($rootScope, $window) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
+            this.link = function (scope) {
+                scope.$watch("result", function (result) {
+                    _this.$rootScope.$emit("page-height-changed");
+                    if (result) {
+                        _this.$window.scrollTo(0, 0);
+                    }
+                });
+            };
+            this.$rootScope = $rootScope;
+            this.$window = $window;
+        }
+        Object.defineProperty(SettingResultDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    result: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingResultDirective.$inject = ["$rootScope", "$window"];
+        return SettingResultDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var SettingTypeDirectiveLoader = (function () {
         function SettingTypeDirectiveLoader($compile) {
             var _this = this;
@@ -36081,39 +36114,6 @@ var CustomerSetting;
         return SettingTypeDirectiveLoader;
     }());
     CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingResultDirective = (function () {
-        function SettingResultDirective($rootScope, $window) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
-            this.link = function (scope) {
-                scope.$watch("result", function (result) {
-                    _this.$rootScope.$emit("page-height-changed");
-                    if (result) {
-                        _this.$window.scrollTo(0, 0);
-                    }
-                });
-            };
-            this.$rootScope = $rootScope;
-            this.$window = $window;
-        }
-        Object.defineProperty(SettingResultDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    result: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingResultDirective.$inject = ["$rootScope", "$window"];
-        return SettingResultDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -37759,9 +37759,9 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "AvailableCreditRange": "剩余额度",
         "Currency": "货币",
         "PositionTaking": "占成数",
-        "SuperMinPT": "股東最低占成数",
-        "SuperMaxPT": "股東最高占成数",
-        "SuperPT": "股東占成数",
+        "SuperMinPT": "超级代理最低占成数",
+        "SuperMaxPT": "超级代理最高占成数",
+        "SuperPT": "超级代理占成数",
         "MasterPT": "总代理占成数",
         "AgentPT": "代理商占成数",
         "MinAllowed": "最低可设:",
@@ -37789,9 +37789,9 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "AvailableCreditRange": "剩餘額度",
         "Currency": "貨幣",
         "PositionTaking": "佔成數",
-        "SuperMinPT": "股東最低佔成數",
-        "SuperMaxPT": "股東最高佔成數",
-        "SuperPT": "股東佔成數",
+        "SuperMinPT": "超級代理最低佔成數",
+        "SuperMaxPT": "超級代理最高佔成數",
+        "SuperPT": "超級代理佔成數",
         "MasterPT": "總代理佔成數",
         "AgentPT": "代理商佔成數",
         "MinAllowed": "最低可設:",
@@ -37828,14 +37828,14 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "MemberPasswordRules": "<div class='password-rule'><div>密码必须是6-10个字符，没有空格，并且包含至少1个大写字母，1个小写字母，1个数字。（例如493abcDE，59D7!4$h）</div><div><span class='note'>注意：</span> 您的密码输入的时候要注意字母的大小写</div></div>",
         "InvalidPassword": "无效的密码",
         "SpreadGroupRule": "帐号一旦新增后, 此项目无法更改。",
-        "SuperMinPTIsOutOfRange": "股東最低占成数超出范围。",
-        "SuperMaxPTIsOutOfRange": "股東最高占成数超出范围。",
-        "SuperMinPTMustBeLessThanOrEqualToSuperMaxPT": "股東最低占成数必须小于或等于股東最高占成数",
-        "SuperPTIsOutOfRange": "股東占成数超出范围。",
+        "SuperMinPTIsOutOfRange": "超级代理最低占成数超出范围。",
+        "SuperMaxPTIsOutOfRange": "超级代理最高占成数超出范围。",
+        "SuperMinPTMustBeLessThanOrEqualToSuperMaxPT": "超级代理最低占成数必须小于或等于超级代理最高占成数",
+        "SuperPTIsOutOfRange": "超级代理占成数超出范围。",
         "MasterPTIsOutOfRange": "总代理占成数超出范围。",
         "AgentPTIsOutOfRange": "代理商占成数超出范围。",
         "TotalPTMustBeInRange": "总占成数必须在{0}%和 {1}%之间。请重试",
-        "TotalPTRangeConflict": "Conflict between current possess and new possess values. Please try again after the new possess value takes effect.",
+        "TotalPTRangeConflict": "占成数数值冲突。请在新占成数生效后重试。",
         "PTEffectiveTime": "{0} 后生效",
         "CreditsMustBeGreaterThanOrEqualTo": "信用额度必须大于或等于{0}。",
         "CreditsMustBeLessThanOrEqualTo": "信用额度必须小于或等于{0}。",
@@ -37849,14 +37849,14 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "MemberPasswordRules": "<div class='password-rule'><div>密碼必須是6-10個字元，沒有空格，並且包含至少1個大寫字母，1個小寫字母，1個數字。 （例如493abcDE，59D7!4$h）</div><div><span class='note'>注意：</span> 您的密碼輸入的時候要注意字母的大小寫</div></div>",
         "InvalidPassword": "無效的密碼",
         "SpreadGroupRule": "帳號一旦新增後, 此項目即無法更改。",
-        "SuperMinPTIsOutOfRange": "股東最低佔成數超出範圍。",
-        "SuperMaxPTIsOutOfRange": "股東最高佔成數超出範圍。",
-        "SuperMinPTMustBeLessThanOrEqualToSuperMaxPT": "股東最低佔成數必須小於或等於股東最高佔成數",
-        "SuperPTIsOutOfRange": "股東佔成數超出範圍。",
+        "SuperMinPTIsOutOfRange": "超級代理最低佔成數超出範圍。",
+        "SuperMaxPTIsOutOfRange": "超級代理最高佔成數超出範圍。",
+        "SuperMinPTMustBeLessThanOrEqualToSuperMaxPT": "超級代理最低佔成數必須小於或等於超級代理最高佔成數",
+        "SuperPTIsOutOfRange": "超級代理佔成數超出範圍。",
         "MasterPTIsOutOfRange": "總代理佔成數超出範圍。",
         "AgentPTIsOutOfRange": "代理商佔成數超出範圍。",
         "TotalPTMustBeInRange": "總佔成數必須在{0}%和 {1}%之間。請重試",
-        "TotalPTRangeConflict": "Conflict between current possess and new possess values. Please try again after the new possess value takes effect.",
+        "TotalPTRangeConflict": "佔成數數值衝突。請在新佔成數生效後重試。",
         "PTEffectiveTime": "{0} 後生效",
         "CreditsMustBeGreaterThanOrEqualTo": "信用額度必須大於或等於{0}。",
         "CreditsMustBeLessThanOrEqualTo": "信用額度必須小於或等於{0}。",
