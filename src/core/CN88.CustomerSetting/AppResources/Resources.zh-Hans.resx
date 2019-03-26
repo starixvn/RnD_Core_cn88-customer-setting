@@ -101,13 +101,13 @@
     <value>Sorry, You don't have permission to access this page.</value>
   </data>
   <data name="CreateSuccessfully" xml:space="preserve">
-    <value>帐户{0}已成功创建。</value>
+    <value>已成功创建帐户{0}。</value>
   </data>
   <data name="BetTypeName_1_1" xml:space="preserve">
-    <value>滚球让球, 滚球大小, 滚球单双</value>
+    <value>滚球让球, 滚球大小, 滚球单/双</value>
   </data>
   <data name="BetTypeName_5_0" xml:space="preserve">
-    <value>独赢, 滚球独赢</value>
+    <value>标准盘, 滚球标准盘</value>
   </data>
   <data name="BetTypeName_9999_0" xml:space="preserve">
     <value>其他玩法</value>

@@ -169,7 +169,7 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Account {0} is created successfully.
+        ///   Looks up a localized string similar to Account {0} is created successfully..
         /// </summary>
         public static string CreateSuccessfully {
             get {

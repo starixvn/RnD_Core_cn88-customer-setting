@@ -101,7 +101,7 @@
     <value>Sorry, You don't have permission to access this page. - zh-tw</value>
   </data>
   <data name="CreateSuccessfully" xml:space="preserve">
-    <value>帳戶{0}已成功創建。</value>
+    <value>已成功建立帳戶{0}。</value>
   </data>
   <data name="SystemError" xml:space="preserve">
     <value>不好意思…目前系統故障，請聯絡系統管理員。</value>
@@ -125,10 +125,10 @@
     <value>所有球類</value>
   </data>
   <data name="BetTypeName_1_1" xml:space="preserve">
-    <value>滾球讓球, 滾球大小, 滾球單雙</value>
+    <value>滾球讓球, 滾球大小, 滾球單/雙</value>
   </data>
   <data name="BetTypeName_5_0" xml:space="preserve">
-    <value>獨贏, 滾球獨贏</value>
+    <value>標準盤, 滾球標準盤</value>
   </data>
   <data name="BetTypeName_9999_0" xml:space="preserve">
     <value>其他玩法</value>
