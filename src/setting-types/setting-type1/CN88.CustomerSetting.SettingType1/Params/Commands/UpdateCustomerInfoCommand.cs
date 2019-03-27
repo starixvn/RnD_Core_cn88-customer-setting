@@ -22,7 +22,7 @@
 
         public string Fax { get; set; }
 
-        public decimal Credit { get; set; }
+        public decimal? Credit { get; set; }
 
         public string Language { get; set; }
 

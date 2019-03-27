@@ -31,7 +31,7 @@
 
         public Currency Currency { get; set; }
 
-        public decimal Credit { get; set; }
+        public decimal? Credit { get; set; }
 
         public decimal MaxCredit { get; set; }
 
@@ -50,6 +50,8 @@
         public DateTime PTEffectiveTime { get; set; }
 
         public IEnumerable<T> PTItems { get; set; }
+
+        public bool IsAllowedUpdateCredit { get; set; }
 
         public override IResult Validate()
         {

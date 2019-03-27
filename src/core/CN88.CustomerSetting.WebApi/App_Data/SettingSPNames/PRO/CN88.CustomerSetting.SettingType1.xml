@@ -27,5 +27,6 @@
     <Setting Key="CS_EditablePTDateSel" SpName="CS_EditablePTDateSel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600"></Setting>
     <Setting Key="CS_MemberUsedCredit_Sel" SpName="CS_Member_TotalBetStake_Sel" DbName="DBTXN.BODB02.bodbAdminNet" TimeOut="600"></Setting>
     <Setting Key="CS_Customer_Credit_Sel" SpName="CS_Customer_Credit_Sel" DbName="DBCUST.CUSTDB.bodbAdminNet" TimeOut="600"></Setting>
+    <Setting Key="Acc_Con_CheckPermission" SpName="Acc_Con_CheckPermission" DbName="DBPOL.Nap_UserControl.bodbAdminNet" TimeOut="600"></Setting>
   </Function>
 </Functions>

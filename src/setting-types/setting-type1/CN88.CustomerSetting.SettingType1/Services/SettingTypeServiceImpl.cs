@@ -52,10 +52,10 @@
             ISettingContext settingContext,
             CustomerSettingQuery query)
             => query.IsCreateNew
-                ? await GetAccountDetailForCreateNew(query, settingContext.Language).ConfigureAwait(false)
-                : await GetAccountDetailForEdit(query, settingContext.Language).ConfigureAwait(false);
+                ? await GetAccountDetailForCreateNew(settingContext.Actor, query, settingContext.Language).ConfigureAwait(false)
+                : await GetAccountDetailForEdit(settingContext.Actor, query, settingContext.Language).ConfigureAwait(false);
 
-        private async Task<SettingType> GetAccountDetailForEdit(CustomerSettingQuery query, string language)
+        private async Task<SettingType> GetAccountDetailForEdit(User actor, CustomerSettingQuery query, string language)
         {
             var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.CustomerId, query.ProductId, false, language).ConfigureAwait(false);
             var customerInfo = (await DynamicRepository.GetAsync<CustomerInfoDto>(new GetGeneralInfoCriteria(query.CustomerLevel.Value, query.CustomerId)).ConfigureAwait(false))
@@ -68,6 +68,7 @@
             settingItem.MobilePhone = DecodeHtml(customerInfo.MobilePhone);
             settingItem.Fax = DecodeHtml(customerInfo.Fax);
             settingItem.Currency = new Currency { Name = customerInfo.Currency };
+            settingItem.IsAllowedUpdateCredit = await IsActorAllowToUpdateCredit(actor).ConfigureAwait(false);
             settingItem.Credit = customerInfo.Credit;
             settingItem.MaxCredit = customerInfo.MaxCredit;
             settingItem.MinCredit = customerInfo.MinCredit;
@@ -98,13 +99,15 @@
         private async Task<decimal> GetMemberUsedCredit(int custId)
             => await DynamicRepository.GetAsync<decimal>(new GetMemberUsedCreditCriteria(custId)).ConfigureAwait(false);
 
-        private async Task<SettingType> GetAccountDetailForCreateNew(CustomerSettingQuery query, string language)
+        private async Task<SettingType> GetAccountDetailForCreateNew(User actor, CustomerSettingQuery query, string language)
         {
             var settingItem = await GetAccountDetailSettingItem(query.CustomerLevel, query.UplineId, query.ProductId, true, language).ConfigureAwait(false);
             var createCustomerInfo = await GetDefaultCreateCustomerInfo(query.CustomerLevel, query.UplineId).ConfigureAwait(false);
 
+            settingItem.Credit = 0;
             settingItem.MaxCredit = createCustomerInfo.MaxCredit;
             settingItem.MinCredit = createCustomerInfo.MinCredit;
+            settingItem.IsAllowedUpdateCredit = await IsActorAllowToUpdateCredit(actor).ConfigureAwait(false);
             settingItem.UplineUsername = createCustomerInfo.UplineUsername;
             settingItem.UsernameSuffixes = createCustomerInfo.NewUsername?.ToCharArray().Select(c => c.ToString());
 
@@ -285,7 +288,7 @@
             return passwordResult.Message;
         }
 
-        private static Dictionary<string, object> BuildCreateNewParams(
+        private Dictionary<string, object> BuildCreateNewParams(
             ISettingContext settingContext,
             AccountDetailSettingItem<SettingItemDefault> settingItem)
             => new Dictionary<string, object>
@@ -293,7 +296,12 @@
                 { "username", settingItem.Username ?? throw new InvalidOperationException(Resources.UsernameCannotBeNullOrEmpty) },
                 { "userpwd", settingItem.Password ?? throw new InvalidOperationException(Resources.PasswordCannotBeNullOrEmpty) },
                 { "firstname", EncodeHtml(settingItem.FirstName) },
-                { "credit", settingItem.Credit },
+#pragma warning disable S4462 // Calls to "async" methods should not be blocking
+                { "credit", IsActorAllowToUpdateCredit(settingContext.Actor).GetAwaiter().GetResult() 
+#pragma warning restore S4462 // Calls to "async" methods should not be blocking
+                    ? settingItem.Credit ?? 0
+                    : 0
+                },
                 { "systemid", settingContext.System },
                 { "ip", settingContext.IP },
                 { "language", LanguageNameConverter.GetLanguageKey(settingContext.Language) },
@@ -426,6 +434,19 @@
             SettingType settingType,
             ISettingContext settingContext)
         {
+            var isAllowedUpdateCredit = await IsActorAllowToUpdateCredit(settingContext.Actor).ConfigureAwait(false);
+            if (settingItem.Credit != null 
+                && !isAllowedUpdateCredit)
+            {
+                return new SettingResult(
+                Result.AccessDenied.Code,
+                Result.AccessDenied.Message,
+                Result.AccessDenied.MsgType,
+                command.Setting.CustomerId,
+                settingType.Id,
+                settingType.Name);
+            }
+
             if (command.Setting.CustomerLevel.IsMemberLevel()
                 && await IsMemberCreditInvalid(command.Setting.CustomerId, settingItem.Credit).ConfigureAwait(false))
             {
@@ -471,7 +492,7 @@
                 settingType.Name);
         }
 
-        private async Task<bool> IsMemberCreditInvalid(int customerId, decimal credit)
+        private async Task<bool> IsMemberCreditInvalid(int customerId, decimal? credit)
         {
             var memberMinCredit = await GetMemberUsedCredit(customerId).ConfigureAwait(false);
             decimal memberMaxCredit = (await DynamicRepository
@@ -490,5 +511,20 @@
 
         private async Task<EditPTTimeDto> GetEditPTTime()
             => await DynamicRepository.GetAsync<EditPTTimeDto>(new GetPTEditTimeCriteria()).ConfigureAwait(false);
+
+        private async Task<bool> IsActorAllowToUpdateCredit(User actor)
+        {
+            if(actor.Level.IsNotCompanyLevel())
+            {
+                return true;
+            }
+
+            var checkCommand = new CheckAdminPermissionCommand(actor.Id);
+
+            await DynamicRepository.ExecuteAsync(checkCommand);
+
+            return checkCommand.ErrCode.HasValue 
+                && checkCommand.ErrCode == 0;
+        }
     }
 }

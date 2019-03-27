@@ -242,6 +242,7 @@
         {
             var command = InstanceFactory.CreateCreateCustomerCommand(customerLevel: Level.Super);
             var settingType = StubSuperAccountDetailSettingType();
+            StubActorCanUpdateCredit();
 
             StubPasswordPassAvalidation();
 
@@ -381,6 +382,7 @@
             var updateCommand = InstanceFactory.CreateUpdateSettingParam(customerLevel: Level.Super);
             var updateSettingType = StubSuperAccountDetailSettingType();
             StubEditablePTTime();
+            StubActorCanUpdateCredit();
 
             await settingTypeServiceImpl.UpdateCustomerSettingType(settingContext, updateCommand, updateSettingType);
 
@@ -423,6 +425,7 @@
             var updateCommand = InstanceFactory.CreateUpdateSettingParam(customerLevel: Level.Super);
             var updateSettingType = StubSuperAccountDetailSettingType();
             StubEditablePTTime();
+            StubActorCanUpdateCredit();
 
             await settingTypeServiceImpl.UpdateCustomerSettingType(settingContext, updateCommand, updateSettingType);
 
@@ -441,6 +444,7 @@
             var updateCommand = InstanceFactory.CreateUpdateSettingParam(customerLevel: Level.Super);
             var updateSettingType = StubSuperAccountDetailSettingType();
             StubEditablePTTime();
+            StubActorCanUpdateCredit();
 
             var result = await settingTypeServiceImpl.UpdateCustomerSettingType(settingContext, updateCommand, updateSettingType);
 
@@ -656,21 +660,6 @@
                 .Returns(Task.FromResult(customerInfo));
         }
 
-        private void StubCurrencyCached()
-        {
-            var currencies = new List<Currency>
-            {
-                new Currency { Id = 1, Code = "UUS", Name = "UUS" },
-                new Currency { Id = 2, Code = "RM", Name = "RM" }
-            };
-
-            cacheService.GetOrSetAsync(
-                       Arg.Any<string>(),
-                       Arg.Any<Func<IEnumerable<Currency>>>(),
-                       Arg.Any<CacheItemOptions>())
-                       .Returns(currencies);
-        }
-
         private void StubSpreadGroupsCached()
         {
             IEnumerable<SpreadGroup> spreadGroups = new List<SpreadGroup>
@@ -688,7 +677,7 @@
 
         private void StubIntervalValue()
         {
-            IEnumerable<AccountDetailSettingItem<SettingItemDefault>> accountDetailSettingItems = new List<AccountDetailSettingItem<SettingItemDefault>>
+            var accountDetailSettingItems = new List<AccountDetailSettingItem<SettingItemDefault>>
             {
                 new AccountDetailSettingItem<SettingItemDefault> { IntervalValue = 3 }
             };
@@ -707,6 +696,16 @@
                 Arg.Any<string>(),
                 Arg.Any<Level>())
                 .Returns(Result.CreateSuccessResult("HashedPassword"));
+        }
+
+        private void StubActorCanUpdateCredit()
+        {
+            dynamicRepository
+                .When(dr => dr.ExecuteAsync(Arg.Any<CheckAdminPermissionCommand>()))
+                .Do(args =>
+                {
+                    ((CheckAdminPermissionCommand)args[0]).ErrCode = 0;
+                });
         }
 
         [TestCase(2, 12)]
@@ -744,6 +743,7 @@
             var updateSettingType = StubSuperAccountDetailSettingType();
 
             StubEditablePTTime(false);
+            StubActorCanUpdateCredit();
 
             var result = await settingTypeServiceImpl.UpdateCustomerSettingType(settingContext, updateCommand, updateSettingType);
 
