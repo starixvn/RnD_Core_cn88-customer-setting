@@ -157,4 +157,7 @@
   <data name="BetTypeName_10_0" xml:space="preserve">
     <value>優勝冠軍</value>
   </data>
+  <data name="BetTypeName_20_0" xml:space="preserve">
+    <value>勝負盤, 滾球勝負盤</value>
+  </data>
 </root>

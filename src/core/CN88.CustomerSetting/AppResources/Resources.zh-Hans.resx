@@ -157,4 +157,7 @@
   <data name="BetTypeName_1_0" xml:space="preserve">
     <value>让球, 大小盘, 单双盘</value>
   </data>
+  <data name="BetTypeName_20_0" xml:space="preserve">
+    <value>胜负盘, 滚球胜负盘</value>
+  </data>
 </root>
