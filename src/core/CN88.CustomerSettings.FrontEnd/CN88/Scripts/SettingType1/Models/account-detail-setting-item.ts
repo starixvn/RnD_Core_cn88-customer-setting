@@ -9,6 +9,7 @@ namespace CustomerSetting.SettingType1 {
         public password: string;
         public confirmPassword: string;
         public firstName: string;
+        public isAllowedUpdateCredit: boolean;
         public credit: number;
         public minCredit: number;
         public maxCredit: number;
@@ -30,6 +31,7 @@ namespace CustomerSetting.SettingType1 {
                 this.username = accountDetail.username;
                 this.password = accountDetail.password;
                 this.firstName = accountDetail.firstName;
+                this.isAllowedUpdateCredit = accountDetail.isAllowedUpdateCredit;
                 this.credit = accountDetail.credit;
                 this.minCredit = accountDetail.minCredit;
                 this.maxCredit = accountDetail.maxCredit;
@@ -38,12 +40,17 @@ namespace CustomerSetting.SettingType1 {
 
             this.ignoredProperties = this.ignoredProperties.concat([
                 "confirmPassword",
+                "isAllowedUpdateCredit",
                 "minCredit",
                 "maxCredit",
                 "hashKey"]);
 
             if (!this.isNew) {
                 this.ignoredProperties = this.ignoredProperties.concat(["username", "password", "uplineUsername"]);
+            }
+
+            if (!this.isAllowedUpdateCredit) {
+                this.ignoredProperties.push("credit");
             }
         }
 
