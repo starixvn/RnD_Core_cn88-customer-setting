@@ -104,6 +104,11 @@ button[disabled],
 html input[disabled] {
   cursor: default; }
 
+input[disabled] {
+  background-color: #e8e8e8;
+  border-color: #dadada;
+  color: #a1a1a1; }
+
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
