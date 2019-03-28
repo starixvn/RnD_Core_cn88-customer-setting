@@ -41,37 +41,45 @@ namespace CN88.CustomerSetting.WebApi
 
             InitLogging(services);
 
-            InitFanexData();
-
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
-
-            var customerSettingApiConfigs = new CustomerSettingApiConfigs();
-            Configuration.Bind("CustomerSettingApi", customerSettingApiConfigs);
-
-
-            services
-                .AddSingleton(customerSettingApiConfigs)
-                .AddSingleton<IDynamicRepository, DynamicRepository>()
-                .AddSingleton<ICacheService, CacheService>()
-                .AddSingleton<ValidationService, ValidationServiceImpl>()
-                .AddSingleton<UpdateSettingService, UpdateSettingServiceImpl>()
-                .AddSingleton<CreateCustomerService, CreateCustomerServiceImpl>()
-                .AddSingleton<ResourceService, ResourceServiceImpl>()
-                .AddSingleton<ProductService, ProductServiceImpl>()
-                .AddSingleton<QuerySettingService, QuerySettingServiceImpl>()
-                .AddSingleton<SettingTypeServiceFactory, SettingTypeServiceFactoryImpl>()
-                .AddSingleton<CustomerDataAccess, CustomerDataAccessImpl>()
-                .AddSingleton<IRemotingRefService, RemotingRefService>()
-                .AddSwaggerGen(c =>
+            try
             {
-                c.SwaggerDoc("v1", new Info { Title = "CN88 Customer Setting", Version = "v1" });
-            });
 
-            services.AddMemoryCache();
-            services.AddAuthentication(o => o.AddScheme("api", a => a.HandlerType = typeof(HmacAuthenticationHandler)));
-            services.AddMvcCore().AddJsonFormatters().AddAuthorization();
+                InitFanexData();
 
-            InitRemotingRef();
+                services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+                var customerSettingApiConfigs = new CustomerSettingApiConfigs();
+                Configuration.Bind("CustomerSettingApi", customerSettingApiConfigs);
+
+
+                services
+                    .AddSingleton(customerSettingApiConfigs)
+                    .AddSingleton<IDynamicRepository, DynamicRepository>()
+                    .AddSingleton<ICacheService, CacheService>()
+                    .AddSingleton<ValidationService, ValidationServiceImpl>()
+                    .AddSingleton<UpdateSettingService, UpdateSettingServiceImpl>()
+                    .AddSingleton<CreateCustomerService, CreateCustomerServiceImpl>()
+                    .AddSingleton<ResourceService, ResourceServiceImpl>()
+                    .AddSingleton<ProductService, ProductServiceImpl>()
+                    .AddSingleton<QuerySettingService, QuerySettingServiceImpl>()
+                    .AddSingleton<SettingTypeServiceFactory, SettingTypeServiceFactoryImpl>()
+                    .AddSingleton<CustomerDataAccess, CustomerDataAccessImpl>()
+                    .AddSingleton<IRemotingRefService, RemotingRefService>()
+                    .AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new Info { Title = "CN88 Customer Setting", Version = "v1" });
+                });
+
+                services.AddMemoryCache();
+                services.AddAuthentication(o => o.AddScheme("api", a => a.HandlerType = typeof(HmacAuthenticationHandler)));
+                services.AddMvcCore().AddJsonFormatters().AddAuthorization();
+
+                InitRemotingRef();
+            }
+            catch(Exception ex)
+            {
+                LogService.Error(ex.ToString());
+            }
         }
 
         private void InitFanexData()
