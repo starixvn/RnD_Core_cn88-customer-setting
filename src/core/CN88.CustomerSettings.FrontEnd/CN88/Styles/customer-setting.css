@@ -974,7 +974,7 @@ select.setting-field {
   display: -ms-flexbox;
   display: flex;
   align-items: center;
-  margin: 10px 25px; }
+  margin: 10px 0 10px 30px; }
   .setting-type-1 .row:after {
     display: block;
     content: "";
@@ -1030,9 +1030,6 @@ select.setting-field {
   margin: initial; }
   .setting-type-1 .position-taking--edit .msg--error .msg__icon {
     background-position: -3px -23px; }
-
-.setting-type-1 .position-taking .row {
-  margin: 10px 0 10px 30px; }
 
 .setting-type-1 .icon--valid-username {
   background-position: -29px -23px; }

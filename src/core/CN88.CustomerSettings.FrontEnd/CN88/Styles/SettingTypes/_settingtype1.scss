@@ -23,7 +23,7 @@ $position-taking-constraint-value-color: #737373;
         display: -ms-flexbox;
         display: flex;
         align-items: center;
-        margin: 10px 25px;
+        margin: 10px 0 10px 30px;
     }
 
     .sub-header {
@@ -101,10 +101,6 @@ $position-taking-constraint-value-color: #737373;
                     background-position: -3px -23px;
                 }
             }
-        }
-
-        .row {
-            margin: 10px 0 10px 30px;
         }
     }
 
