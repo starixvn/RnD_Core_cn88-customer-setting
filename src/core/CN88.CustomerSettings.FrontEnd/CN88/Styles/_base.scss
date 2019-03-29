@@ -118,12 +118,6 @@ html input[disabled] {
     cursor: default;
 }
 
-input[disabled] {
-    background-color: $field-disabled-background-color;
-    border-color: $field-disabled-border-color;
-    color: $field-disabled-color;
-}
-
 button::-moz-focus-inner,
 input::-moz-focus-inner {
     border: 0;

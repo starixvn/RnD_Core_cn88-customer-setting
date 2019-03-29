@@ -104,11 +104,6 @@ button[disabled],
 html input[disabled] {
   cursor: default; }
 
-input[disabled] {
-  background-color: #e8e8e8;
-  border-color: #dadada;
-  color: #a1a1a1; }
-
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
@@ -309,6 +304,10 @@ th {
   padding: 0 4px; }
   .setting-field:focus {
     border-color: #66afe9; }
+  .setting-field[disabled] {
+    background-color: #e8e8e8;
+    border-color: #dadada;
+    color: #a1a1a1; }
   .setting-field--fullwidth {
     width: 100%; }
   .setting-field--error, .setting-field--error:focus {
@@ -353,12 +352,14 @@ select.setting-field {
     background-color: #fff;
     color: #737373;
     margin-right: 10px; }
-    .btn--cancel:hover, .btn--cancel:focus {
+    .btn--cancel:hover:enabled, .btn--cancel:focus:enabled, .btn--cancel:active:enabled {
       background-color: #a5a5a5;
       border: none;
       color: #fff; }
-  .btn:hover, .btn:focus {
+  .btn:hover:enabled, .btn:focus:enabled, .btn:active:enabled {
     background-color: #31c18e; }
+  .btn[disabled] {
+    opacity: 0.6; }
 
 .icon {
   background-image: url("Images/sprites.png");

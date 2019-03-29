@@ -11,6 +11,12 @@
         border-color: $field-focus-border-color;
     }
 
+    &[disabled] {
+        background-color: $field-disabled-background-color;
+        border-color: $field-disabled-border-color;
+        color: $field-disabled-color;
+    }
+
     &--fullwidth {
         width: 100%;
     }
@@ -78,15 +84,23 @@ select.setting-field {
         color: $cancel-button-text-color;
         margin-right: 10px;
 
-        &:hover, &:focus {
+        &:hover:enabled,
+        &:focus:enabled,
+        &:active:enabled {
             background-color: $cancel-button-hover-background-color;
             border: none;
             color: $button-text-color;
         }
     }
 
-    &:hover, &:focus {
+    &:hover:enabled,
+    &:focus:enabled,
+    &:active:enabled {
         background-color: $button-hover-background-color;
+    }
+
+    &[disabled] {
+        opacity: 0.6;
     }
 }
 
