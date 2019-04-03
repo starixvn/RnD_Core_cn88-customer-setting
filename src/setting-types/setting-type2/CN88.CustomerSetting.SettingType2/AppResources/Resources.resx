@@ -162,7 +162,7 @@
   <data name="Msg_11" xml:space="preserve">
     <value>Please refresh the page and try again. Commission is out of range.</value>
   </data>
-  <data name="Mgs_10040" xml:space="preserve">
+  <data name="Msg_10040" xml:space="preserve">
     <value>Wrong Max per Bet/ Max per Event.</value>
   </data>
   <data name="Msg_10041" xml:space="preserve">

@@ -70,15 +70,6 @@ namespace CN88.CustomerSetting.SettingType2.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wrong Max per Bet/ Max per Event..
-        /// </summary>
-        internal static string Mgs_10040 {
-            get {
-                return ResourceManager.GetString("Mgs_10040", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Invalid Commission Rate..
         /// </summary>
         internal static string Msg_1 {
@@ -183,6 +174,15 @@ namespace CN88.CustomerSetting.SettingType2.AppResources {
         internal static string Msg_10021 {
             get {
                 return ResourceManager.GetString("Msg_10021", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong Max per Bet/ Max per Event..
+        /// </summary>
+        internal static string Msg_10040 {
+            get {
+                return ResourceManager.GetString("Msg_10040", resourceCulture);
             }
         }
         
