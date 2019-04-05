@@ -19,7 +19,7 @@
 
     labels["zh-tw"] = {
         "CommissionAndBetLimit": "退水和限額",
-        "MaxBet": "退水和限額",
+        "MaxBet": "單注最高",
         "MaxPerEvent": "單場最高",
         "MemberCommission": "會員退水設定"
     };
