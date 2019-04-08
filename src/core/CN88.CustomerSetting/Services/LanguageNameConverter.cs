@@ -34,7 +34,7 @@
             switch (languageName.ToUpperInvariant())
             {
                 case "ZH-TW": return "CT"; // Traditional
-                case "ZH-HANS": return "CS"; // Simplified
+                case "ZH-HANS": return "CN"; // Simplified
                 case "JA-JP": return "J"; // Japanese
                 case "TH-TH": return "TH"; // Thai
                 case "KO-KR": return "KO"; // Korean
