@@ -17,7 +17,8 @@
 
         private static JsonSerializerSettings serializerSettings = new JsonSerializerSettings
         {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         };
 
         public ErrorHandlingMiddleware(RequestDelegate next)
