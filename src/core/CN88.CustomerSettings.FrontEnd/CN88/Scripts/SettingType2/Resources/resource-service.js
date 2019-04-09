@@ -33,7 +33,7 @@
         "MaxBetMustBeGreaterThanOrEqualTo": "Max per Bet must be greater than or equal to {0}.",
         "MaxBetMustBeLessThanOrEqualTo": "Max per Bet must be less than or equal to {0}.",
         "MaxBetMustBeLessThanOrEqualToMaxPerEvent": "Max per Bet must be less than or equal to Max per Event.",
-        "MaxPerEventNote": "Maximum bet amount will vary depending on the bet type and event ID, except for Odd/Even.",
+        "MaxPerEventNote": "Maximum bet amount of each event.",
         "MaxPerEventMustBeGreaterThanOrEqualTo": "Max per Event must be greater than or equal to {0}.",
         "MaxPerEventMustBeLessThanOrEqualTo": "Max per Event must be less than or equal to {0}."
     };
@@ -45,7 +45,7 @@
         "MaxBetMustBeGreaterThanOrEqualTo": "单注最高金额必须大于或等于{0}。",
         "MaxBetMustBeLessThanOrEqualTo": "单注最高金额必须小于或等于{0}。",
         "MaxBetMustBeLessThanOrEqualToMaxPerEvent": "单注最高金额必须小于或等于单场最高",
-        "MaxPerEventNote": "单场最高投注金额的限制是根据个别玩法和场次号, 单双除外。",
+        "MaxPerEventNote": "各赛事的最大投注限额",
         "MaxPerEventMustBeGreaterThanOrEqualTo": "单场最高金额必须大于或等于{0}。",
         "MaxPerEventMustBeLessThanOrEqualTo": "单场最高金额必须小于或等于{0}。"
     };
@@ -57,7 +57,7 @@
         "MaxBetMustBeGreaterThanOrEqualTo": "單注最高金額必須大於或等於{0}。",
         "MaxBetMustBeLessThanOrEqualTo": "單注最高金額必須小於或等於{0}。",
         "MaxBetMustBeLessThanOrEqualToMaxPerEvent": "單注最高金額必須小於或等於單場最高",
-        "MaxPerEventNote": "單場最高投注金額的限制是根據個別玩法和場次號, 單雙除外。",
+        "MaxPerEventNote": "各賽事的最大投注限額",
         "MaxPerEventMustBeGreaterThanOrEqualTo": "單場最高金額必須大於或等於{0}。",
         "MaxPerEventMustBeLessThanOrEqualTo": "單場最高金額必須小於或等於{0}。"
     };
