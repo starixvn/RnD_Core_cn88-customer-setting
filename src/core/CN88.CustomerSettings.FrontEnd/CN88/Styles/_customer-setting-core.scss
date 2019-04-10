@@ -230,6 +230,14 @@ select.setting-field {
         }
     }
 
+    %adjust-height {
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        height: 100%;
+    }
+
     &__cell {
         @include border(right);
         align-items: center;
@@ -253,11 +261,7 @@ select.setting-field {
     }
 
     &__cell-wrapper {
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: flex;
-        height: 100%;
+        @extend %adjust-height;
 
         &--readonly {
             .block__cell {
@@ -291,6 +295,7 @@ select.setting-field {
 
     &__lbl-group {
         @include clearfix();
+        @extend %adjust-height;
         background-color: $block-label-group-background-color;
         text-align: center;
         width: 100%;
