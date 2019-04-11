@@ -98,7 +98,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AccessDeniedMsg" xml:space="preserve">
-    <value>Sorry, You don't have permission to access this page.</value>
+    <value>抱歉，您无权访问此页面。</value>
   </data>
   <data name="CreateSuccessfully" xml:space="preserve">
     <value>已成功创建帐户{0}。</value>

@@ -440,7 +440,7 @@
             {
                 return new SettingResult(
                 Result.AccessDenied.Code,
-                Result.AccessDenied.Message,
+                CustomerSetting.AppResources.Resources.AccessDeniedMsg,
                 Result.AccessDenied.MsgType,
                 command.Setting.CustomerId,
                 settingType.Id,

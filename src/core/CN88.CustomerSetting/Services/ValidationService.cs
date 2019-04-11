@@ -111,7 +111,7 @@
 
             if (!isValidConstrain)
             {
-                throw new CustomerSettingException(Result.AccessDenied.Message);
+                throw new CustomerSettingException(Resources.AccessDeniedMsg);
             }
         }
 
@@ -144,7 +144,7 @@
 
             if (actualCustomerLevel != customerLevel.Value)
             {
-                throw new CustomerSettingException(Result.AccessDenied.Message);
+                throw new CustomerSettingException(Resources.AccessDeniedMsg);
             }
         }
 
@@ -165,7 +165,7 @@
 
             if (Enumeration.FromValue<Level>(actualUplineLevel).IsNotDirectUplineOf(customerLevel.Value))
             {
-                throw new CustomerSettingException(Result.AccessDenied.Message);
+                throw new CustomerSettingException(Resources.AccessDeniedMsg);
             }
         }
 
@@ -246,7 +246,7 @@
             {
                 if (!productSettingTypes.Any(stt => stt.Id == customerSettingType.Id))
                 {
-                    throw new CustomerSettingException(Result.AccessDenied.Message);
+                    throw new CustomerSettingException(Resources.AccessDeniedMsg);
                 }
             }
         }
@@ -258,7 +258,7 @@
                 if (customerSettingType.DisplayMode != DisplayModes.Editable
                     || !customerSettingType.SatisfyCustomerLevelConstraint(actorLevel, customerLevel))
                 {
-                    throw new CustomerSettingException(Result.AccessDenied.Message);
+                    throw new CustomerSettingException(Resources.AccessDeniedMsg);
                 }
             }
         }
