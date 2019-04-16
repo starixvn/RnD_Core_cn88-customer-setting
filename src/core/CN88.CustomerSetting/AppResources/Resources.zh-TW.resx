@@ -152,7 +152,7 @@
     <value>非體育產品</value>
   </data>
   <data name="BetTypeName_1_0" xml:space="preserve">
-    <value>讓球, 大小盤, 單雙盤</value>
+    <value>讓分盤, 大/小, 單/雙</value>
   </data>
   <data name="BetTypeName_10_0" xml:space="preserve">
     <value>優勝冠軍</value>

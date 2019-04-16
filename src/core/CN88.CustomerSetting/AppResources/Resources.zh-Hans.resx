@@ -155,7 +155,7 @@
     <value>优胜冠军</value>
   </data>
   <data name="BetTypeName_1_0" xml:space="preserve">
-    <value>让球, 大小盘, 单双盘</value>
+    <value>让分盘, 大/小, 单/双</value>
   </data>
   <data name="BetTypeName_20_0" xml:space="preserve">
     <value>胜负盘, 滚球胜负盘</value>
