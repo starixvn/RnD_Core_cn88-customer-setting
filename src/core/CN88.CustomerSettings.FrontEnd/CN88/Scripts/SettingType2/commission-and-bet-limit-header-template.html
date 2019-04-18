@@ -5,8 +5,8 @@
              data-ng-style="eachGroupStyle"
              data-ng-repeat="item in availableCommissionGroups">{{item}}</div>
     </div>
-    <div class="block__lbl w50-percent" data-ng-if="customerLevel === avaiCustomerLevels.member">{{::('MemberCommission' | st2Label)}}</div>
-    <div class="w50-percent">
+    <div class="block__lbl-group block__lbl w50-percent" data-ng-if="customerLevel === avaiCustomerLevels.member">{{::('MemberCommission' | st2Label)}}</div>
+    <div class="block__lbl-group w50-percent">
         <div class="block__lbl w50-percent">
             <span>{{::('MaxPerEvent' | st2Label)}}</span>
             <span class="icon icon--command icon--info icon--margin-left"
