@@ -37,6 +37,10 @@
 
         public decimal MinCredit { get; set; }
 
+        public decimal CreditBalance => Credit.HasValue 
+            ? Credit.Value - MinCredit
+            : 0;
+
         public SpreadGroup SpreadGroup { get; set; }
 
         public IEnumerable<string> UsernameSuffixes { get; set; }

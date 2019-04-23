@@ -37,6 +37,7 @@
             properties.Add(string.Format("\"actorLevel\": {0},", ActorLevel));
             properties.Add(string.Format("\"uplineId\": {0},", UplineId));
             properties.Add(string.Format("\"isCreateNew\": {0},", IsCreateNew.ToString().ToLowerInvariant()));
+            properties.Add(string.Format("\"editable\": {0},", (!IsReadOnly).ToString().ToLowerInvariant()));
 
             properties.Add(string.Format("\"customerId\": {0}", CustomerId.HasValue ? CustomerId.Value : 0));
 

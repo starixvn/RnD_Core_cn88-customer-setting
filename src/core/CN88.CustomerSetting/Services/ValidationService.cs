@@ -104,10 +104,19 @@
             }
         }
 
+        private static void DenyIfActorIsCustomer(User actor, Level customerLevel)
+        {
+            if (actor.Level.Is(customerLevel))
+            {
+                throw new CustomerSettingException(Resources.AccessDeniedMsg);
+            }
+        }
+
         private static void CheckActorAndCustomerLevelsConstrain(User actor, Level customerLevel)
         {
             var isValidConstrain = actor.IsCompany
-                || actor.Level.IsUplineOf(customerLevel);
+                || actor.Level.IsUplineOf(customerLevel)
+                || actor.Level.Is(customerLevel);
 
             if (!isValidConstrain)
             {
@@ -202,6 +211,8 @@
             {
                 await CheckQueryPermission(settingContext, customerId, customerLevel, productId, false, 0).ConfigureAwait(false);
 
+                DenyIfActorIsCustomer(settingContext.Actor, customerLevel);
+
                 await CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes).ConfigureAwait(false);
 
                 CheckUpdatableCustomerSettingTypes(actorLevel, customerLevel, settingTypes);
@@ -288,6 +299,8 @@
             try
             {
                 await CheckQueryPermission(settingContext, customerId, customerLevel, productId, true, command.UplineId).ConfigureAwait(false);
+
+                DenyIfActorIsCustomer(settingContext.Actor, customerLevel);
 
                 await CheckCustomerSettingTypesIsValidWithProductProfile(settingContext, productId, settingTypes).ConfigureAwait(false);
 

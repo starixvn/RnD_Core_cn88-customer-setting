@@ -117,15 +117,6 @@
             
             AssumeValidateQuerySettingIsSuccessful();
 
-            ////updateParam.Setting.SettingTypes = new List<SettingType>
-            ////{
-            ////    InstanceFactory.CreateCustomerSettingType(1)
-            ////};
-            //productService.GetProduct(
-            //    settingContext, 
-            //    updateParam.Setting.ProductId, 
-            //    (byte)SystemType.Nap)
-            //    .Returns(Task.FromResult(InstanceFactory.CreateProduct(updateParam.Setting.ProductId)));
             productService.GetProductSettingTypes(updateParam.Setting.ProductId, (byte)SystemType.Nap)
                 .Returns(Task.FromResult(updateParam.Setting.SettingTypes));
 

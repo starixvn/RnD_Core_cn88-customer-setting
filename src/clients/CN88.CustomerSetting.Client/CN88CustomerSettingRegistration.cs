@@ -90,19 +90,25 @@
         {
             routes.MapRoute(
                 name: "CN88_Setting_View",
+#pragma warning disable S1075 // URIs should not be hardcoded
                 url: UrlRootName + "/ViewCN88CustomerSetting/{action}/{id}",
+#pragma warning restore S1075 // URIs should not be hardcoded
                 defaults: new { controller = "ViewCN88CustomerSetting", action = "Edit", id = UrlParameter.Optional },
                 namespaces: new string[] { "CN88.CustomerSetting.Client.Controllers" });
 
             routes.MapRoute(
                 name: "CN88_Setting_Create",
+#pragma warning disable S1075 // URIs should not be hardcoded
                 url: UrlRootName + "/CreateCN88Customer/{action}/{id}",
+#pragma warning restore S1075 // URIs should not be hardcoded
                 defaults: new { controller = "CreateCN88Customer", action = "Create", id = UrlParameter.Optional },
                 namespaces: new string[] { "CN88.CustomerSetting.Client.Controllers" });
 
             routes.MapRoute(
                 name: "CN88_Setting_Update",
+#pragma warning disable S1075 // URIs should not be hardcoded
                 url: UrlRootName + "/UpdateCN88CustomerSetting/{action}/{id}",
+#pragma warning restore S1075 // URIs should not be hardcoded
                 defaults: new { controller = "UpdateCN88CustomerSetting", action = "Update", id = UrlParameter.Optional },
                 namespaces: new string[] { "CN88.CustomerSetting.Client.Controllers" });
         }

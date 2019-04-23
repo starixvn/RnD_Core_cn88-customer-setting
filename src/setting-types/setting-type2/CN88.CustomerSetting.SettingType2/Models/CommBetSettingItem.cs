@@ -88,5 +88,15 @@
                 base.ToXml(),
                 MaxBet,
                 MaxPerEvent);
+
+        public void ResetMinMax()
+        {
+            MinComm = 0;
+            MaxComm = 0;
+            MinMaxBet = 0;
+            MinMaxPerEvent = 0;
+            MaxMaxBet = 0;
+            MaxMaxPerEvent = 0;
+        }
     }
 }

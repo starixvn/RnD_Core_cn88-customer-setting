@@ -47,6 +47,7 @@
 
             var commBetSettingDtoList = await GetCommBetSettingDtoList(query).ConfigureAwait(false);
             var settingItems = new List<CommBetSettingItem>();
+            var isViewMySetting = settingContext.Actor.Id == query.CustomerId;
 
             foreach (var settingItemConfig in settingTypeConfig)
             {
@@ -57,7 +58,7 @@
 
                 if (settingItemDto.Any())
                 {
-                    var settingItem = BuildSettingItem(settingItemDto, settingItemConfig, settingContext.Language);
+                    var settingItem = BuildSettingItem(settingItemDto, settingItemConfig, settingContext.Language, isViewMySetting);
 
                     settingItems.Add(settingItem);
                 }
@@ -81,12 +82,13 @@
         private CommBetSettingItem BuildSettingItem(
             IEnumerable<CommBetSettingDto> settingItemDto,
             IEnumerable<CommBetSettingConfigDto> settingItemConfig,
-            string language)
+            string language,
+            bool isViewMySetting)
         {
             var firstSettingItemDto = settingItemDto.First();
             var firstSettingItemConfig = settingItemConfig.FirstOrDefault();
 
-            return new CommBetSettingItem
+            var settingItem =  new CommBetSettingItem
             {
                 SportTypeName = ResourceService.GetSportTypeName(firstSettingItemConfig.SportTypeId, language),
                 BetTypeName = ResourceService.GetBetTypeName(firstSettingItemConfig.BetTypeId, firstSettingItemConfig.IsLive, language),
@@ -119,6 +121,13 @@
                         })
                     : Enumerable.Empty<CommissionGroup>()
             };
+
+            if(isViewMySetting)
+            {
+                settingItem.ResetMinMax();
+            }
+
+            return settingItem;
         }
 
         public override IDictionary<string, object> BuildCreateCustomerParams(

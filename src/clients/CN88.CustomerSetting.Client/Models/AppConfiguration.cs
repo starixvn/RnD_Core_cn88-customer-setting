@@ -13,15 +13,13 @@
 
         public string AntiForgeryToken { get; set; }
 
-        public bool Editable { get; set; }
-
         public string ToJson()
         {
-            string objTpl = "{{\"applicationPath\": \"{0}\", \"antiForgeryToken\": \"{1}\", \"editable\": {2}}}";
+            string objTpl = "{{\"applicationPath\": \"{0}\", \"antiForgeryToken\": \"{1}\", \"editable\": true}}";
 
             AntiForgeryToken = AntiForgeryExtension.GetTokenHeaderValue();
 
-            return string.Format(objTpl, ApplicationPath, AntiForgeryToken, Editable.ToString().ToLower());
+            return string.Format(objTpl, ApplicationPath, AntiForgeryToken);
         }
     }
 }

@@ -3,7 +3,7 @@
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Results;
 
-    public class AgentPTItem : SettingItemDefault
+    public class AgentPTItem : SettingItemDefault, IPTItem
     {
         private const string PTXmlFormat
             = "<PT {0} MasterPT=\"{1}\" AgentPT=\"{2}\" />";
@@ -44,5 +44,15 @@
                 base.ToXml(),
                 MasterPT,
                 AgentPT);
+
+        public void ResetMinMax()
+        {
+            MinAgentPT = 0;
+            MaxAgentPT = 0;
+            MinAllowedPT = 0;
+            MaxAllowedPT = 0;
+            MinMasterPT = 0;
+            MaxMasterPT = 0;
+        }
     }
 }

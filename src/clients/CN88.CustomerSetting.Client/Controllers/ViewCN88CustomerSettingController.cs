@@ -17,6 +17,7 @@
     {
         private const string SettingTemplateCachingKey = "ViewCN88CustomerSettingController";
         private const byte CachingHours = 4;
+        private const byte CompanyLevelId = 5;
 
         private readonly ICustomerSettingService _customerSettingService;
 
@@ -71,6 +72,7 @@
                 query.Language = settingContext.Language;
                 query.HashKey = settingContext.HashKey;
                 query.ActorLevel = settingContext.ActorLevel;
+                query.IsReadOnly = !query.IsCreateNew && query.CustomerId == 0;
 
                 template = ReplaceParameters(template, query);
             }
@@ -98,6 +100,13 @@
             querySettingRequest.Language = settingContext.Language;
             querySettingRequest.ClientIP = settingContext.IP;
             querySettingRequest.System = settingContext.System;
+
+            if(querySettingRequest.CustomerId == 0
+                && querySettingRequest.ActorLevel < CompanyLevelId)
+            {
+                querySettingRequest.CustomerId = querySettingRequest.ActorId;
+                querySettingRequest.CustomerLevel = querySettingRequest.ActorLevel;
+            }
 
             customerSettingResponse = _customerSettingService.QueryCustomerSetting(querySettingRequest);
             Response.StatusCode = (int)customerSettingResponse.StatusCode;
@@ -142,8 +151,6 @@
         {
             string finalTemplate = template;
             var appConfig = new AppConfiguration(Response.ApplyAppPathModifier($"~/{CN88CustomerSettingRegistration.UrlRootName}"));
-
-            appConfig.Editable = !query.IsReadOnly;
 
             if (!string.IsNullOrEmpty(finalTemplate))
             {

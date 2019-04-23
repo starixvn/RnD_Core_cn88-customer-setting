@@ -240,7 +240,9 @@
                         .Returns(commBetSettingConfigs);
         }
 
+#pragma warning disable S3241 // Methods should not return values that are never used
         private IEnumerable<CommBetSettingDto> StubCommBetSettingList(
+#pragma warning restore S3241 // Methods should not return values that are never used
             bool isCreateNew = true,
             int customerId = 1,
             byte level = 4)

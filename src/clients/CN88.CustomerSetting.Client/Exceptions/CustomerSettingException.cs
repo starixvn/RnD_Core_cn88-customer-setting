@@ -4,7 +4,9 @@
     using System.Runtime.Serialization;
 
     [Serializable]
+#pragma warning disable S1939 // Inheritance list should not be redundant
     public class CustomerSettingException : Exception, ISerializable
+#pragma warning restore S1939 // Inheritance list should not be redundant
     {
         public CustomerSettingException()
             : base()

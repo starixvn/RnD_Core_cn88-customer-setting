@@ -366,7 +366,7 @@ var DemoFrom;
             for (var item in Role) {
                 if (item) {
                     var roleId = parseInt(item, 10);
-                    if (roleId < uplineRole) {
+                    if (roleId <= uplineRole) {
                         roles.push(new KeyValuePair(roleId, Role[roleId]));
                     }
                 }
@@ -378,7 +378,7 @@ var DemoFrom;
             for (var item in Role) {
                 if (item) {
                     var roleId = parseInt(item, 10);
-                    if (downlineRole < roleId && roleId < Role.company) {
+                    if (downlineRole <= roleId && roleId < Role.company) {
                         roles.push(new KeyValuePair(roleId, Role[roleId]));
                     }
                 }

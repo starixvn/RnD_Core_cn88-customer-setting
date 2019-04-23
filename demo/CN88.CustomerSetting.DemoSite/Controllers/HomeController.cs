@@ -62,7 +62,9 @@
 
             for (var i = 0; i < length; ++i)
             {
+#pragma warning disable S1643 // Strings should not be concatenated using '+' in a loop
                 rndStr += chars[rnd.Next() % chars.Length];
+#pragma warning restore S1643 // Strings should not be concatenated using '+' in a loop
             }
             return rndStr;
         }
