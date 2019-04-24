@@ -6,7 +6,6 @@
     using System.Net;
     using System.Threading.Tasks;
     using CN88.CustomerSetting.Models;
-    using CN88.CustomerSetting.Models.Constants;
     using CN88.CustomerSetting.Models.Enumerations;
     using CN88.CustomerSetting.Models.Requests;
     using CN88.CustomerSetting.Models.Results;
@@ -64,7 +63,6 @@
             settingItem.Username = customerInfo.Username;
 
             var isViewMySetting = actor.Id == query.CustomerId;
-
             if (!isViewMySetting)
             {
                 settingItem.FirstName = DecodeHtml(customerInfo.FirstName);
@@ -135,10 +133,10 @@
 
         private async Task<AccountDetailSettingItem<SettingItemDefault>> GetAccountDetailSettingItem(
             int actorId,
-            Level level, 
-            int custId, 
-            int productId, 
-            bool isCreateNew, 
+            Level level,
+            int custId,
+            int productId,
+            bool isCreateNew,
             string language)
         {
             if (level.IsMemberLevel())
@@ -189,7 +187,7 @@
                     break;
             }
 
-            if(settingItem == null)
+            if (settingItem == null)
             {
                 throw new InvalidOperationException($"Cannot get default setting to create new downline");
             }
@@ -319,7 +317,7 @@
                 { "userpwd", settingItem.Password ?? throw new InvalidOperationException(Resources.PasswordCannotBeNullOrEmpty) },
                 { "firstname", EncodeHtml(settingItem.FirstName) },
 #pragma warning disable S4462 // Calls to "async" methods should not be blocking
-                { "credit", IsActorAllowToUpdateCredit(settingContext.Actor).GetAwaiter().GetResult() 
+                { "credit", IsActorAllowToUpdateCredit(settingContext.Actor).GetAwaiter().GetResult()
 #pragma warning restore S4462 // Calls to "async" methods should not be blocking
                     ? settingItem.Credit ?? 0
                     : 0
@@ -393,9 +391,9 @@
                 ?? throw new InvalidOperationException("AccountDetail cannot be null");
 
             var updateCustomerInfoResult = await UpdateCustomerInfo(
-                command, 
-                settingItem, 
-                settingType, 
+                command,
+                settingItem,
+                settingType,
                 settingContext).ConfigureAwait(false);
 
             if (updateCustomerInfoResult.IsFailed
@@ -415,7 +413,7 @@
         {
             var editPTTime = await GetEditPTTime().ConfigureAwait(false);
 
-            if(!editPTTime.IsEditablePT)
+            if (!editPTTime.IsEditablePT)
             {
                 return new SettingResult(Result.CreateErrorResult(Resources.EditPossessTimeInvalid));
             }
@@ -457,7 +455,7 @@
             ISettingContext settingContext)
         {
             var isAllowedUpdateCredit = await IsActorAllowToUpdateCredit(settingContext.Actor).ConfigureAwait(false);
-            if (settingItem.Credit != null 
+            if (settingItem.Credit != null
                 && !isAllowedUpdateCredit)
             {
                 return new SettingResult(
@@ -481,11 +479,20 @@
                 settingType.Name);
             }
 
+            return await ExecuteUpdateCustomerInfoCommand(command.Setting, settingItem, settingType, settingContext).ConfigureAwait(false);
+        }
+
+        private async Task<SettingResult> ExecuteUpdateCustomerInfoCommand(
+            ISetting setting,
+            AccountDetailSettingItem<SettingItemDefault> settingItem,
+            SettingType settingType,
+            ISettingContext settingContext)
+        {
             var updateCommand = new UpdateCustomerInfoCommand
             {
-                RoleId = command.Setting.CustomerLevel.Value,
+                RoleId = setting.CustomerLevel.Value,
                 Credit = settingItem.Credit,
-                CustId = command.Setting.CustomerId,
+                CustId = setting.CustomerId,
                 Fax = EncodeHtml(settingItem.Fax),
                 FirstName = EncodeHtml(settingItem.FirstName),
                 LastName = EncodeHtml(settingItem.LastName),
@@ -509,7 +516,7 @@
                 result.Code,
                 result.Message,
                 result.MsgType,
-                command.Setting.CustomerId,
+                setting.CustomerId,
                 settingType.Id,
                 settingType.Name);
         }
@@ -536,7 +543,7 @@
 
         private async Task<bool> IsActorAllowToUpdateCredit(User actor)
         {
-            if(actor.Level.IsNotCompanyLevel())
+            if (actor.Level.IsNotCompanyLevel())
             {
                 return true;
             }
@@ -545,7 +552,7 @@
 
             await DynamicRepository.ExecuteAsync(checkCommand);
 
-            return checkCommand.ErrCode.HasValue 
+            return checkCommand.ErrCode.HasValue
                 && checkCommand.ErrCode == 0;
         }
     }

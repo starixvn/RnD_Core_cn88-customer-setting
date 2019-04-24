@@ -159,5 +159,23 @@
             // Assert.
             Assert.IsFalse(actualResult.IsSuccessful);
         }
+
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        public async Task ValidateUpdateSettingAction_ActorIsCustomer_ReturnFailedResult(byte levelId)
+        {
+            // Arrange.
+            var updateParam = InstanceFactory.CreateUpdateSettingParam(100, Enumeration.FromValue<Level>(levelId));
+
+            settingContext.Actor.Level = Enumeration.FromValue<Level>(levelId);
+            AssumeValidateQuerySettingIsSuccessful();
+
+            // Act.
+            var actualResult = await validationService.ValidateUpdateSettingAction(settingContext, updateParam);
+
+            // Assert.
+            Assert.IsFalse(actualResult.IsSuccessful);
+        }
     }
 }

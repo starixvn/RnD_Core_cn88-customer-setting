@@ -29,7 +29,7 @@
             MinSuperMaxPT = 0;
             MaxSuperMaxPT = 0;
             MinSuperMinPT = 0;
-            MinSuperMinPT = 0;
+            MaxSuperMinPT = 0;
         }
 
         public override string ToXml()

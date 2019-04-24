@@ -736,6 +736,53 @@
             Assert.AreEqual(new DateTime(2000, 11, 11), settingItem.PTEffectiveTime);
         }
 
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        public async Task GetCustomerSettingType_ActorIsNotCompany_DoesNotExecuteCheckAdminPermissionCommand(byte actorLevel)
+        {
+            settingContext.Actor.Level = Enumeration.FromValue<Level>(actorLevel);
+
+            var downlineLevel = Enumeration.FromValue<Level>((byte)(actorLevel - 1));
+            var settingQuery = InstanceFactory.CreateQuerySettingParam(
+                false,
+                1,
+                downlineLevel,
+                1,
+                12);
+
+            StubAccountDetail(downlineLevel);
+            StubGetCustomerInfoForEdit();
+
+            await settingTypeServiceImpl.GetCustomerSettingType(
+                settingContext,
+                settingQuery);
+
+            await dynamicRepository.DidNotReceiveWithAnyArgs().ExecuteAsync(Arg.Any<CheckAdminPermissionCommand>());
+        }
+
+        [Test]
+        public async Task GetCustomerSettingType_ActorIsCompany_ExecuteCheckAdminPermissionCommand()
+        {
+            var downlineLevel = Enumeration.FromValue<Level>(3);
+            var settingQuery = InstanceFactory.CreateQuerySettingParam(
+                false,
+                1,
+                downlineLevel,
+                1,
+                12);
+
+            StubAccountDetail(downlineLevel);
+            StubGetCustomerInfoForEdit();
+
+            await settingTypeServiceImpl.GetCustomerSettingType(
+                settingContext,
+                settingQuery);
+
+            await dynamicRepository.Received().ExecuteAsync(Arg.Is<CheckAdminPermissionCommand>(
+                command => command.CustId == settingContext.Actor.Id));
+        }
+
         [Test]
         public async Task UpdateCustomerSettingType_OutOfEditPTTime_ReturnErrorResult()
         {

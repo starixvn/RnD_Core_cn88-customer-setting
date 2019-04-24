@@ -115,8 +115,10 @@
                         {
                             Id = dto.GroupId,
                             Name = dto.GroupName,
-                            MaxValue = dto.MaxCommPercent,
-                            MinValue = dto.MinCommPercent,
+#pragma warning disable S3358 // Ternary operators should not be nested
+                            MaxValue = isViewMySetting ? 0 : dto.MaxCommPercent,
+                            MinValue = isViewMySetting ? 0 : dto.MinCommPercent,
+#pragma warning restore S3358 // Ternary operators should not be nested
                             Value = dto.CommPercent
                         })
                     : Enumerable.Empty<CommissionGroup>()

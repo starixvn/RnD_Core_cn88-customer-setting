@@ -139,12 +139,9 @@
 
         private static readonly object[] ValidateQuerySetting_ActorDoesNotHavePermission_Cases =
         {
-            new object[] { Level.Super, Level.Super },
             new object[] { Level.Master, Level.Super },
-            new object[] { Level.Master, Level.Master },
             new object[] { Level.Agent, Level.Super },
-            new object[] { Level.Agent, Level.Master },
-            new object[] { Level.Agent, Level.Agent }
+            new object[] { Level.Agent, Level.Master }
         };
 
         [Test]
@@ -296,19 +293,5 @@
                 criteria => criteria.ActorId == settingContext.Actor.Id
                     && criteria.CustomerId == query.CustomerId));
         }
-
-        private static readonly object[] ValidateQuerySetting_EditingMemberAndActorLevelIsDifferentWithUplineLevel_Cases =
-        {
-            new object[] { Level.Super },
-            new object[] { Level.Master },
-            new object[] { Level.Agent }
-        };
-
-        private static readonly Level[] ValidateQuerySetting_CompanyEditsCustomerIsNotMemberAndUplineLevelIsNull_Cases =
-        {
-            Level.Super,
-            Level.Master,
-            Level.Agent
-        };
     }
 }
