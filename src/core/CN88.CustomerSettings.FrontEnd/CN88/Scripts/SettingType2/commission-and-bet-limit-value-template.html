@@ -1,5 +1,5 @@
 ﻿<div class="block__cell-wrapper"
-     data-ng-if="editable"
+     data-ng-if="isEditable"
      data-setting-field-group="item"
      data-resource-service-name="st2ResourceService">
     <div class="block__cell-wrapper w50-percent" data-ng-if="customerLevel !== avaiCustomerLevels.member">
@@ -72,7 +72,7 @@
         </div>
     </div>
 </div>
-<div class="block__cell-wrapper block__cell-wrapper--readonly" data-ng-if="!editable">
+<div class="block__cell-wrapper block__cell-wrapper--readonly" data-ng-if="!isEditable">
     <div class="block__cell-wrapper w50-percent" data-ng-if="customerLevel !== avaiCustomerLevels.member">
         <div class="block__cell align-center"
              data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"

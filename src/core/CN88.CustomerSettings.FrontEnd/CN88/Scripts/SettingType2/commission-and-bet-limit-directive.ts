@@ -30,7 +30,6 @@ namespace CustomerSetting.SettingType2 {
         public static $inject: string[] = [
             "st2ResourceService",
             "crossingSettingTypesServiceBus",
-            "appConfigService",
             "settingTypesSharedValuesService"
         ];
 
@@ -97,9 +96,8 @@ namespace CustomerSetting.SettingType2 {
         constructor(
             resourceService: ResourceService,
             crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus,
-            appConfigService: AppConfigService,
             settingTypesSharedValuesService: SettingTypesSharedValuesService) {
-            super(appConfigService, settingTypesSharedValuesService, commissionAndBetLimitItemFactory);
+            super(settingTypesSharedValuesService, commissionAndBetLimitItemFactory);
 
             this.resourceService = resourceService;
             this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;

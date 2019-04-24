@@ -6,7 +6,7 @@
             <span class="position-taking__constraint">{{'MaxAllowed' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.maxAllowedPT | formatPercentage}}</span></span>
         </span>
     </div>
-    <div data-ng-if="editable && isNew">
+    <div data-ng-if="isEditable && isNew">
         <div class="row">
             <label class="w40-percent">{{::('MasterPT' | st1Label)}}</label>
             <div class="w60-percent" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT">
@@ -42,7 +42,7 @@
             </div>
         </div>
     </div>
-    <div data-ng-if="editable && !isNew">
+    <div data-ng-if="isEditable && !isNew">
         <div class="row">
             <label class="w40-percent">{{::('MasterPT' | st1Label)}}</label>
             <label class="w30-percent">{{ptItem.currentMasterPT | formatPercentage}}</label>
@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-    <div data-ng-if="!editable">
+    <div data-ng-if="!isEditable">
         <div class="row">
             <label class="w40-percent">{{::('MasterPT' | st1Label)}}</label>
             <label class="w30-percent">{{ptItem.masterPT | formatPercentage}}</label>

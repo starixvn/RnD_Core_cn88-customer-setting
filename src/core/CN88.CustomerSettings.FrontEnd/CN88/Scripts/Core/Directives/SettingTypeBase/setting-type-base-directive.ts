@@ -22,7 +22,7 @@ namespace CustomerSetting {
         settingType: SettingType;
         settingTypeName: string;
         isNew: boolean;
-        editable: boolean;
+        isEditable: boolean;
         avaiCustomerLevels: Object;
     }
 
@@ -39,15 +39,10 @@ namespace CustomerSetting {
             this.linkInternal(scope);
         };
 
-        protected appConfigService: AppConfigService;
         protected settingTypesSharedValuesService: SettingTypesSharedValuesService;
         protected instantiateSettingItem: INewSettingItem;
 
-        constructor(
-            appConfigService: AppConfigService,
-            settingTypesSharedValuesService: SettingTypesSharedValuesService,
-            instantiateSettingItem: INewSettingItem) {
-            this.appConfigService = appConfigService;
+        constructor(settingTypesSharedValuesService: SettingTypesSharedValuesService, instantiateSettingItem: INewSettingItem) {
             this.settingTypesSharedValuesService = settingTypesSharedValuesService;
             this.instantiateSettingItem = instantiateSettingItem;
         }
@@ -60,7 +55,7 @@ namespace CustomerSetting {
             scope.productId = this.settingTypesSharedValuesService.productId;
             scope.productName = this.settingTypesSharedValuesService.productName;
             scope.isNew = this.settingTypesSharedValuesService.isNew;
-            scope.editable = this.appConfigService.canUpdate() && scope.settingType.displayMode === DisplayMode.editable;
+            scope.isEditable = this.settingTypesSharedValuesService.isEditable && scope.settingType.displayMode === DisplayMode.editable;
             scope.avaiCustomerLevels = Level;
 
             if (this.instantiateSettingItem) {

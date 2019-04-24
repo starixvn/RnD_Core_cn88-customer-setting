@@ -1,6 +1,6 @@
 ﻿<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index">
     <div class="position-taking__group-name">{{ptItem.sportTypeName}}</div>
-    <div data-ng-if="editable && isNew">
+    <div data-ng-if="isEditable && isNew">
         <div class="row">
             <label class="w40-percent">{{::('SuperMinPT' | st1Label)}}</label>
             <div class="w60-percent">
@@ -24,7 +24,7 @@
             </div>
         </div>
     </div>
-    <div data-ng-if="editable && !isNew">
+    <div data-ng-if="isEditable && !isNew">
         <div class="row">
             <label class="w40-percent">{{::('SuperMinPT' | st1Label)}}</label>
             <label class="w30-percent">{{ptItem.currentSuperMinPT | formatPercentage}}</label>
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div data-ng-if="!editable">
+    <div data-ng-if="!isEditable">
         <div class="row">
             <label class="w40-percent">{{::('SuperMinPT' | st1Label)}}</label>
             <label class="w30-percent">{{ptItem.superMinPT | formatPercentage}}</label>

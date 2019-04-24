@@ -29,13 +29,17 @@ namespace CustomerSetting {
         }
 
         public get isNew(): boolean {
-            return this.isCreateNew;
+            return this.query.isNew;
+        }
+
+        public get isEditable(): boolean {
+            return this.editable;
         }
 
         private system: number;
         private actorLv: Level;
         private lang: string;
-        private isCreateNew: boolean;
+        private editable: boolean;
         private query: SettingQuery;
 
         private $window: ng.IWindowService;
@@ -61,19 +65,20 @@ namespace CustomerSetting {
             if (params) {
                 var uplineId = params.uplineId ? params.uplineId : undefined;
                 var customerLevel = params.customerLevel ? params.customerLevel : undefined;
+                var isNew = params.isCreateNew || false;
 
                 this.lang = params.language || Defaults.language;
                 this.system = params.system || Defaults.system;
-                this.isCreateNew = params.isCreateNew || false;
                 this.hashKey = params.hashKey;
                 this.actorLv = params.actorLevel ? params.actorLevel : undefined;
+                this.editable = params.editable || false;
 
                 this.query = new SettingQuery(
                     params.productId,
                     uplineId,
                     customerLevel,
                     params.customerId,
-                    this.isNew);
+                    isNew);
             }
         }
     }

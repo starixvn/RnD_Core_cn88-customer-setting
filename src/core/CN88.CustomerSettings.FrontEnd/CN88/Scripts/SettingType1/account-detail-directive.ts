@@ -12,11 +12,7 @@
 
 namespace CustomerSetting.SettingType1 {
     class AccountDetailDirective extends SettingTypeBaseDirective {
-        public static $inject: string[] = [
-            "st1ResourceService",
-            "appConfigService",
-            "settingTypesSharedValuesService"
-        ];
+        public static $inject: string[] = ["st1ResourceService", "settingTypesSharedValuesService"];
 
         public templateUrl: string = "account-detail-template.htm";
 
@@ -46,11 +42,8 @@ namespace CustomerSetting.SettingType1 {
 
         private resourceService: ResourceService;
 
-        constructor(
-            resourceService: ResourceService,
-            appConfigService: AppConfigService,
-            settingTypesSharedValuesService: SettingTypesSharedValuesService) {
-            super(appConfigService, settingTypesSharedValuesService, null);
+        constructor(resourceService: ResourceService, settingTypesSharedValuesService: SettingTypesSharedValuesService) {
+            super(settingTypesSharedValuesService, null);
 
             this.resourceService = resourceService;
         }

@@ -1,5 +1,5 @@
 ﻿<div>
-    <div data-ng-if="editable">
+    <div data-ng-if="isEditable">
         <div class="row">
             <label class="w40-percent">
                 <span>{{::('Headline' | st1Label)}}</span>
@@ -86,34 +86,10 @@
             </div>
         </div>
     </div>
-    <div data-ng-if="!editable">
-        <div class="row">
-            <label class="w40-percent">{{::('Headline' | st1Label)}}</label>
-            <label class="w60-percent">{{accountDetail.uplineUsername}}</label>
-        </div>
+    <div data-ng-if="!isEditable">
         <div class="row">
             <label class="w40-percent">{{::('Username' | st1Label)}}</label>
             <label class="w60-percent">{{accountDetail.username}}</label>
-        </div>
-        <div class="row">
-            <label class="w40-percent">{{::('FirstName' | st1Label)}}</label>
-            <label class="w60-percent">{{accountDetail.firstName}}</label>
-        </div>
-        <div class="row">
-            <label class="w40-percent">{{::('LastName' | st1Label)}}</label>
-            <label class="w60-percent">{{accountDetail.lastName}}</label>
-        </div>
-        <div class="row">
-            <label class="w40-percent">{{::('Phone' | st1Label)}}</label>
-            <label class="w60-percent">{{accountDetail.phone}}</label>
-        </div>
-        <div class="row">
-            <label class="w40-percent">{{::('MobilePhone' | st1Label)}}</label>
-            <label class="w60-percent">{{accountDetail.mobilePhone}}</label>
-        </div>
-        <div class="row">
-            <label class="w40-percent">{{::('Fax' | st1Label)}}</label>
-            <label class="w60-percent">{{accountDetail.fax}}</label>
         </div>
     </div>
 </div>

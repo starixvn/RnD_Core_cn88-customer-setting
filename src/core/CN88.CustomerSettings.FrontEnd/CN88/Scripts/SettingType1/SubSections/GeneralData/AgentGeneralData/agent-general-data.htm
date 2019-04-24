@@ -1,5 +1,5 @@
 ﻿<div>
-    <div data-ng-if="editable">
+    <div data-ng-if="isEditable">
         <div class="row" data-ng-if="isNew">
             <label class="w40-percent">{{::('Master' | st1Label)}}</label>
             <label class="w60-percent">{{accountDetail.uplineUsername}}</label>
@@ -56,14 +56,10 @@
             </div>
         </div>
     </div>
-    <div data-ng-if="!editable">
+    <div data-ng-if="!isEditable">
         <div class="row">
             <label class="w40-percent">{{::('Username' | st1Label)}}</label>
             <label class="w60-percent">{{accountDetail.username}}</label>
-        </div>
-        <div class="row">
-            <label class="w40-percent">{{::('Name' | st1Label)}}</label>
-            <label class="w60-percent">{{accountDetail.firstName}}</label>
         </div>
     </div>
 </div>

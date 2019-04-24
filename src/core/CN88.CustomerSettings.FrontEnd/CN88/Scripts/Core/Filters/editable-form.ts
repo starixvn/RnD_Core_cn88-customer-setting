@@ -4,7 +4,7 @@
 /// <reference path="../module-registrater.ts" />
 
 namespace CustomerSetting {
-    function EditableFormFilter(appConfigService: AppConfigService): Function {
+    function EditableFormFilter(parametersService: ParametersService): Function {
         return (setting: { settingTypes: Array<{ displayMode: number }> }) => {
             var hasEditableSettingType: boolean = false;
 
@@ -14,10 +14,10 @@ namespace CustomerSetting {
                 });
             }
 
-            return appConfigService.canUpdate() && hasEditableSettingType;
+            return parametersService.isEditable && hasEditableSettingType;
         };
     }
 
-    EditableFormFilter.$inject = ["appConfigService"];
+    EditableFormFilter.$inject = ["parametersService"];
     ModuleRegister.filter("editableForm", EditableFormFilter);
 }

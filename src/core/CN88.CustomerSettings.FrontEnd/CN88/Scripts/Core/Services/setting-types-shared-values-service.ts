@@ -15,6 +15,7 @@ namespace CustomerSetting {
         public productId: number;
         public productName: string;
         public isNew: boolean;
+        public isEditable: boolean;
         public hashKey: string;
 
         private parametersService: ParametersService;
@@ -27,6 +28,7 @@ namespace CustomerSetting {
             this.actorLevel = this.parametersService.actorLevel;
             this.uplineId = uplineId;
             this.isNew = this.parametersService.isNew;
+            this.isEditable = this.parametersService.isEditable;
             this.hashKey = this.parametersService.hashKey;
 
             if (setting) {

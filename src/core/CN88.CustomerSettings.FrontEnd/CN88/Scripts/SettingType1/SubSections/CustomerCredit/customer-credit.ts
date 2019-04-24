@@ -8,7 +8,7 @@ namespace CustomerSetting.SettingType1 {
         public get scope(): any {
             return {
                 accountDetail: "=",
-                editable: "=",
+                isEditable: "=",
                 creditPrecision: "=precision"
             };
         }

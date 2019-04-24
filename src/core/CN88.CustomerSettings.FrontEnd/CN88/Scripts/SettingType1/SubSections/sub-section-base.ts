@@ -8,7 +8,7 @@ namespace CustomerSetting.SettingType1 {
         customerLevel: Level;
         accountDetail: AccountDetailSettingItem;
         isNew: boolean;
-        editable: boolean;
+        isEditable: boolean;
         avaiCustomerLevels: Object;
     }
 
@@ -20,7 +20,7 @@ namespace CustomerSetting.SettingType1 {
         public get scope(): any {
             return {
                 accountDetail: "=",
-                editable: "="
+                isEditable: "="
             };
         }
 

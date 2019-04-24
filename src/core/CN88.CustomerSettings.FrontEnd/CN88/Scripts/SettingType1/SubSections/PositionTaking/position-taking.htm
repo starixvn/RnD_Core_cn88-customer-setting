@@ -1,6 +1,6 @@
 ﻿<div class="position-taking" data-ng-class="{ 'position-taking--edit': !isNew && !accountDetail.isPTReadOnly }">
     <div class="sub-header">{{::('PositionTaking' | st1Label)}}</div>
-    <div class="msg msg--error" data-ng-if="editable && !isNew && !accountDetail.isPTReadOnly">
+    <div class="msg msg--error" data-ng-if="isEditable && !isNew && !accountDetail.isPTReadOnly">
         <div class="icon msg__icon"></div>
         <div class="msg__content">{{'PTEffectiveTime' | st1Message:(accountDetail.ptEffectiveTime | formatDateTime)}}</div>
     </div>

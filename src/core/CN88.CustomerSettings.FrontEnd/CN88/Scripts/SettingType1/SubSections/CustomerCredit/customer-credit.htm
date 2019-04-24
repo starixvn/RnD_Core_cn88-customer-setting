@@ -1,6 +1,6 @@
 ﻿<div class="customer-credit">
     <div class="sub-header">{{::('Credit' | st1Label)}}</div>
-    <div data-ng-if="editable">
+    <div data-ng-if="isEditable">
         <div data-ng-if="customerLevel === avaiCustomerLevels.super">
             <div class="row">
                 <label class="w40-percent">{{::('Currency' | st1Label)}}</label>
@@ -50,7 +50,7 @@
             </div>
         </div>
     </div>
-    <div data-ng-if="!editable">
+    <div data-ng-if="!isEditable">
         <div data-ng-if="customerLevel === avaiCustomerLevels.super">
             <div class="row">
                 <label class="w40-percent">{{::('Currency' | st1Label)}}</label>
@@ -61,8 +61,8 @@
                 <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('AvailableCreditRange' | st1Label)}}</label>
-                <label class="w60-percent">>= {{accountDetail.minCredit | number:creditPrecision}}</label>
+                <label class="w40-percent">{{::('CreditBalance' | st1Label)}}</label>
+                <label class="w60-percent">{{accountDetail.creditBalance | number:creditPrecision}}</label>
             </div>
         </div>
         <div data-ng-if="customerLevel !== avaiCustomerLevels.super">
@@ -71,8 +71,8 @@
                 <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label>
             </div>
             <div class="row">
-                <label class="w40-percent">{{::('AvailableCreditRange' | st1Label)}}</label>
-                <label class="w60-percent">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label>
+                <label class="w40-percent">{{::('CreditBalance' | st1Label)}}</label>
+                <label class="w60-percent">{{accountDetail.creditBalance | number:creditPrecision}}</label>
             </div>
         </div>
     </div>
