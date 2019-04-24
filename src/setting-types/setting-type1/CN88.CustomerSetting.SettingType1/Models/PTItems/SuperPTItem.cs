@@ -3,7 +3,7 @@
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Results;
 
-    public class SuperPTItem : SettingItemDefault, IPTItem
+    public class SuperPTItem : SettingItemDefault
     {
         private const string PTXmlFormat
             = "<PT {0} MinPT=\"{1}\" MaxPT=\"{2}\" />";
@@ -23,14 +23,6 @@
         public decimal MinSuperMaxPT { get; set; }
 
         public decimal MaxSuperMaxPT { get; set; }
-
-        public void ResetMinMax()
-        {
-            MinSuperMaxPT = 0;
-            MaxSuperMaxPT = 0;
-            MinSuperMinPT = 0;
-            MaxSuperMinPT = 0;
-        }
 
         public override string ToXml()
             => string.Format(

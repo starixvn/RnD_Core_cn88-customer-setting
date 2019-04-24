@@ -70,14 +70,14 @@
                 settingItem.Phone = DecodeHtml(customerInfo.Phone);
                 settingItem.MobilePhone = DecodeHtml(customerInfo.MobilePhone);
                 settingItem.Fax = DecodeHtml(customerInfo.Fax);
+                settingItem.MaxCredit = customerInfo.MaxCredit;
+                settingItem.MinCredit = customerInfo.MinCredit;
+                settingItem.IsAllowedUpdateCredit = await IsActorAllowToUpdateCredit(actor).ConfigureAwait(false);
+                settingItem.UplineUsername = DecodeHtml(customerInfo.HeadlineUsername);
             }
 
             settingItem.Currency = new Currency { Name = customerInfo.Currency };
-            settingItem.IsAllowedUpdateCredit = await IsActorAllowToUpdateCredit(actor).ConfigureAwait(false);
             settingItem.Credit = customerInfo.Credit;
-            settingItem.MaxCredit = customerInfo.MaxCredit;
-            settingItem.MinCredit = customerInfo.MinCredit;
-            settingItem.UplineUsername = DecodeHtml(customerInfo.HeadlineUsername);
 
             await GetMemberInfo(query, settingItem, customerInfo).ConfigureAwait(false);
 
@@ -144,6 +144,14 @@
                 return new MemberAccountDetail();
             }
 
+            if (actorId == custId)
+            {
+                return new AccountDetailSettingItem<SettingItemDefault>
+                {
+                    PTItems = Enumerable.Empty<SettingItemDefault>()
+                };
+            }
+
             var settingItem = await GetAccountDetailSettingItem(level, custId, isCreateNew, language).ConfigureAwait(false);
             var settingTypeConfig = (await GetSettingTypeConfig<AccountDetailSettingItem<SettingItemDefault>>(productId, SettingTypeId)
                 .ConfigureAwait(false))
@@ -151,14 +159,6 @@
             if (settingTypeConfig != null)
             {
                 settingItem.IntervalValue = settingTypeConfig.IntervalValue;
-            }
-
-            if (actorId == custId)
-            {
-                foreach (var ptItem in settingItem.PTItems)
-                {
-                    (ptItem as IPTItem)?.ResetMinMax();
-                }
             }
 
             return settingItem;
