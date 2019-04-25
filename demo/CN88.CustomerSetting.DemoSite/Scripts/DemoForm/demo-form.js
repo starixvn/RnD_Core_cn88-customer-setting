@@ -366,7 +366,7 @@ var DemoFrom;
             for (var item in Role) {
                 if (item) {
                     var roleId = parseInt(item, 10);
-                    if (roleId <= uplineRole) {
+                    if (roleId <= uplineRole && roleId !== 5) {
                         roles.push(new KeyValuePair(roleId, Role[roleId]));
                     }
                 }

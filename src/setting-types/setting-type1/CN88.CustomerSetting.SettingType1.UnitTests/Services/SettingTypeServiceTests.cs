@@ -193,6 +193,43 @@
             Assert.AreEqual("Username", accountDetailItem.Username);
         }
 
+        [TestCase(2, 12)]
+        [TestCase(3, 13)]
+        [TestCase(4, 14)]
+        public async Task GetCustomerSettingType_WhenViewMySetting_ReturnEmptyAccountDetail(
+            byte levelId,
+            int uplineId)
+        {
+            var downlineLevel = Enumeration.FromValue<Level>(levelId);
+            var settingQuery = InstanceFactory.CreateQuerySettingParam(
+                false,
+                1,
+                downlineLevel,
+                1,
+                uplineId);
+            settingContext.Actor.Id = settingQuery.CustomerId;
+            settingContext.Actor.Level = Enumeration.FromValue<Level>(levelId);
+
+            StubAccountDetail(downlineLevel);
+            StubGetCustomerInfoForEdit();
+
+            var accountDetailItem = (await settingTypeServiceImpl.GetCustomerSettingType(
+                settingContext,
+                settingQuery))
+                .SettingItems
+                .FirstOrDefault() as AccountDetailSettingItem<SettingItemDefault>;
+
+            Assert.AreEqual(0, accountDetailItem.MinCredit);
+            Assert.AreEqual(0, accountDetailItem.MaxCredit);
+            Assert.IsNull(accountDetailItem.Fax);
+            Assert.IsNull(accountDetailItem.FirstName);
+            Assert.IsNull(accountDetailItem.LastName);
+            Assert.IsNull(accountDetailItem.MobilePhone);
+            Assert.IsNull(accountDetailItem.Phone);
+            Assert.AreEqual("Username", accountDetailItem.Username);
+            Assert.IsEmpty(accountDetailItem.PTItems);
+        }
+
         [Test]
         public async Task GetCustomerSettingType_WhenEditMember_GetSpreadGroups()
         {
