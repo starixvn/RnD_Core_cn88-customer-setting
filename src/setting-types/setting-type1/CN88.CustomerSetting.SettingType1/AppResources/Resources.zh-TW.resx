@@ -161,10 +161,10 @@
     <value>無效的佔成數</value>
   </data>
   <data name="Msg_20019" xml:space="preserve">
-    <value>現有總代理佔成數超出新設的超級代理最高佔成數</value>
+    <value>現有總代理佔成數超出新設的股東最高佔成數</value>
   </data>
   <data name="Msg_20020" xml:space="preserve">
-    <value>現有會員佔成數超出新設的超級代理最高佔成數</value>
+    <value>現有會員佔成數超出新設的股東最高佔成數</value>
   </data>
   <data name="Msg_20021" xml:space="preserve">
     <value>現有總代理佔成數超出新設的總代理最高佔成數</value>
@@ -188,10 +188,10 @@
     <value>違反公司所設的總代理最高佔成數</value>
   </data>
   <data name="Msg_20028" xml:space="preserve">
-    <value>佔成數違反了超級代理最高佔成數</value>
+    <value>佔成數違反了股東最高佔成數</value>
   </data>
   <data name="Msg_20029" xml:space="preserve">
-    <value>佔成數違反了超級代理最低佔成數</value>
+    <value>佔成數違反了股東最低佔成數</value>
   </data>
   <data name="Msg_20030" xml:space="preserve">
     <value>代理商最低佔成數違反了總代理最高佔成數</value>
@@ -215,40 +215,40 @@
     <value>已成功更新帳戶詳細資訊</value>
   </data>
   <data name="Msg_30007" xml:space="preserve">
-    <value>新設的超級代理最低佔成數大於某幾條下線的總佔成數</value>
+    <value>新設的股東最低佔成數大於某幾條下線的總佔成數</value>
   </data>
   <data name="Msg_30008" xml:space="preserve">
-    <value>新設的超級代理最高佔成數小於某幾條下線的總佔成數</value>
+    <value>新設的股東最高佔成數小於某幾條下線的總佔成數</value>
   </data>
   <data name="Msg_30009" xml:space="preserve">
-    <value>超級代理最低佔成數必須小於或等於超級代理最高佔成數</value>
+    <value>股東最低佔成數必須小於或等於股東最高佔成數</value>
   </data>
   <data name="Msg_20035" xml:space="preserve">
-    <value>新設的超級代理佔成數過低，將導致某些下線的總佔成數低於超級代理最低佔成數</value>
+    <value>新設的股東佔成數過低，將導致某些下線的總佔成數低於股東最低佔成數</value>
   </data>
   <data name="Msg_20036" xml:space="preserve">
-    <value>新設的超級代理佔成數過高，將導致某些下線的總佔成數大於超級代理最高佔成數</value>
+    <value>新設的股東佔成數過高，將導致某些下線的總佔成數大於股東最高佔成數</value>
   </data>
   <data name="Msg_20037" xml:space="preserve">
-    <value>總代理及代理商的總佔成數過低，將導致此下線的總佔成數低於超級代理的最低佔成數</value>
+    <value>總代理及代理商的總佔成數過低，將導致此下線的總佔成數低於股東的最低佔成數</value>
   </data>
   <data name="Msg_20038" xml:space="preserve">
-    <value>總代理及代理商的總佔成數過高，將導致此下線的總佔成數大於超級代理的最高佔成數</value>
+    <value>總代理及代理商的總佔成數過高，將導致此下線的總佔成數大於股東的最高佔成數</value>
   </data>
   <data name="Msg_70024" xml:space="preserve">
     <value>信用額度不足。</value>
   </data>
   <data name="Msg_20039" xml:space="preserve">
-    <value>總代理佔成數過高，導致其下線總佔成數大於超級代理的最高佔成數。</value>
+    <value>總代理佔成數過高，導致其下線總佔成數大於股東的最高佔成數。</value>
   </data>
   <data name="Msg_20040" xml:space="preserve">
-    <value>代理商佔成數過高，導致其下線總佔成數大於超級代理的最高佔成數。</value>
+    <value>代理商佔成數過高，導致其下線總佔成數大於股東的最高佔成數。</value>
   </data>
   <data name="EditPossessTimeInvalid" xml:space="preserve">
     <value>目前無法更新佔成數。</value>
   </data>
   <data name="Msg_40041" xml:space="preserve">
-    <value>無效的股東</value>
+    <value>無效的大股東</value>
   </data>
   <data name="SportTypeName_1" xml:space="preserve">
     <value>體育博彩</value>
