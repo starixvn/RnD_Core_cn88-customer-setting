@@ -35830,6 +35830,54 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var PercentageDropdownDirective = (function () {
+        function PercentageDropdownDirective(valueRangeService) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
+            this.restrict = "E";
+            this.link = function (scope) {
+                if (scope.autoRefresh) {
+                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
+                        _this.initializeRange(scope);
+                    });
+                }
+                else {
+                    _this.initializeRange(scope);
+                }
+            };
+            this.valueRangeService = valueRangeService;
+        }
+        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    value: "=ngModel",
+                    min: "=",
+                    max: "=",
+                    step: "=?",
+                    precision: "=?",
+                    placeholder: "@",
+                    placeholderVisible: "=?",
+                    autoRefresh: "=?"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
+            scope.precision = scope.precision || 0;
+            scope.factor = Math.pow(10, scope.precision);
+            scope.step = scope.step || 1;
+            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
+        };
+        PercentageDropdownDirective.$inject = ["valueRangeService"];
+        return PercentageDropdownDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var SettingFieldGroupDirective = (function () {
         function SettingFieldGroupDirective($injector, $filter) {
             var _this = this;
@@ -35988,54 +36036,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    var PercentageDropdownDirective = (function () {
-        function PercentageDropdownDirective(valueRangeService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
-            this.restrict = "E";
-            this.link = function (scope) {
-                if (scope.autoRefresh) {
-                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
-                        _this.initializeRange(scope);
-                    });
-                }
-                else {
-                    _this.initializeRange(scope);
-                }
-            };
-            this.valueRangeService = valueRangeService;
-        }
-        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    value: "=ngModel",
-                    min: "=",
-                    max: "=",
-                    step: "=?",
-                    precision: "=?",
-                    placeholder: "@",
-                    placeholderVisible: "=?",
-                    autoRefresh: "=?"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
-            scope.precision = scope.precision || 0;
-            scope.factor = Math.pow(10, scope.precision);
-            scope.step = scope.step || 1;
-            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
-        };
-        PercentageDropdownDirective.$inject = ["valueRangeService"];
-        return PercentageDropdownDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     var SettingResultDirective = (function () {
         function SettingResultDirective($rootScope, $window) {
             var _this = this;
@@ -36065,6 +36065,55 @@ var CustomerSetting;
         return SettingResultDirective;
     }());
     CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingTypeDirectiveLoader = (function () {
+        function SettingTypeDirectiveLoader($compile) {
+            var _this = this;
+            this.replace = true;
+            this.link = function (scope, element) {
+                scope.$watch("setting.settingTypes", function () {
+                    _this.generateNodes(scope, element);
+                });
+            };
+            this.$compile = $compile;
+            this.loadedSettingTypes = [];
+        }
+        Object.defineProperty(SettingTypeDirectiveLoader.prototype, "scope", {
+            get: function () {
+                return {
+                    setting: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingTypeDirectiveLoader.prototype.generateNodes = function (scope, element) {
+            var _this = this;
+            if (scope.setting && scope.setting.settingTypes && angular.isArray(scope.setting.settingTypes)) {
+                scope.setting.settingTypes.forEach(function (settingType, index) {
+                    var loaded = _this.loadedSettingTypes.some(function (item) {
+                        return item === settingType.id;
+                    });
+                    if (!loaded) {
+                        var settingTypeNodeTemplate = CustomerSetting.StringFormater.format("<st{0} data-setting-type=\"setting.settingTypes[{1}]\"></st{0}>", settingType.id, index);
+                        var settingTypeElement = angular.element(settingTypeNodeTemplate);
+                        if (index === scope.setting.settingTypes.length - 1) {
+                            settingTypeElement.addClass("last-setting-type");
+                        }
+                        element.append(settingTypeElement);
+                        _this.$compile(settingTypeElement)(scope);
+                        _this.loadedSettingTypes.push(settingType.id);
+                    }
+                });
+            }
+        };
+        SettingTypeDirectiveLoader.$inject = ["$compile"];
+        return SettingTypeDirectiveLoader;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36206,55 +36255,6 @@ var CustomerSetting;
         return TooltipDirective;
     }());
     CustomerSetting.ModuleRegister.directive("tooltip", TooltipDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingTypeDirectiveLoader = (function () {
-        function SettingTypeDirectiveLoader($compile) {
-            var _this = this;
-            this.replace = true;
-            this.link = function (scope, element) {
-                scope.$watch("setting.settingTypes", function () {
-                    _this.generateNodes(scope, element);
-                });
-            };
-            this.$compile = $compile;
-            this.loadedSettingTypes = [];
-        }
-        Object.defineProperty(SettingTypeDirectiveLoader.prototype, "scope", {
-            get: function () {
-                return {
-                    setting: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingTypeDirectiveLoader.prototype.generateNodes = function (scope, element) {
-            var _this = this;
-            if (scope.setting && scope.setting.settingTypes && angular.isArray(scope.setting.settingTypes)) {
-                scope.setting.settingTypes.forEach(function (settingType, index) {
-                    var loaded = _this.loadedSettingTypes.some(function (item) {
-                        return item === settingType.id;
-                    });
-                    if (!loaded) {
-                        var settingTypeNodeTemplate = CustomerSetting.StringFormater.format("<st{0} data-setting-type=\"setting.settingTypes[{1}]\"></st{0}>", settingType.id, index);
-                        var settingTypeElement = angular.element(settingTypeNodeTemplate);
-                        if (index === scope.setting.settingTypes.length - 1) {
-                            settingTypeElement.addClass("last-setting-type");
-                        }
-                        element.append(settingTypeElement);
-                        _this.$compile(settingTypeElement)(scope);
-                        _this.loadedSettingTypes.push(settingType.id);
-                    }
-                });
-            }
-        };
-        SettingTypeDirectiveLoader.$inject = ["$compile"];
-        return SettingTypeDirectiveLoader;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36857,21 +36857,6 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
-        var MasterPositionTakingDirective = (function () {
-            function MasterPositionTakingDirective() {
-                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name">{{ptItem.sportTypeName}}</div><div class="row" data-ng-if="editable && isNew"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superPT" data-min="ptItem.minSuperPT" data-max="ptItem.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superPT\'}}"></percentage-dropdown></div></div><div class="row" data-ng-if="editable && !isNew"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.currentSuperPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superPT" data-min="ptItem.minSuperPT" data-max="ptItem.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superPT\'}}"></percentage-dropdown></div></div><div class="row" data-ng-if="!editable"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.superPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div>';
-                this.replace = true;
-            }
-            return MasterPositionTakingDirective;
-        }());
-        CustomerSetting.ModuleRegister.directive("st1MasterPositionTaking", MasterPositionTakingDirective);
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
         var AgentPositionTakingDirective = (function () {
             function AgentPositionTakingDirective() {
                 this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name position-taking--has-constraint"><span>{{ptItem.sportTypeName}}</span> <span class="position-taking__constraint-group"><span class="position-taking__constraint">{{\'MinAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.minAllowedPT | formatPercentage}}</span></span> <span class="position-taking__constraint">{{\'MaxAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.maxAllowedPT | formatPercentage}}</span></span></span></div><div data-ng-if="editable && isNew"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label><div class="w60-percent" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div><div class="w60-percent" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT"><select class="setting-field setting-field--fullwidth" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"><option>-</option></select></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label><div class="w60-percent" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div><div class="w60-percent" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT"><select class="setting-field setting-field--fullwidth" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"><option>-</option></select></div></div></div><div data-ng-if="editable && !isNew"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.currentMasterPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.currentAgentPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div></div></div><div data-ng-if="!editable"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.masterPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.agentPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div></div>';
@@ -36880,6 +36865,21 @@ var CustomerSetting;
             return AgentPositionTakingDirective;
         }());
         CustomerSetting.ModuleRegister.directive("st1AgentPositionTaking", AgentPositionTakingDirective);
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var MasterPositionTakingDirective = (function () {
+            function MasterPositionTakingDirective() {
+                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name">{{ptItem.sportTypeName}}</div><div class="row" data-ng-if="editable && isNew"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superPT" data-min="ptItem.minSuperPT" data-max="ptItem.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superPT\'}}"></percentage-dropdown></div></div><div class="row" data-ng-if="editable && !isNew"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.currentSuperPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superPT" data-min="ptItem.minSuperPT" data-max="ptItem.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superPT\'}}"></percentage-dropdown></div></div><div class="row" data-ng-if="!editable"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.superPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div>';
+                this.replace = true;
+            }
+            return MasterPositionTakingDirective;
+        }());
+        CustomerSetting.ModuleRegister.directive("st1MasterPositionTaking", MasterPositionTakingDirective);
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -37745,7 +37745,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
     };
 
     labels["zh-hans"] = {
-        "Headline": "股东",
+        "Headline": "大股东",
         "Master": "总代理",
         "Agent": "代理商",
         "AccountDetail": "帐户详细设定",
@@ -37766,9 +37766,9 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "AvailableCreditRange": "剩余额度",
         "Currency": "货币",
         "PositionTaking": "占成数",
-        "SuperMinPT": "超级代理最低占成数",
-        "SuperMaxPT": "超级代理最高占成数",
-        "SuperPT": "超级代理占成数",
+        "SuperMinPT": "股东最低占成数",
+        "SuperMaxPT": "股东最高占成数",
+        "SuperPT": "股东占成数",
         "MasterPT": "总代理占成数",
         "AgentPT": "代理商占成数",
         "MinAllowed": "最低可设:",
@@ -37776,7 +37776,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
     };
 
     labels["zh-tw"] = {
-        "Headline": "股東",
+        "Headline": "大股東",
         "Master": "總代理",
         "Agent": "代理商",
         "AccountDetail": "帳戶詳細設定",
@@ -37797,9 +37797,9 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "AvailableCreditRange": "剩餘額度",
         "Currency": "貨幣",
         "PositionTaking": "佔成數",
-        "SuperMinPT": "超級代理最低佔成數",
-        "SuperMaxPT": "超級代理最高佔成數",
-        "SuperPT": "超級代理佔成數",
+        "SuperMinPT": "股東最低佔成數",
+        "SuperMaxPT": "股東最高佔成數",
+        "SuperPT": "股東佔成數",
         "MasterPT": "總代理佔成數",
         "AgentPT": "代理商佔成數",
         "MinAllowed": "最低可設:",
@@ -37836,10 +37836,10 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "MemberPasswordRules": "<div class='password-rule'><div>密码必须是6-10个字符，没有空格，并且包含至少1个大写字母，1个小写字母，1个数字。（例如493abcDE，59D7!4$h）</div><div><span class='note'>注意：</span> 您的密码输入的时候要注意字母的大小写</div></div>",
         "InvalidPassword": "无效的密码",
         "SpreadGroupRule": "帐号一旦新增后, 此项目无法更改。",
-        "SuperMinPTIsOutOfRange": "超级代理最低占成数超出范围。",
-        "SuperMaxPTIsOutOfRange": "超级代理最高占成数超出范围。",
-        "SuperMinPTMustBeLessThanOrEqualToSuperMaxPT": "超级代理最低占成数必须小于或等于超级代理最高占成数",
-        "SuperPTIsOutOfRange": "超级代理占成数超出范围。",
+        "SuperMinPTIsOutOfRange": "股东最低占成数超出范围。",
+        "SuperMaxPTIsOutOfRange": "股东最高占成数超出范围。",
+        "SuperMinPTMustBeLessThanOrEqualToSuperMaxPT": "股东最低占成数必须小于或等于股东最高占成数",
+        "SuperPTIsOutOfRange": "股东占成数超出范围。",
         "MasterPTIsOutOfRange": "总代理占成数超出范围。",
         "AgentPTIsOutOfRange": "代理商占成数超出范围。",
         "TotalPTMustBeInRange": "总占成数必须在{0}%和 {1}%之间。请重试",
@@ -37857,10 +37857,10 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "MemberPasswordRules": "<div class='password-rule'><div>密碼必須是6-10個字元，沒有空格，並且包含至少1個大寫字母，1個小寫字母，1個數字。 （例如493abcDE，59D7!4$h）</div><div><span class='note'>注意：</span> 您的密碼輸入的時候要注意字母的大小寫</div></div>",
         "InvalidPassword": "無效的密碼",
         "SpreadGroupRule": "帳號一旦新增後, 此項目即無法更改。",
-        "SuperMinPTIsOutOfRange": "超級代理最低佔成數超出範圍。",
-        "SuperMaxPTIsOutOfRange": "超級代理最高佔成數超出範圍。",
-        "SuperMinPTMustBeLessThanOrEqualToSuperMaxPT": "超級代理最低佔成數必須小於或等於超級代理最高佔成數",
-        "SuperPTIsOutOfRange": "超級代理佔成數超出範圍。",
+        "SuperMinPTIsOutOfRange": "股東最低佔成數超出範圍。",
+        "SuperMaxPTIsOutOfRange": "股東最高佔成數超出範圍。",
+        "SuperMinPTMustBeLessThanOrEqualToSuperMaxPT": "股東最低佔成數必須小於或等於股東最高佔成數",
+        "SuperPTIsOutOfRange": "股東佔成數超出範圍。",
         "MasterPTIsOutOfRange": "總代理佔成數超出範圍。",
         "AgentPTIsOutOfRange": "代理商佔成數超出範圍。",
         "TotalPTMustBeInRange": "總佔成數必須在{0}%和 {1}%之間。請重試",
