@@ -157,7 +157,7 @@
     <value>退水率無效</value>
   </data>
   <data name="UpdateCommBetSettingSuccess" xml:space="preserve">
-    <value>已成功更新佣金和限額設定。</value>
+    <value>已成功更新退水和限額設定。</value>
   </data>
   <data name="Msg_11" xml:space="preserve">
     <value>請更新頁面然後重試。退水率超出範圍。</value>
