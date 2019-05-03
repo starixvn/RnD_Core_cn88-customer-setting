@@ -41,6 +41,10 @@
         }
 
         [CustomerSettingAuth(IsUpdate = false)]
+        public ContentResult MySetting(SettingFormQuery query)
+            => Edit(query);
+
+        [CustomerSettingAuth(IsUpdate = false)]
         public ContentResult Create(SettingFormQuery query)
         {
             query.IsCreateNew = true;
