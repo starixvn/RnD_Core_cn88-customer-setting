@@ -37,9 +37,7 @@
 
         public decimal MinCredit { get; set; }
 
-        public decimal CreditBalance => Credit.HasValue 
-            ? Credit.Value - MinCredit
-            : 0;
+        public decimal CreditBalance { get; set; }
 
         public SpreadGroup SpreadGroup { get; set; }
 

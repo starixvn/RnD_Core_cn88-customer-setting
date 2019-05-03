@@ -78,6 +78,7 @@
 
             settingItem.Currency = new Currency { Name = customerInfo.Currency };
             settingItem.Credit = customerInfo.Credit;
+            settingItem.CreditBalance = customerInfo.Credit - customerInfo.MinCredit;
 
             await GetMemberInfo(query, settingItem, customerInfo).ConfigureAwait(false);
 
