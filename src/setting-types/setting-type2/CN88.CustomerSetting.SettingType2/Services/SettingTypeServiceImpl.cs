@@ -47,7 +47,7 @@
 
             var commBetSettingDtoList = await GetCommBetSettingDtoList(query).ConfigureAwait(false);
             var settingItems = new List<CommBetSettingItem>();
-            var isViewMySetting = settingContext.Actor.Id == query.CustomerId;
+            var isViewMySetting = query.IsNotCreateNew && settingContext.Actor.Id == query.CustomerId;
 
             foreach (var settingItemConfig in settingTypeConfig)
             {

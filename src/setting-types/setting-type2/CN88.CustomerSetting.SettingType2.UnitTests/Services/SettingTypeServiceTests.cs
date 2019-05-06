@@ -89,7 +89,7 @@
         [TestCase(4)]
         public async Task GetCustomerSettingType_ViewMySetting_ReturnZeroMinMax(byte levelId)
         {
-            var query = InstanceFactory.CreateQuerySettingParam(true);
+            var query = InstanceFactory.CreateQuerySettingParam(false);
             query.CustomerLevel = Enumeration.FromValue<Level>(levelId);
             settingContext.Actor.Id = query.CustomerId;
             settingContext.Actor.Level = query.CustomerLevel;

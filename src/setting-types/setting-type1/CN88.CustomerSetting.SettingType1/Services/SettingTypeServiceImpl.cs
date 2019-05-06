@@ -145,7 +145,7 @@
                 return new MemberAccountDetail();
             }
 
-            if (actorId == custId)
+            if (actorId == custId && !isCreateNew)
             {
                 return new AccountDetailSettingItem<SettingItemDefault>
                 {
