@@ -76,7 +76,8 @@
                 query.Language = settingContext.Language;
                 query.HashKey = settingContext.HashKey;
                 query.ActorLevel = settingContext.ActorLevel;
-                query.IsReadOnly = !query.IsCreateNew && (query.CustomerId == 0 || query.CustomerId == settingContext.ActorId);
+                query.IsReadOnly = !query.IsCreateNew 
+                    && (!query.CustomerId.HasValue || query.CustomerId == 0 || query.CustomerId == settingContext.ActorId);
 
                 template = ReplaceParameters(template, query);
             }
