@@ -5,17 +5,20 @@
 
     labels["en-us"] = {
         "Cancel": "Cancel",
-        "Save": "Save"
+        "Save": "Save",
+        "SaveAndNew": "Save & New"
     };
 
     labels["zh-hans"] = {
         "Cancel": "取消",
-        "Save": "保存"
+        "Save": "保存",
+        "SaveAndNew": "保存与新增"
     };
 
     labels["zh-tw"] = {
         "Cancel": "取消",
-        "Save": "保存"
+        "Save": "保存",
+        "SaveAndNew": "保存與新增"
     };
 
     var messages = {};

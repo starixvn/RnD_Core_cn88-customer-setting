@@ -424,11 +424,17 @@ var DemoFrom;
 })(DemoFrom || (DemoFrom = {}));
 /* tslint:disable */
 var showCN88CancelButton = true;
+var showCN88SaveAndNewButton = true;
 function cn88SuccessfulUpdatingCallback(isSuccessful) {
     console.log("Be called after updating sucessfully!");
 }
 function cn88CancelCallback() {
     console.log("Cancel the form!");
+}
+function cn88SaveAndNewCallback() {
+    var iframe = document.getElementById("setting-page");
+
+    iframe.contentWindow.location.reload();
 }
 /* tslint:enable */
 //# sourceMappingURL=demo-form.js.map

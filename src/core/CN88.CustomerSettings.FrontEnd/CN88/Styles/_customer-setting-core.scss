@@ -82,7 +82,6 @@ select.setting-field {
         @include border($color: $cancel-button-border-color);
         background-color: $cancel-button-background-color;
         color: $cancel-button-text-color;
-        margin-right: 10px;
 
         &:hover:enabled,
         &:focus:enabled,
@@ -91,6 +90,10 @@ select.setting-field {
             border: none;
             color: $button-text-color;
         }
+    }
+
+    &--margin-right {
+        margin-right: 10px;
     }
 
     &:hover:enabled,

@@ -30,8 +30,11 @@ namespace CustomerSetting {
         public setting: Setting;
         public warningMessages: Result | UpdatingSettingResult;
         public requestMsgResult: Result | UpdatingSettingResult;
-        public cancelCallback: Function;
         public cancelButtonRequired: boolean;
+        public cancelCallback: Function;
+        public updateCallback: ISuccessfulUpdatingCallback;
+        public saveAndNewRequired: boolean;
+        public saveAndNewCallback: ISuccessfulUpdatingCallback;
 
         private $window: ng.IWindowService;
         private $timeout: ng.ITimeoutService;
@@ -40,7 +43,6 @@ namespace CustomerSetting {
         private resourceService: ResourceService;
         private requestService: RequestService;
         private settingTypesSharedValuesService: SettingTypesSharedValuesService;
-        private successfulUpdatingCallback: ISuccessfulUpdatingCallback;
 
         constructor(
             $window: ng.IWindowService,
@@ -63,11 +65,19 @@ namespace CustomerSetting {
             $locale.NUMBER_FORMATS.DECIMAL_SEP = this.appConfigService.decimalSeparator;
 
             /* tslint:disable:no-string-literal */
-            this.successfulUpdatingCallback = this.$window.parent["cn88SuccessfulUpdatingCallback"];
+            this.updateCallback = this.$window.parent["cn88SuccessfulUpdatingCallback"];
             this.cancelButtonRequired = this.$window.parent["showCN88CancelButton"];
 
             if (this.cancelButtonRequired) {
                 this.cancelCallback = this.$window.parent["cn88CancelCallback"];
+            }
+
+            if (this.parametersService.isNew) {
+                this.saveAndNewRequired = this.$window.parent["showCN88SaveAndNewButton"];
+
+                if (this.saveAndNewRequired) {
+                    this.saveAndNewCallback = this.$window.parent["cn88SaveAndNewCallback"];
+                }
             }
             /* tslint:enable:no-string-literal */
 
@@ -79,7 +89,11 @@ namespace CustomerSetting {
             });
         }
 
-        public update(): void {
+        public saveAndNew(): void {
+            this.update(this.saveAndNewCallback);
+        }
+
+        public update(callback: ISuccessfulUpdatingCallback = this.updateCallback): void {
             var changedSettings: Setting = this.settingTypesSharedValuesService.isNew ? this.setting.getEditableSettings() : this.setting.getChanges();
             var command: SettingCommand;
             var path: string = this.settingTypesSharedValuesService.isNew
@@ -93,7 +107,7 @@ namespace CustomerSetting {
 
                 if (changedSettings.validate()) {
                     command = this.parametersService.createSettingCommand(changedSettings);
-                    this.updateSetting(path, command);
+                    this.updateSetting(path, command, callback);
                 }
             } else {
                 var error: Result = Result.noChangeToUpdate;
@@ -103,7 +117,7 @@ namespace CustomerSetting {
             }
         }
 
-        private updateSetting(path: string, command: SettingCommand): void {
+        private updateSetting(path: string, command: SettingCommand, callback: ISuccessfulUpdatingCallback): void {
             this.requestService.post(path, command.toJson(), (response: ng.IHttpPromiseCallbackArg<any>) => {
                 this.requestMsgResult = new UpdatingSettingResult(response.data);
 
@@ -117,8 +131,8 @@ namespace CustomerSetting {
                     if (settingResults.isSuccessful) {
                         this.requestMsgResult = undefined;
 
-                        if (this.successfulUpdatingCallback) {
-                            this.successfulUpdatingCallback(settingResults.isSuccessful);
+                        if (callback) {
+                            callback(settingResults.isSuccessful);
                         }
                     }
                 }, Defaults.displayingMsgTime);

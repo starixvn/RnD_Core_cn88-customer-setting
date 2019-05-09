@@ -350,12 +350,13 @@ select.setting-field {
   .btn--cancel {
     border: 1px solid #d2d2d2;
     background-color: #fff;
-    color: #737373;
-    margin-right: 10px; }
+    color: #737373; }
     .btn--cancel:hover:enabled, .btn--cancel:focus:enabled, .btn--cancel:active:enabled {
       background-color: #a5a5a5;
       border: none;
       color: #fff; }
+  .btn--margin-right {
+    margin-right: 10px; }
   .btn:hover:enabled, .btn:focus:enabled, .btn:active:enabled {
     background-color: #31c18e; }
   .btn[disabled] {

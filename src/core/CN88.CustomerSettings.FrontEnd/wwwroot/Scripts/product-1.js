@@ -35313,10 +35313,16 @@ var CustomerSetting;
             this.settingTypesSharedValuesService = settingTypesSharedValuesService;
             $locale.NUMBER_FORMATS.GROUP_SEP = this.appConfigService.thousandSeparator;
             $locale.NUMBER_FORMATS.DECIMAL_SEP = this.appConfigService.decimalSeparator;
-            this.successfulUpdatingCallback = this.$window.parent["cn88SuccessfulUpdatingCallback"];
+            this.updateCallback = this.$window.parent["cn88SuccessfulUpdatingCallback"];
             this.cancelButtonRequired = this.$window.parent["showCN88CancelButton"];
             if (this.cancelButtonRequired) {
                 this.cancelCallback = this.$window.parent["cn88CancelCallback"];
+            }
+            if (this.parametersService.isNew) {
+                this.saveAndNewRequired = this.$window.parent["showCN88SaveAndNewButton"];
+                if (this.saveAndNewRequired) {
+                    this.saveAndNewCallback = this.$window.parent["cn88SaveAndNewCallback"];
+                }
             }
             this.systemId = this.parametersService.systemId;
             this.requestService.registerSharedScope(this);
@@ -35324,7 +35330,11 @@ var CustomerSetting;
                 _this.querySetting();
             });
         }
-        CustomerSettingController.prototype.update = function () {
+        CustomerSettingController.prototype.saveAndNew = function () {
+            this.update(this.saveAndNewCallback);
+        };
+        CustomerSettingController.prototype.update = function (callback) {
+            if (callback === void 0) { callback = this.updateCallback; }
             var changedSettings = this.settingTypesSharedValuesService.isNew ? this.setting.getEditableSettings() : this.setting.getChanges();
             var command;
             var path = this.settingTypesSharedValuesService.isNew
@@ -35335,7 +35345,7 @@ var CustomerSetting;
                 changedSettings.resetValidationState();
                 if (changedSettings.validate()) {
                     command = this.parametersService.createSettingCommand(changedSettings);
-                    this.updateSetting(path, command);
+                    this.updateSetting(path, command, callback);
                 }
             }
             else {
@@ -35344,7 +35354,7 @@ var CustomerSetting;
                 this.requestMsgResult = error;
             }
         };
-        CustomerSettingController.prototype.updateSetting = function (path, command) {
+        CustomerSettingController.prototype.updateSetting = function (path, command, callback) {
             var _this = this;
             this.requestService.post(path, command.toJson(), function (response) {
                 _this.requestMsgResult = new CustomerSetting.UpdatingSettingResult(response.data);
@@ -35355,8 +35365,8 @@ var CustomerSetting;
                     }
                     if (settingResults.isSuccessful) {
                         _this.requestMsgResult = undefined;
-                        if (_this.successfulUpdatingCallback) {
-                            _this.successfulUpdatingCallback(settingResults.isSuccessful);
+                        if (callback) {
+                            callback(settingResults.isSuccessful);
                         }
                     }
                 }, CustomerSetting.Defaults.displayingMsgTime);
@@ -35882,164 +35892,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    var SettingFieldGroupDirective = (function () {
-        function SettingFieldGroupDirective($injector, $filter) {
-            var _this = this;
-            this.restrict = "A";
-            this.priority = 100;
-            this.compile = function (element) {
-                var errorTooltipContainer = angular.element("<span></span>");
-                errorTooltipContainer.addClass("error-tooltip-container");
-                errorTooltipContainer.attr("data-tooltip", "{{errorMessage}}");
-                errorTooltipContainer.attr("data-manual", "true");
-                errorTooltipContainer.attr("data-tooltip-type", "error");
-                element.prepend(errorTooltipContainer);
-                return {
-                    post: _this.link
-                };
-            };
-            this.controller = ["$scope", function ($scope) {
-                    $scope.registeredFields = [];
-                    $scope.errorMessage = null;
-                    this.register = function (fieldName, element) {
-                        if (!fieldName || !element) {
-                            return;
-                        }
-                        var existing = $scope.registeredFields.some(function (registeredField) {
-                            return registeredField.key === fieldName;
-                        });
-                        if (!existing) {
-                            $scope.registeredFields.push(new CustomerSetting.KeyValuePair(fieldName, { element: element }));
-                        }
-                    };
-                }];
-            this.link = function (scope, element) {
-                var errorContainer = angular.element(element[0].getElementsByClassName("error-tooltip-container")[0]);
-                var tooltipController = errorContainer.controller("tooltip");
-                scope.reset = function () {
-                    scope.$apply(function () {
-                        scope.settingItem.resetValidationState();
-                    });
-                };
-                scope.$watch("settingItem.validationState", function (validationState, oldValidationState) {
-                    if (!oldValidationState || oldValidationState === validationState) {
-                        return;
-                    }
-                    if (scope.registeredFields.length > 0) {
-                        if (validationState === CustomerSetting.Result.normal) {
-                            if (tooltipController && scope.dirtyField) {
-                                tooltipController.hideTooltip();
-                                scope.dirtyField = null;
-                            }
-                            _this.toggleAffectedFieldsState(scope);
-                        }
-                        else {
-                            var errorMessage = _this.getErrorMessage(validationState, scope.resourceServiceName, scope.customFilterName);
-                            scope.dirtyField = _this.getErrorTriggeringField(scope.registeredFields, validationState.triggeringFieldName);
-                            if (tooltipController && errorMessage && scope.dirtyField) {
-                                var inputElement = scope.dirtyField[0];
-                                _this.toggleAffectedFieldsState(scope, validationState.affectedFields);
-                                tooltipController.showTooltipAt(errorMessage, scope.dirtyField);
-                                if (inputElement.focus) {
-                                    inputElement.focus();
-                                }
-                                if (inputElement.select) {
-                                    inputElement.select();
-                                }
-                            }
-                        }
-                    }
-                });
-            };
-            this.$injector = $injector;
-            this.$filter = $filter;
-        }
-        Object.defineProperty(SettingFieldGroupDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    settingItem: "=settingFieldGroup",
-                    resourceServiceName: "@",
-                    customFilterName: "@"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingFieldGroupDirective.prototype.toggleAffectedFieldsState = function (scope, affectedFieldNames) {
-            if (affectedFieldNames === void 0) { affectedFieldNames = []; }
-            scope.registeredFields.forEach(function (registeredField) {
-                if (affectedFieldNames.indexOf(registeredField.key) >= 0) {
-                    registeredField.value.element.addClass("setting-field--error");
-                    registeredField.value.element.on("change", scope.reset);
-                    registeredField.value.dirty = true;
-                }
-                else if (registeredField.value.dirty) {
-                    registeredField.value.element.removeClass("setting-field--error");
-                    registeredField.value.element.off("change", scope.reset);
-                    registeredField.value.dirty = false;
-                }
-            });
-        };
-        SettingFieldGroupDirective.prototype.getErrorTriggeringField = function (registeredFields, fieldName) {
-            var filteredRegisteredFields = registeredFields
-                .filter(function (registeredField) { return fieldName === registeredField.key; });
-            return filteredRegisteredFields.length > 0 ? filteredRegisteredFields[0].value.element : null;
-        };
-        SettingFieldGroupDirective.prototype.getErrorMessage = function (validationResult, resourceServiceName, customFilterName) {
-            var _this = this;
-            if (customFilterName === void 0) { customFilterName = null; }
-            var message = null;
-            if (validationResult.message) {
-                var resourceService = this.$injector.get(resourceServiceName);
-                var params = (validationResult.msgParams || []).map(function (param) {
-                    if (customFilterName) {
-                        return _this.$filter(customFilterName)(param);
-                    }
-                    else if (typeof param === "number") {
-                        var precision = validationResult.extraData.precision;
-                        if (precision === undefined || precision === null) {
-                            return _this.$filter("number")(param);
-                        }
-                        else {
-                            return _this.$filter("number")(param, precision);
-                        }
-                    }
-                    else {
-                        return param;
-                    }
-                });
-                if (resourceService) {
-                    params.unshift(validationResult.message);
-                    message = resourceService.getFormattedMessage.apply(resourceService, params);
-                }
-            }
-            return message;
-        };
-        SettingFieldGroupDirective.$inject = ["$injector", "$filter"];
-        return SettingFieldGroupDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingFieldGroup", SettingFieldGroupDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingFieldDirective = (function () {
-        function SettingFieldDirective() {
-            this.require = "^settingFieldGroup";
-            this.restrict = "A";
-            this.link = function (scope, element, attributes, settingFieldGroupController) {
-                attributes.$observe("settingField", function (settingField) {
-                    settingFieldGroupController.register(settingField, element);
-                });
-            };
-        }
-        return SettingFieldDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingField", SettingFieldDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     var SettingResultDirective = (function () {
         function SettingResultDirective($rootScope, $window) {
             var _this = this;
@@ -36269,6 +36121,164 @@ var CustomerSetting;
         System[System["internalAlpha"] = 3] = "internalAlpha";
     })(CustomerSetting.System || (CustomerSetting.System = {}));
     var System = CustomerSetting.System;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingFieldGroupDirective = (function () {
+        function SettingFieldGroupDirective($injector, $filter) {
+            var _this = this;
+            this.restrict = "A";
+            this.priority = 100;
+            this.compile = function (element) {
+                var errorTooltipContainer = angular.element("<span></span>");
+                errorTooltipContainer.addClass("error-tooltip-container");
+                errorTooltipContainer.attr("data-tooltip", "{{errorMessage}}");
+                errorTooltipContainer.attr("data-manual", "true");
+                errorTooltipContainer.attr("data-tooltip-type", "error");
+                element.prepend(errorTooltipContainer);
+                return {
+                    post: _this.link
+                };
+            };
+            this.controller = ["$scope", function ($scope) {
+                    $scope.registeredFields = [];
+                    $scope.errorMessage = null;
+                    this.register = function (fieldName, element) {
+                        if (!fieldName || !element) {
+                            return;
+                        }
+                        var existing = $scope.registeredFields.some(function (registeredField) {
+                            return registeredField.key === fieldName;
+                        });
+                        if (!existing) {
+                            $scope.registeredFields.push(new CustomerSetting.KeyValuePair(fieldName, { element: element }));
+                        }
+                    };
+                }];
+            this.link = function (scope, element) {
+                var errorContainer = angular.element(element[0].getElementsByClassName("error-tooltip-container")[0]);
+                var tooltipController = errorContainer.controller("tooltip");
+                scope.reset = function () {
+                    scope.$apply(function () {
+                        scope.settingItem.resetValidationState();
+                    });
+                };
+                scope.$watch("settingItem.validationState", function (validationState, oldValidationState) {
+                    if (!oldValidationState || oldValidationState === validationState) {
+                        return;
+                    }
+                    if (scope.registeredFields.length > 0) {
+                        if (validationState === CustomerSetting.Result.normal) {
+                            if (tooltipController && scope.dirtyField) {
+                                tooltipController.hideTooltip();
+                                scope.dirtyField = null;
+                            }
+                            _this.toggleAffectedFieldsState(scope);
+                        }
+                        else {
+                            var errorMessage = _this.getErrorMessage(validationState, scope.resourceServiceName, scope.customFilterName);
+                            scope.dirtyField = _this.getErrorTriggeringField(scope.registeredFields, validationState.triggeringFieldName);
+                            if (tooltipController && errorMessage && scope.dirtyField) {
+                                var inputElement = scope.dirtyField[0];
+                                _this.toggleAffectedFieldsState(scope, validationState.affectedFields);
+                                tooltipController.showTooltipAt(errorMessage, scope.dirtyField);
+                                if (inputElement.focus) {
+                                    inputElement.focus();
+                                }
+                                if (inputElement.select) {
+                                    inputElement.select();
+                                }
+                            }
+                        }
+                    }
+                });
+            };
+            this.$injector = $injector;
+            this.$filter = $filter;
+        }
+        Object.defineProperty(SettingFieldGroupDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    settingItem: "=settingFieldGroup",
+                    resourceServiceName: "@",
+                    customFilterName: "@"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingFieldGroupDirective.prototype.toggleAffectedFieldsState = function (scope, affectedFieldNames) {
+            if (affectedFieldNames === void 0) { affectedFieldNames = []; }
+            scope.registeredFields.forEach(function (registeredField) {
+                if (affectedFieldNames.indexOf(registeredField.key) >= 0) {
+                    registeredField.value.element.addClass("setting-field--error");
+                    registeredField.value.element.on("change", scope.reset);
+                    registeredField.value.dirty = true;
+                }
+                else if (registeredField.value.dirty) {
+                    registeredField.value.element.removeClass("setting-field--error");
+                    registeredField.value.element.off("change", scope.reset);
+                    registeredField.value.dirty = false;
+                }
+            });
+        };
+        SettingFieldGroupDirective.prototype.getErrorTriggeringField = function (registeredFields, fieldName) {
+            var filteredRegisteredFields = registeredFields
+                .filter(function (registeredField) { return fieldName === registeredField.key; });
+            return filteredRegisteredFields.length > 0 ? filteredRegisteredFields[0].value.element : null;
+        };
+        SettingFieldGroupDirective.prototype.getErrorMessage = function (validationResult, resourceServiceName, customFilterName) {
+            var _this = this;
+            if (customFilterName === void 0) { customFilterName = null; }
+            var message = null;
+            if (validationResult.message) {
+                var resourceService = this.$injector.get(resourceServiceName);
+                var params = (validationResult.msgParams || []).map(function (param) {
+                    if (customFilterName) {
+                        return _this.$filter(customFilterName)(param);
+                    }
+                    else if (typeof param === "number") {
+                        var precision = validationResult.extraData.precision;
+                        if (precision === undefined || precision === null) {
+                            return _this.$filter("number")(param);
+                        }
+                        else {
+                            return _this.$filter("number")(param, precision);
+                        }
+                    }
+                    else {
+                        return param;
+                    }
+                });
+                if (resourceService) {
+                    params.unshift(validationResult.message);
+                    message = resourceService.getFormattedMessage.apply(resourceService, params);
+                }
+            }
+            return message;
+        };
+        SettingFieldGroupDirective.$inject = ["$injector", "$filter"];
+        return SettingFieldGroupDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingFieldGroup", SettingFieldGroupDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingFieldDirective = (function () {
+        function SettingFieldDirective() {
+            this.require = "^settingFieldGroup";
+            this.restrict = "A";
+            this.link = function (scope, element, attributes, settingFieldGroupController) {
+                attributes.$observe("settingField", function (settingField) {
+                    settingFieldGroupController.register(settingField, element);
+                });
+            };
+        }
+        return SettingFieldDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingField", SettingFieldDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -37661,7 +37671,7 @@ var CustomerSetting;
 angular.module("customerSetting").run(["$templateCache", function($templateCache) {$templateCache.put("./tooltip.html","<div class=\"tooltip tooltip--{{tooltipType}}\" data-ng-show=\"tooltipMessage && beingShowed\"><div class=\"tooltip__content\" data-ng-bind-html=\"tooltipMessage | unsafe\"></div></div>");
 $templateCache.put("./SettingType1/headline-suggestion-item-template.html","<a href=\"#\" data-headline-suggestion-item data-ng-bind-html=\"match.label | uibTypeaheadHighlight:query\" ng-attr-title=\"{{match.label}}\"></a>");
 $templateCache.put("./SettingType2/commission-and-bet-limit-header-template.html","<div class=\"block__lbl\"></div><div class=\"w80-percent\"><div class=\"block__lbl-group w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__lbl\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"item in availableCommissionGroups\">{{item}}</div></div><div class=\"block__lbl-group block__lbl w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member\">{{::(\'MemberCommission\' | st2Label)}}</div><div class=\"block__lbl-group w50-percent\"><div class=\"block__lbl w50-percent\"><span>{{::(\'MaxPerEvent\' | st2Label)}}</span> <span class=\"icon icon--command icon--info icon--margin-left\" data-tooltip=\"{{\'MaxPerEventNote\' | st2Message}}\" data-tooltip-type=\"info\" data-inner-tooltip=\"info\"></span></div><div class=\"block__lbl block__lbl--no-border w50-percent\"><span>{{::(\'MaxBet\' | st2Label)}}</span> <span class=\"icon icon--command icon--info icon--margin-left\" data-tooltip=\"{{\'MaxBetNote\' | st2Message}}\" data-tooltip-type=\"info\" data-inner-tooltip=\"true\"></span></div></div></div>");
-$templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html","<div class=\"block__cell-wrapper\" data-ng-if=\"isEditable\" data-setting-field-group=\"item\" data-resource-service-name=\"st2ResourceService\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups track by $index\"><percentage-dropdown data-ng-if=\"commissionGroup\" data-ng-model=\"commissionGroup.value\" data-setting-field=\"{{\'commissionGroups-\' + $index}}\" data-min=\"commissionGroup.minValue\" data-max=\"commissionGroup.maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell align-center w100-percent\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex]\" data-ng-model=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].value\" data-setting-field=\"{{\'commissionGroups-\' + item.memberSpreadGroupIndex}}\" data-min=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue\" data-max=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\" data-auto-refresh=\"true\"></percentage-dropdown></div><div class=\"block__cell w50-percent align-center\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell-wrapper w50-percent\"><div class=\"block__cell w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxPerEventConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxPerEvent\" data-setting-field=\"maxPerEvent\"> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxPerEvent > 0)\">[{{item.minMaxPerEvent | number:betSettingPrecision}}; {{item.maxMaxPerEvent | number:betSettingPrecision}}]</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && (item.maxMaxPerEvent === 0) && hasMaxPerEventConstraint\">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span></div><div class=\"block__cell block__cell--no-border w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxBetConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxBet\" data-setting-field=\"maxBet\"> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxBet > 0)\">[{{item.minMaxBet | number:betSettingPrecision}}; {{item.maxMaxBet | number:betSettingPrecision}}]</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && (item.maxMaxBet === 0) && hasMaxBetConstraint\">>={{item.minMaxBet | number:betSettingPrecision}}</span></div></div></div><div class=\"block__cell-wrapper block__cell-wrapper--readonly\" data-ng-if=\"!isEditable\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups\">{{commissionGroup.value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center w100-percent\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\">{{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div><div class=\"w50-percent w50-percent\"><div class=\"block__cell align-center w50-percent\">{{item.maxPerEvent | number:betSettingPrecision}}</div><div class=\"block__cell align-center block__cell--no-border w50-percent\">{{item.maxBet | number:betSettingPrecision}}</div></div></div>");}]);
+$templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html","<div class=\"block__cell-wrapper\" data-ng-if=\"isEditable\" data-setting-field-group=\"item\" data-resource-service-name=\"st2ResourceService\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups track by $index\"><percentage-dropdown data-ng-if=\"commissionGroup\" data-ng-model=\"commissionGroup.value\" data-setting-field=\"{{\'commissionGroups-\' + $index}}\" data-min=\"commissionGroup.minValue\" data-max=\"commissionGroup.maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell align-center w100-percent\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex]\" data-ng-model=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].value\" data-setting-field=\"{{\'commissionGroups-\' + item.memberSpreadGroupIndex}}\" data-min=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue\" data-max=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\" data-auto-refresh=\"true\"></percentage-dropdown></div><div class=\"block__cell w50-percent align-center\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell-wrapper w50-percent\"><div class=\"block__cell w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxPerEventConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxPerEvent\" data-setting-field=\"maxPerEvent\"> <span class=\"setting-field--constraint\" data-ng-if=\"customerLevel !== avaiCustomerLevels.super\">&lt;={{item.maxMaxPerEvent | number:betSettingPrecision}}</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && hasMaxPerEventConstraint\">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span></div><div class=\"block__cell block__cell--no-border w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxBetConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxBet\" data-setting-field=\"maxBet\"> <span class=\"setting-field--constraint\" data-ng-if=\"customerLevel !== avaiCustomerLevels.super\">&lt;={{item.maxMaxBet | number:betSettingPrecision}}</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && hasMaxBetConstraint\">>={{item.minMaxBet | number:betSettingPrecision}}</span></div></div></div><div class=\"block__cell-wrapper block__cell-wrapper--readonly\" data-ng-if=\"!isEditable\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups\">{{commissionGroup.value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center w100-percent\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\">{{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div><div class=\"w50-percent w50-percent\"><div class=\"block__cell align-center w50-percent\">{{item.maxPerEvent | number:betSettingPrecision}}</div><div class=\"block__cell align-center block__cell--no-border w50-percent\">{{item.maxBet | number:betSettingPrecision}}</div></div></div>");}]);
 /*jshint -W101,-W106,-W044,-W098*/
 
 (function () {
@@ -37669,17 +37679,20 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
 
     labels["en-us"] = {
         "Cancel": "Cancel",
-        "Save": "Save"
+        "Save": "Save",
+        "SaveAndNew": "Save & New"
     };
 
     labels["zh-hans"] = {
         "Cancel": "取消",
-        "Save": "保存"
+        "Save": "保存",
+        "SaveAndNew": "保存与新增"
     };
 
     labels["zh-tw"] = {
         "Cancel": "取消",
-        "Save": "保存"
+        "Save": "保存",
+        "SaveAndNew": "保存與新增"
     };
 
     var messages = {};

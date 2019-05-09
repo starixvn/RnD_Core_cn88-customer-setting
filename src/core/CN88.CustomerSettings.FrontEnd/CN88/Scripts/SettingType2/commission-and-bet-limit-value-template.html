@@ -56,8 +56,8 @@
                    data-numeric-input
                    data-ng-model="item.maxPerEvent"
                    data-setting-field="maxPerEvent" />
-            <span class="setting-field--constraint" data-ng-if="(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxPerEvent > 0)">[{{item.minMaxPerEvent | number:betSettingPrecision}}; {{item.maxMaxPerEvent | number:betSettingPrecision}}]</span>
-            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && (item.maxMaxPerEvent === 0) && hasMaxPerEventConstraint">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span>
+            <span class="setting-field--constraint" data-ng-if="customerLevel !== avaiCustomerLevels.super">&lt;={{item.maxMaxPerEvent | number:betSettingPrecision}}</span>
+            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && hasMaxPerEventConstraint">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span>
         </div>
         <div class="block__cell block__cell--no-border w50-percent"
              data-ng-class="{'align-center': !hasMaxBetConstraint}">
@@ -67,8 +67,8 @@
                    data-numeric-input
                    data-ng-model="item.maxBet"
                    data-setting-field="maxBet" />
-            <span class="setting-field--constraint" data-ng-if="(customerLevel !== avaiCustomerLevels.super) || (item.maxMaxBet > 0)">[{{item.minMaxBet | number:betSettingPrecision}}; {{item.maxMaxBet | number:betSettingPrecision}}]</span>
-            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && (item.maxMaxBet === 0) && hasMaxBetConstraint">>={{item.minMaxBet | number:betSettingPrecision}}</span>
+            <span class="setting-field--constraint" data-ng-if="customerLevel !== avaiCustomerLevels.super">&lt;={{item.maxMaxBet | number:betSettingPrecision}}</span>
+            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && hasMaxBetConstraint">>={{item.minMaxBet | number:betSettingPrecision}}</span>
         </div>
     </div>
 </div>
