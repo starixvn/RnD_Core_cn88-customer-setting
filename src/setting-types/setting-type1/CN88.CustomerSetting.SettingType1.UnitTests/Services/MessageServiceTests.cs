@@ -51,7 +51,7 @@
                                 + "\"/>"
                                 + "</Root>";
             ResourceService.GetSportTypeName(1, Arg.Any<string>()).Returns(sportTypeName);
-            ResourceService.GetBetTypeName(1, Arg.Any<bool>(), Arg.Any<string>()).Returns(betTypeName);
+            ResourceService.GetBetTypeName(1, Arg.Any<bool>(), Arg.Any<string>(), 1).Returns(betTypeName);
 
             //// Act
             var actualMessageContent = MessageService.TranslateMessage(msgType, rawMessage, settingLevel, SettingContext.Language);
@@ -80,7 +80,7 @@
                                 + "\" MinPT=\"12\"/>"
                                 + "</Root>";
             ResourceService.GetSportTypeName(1, Arg.Any<string>()).Returns(sportTypeName);
-            ResourceService.GetBetTypeName(1, Arg.Any<bool>(), Arg.Any<string>()).Returns(betTypeName);
+            ResourceService.GetBetTypeName(1, Arg.Any<bool>(), Arg.Any<string>(), 1).Returns(betTypeName);
 
             //// Act
             var actualMessageContent = MessageService.TranslateMessage(msgType, rawMessage, settingLevel, SettingContext.Language);
@@ -109,7 +109,7 @@
                                 + "\" MaxPT=\"12\"/>"
                                 + "</Root>";
             ResourceService.GetSportTypeName(1, Arg.Any<string>()).Returns(sportTypeName);
-            ResourceService.GetBetTypeName(1, Arg.Any<bool>(), Arg.Any<string>()).Returns(betTypeName);
+            ResourceService.GetBetTypeName(1, Arg.Any<bool>(), Arg.Any<string>(), 1).Returns(betTypeName);
 
             //// Act
             var actualMessageContent = MessageService.TranslateMessage(msgType, rawMessage, settingLevel, SettingContext.Language);
@@ -138,7 +138,7 @@
                                 + "\" MinPT=\"11\" MaxPT=\"13\"/>"
                                 + "</Root>";
             ResourceService.GetSportTypeName(1, Arg.Any<string>()).Returns(sportTypeName);
-            ResourceService.GetBetTypeName(1, Arg.Any<bool>(), Arg.Any<string>()).Returns(betTypeName);
+            ResourceService.GetBetTypeName(1, Arg.Any<bool>(), Arg.Any<string>(), 1).Returns(betTypeName);
 
             //// Act
             var actualMessageContent = MessageService.TranslateMessage(msgType, rawMessage, settingLevel, SettingContext.Language);

@@ -128,7 +128,7 @@
     <value>滾球讓球, 滾球大小, 滾球單/雙</value>
   </data>
   <data name="BetTypeName_5_0" xml:space="preserve">
-    <value>標準盤, 滾球標準盤</value>
+    <value>獨贏盤, 滾球獨贏</value>
   </data>
   <data name="BetTypeName_9999_0" xml:space="preserve">
     <value>其他玩法</value>
@@ -159,5 +159,8 @@
   </data>
   <data name="BetTypeName_20_0" xml:space="preserve">
     <value>勝負盤, 滾球勝負盤</value>
+  </data>
+  <data name="BetTypeName_99_5_0" xml:space="preserve">
+    <value>勝負盤, 獨贏盤, 滾球勝負盤, 滾球獨贏盤</value>
   </data>
 </root>

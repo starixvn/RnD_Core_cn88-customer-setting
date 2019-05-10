@@ -9,7 +9,7 @@
 
         string GetSportTypeName(int sportTypeId, string language);
 
-        string GetBetTypeName(int betTypeId, bool isLive, string language);
+        string GetBetTypeName(int betTypeId, bool isLive, string language, int sportId);
 
         string GetResourceData(string refId, string resourceId, string language);
     }
@@ -20,6 +20,8 @@
         private const string ProductDefaultFormat = "Product {0}";
         private const string ProductRefId = "Product";
         private const string RefResourceDefaultFormat = "Ref Resource: {0} - Key: {1}";
+        private const int OtherSportId = 99;
+        private const int OneXTwoBetTypeId = 5;
 
         private readonly IRemotingRefService remotingRef;
 
@@ -67,7 +69,7 @@
                 : sportTypeName;
         }
 
-        public virtual string GetBetTypeName(int betTypeId, bool isLive, string language)
+        public virtual string GetBetTypeName(int betTypeId, bool isLive, string language, int sportId)
         {
             if (betTypeId <= 0)
             {
@@ -75,7 +77,7 @@
             }
 
             var live = isLive ? 1 : 0;
-            var betTypeKey = $"BetTypeName_{betTypeId}_{live}";
+            var betTypeKey = GetBetTypeKey(betTypeId, live, sportId);
             var betTypeName = Resources.ResourceManager.GetString(betTypeKey);
 
             if (!string.IsNullOrEmpty(betTypeName))
@@ -89,6 +91,16 @@
             return string.IsNullOrEmpty(betTypeName)
                 ? betTypeKey
                 : $"{liveText}{betTypeName}";
+        }
+
+        private static string GetBetTypeKey(int betTypeId, int live, int sportId)
+        {
+            if(sportId == OtherSportId && betTypeId == OneXTwoBetTypeId)
+            {
+                return $"BetTypeName_{sportId}_{betTypeId}_{live}";
+            }
+
+            return $"BetTypeName_{betTypeId}_{live}";
         }
 
         public virtual string GetResourceData(string refId, string resourceId, string language)

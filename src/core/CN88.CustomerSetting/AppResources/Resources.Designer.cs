@@ -151,6 +151,15 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Moneyline, 1 X 2, In-play Moneyline, In-play 1 X 2.
+        /// </summary>
+        public static string BetTypeName_99_5_0 {
+            get {
+                return ResourceManager.GetString("BetTypeName_99_5_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Other Bet Types.
         /// </summary>
         public static string BetTypeName_9999_0 {

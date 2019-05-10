@@ -204,4 +204,7 @@
   <data name="BetTypeName_20_0" xml:space="preserve">
     <value>Moneyline, In-Play Moneyline</value>
   </data>
+  <data name="BetTypeName_99_5_0" xml:space="preserve">
+    <value>Moneyline, 1 X 2, In-play Moneyline, In-play 1 X 2</value>
+  </data>
 </root>

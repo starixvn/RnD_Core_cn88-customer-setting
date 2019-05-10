@@ -32,13 +32,13 @@
                     return resourceService.GetSportTypeName(SportType, language);
 
                 case SettingLevel.BetType:
-                    return resourceService.GetBetTypeName(BetType, IsLive, language);
+                    return resourceService.GetBetTypeName(BetType, IsLive, language, SportType);
 
                 case SettingLevel.SportTypeBetType:
                     return string.Format(
                         "{0} - {1}",
                         resourceService.GetSportTypeName(SportType, language),
-                        resourceService.GetBetTypeName(BetType, IsLive, language));
+                        resourceService.GetBetTypeName(BetType, IsLive, language, SportType));
 
                 default:
                     throw new InvalidOperationException("Not implement setting level");

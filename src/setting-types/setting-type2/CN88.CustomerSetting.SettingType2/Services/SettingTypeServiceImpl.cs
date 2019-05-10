@@ -91,7 +91,7 @@
             var settingItem =  new CommBetSettingItem
             {
                 SportTypeName = ResourceService.GetSportTypeName(firstSettingItemConfig.SportTypeId, language),
-                BetTypeName = ResourceService.GetBetTypeName(firstSettingItemConfig.BetTypeId, firstSettingItemConfig.IsLive, language),
+                BetTypeName = ResourceService.GetBetTypeName(firstSettingItemConfig.BetTypeId, firstSettingItemConfig.IsLive, language, firstSettingItemConfig.SportTypeId),
 
                 LayoutType = firstSettingItemConfig.LayoutType,
                 IntervalValue = firstSettingItemConfig.IntervalValuePercent,
