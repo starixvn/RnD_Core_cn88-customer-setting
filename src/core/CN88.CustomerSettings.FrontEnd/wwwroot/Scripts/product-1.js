@@ -35892,6 +35892,164 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var SettingFieldGroupDirective = (function () {
+        function SettingFieldGroupDirective($injector, $filter) {
+            var _this = this;
+            this.restrict = "A";
+            this.priority = 100;
+            this.compile = function (element) {
+                var errorTooltipContainer = angular.element("<span></span>");
+                errorTooltipContainer.addClass("error-tooltip-container");
+                errorTooltipContainer.attr("data-tooltip", "{{errorMessage}}");
+                errorTooltipContainer.attr("data-manual", "true");
+                errorTooltipContainer.attr("data-tooltip-type", "error");
+                element.prepend(errorTooltipContainer);
+                return {
+                    post: _this.link
+                };
+            };
+            this.controller = ["$scope", function ($scope) {
+                    $scope.registeredFields = [];
+                    $scope.errorMessage = null;
+                    this.register = function (fieldName, element) {
+                        if (!fieldName || !element) {
+                            return;
+                        }
+                        var existing = $scope.registeredFields.some(function (registeredField) {
+                            return registeredField.key === fieldName;
+                        });
+                        if (!existing) {
+                            $scope.registeredFields.push(new CustomerSetting.KeyValuePair(fieldName, { element: element }));
+                        }
+                    };
+                }];
+            this.link = function (scope, element) {
+                var errorContainer = angular.element(element[0].getElementsByClassName("error-tooltip-container")[0]);
+                var tooltipController = errorContainer.controller("tooltip");
+                scope.reset = function () {
+                    scope.$apply(function () {
+                        scope.settingItem.resetValidationState();
+                    });
+                };
+                scope.$watch("settingItem.validationState", function (validationState, oldValidationState) {
+                    if (!oldValidationState || oldValidationState === validationState) {
+                        return;
+                    }
+                    if (scope.registeredFields.length > 0) {
+                        if (validationState === CustomerSetting.Result.normal) {
+                            if (tooltipController && scope.dirtyField) {
+                                tooltipController.hideTooltip();
+                                scope.dirtyField = null;
+                            }
+                            _this.toggleAffectedFieldsState(scope);
+                        }
+                        else {
+                            var errorMessage = _this.getErrorMessage(validationState, scope.resourceServiceName, scope.customFilterName);
+                            scope.dirtyField = _this.getErrorTriggeringField(scope.registeredFields, validationState.triggeringFieldName);
+                            if (tooltipController && errorMessage && scope.dirtyField) {
+                                var inputElement = scope.dirtyField[0];
+                                _this.toggleAffectedFieldsState(scope, validationState.affectedFields);
+                                tooltipController.showTooltipAt(errorMessage, scope.dirtyField);
+                                if (inputElement.focus) {
+                                    inputElement.focus();
+                                }
+                                if (inputElement.select) {
+                                    inputElement.select();
+                                }
+                            }
+                        }
+                    }
+                });
+            };
+            this.$injector = $injector;
+            this.$filter = $filter;
+        }
+        Object.defineProperty(SettingFieldGroupDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    settingItem: "=settingFieldGroup",
+                    resourceServiceName: "@",
+                    customFilterName: "@"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingFieldGroupDirective.prototype.toggleAffectedFieldsState = function (scope, affectedFieldNames) {
+            if (affectedFieldNames === void 0) { affectedFieldNames = []; }
+            scope.registeredFields.forEach(function (registeredField) {
+                if (affectedFieldNames.indexOf(registeredField.key) >= 0) {
+                    registeredField.value.element.addClass("setting-field--error");
+                    registeredField.value.element.on("change", scope.reset);
+                    registeredField.value.dirty = true;
+                }
+                else if (registeredField.value.dirty) {
+                    registeredField.value.element.removeClass("setting-field--error");
+                    registeredField.value.element.off("change", scope.reset);
+                    registeredField.value.dirty = false;
+                }
+            });
+        };
+        SettingFieldGroupDirective.prototype.getErrorTriggeringField = function (registeredFields, fieldName) {
+            var filteredRegisteredFields = registeredFields
+                .filter(function (registeredField) { return fieldName === registeredField.key; });
+            return filteredRegisteredFields.length > 0 ? filteredRegisteredFields[0].value.element : null;
+        };
+        SettingFieldGroupDirective.prototype.getErrorMessage = function (validationResult, resourceServiceName, customFilterName) {
+            var _this = this;
+            if (customFilterName === void 0) { customFilterName = null; }
+            var message = null;
+            if (validationResult.message) {
+                var resourceService = this.$injector.get(resourceServiceName);
+                var params = (validationResult.msgParams || []).map(function (param) {
+                    if (customFilterName) {
+                        return _this.$filter(customFilterName)(param);
+                    }
+                    else if (typeof param === "number") {
+                        var precision = validationResult.extraData.precision;
+                        if (precision === undefined || precision === null) {
+                            return _this.$filter("number")(param);
+                        }
+                        else {
+                            return _this.$filter("number")(param, precision);
+                        }
+                    }
+                    else {
+                        return param;
+                    }
+                });
+                if (resourceService) {
+                    params.unshift(validationResult.message);
+                    message = resourceService.getFormattedMessage.apply(resourceService, params);
+                }
+            }
+            return message;
+        };
+        SettingFieldGroupDirective.$inject = ["$injector", "$filter"];
+        return SettingFieldGroupDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingFieldGroup", SettingFieldGroupDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingFieldDirective = (function () {
+        function SettingFieldDirective() {
+            this.require = "^settingFieldGroup";
+            this.restrict = "A";
+            this.link = function (scope, element, attributes, settingFieldGroupController) {
+                attributes.$observe("settingField", function (settingField) {
+                    settingFieldGroupController.register(settingField, element);
+                });
+            };
+        }
+        return SettingFieldDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingField", SettingFieldDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var SettingResultDirective = (function () {
         function SettingResultDirective($rootScope, $window) {
             var _this = this;
@@ -36121,164 +36279,6 @@ var CustomerSetting;
         System[System["internalAlpha"] = 3] = "internalAlpha";
     })(CustomerSetting.System || (CustomerSetting.System = {}));
     var System = CustomerSetting.System;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingFieldGroupDirective = (function () {
-        function SettingFieldGroupDirective($injector, $filter) {
-            var _this = this;
-            this.restrict = "A";
-            this.priority = 100;
-            this.compile = function (element) {
-                var errorTooltipContainer = angular.element("<span></span>");
-                errorTooltipContainer.addClass("error-tooltip-container");
-                errorTooltipContainer.attr("data-tooltip", "{{errorMessage}}");
-                errorTooltipContainer.attr("data-manual", "true");
-                errorTooltipContainer.attr("data-tooltip-type", "error");
-                element.prepend(errorTooltipContainer);
-                return {
-                    post: _this.link
-                };
-            };
-            this.controller = ["$scope", function ($scope) {
-                    $scope.registeredFields = [];
-                    $scope.errorMessage = null;
-                    this.register = function (fieldName, element) {
-                        if (!fieldName || !element) {
-                            return;
-                        }
-                        var existing = $scope.registeredFields.some(function (registeredField) {
-                            return registeredField.key === fieldName;
-                        });
-                        if (!existing) {
-                            $scope.registeredFields.push(new CustomerSetting.KeyValuePair(fieldName, { element: element }));
-                        }
-                    };
-                }];
-            this.link = function (scope, element) {
-                var errorContainer = angular.element(element[0].getElementsByClassName("error-tooltip-container")[0]);
-                var tooltipController = errorContainer.controller("tooltip");
-                scope.reset = function () {
-                    scope.$apply(function () {
-                        scope.settingItem.resetValidationState();
-                    });
-                };
-                scope.$watch("settingItem.validationState", function (validationState, oldValidationState) {
-                    if (!oldValidationState || oldValidationState === validationState) {
-                        return;
-                    }
-                    if (scope.registeredFields.length > 0) {
-                        if (validationState === CustomerSetting.Result.normal) {
-                            if (tooltipController && scope.dirtyField) {
-                                tooltipController.hideTooltip();
-                                scope.dirtyField = null;
-                            }
-                            _this.toggleAffectedFieldsState(scope);
-                        }
-                        else {
-                            var errorMessage = _this.getErrorMessage(validationState, scope.resourceServiceName, scope.customFilterName);
-                            scope.dirtyField = _this.getErrorTriggeringField(scope.registeredFields, validationState.triggeringFieldName);
-                            if (tooltipController && errorMessage && scope.dirtyField) {
-                                var inputElement = scope.dirtyField[0];
-                                _this.toggleAffectedFieldsState(scope, validationState.affectedFields);
-                                tooltipController.showTooltipAt(errorMessage, scope.dirtyField);
-                                if (inputElement.focus) {
-                                    inputElement.focus();
-                                }
-                                if (inputElement.select) {
-                                    inputElement.select();
-                                }
-                            }
-                        }
-                    }
-                });
-            };
-            this.$injector = $injector;
-            this.$filter = $filter;
-        }
-        Object.defineProperty(SettingFieldGroupDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    settingItem: "=settingFieldGroup",
-                    resourceServiceName: "@",
-                    customFilterName: "@"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingFieldGroupDirective.prototype.toggleAffectedFieldsState = function (scope, affectedFieldNames) {
-            if (affectedFieldNames === void 0) { affectedFieldNames = []; }
-            scope.registeredFields.forEach(function (registeredField) {
-                if (affectedFieldNames.indexOf(registeredField.key) >= 0) {
-                    registeredField.value.element.addClass("setting-field--error");
-                    registeredField.value.element.on("change", scope.reset);
-                    registeredField.value.dirty = true;
-                }
-                else if (registeredField.value.dirty) {
-                    registeredField.value.element.removeClass("setting-field--error");
-                    registeredField.value.element.off("change", scope.reset);
-                    registeredField.value.dirty = false;
-                }
-            });
-        };
-        SettingFieldGroupDirective.prototype.getErrorTriggeringField = function (registeredFields, fieldName) {
-            var filteredRegisteredFields = registeredFields
-                .filter(function (registeredField) { return fieldName === registeredField.key; });
-            return filteredRegisteredFields.length > 0 ? filteredRegisteredFields[0].value.element : null;
-        };
-        SettingFieldGroupDirective.prototype.getErrorMessage = function (validationResult, resourceServiceName, customFilterName) {
-            var _this = this;
-            if (customFilterName === void 0) { customFilterName = null; }
-            var message = null;
-            if (validationResult.message) {
-                var resourceService = this.$injector.get(resourceServiceName);
-                var params = (validationResult.msgParams || []).map(function (param) {
-                    if (customFilterName) {
-                        return _this.$filter(customFilterName)(param);
-                    }
-                    else if (typeof param === "number") {
-                        var precision = validationResult.extraData.precision;
-                        if (precision === undefined || precision === null) {
-                            return _this.$filter("number")(param);
-                        }
-                        else {
-                            return _this.$filter("number")(param, precision);
-                        }
-                    }
-                    else {
-                        return param;
-                    }
-                });
-                if (resourceService) {
-                    params.unshift(validationResult.message);
-                    message = resourceService.getFormattedMessage.apply(resourceService, params);
-                }
-            }
-            return message;
-        };
-        SettingFieldGroupDirective.$inject = ["$injector", "$filter"];
-        return SettingFieldGroupDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingFieldGroup", SettingFieldGroupDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingFieldDirective = (function () {
-        function SettingFieldDirective() {
-            this.require = "^settingFieldGroup";
-            this.restrict = "A";
-            this.link = function (scope, element, attributes, settingFieldGroupController) {
-                attributes.$observe("settingField", function (settingField) {
-                    settingFieldGroupController.register(settingField, element);
-                });
-            };
-        }
-        return SettingFieldDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingField", SettingFieldDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -37463,29 +37463,29 @@ var CustomerSetting;
                 return isValid;
             };
             CommissionAndBetLimitSettingItem.prototype.validateBetLimit = function () {
-                if (this.maxBet === undefined || this.maxBet === null) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "maxBet");
-                    return false;
-                }
                 if (this.maxPerEvent === undefined || this.maxPerEvent === null) {
                     this.validationState = new CustomerSetting.ValidationResult("RequiredField", "maxPerEvent");
                     return false;
                 }
-                if (this.maxBet < this.minMaxBet) {
-                    this.validationState = new CustomerSetting.ValidationResult("MaxBetMustBeGreaterThanOrEqualTo", "maxBet", [this.minMaxBet]);
+                if (this.maxBet === undefined || this.maxBet === null) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "maxBet");
                     return false;
                 }
                 if (this.maxPerEvent < this.minMaxPerEvent) {
                     this.validationState = new CustomerSetting.ValidationResult("MaxPerEventMustBeGreaterThanOrEqualTo", "maxPerEvent", [this.minMaxPerEvent]);
                     return false;
                 }
+                if (this.maxBet < this.minMaxBet) {
+                    this.validationState = new CustomerSetting.ValidationResult("MaxBetMustBeGreaterThanOrEqualTo", "maxBet", [this.minMaxBet]);
+                    return false;
+                }
                 if (this.customerLevel !== CustomerSetting.Level.super) {
-                    if (this.maxBet > this.maxMaxBet) {
-                        this.validationState = new CustomerSetting.ValidationResult("MaxBetMustBeLessThanOrEqualTo", "maxBet", [this.maxMaxBet]);
-                        return false;
-                    }
                     if (this.maxPerEvent > this.maxMaxPerEvent) {
                         this.validationState = new CustomerSetting.ValidationResult("MaxPerEventMustBeLessThanOrEqualTo", "maxPerEvent", [this.maxMaxPerEvent]);
+                        return false;
+                    }
+                    if (this.maxBet > this.maxMaxBet) {
+                        this.validationState = new CustomerSetting.ValidationResult("MaxBetMustBeLessThanOrEqualTo", "maxBet", [this.maxMaxBet]);
                         return false;
                     }
                 }

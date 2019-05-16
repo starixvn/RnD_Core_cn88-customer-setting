@@ -125,20 +125,14 @@ namespace CustomerSetting.SettingType2 {
         }
 
         private validateBetLimit(): boolean {
-            if (this.maxBet === undefined || this.maxBet === null) {
-                this.validationState = new ValidationResult("RequiredField", "maxBet");
-
-                return false;
-            }
-
             if (this.maxPerEvent === undefined || this.maxPerEvent === null) {
                 this.validationState = new ValidationResult("RequiredField", "maxPerEvent");
 
                 return false;
             }
 
-            if (this.maxBet < this.minMaxBet) {
-                this.validationState = new ValidationResult("MaxBetMustBeGreaterThanOrEqualTo", "maxBet", [this.minMaxBet]);
+            if (this.maxBet === undefined || this.maxBet === null) {
+                this.validationState = new ValidationResult("RequiredField", "maxBet");
 
                 return false;
             }
@@ -149,15 +143,21 @@ namespace CustomerSetting.SettingType2 {
                 return false;
             }
 
+            if (this.maxBet < this.minMaxBet) {
+                this.validationState = new ValidationResult("MaxBetMustBeGreaterThanOrEqualTo", "maxBet", [this.minMaxBet]);
+
+                return false;
+            }
+
             if (this.customerLevel !== Level.super) {
-                if (this.maxBet > this.maxMaxBet) {
-                    this.validationState = new ValidationResult("MaxBetMustBeLessThanOrEqualTo", "maxBet", [this.maxMaxBet]);
+                if (this.maxPerEvent > this.maxMaxPerEvent) {
+                    this.validationState = new ValidationResult("MaxPerEventMustBeLessThanOrEqualTo", "maxPerEvent", [this.maxMaxPerEvent]);
 
                     return false;
                 }
 
-                if (this.maxPerEvent > this.maxMaxPerEvent) {
-                    this.validationState = new ValidationResult("MaxPerEventMustBeLessThanOrEqualTo", "maxPerEvent", [this.maxMaxPerEvent]);
+                if (this.maxBet > this.maxMaxBet) {
+                    this.validationState = new ValidationResult("MaxBetMustBeLessThanOrEqualTo", "maxBet", [this.maxMaxBet]);
 
                     return false;
                 }
