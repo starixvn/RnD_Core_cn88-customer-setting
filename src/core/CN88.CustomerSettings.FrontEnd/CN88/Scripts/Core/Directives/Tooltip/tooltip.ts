@@ -12,6 +12,7 @@ namespace CustomerSetting {
         innerTooltip: boolean;
         manual: boolean;
         beingShowed: boolean;
+        relocate: Function;
     }
 
     class TooltipDirective implements ng.IDirective {
@@ -32,8 +33,13 @@ namespace CustomerSetting {
 
         public controller: any = ["$scope", function ($scope: ITooltipScope) {
             this.showTooltipAt = (tooltipMessage: string, target: ng.IAugmentedJQuery) => {
-                $scope.tooltipMessage = tooltipMessage;
                 $scope.target = target;
+
+                if ($scope.tooltipMessage === tooltipMessage) {
+                    $scope.relocate();
+                } else {
+                    $scope.tooltipMessage = tooltipMessage;
+                }
             };
             this.hideTooltip = () => {
                 $scope.tooltipMessage = null;
@@ -44,7 +50,7 @@ namespace CustomerSetting {
             var template: {} = this.$templateCache.get("./tooltip.html");
             var tooltip: ng.IAugmentedJQuery = angular.element(template);
 
-            var debounceResize: any = debounce(() => {
+            var relocate = () => {
                 if (scope.tooltipMessage) {
                     this.calculateTooltipPosition(
                         scope.target,
@@ -52,7 +58,8 @@ namespace CustomerSetting {
                         scope.tooltipPositionModel,
                         scope.manual);
                 }
-            }, 100);
+            };
+            var debounceResize: any = debounce(relocate, 100);
 
             scope.tooltipType = scope.tooltipType || "info";
             scope.target = element;
@@ -68,12 +75,7 @@ namespace CustomerSetting {
 
                         scope.beingShowed = true;
                         scope.$apply();
-
-                        this.calculateTooltipPosition(
-                            scope.target,
-                            tooltip,
-                            scope.tooltipPositionModel,
-                            scope.manual);
+                        relocate();
                     }
                 });
 
@@ -93,15 +95,8 @@ namespace CustomerSetting {
                 element.parent().prepend(tooltip);
             }
 
-            scope.$watch("tooltipMessage", () => {
-                if (scope.tooltipMessage) {
-                    this.calculateTooltipPosition(
-                        scope.target,
-                        tooltip,
-                        scope.tooltipPositionModel,
-                        scope.manual);
-                }
-            });
+            scope.$watch("tooltipMessage", relocate);
+            scope.relocate = relocate;
 
             angular.element(this.$window).on("resize", debounceResize);
             this.$rootScope.$on("page-height-changed", debounceResize);
