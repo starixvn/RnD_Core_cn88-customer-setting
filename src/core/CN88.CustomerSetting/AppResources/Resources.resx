@@ -172,7 +172,7 @@
     <value>In-Play Handicap, In-Play Over/Under, In-Play Odd/Even</value>
   </data>
   <data name="BetTypeName_5_0" xml:space="preserve">
-    <value>1 X 2, In-Play 1 X 2</value>
+    <value>1X2, In-Play 1X2</value>
   </data>
   <data name="BetTypeName_9999_0" xml:space="preserve">
     <value>Other Bet Types</value>
@@ -205,6 +205,6 @@
     <value>Moneyline, In-Play Moneyline</value>
   </data>
   <data name="BetTypeName_99_5_0" xml:space="preserve">
-    <value>Moneyline, 1 X 2, In-play Moneyline, In-play 1 X 2</value>
+    <value>Moneyline, 1X2, In-Play Moneyline, In-Play 1X2</value>
   </data>
 </root>

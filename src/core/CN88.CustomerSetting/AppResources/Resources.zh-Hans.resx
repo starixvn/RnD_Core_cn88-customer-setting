@@ -107,7 +107,7 @@
     <value>滚球让球, 滚球大小, 滚球单/双</value>
   </data>
   <data name="BetTypeName_5_0" xml:space="preserve">
-    <value>独赢盘, 滚球独赢</value>
+    <value>独赢盘, 滚球独赢盘</value>
   </data>
   <data name="BetTypeName_9999_0" xml:space="preserve">
     <value>其他玩法</value>

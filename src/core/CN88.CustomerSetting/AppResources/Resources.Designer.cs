@@ -133,7 +133,7 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1 X 2, In-Play 1 X 2.
+        ///   Looks up a localized string similar to 1X2, In-Play 1X2.
         /// </summary>
         public static string BetTypeName_5_0 {
             get {
@@ -151,7 +151,7 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Moneyline, 1 X 2, In-play Moneyline, In-play 1 X 2.
+        ///   Looks up a localized string similar to Moneyline, 1X2, In-Play Moneyline, In-Play 1X2.
         /// </summary>
         public static string BetTypeName_99_5_0 {
             get {
