@@ -23,6 +23,7 @@ namespace CustomerSetting {
         settingTypeName: string;
         isNew: boolean;
         isEditable: boolean;
+        isMobileView: boolean;
         avaiCustomerLevels: Object;
     }
 
@@ -55,6 +56,7 @@ namespace CustomerSetting {
             scope.productId = this.settingTypesSharedValuesService.productId;
             scope.productName = this.settingTypesSharedValuesService.productName;
             scope.isNew = this.settingTypesSharedValuesService.isNew;
+            scope.isMobileView = this.settingTypesSharedValuesService.isMobileView;
             scope.isEditable = this.settingTypesSharedValuesService.isEditable && scope.settingType.displayMode === DisplayMode.editable;
             scope.avaiCustomerLevels = Level;
 

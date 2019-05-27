@@ -36,11 +36,17 @@ namespace CustomerSetting {
             return this.editable;
         }
 
+        public get isMobileView(): boolean {
+            return this.isMobile && this.isPhone;
+        }
+
         private system: number;
         private actorLv: Level;
         private lang: string;
         private editable: boolean;
         private query: SettingQuery;
+        private isMobile: boolean;
+        private isPhone: boolean;
 
         private $window: ng.IWindowService;
 
@@ -72,6 +78,8 @@ namespace CustomerSetting {
                 this.hashKey = params.hashKey;
                 this.actorLv = params.actorLevel ? params.actorLevel : undefined;
                 this.editable = params.editable || false;
+                this.isMobile = params.isMobile || false;
+                this.isPhone = params.isPhone || false;
 
                 this.query = new SettingQuery(
                     params.productId,

@@ -1,13 +1,16 @@
-﻿<div class="block__cell-wrapper"
+﻿<div class="block__cell-group"
      data-ng-if="isEditable"
      data-setting-field-group="item"
      data-resource-service-name="st2ResourceService">
-    <div class="block__cell-wrapper w50-percent" data-ng-if="customerLevel !== avaiCustomerLevels.member">
-        <div class="block__cell align-center"
-             data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
+    <div data-ng-class="{ 'block__cell align-center w30-percent': isMobileView, 'block__cell-sub-group w50-percent': !isMobileView }"
+         data-ng-if="customerLevel !== avaiCustomerLevels.member">
+        <div data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
              data-ng-style="eachGroupStyle"
+             data-ng-class="{ 'commission-group': isMobileView, 'block__cell align-center': !isMobileView }"
              data-ng-repeat="commissionGroup in item.mappedCommissionGroups track by $index">
-            <percentage-dropdown data-ng-if="commissionGroup"
+            <label class="commission-group__lbl" data-ng-if="isMobileView && commissionGroup.name">{{commissionGroup.name}}</label>
+            <percentage-dropdown data-ng-class="{ 'commission-group__value': isMobileView }"
+                                 data-ng-if="commissionGroup"
                                  data-ng-model="commissionGroup.value"
                                  data-setting-field="{{'commissionGroups-' + $index}}"
                                  data-min="commissionGroup.minValue"
@@ -15,9 +18,11 @@
                                  data-step="item.intervalValue"
                                  data-precision="commissionPrecision"></percentage-dropdown>
         </div>
-        <div class="block__cell align-center w100-percent"
+        <div class="w100-percent"
+             data-ng-class="{ 'block__cell align-center': !isMobileView }"
              data-ng-if="item.layoutType === availableLayoutTypes.singleGroup">
-            <percentage-dropdown data-ng-if="item.mappedCommissionGroups[0]"
+            <percentage-dropdown data-ng-class="{ 'commission-group__value--full-width': isMobileView }"
+                                 data-ng-if="item.mappedCommissionGroups[0]"
                                  data-ng-model="item.mappedCommissionGroups[0].value"
                                  data-setting-field="commissionGroups-0"
                                  data-min="item.mappedCommissionGroups[0].minValue"
@@ -26,9 +31,11 @@
                                  data-precision="commissionPrecision"></percentage-dropdown>
         </div>
     </div>
-    <div class="block__cell align-center w50-percent"
-         data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups">
-        <percentage-dropdown data-ng-if="item.mappedCommissionGroups[item.memberSpreadGroupIndex]"
+    <div class="block__cell align-center"
+         data-ng-class="{ 'w30-percent': isMobileView, 'w50-percent': !isMobileView }"
+         data-ng-if="customerLevel === avaiCustomerLevels.member">
+        <percentage-dropdown data-ng-class="{ 'commission-group__value--full-width': isMobileView }"
+                             data-ng-if="item.mappedCommissionGroups[item.memberSpreadGroupIndex]"
                              data-ng-model="item.mappedCommissionGroups[item.memberSpreadGroupIndex].value"
                              data-setting-field="{{'commissionGroups-' + item.memberSpreadGroupIndex}}"
                              data-min="item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue"
@@ -37,19 +44,9 @@
                              data-precision="commissionPrecision"
                              data-auto-refresh="true"></percentage-dropdown>
     </div>
-    <div class="block__cell w50-percent align-center"
-         data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup">
-        <percentage-dropdown data-ng-if="item.mappedCommissionGroups[0]"
-                             data-ng-model="item.mappedCommissionGroups[0].value"
-                             data-setting-field="commissionGroups-0"
-                             data-min="item.mappedCommissionGroups[0].minValue"
-                             data-max="item.mappedCommissionGroups[0].maxValue"
-                             data-step="item.intervalValue"
-                             data-precision="commissionPrecision"></percentage-dropdown>
-    </div>
-    <div class="block__cell-wrapper w50-percent">
+    <div class="block__cell-sub-group" data-ng-class="{ 'w70-percent': isMobileView, 'w50-percent': !isMobileView }">
         <div class="block__cell w50-percent"
-             data-ng-class="{'align-center': !hasMaxPerEventConstraint}">
+             data-ng-class="{ 'align-center': !hasMaxPerEventConstraint || isMobileView }">
             <input type="text"
                    maxlength="14"
                    class="setting-field setting-field--number setting-field--has-constraint"
@@ -60,7 +57,7 @@
             <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && hasMaxPerEventConstraint">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span>
         </div>
         <div class="block__cell block__cell--no-border w50-percent"
-             data-ng-class="{'align-center': !hasMaxBetConstraint}">
+             data-ng-class="{ 'align-center': !hasMaxBetConstraint || isMobileView }">
             <input type="text"
                    maxlength="14"
                    class="setting-field setting-field--number setting-field--has-constraint"
@@ -72,27 +69,28 @@
         </div>
     </div>
 </div>
-<div class="block__cell-wrapper block__cell-wrapper--readonly" data-ng-if="!isEditable">
-    <div class="block__cell-wrapper w50-percent" data-ng-if="customerLevel !== avaiCustomerLevels.member">
-        <div class="block__cell align-center"
-             data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
+<div class="block__cell-group block__cell-group--readonly" data-ng-if="!isEditable">
+    <div data-ng-class="{ 'block__cell w30-percent': isMobileView, 'block__cell-sub-group w50-percent': !isMobileView }"
+         data-ng-if="customerLevel !== avaiCustomerLevels.member">
+        <div data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
              data-ng-style="eachGroupStyle"
+             data-ng-class="{ 'commission-group': isMobileView, 'block__cell align-center': !isMobileView }"
              data-ng-repeat="commissionGroup in item.mappedCommissionGroups">
-            {{commissionGroup.value | formatPercentage:commissionPrecision}}
+            <label class="commission-group__lbl" data-ng-if="isMobileView && commissionGroup.name">{{commissionGroup.name}}</label>
+            <label class="commission-group__value">{{commissionGroup.value | formatPercentage:commissionPrecision}}</label>
         </div>
-        <div class="block__cell align-center w100-percent" data-ng-if="item.layoutType === availableLayoutTypes.singleGroup">
+        <div class="align-center w100-percent"
+             data-ng-class="{ 'block__cell': !isMobileView }"
+             data-ng-if="item.layoutType === availableLayoutTypes.singleGroup">
             {{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}
         </div>
     </div>
-    <div class="block__cell align-center w50-percent"
-         data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups">
+    <div class="block__cell align-center"
+         data-ng-class="{ 'w30-percent': isMobileView, 'w50-percent': !isMobileView }"
+         data-ng-if="customerLevel === avaiCustomerLevels.member">
         {{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}
     </div>
-    <div class="block__cell align-center w50-percent"
-         data-ng-if="customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup">
-        {{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}
-    </div>
-    <div class="w50-percent w50-percent">
+    <div class="block__cell-sub-group" data-ng-class="{ 'w70-percent': isMobileView, 'w50-percent': !isMobileView }">
         <div class="block__cell align-center w50-percent">{{item.maxPerEvent | number:betSettingPrecision}}</div>
         <div class="block__cell align-center block__cell--no-border w50-percent">{{item.maxBet | number:betSettingPrecision}}</div>
     </div>

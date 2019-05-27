@@ -1,37 +1,37 @@
-﻿<div class="block setting-type-{{settingType.id}} {{cssClass}}" data-ng-show="settingType" data-ng-class="{ 'block--error': !(settingType | validSettingType) }">
+﻿<div class="block setting-type-{{settingType.id}} {{cssClass}}"
+     data-ng-show="settingType"
+     data-ng-class="{ 'block--error': !(settingType | validSettingType) }">
     <div class="block__header"
          data-setting-type="{{settingType.id}}"
          data-ng-class="{ 'block__header--error': !(settingType | validSettingType) }">
         {{settingTypeName}}
     </div>
-    <div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div>
-    <div class="block__item-group"
-         data-ng-class="{ 'block__item-group--last': $last }"
-         data-ng-if="settingType | validSettingType"
-         data-ng-repeat="group in sportGroups">
-        <div class="block__sub-header"
-             data-ng-if="settingType.settingLevel === avaiSettingLevels.sportTypeBetType"
-             data-sport-type="{{group[0].sportTypeId}}">
-            {{group[0].sportTypeName}}
-        </div>
-        <div class="block__item"
-             data-ng-repeat="item in group"
-             data-ng-class="{ 'block__item--last': $last,
-                              'block__item--near-last': $index === group.length - 2 && $index % 2 === 0,
-                              'block__item--before-extra-item': $last && group.length % 2 === 1 && group.length > 1,
-                              'block__item--odd': $odd,
-                              'block__item--full-width': group.length === 1 }">
-            <div class="block__lbl"
-                 data-ng-class="{ 'block__lbl--padding-left': settingType.settingLevel === avaiSettingLevels.sportTypeBetType }"
-                 data-product="{{productId}}"
-                 data-sport-type="{{item.sportTypeId}}"
-                 data-bet-type="{{item.betTypeId}}">
-                {{item | showingName:settingType.settingLevel:productName }}
+    <div class="block__content">
+        <div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div>
+        <div class="block__item-group"
+             data-ng-class="{ 'block__item-group--last': $last }"
+             data-ng-if="settingType | validSettingType"
+             data-ng-repeat="group in sportGroups">
+            <div class="block__sub-header"
+                 data-ng-if="settingType.settingLevel === avaiSettingLevels.sportTypeBetType"
+                 data-sport-type="{{group[0].sportTypeId}}">
+                {{group[0].sportTypeName}}
             </div>
-            <div class="block__value" data-ng-include="valueTemplateUrl"></div>
+            <div class="block__item"
+                 data-ng-repeat="item in group"
+                 data-ng-class="{ 'block__item--last': $last, 'block__item--odd': $odd && isMobileView }">
+                <div class="block__lbl"
+                     data-ng-class="{ 'block__lbl--padding-left': (settingType.settingLevel === avaiSettingLevels.sportTypeBetType) && !isMobileView }"
+                     data-product="{{productId}}"
+                     data-sport-type="{{item.sportTypeId}}"
+                     data-bet-type="{{item.betTypeId}}">
+                    {{item | showingName:settingType.settingLevel:productName }}
+                </div>
+                <div class="block__value" data-ng-include="valueTemplateUrl"></div>
+            </div>
         </div>
-    </div>
-    <div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">
-        {{sportGroups[0][0].errorMessage}}
+        <div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">
+            {{sportGroups[0][0].errorMessage}}
+        </div>
     </div>
 </div>

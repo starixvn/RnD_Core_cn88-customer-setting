@@ -7,9 +7,9 @@
         </span>
     </div>
     <div data-ng-if="isEditable && isNew">
-        <div class="row">
-            <label class="w40-percent">{{::('MasterPT' | st1Label)}}</label>
-            <div class="w60-percent" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT">
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('MasterPT' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT">
                 <percentage-dropdown class="setting-field--fullwidth"
                                      data-ng-model="ptItem.masterPT"
                                      data-min="0"
@@ -17,16 +17,16 @@
                                      data-step="accountDetail.intervalValue"
                                      data-setting-field="{{'ptItems-' + $index + '-masterPT'}}"></percentage-dropdown>
             </div>
-            <div class="w60-percent" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT">
+            <div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT">
                 <select class="setting-field setting-field--fullwidth"
                         data-setting-field="{{'ptItems-' + $index + '-masterPT'}}">
                     <option>-</option>
                 </select>
             </div>
         </div>
-        <div class="row">
-            <label class="w40-percent">{{::('AgentPT' | st1Label)}}</label>
-            <div class="w60-percent" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT">
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('AgentPT' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT">
                 <percentage-dropdown class="setting-field--fullwidth"
                                      data-ng-model="ptItem.agentPT"
                                      data-min="0"
@@ -34,7 +34,7 @@
                                      data-step="accountDetail.intervalValue"
                                      data-setting-field="{{'ptItems-' + $index + '-agentPT'}}"></percentage-dropdown>
             </div>
-            <div class="w60-percent" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT">
+            <div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT">
                 <select class="setting-field setting-field--fullwidth"
                         data-setting-field="{{'ptItems-' + $index + '-agentPT'}}">
                     <option>-</option>
@@ -43,43 +43,51 @@
         </div>
     </div>
     <div data-ng-if="isEditable && !isNew">
-        <div class="row">
-            <label class="w40-percent">{{::('MasterPT' | st1Label)}}</label>
-            <label class="w30-percent">{{ptItem.currentMasterPT | formatPercentage}}</label>
-            <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label>
-            <div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly">
-                <percentage-dropdown class="setting-field--fullwidth"
-                                     data-ng-model="ptItem.masterPT"
-                                     data-min="0"
-                                     data-max="ptItem.maxMasterPT"
-                                     data-step="accountDetail.intervalValue"
-                                     data-setting-field="{{'ptItems-' + $index + '-masterPT'}}"></percentage-dropdown>
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('MasterPT' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl horizontal-stretch">
+                <label class="w30-percent">{{ptItem.currentMasterPT | formatPercentage}}</label>
+                <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label>
+                <div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly">
+                    <percentage-dropdown class="setting-field--fullwidth"
+                                         data-ng-model="ptItem.masterPT"
+                                         data-min="0"
+                                         data-max="ptItem.maxMasterPT"
+                                         data-step="accountDetail.intervalValue"
+                                         data-setting-field="{{'ptItems-' + $index + '-masterPT'}}"></percentage-dropdown>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <label class="w40-percent">{{::('AgentPT' | st1Label)}}</label>
-            <label class="w30-percent">{{ptItem.currentAgentPT | formatPercentage}}</label>
-            <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label>
-            <div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly">
-                <percentage-dropdown class="setting-field--fullwidth"
-                                     data-ng-model="ptItem.agentPT"
-                                     data-min="0"
-                                     data-max="ptItem.maxAgentPT"
-                                     data-step="accountDetail.intervalValue"
-                                     data-setting-field="{{'ptItems-' + $index + '-agentPT'}}"></percentage-dropdown>
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('AgentPT' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl horizontal-stretch">
+                <label class="w30-percent">{{ptItem.currentAgentPT | formatPercentage}}</label>
+                <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label>
+                <div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly">
+                    <percentage-dropdown class="setting-field--fullwidth"
+                                         data-ng-model="ptItem.agentPT"
+                                         data-min="0"
+                                         data-max="ptItem.maxAgentPT"
+                                         data-step="accountDetail.intervalValue"
+                                         data-setting-field="{{'ptItems-' + $index + '-agentPT'}}"></percentage-dropdown>
+                </div>
             </div>
         </div>
     </div>
     <div data-ng-if="!isEditable">
-        <div class="row">
-            <label class="w40-percent">{{::('MasterPT' | st1Label)}}</label>
-            <label class="w30-percent">{{ptItem.masterPT | formatPercentage}}</label>
-            <label class="w30-percent">-</label>
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('MasterPT' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl horizontal-stretch">
+                <label class="w30-percent">{{ptItem.masterPT | formatPercentage}}</label>
+                <label class="w30-percent">-</label>
+            </div>
         </div>
-        <div class="row">
-            <label class="w40-percent">{{::('AgentPT' | st1Label)}}</label>
-            <label class="w30-percent">{{ptItem.agentPT | formatPercentage}}</label>
-            <label class="w30-percent">-</label>
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('AgentPT' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl horizontal-stretch">
+                <label class="w30-percent">{{ptItem.agentPT | formatPercentage}}</label>
+                <label class="w30-percent">-</label>
+            </div>
         </div>
     </div>
 </div>

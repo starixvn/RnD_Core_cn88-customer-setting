@@ -7,21 +7,24 @@
         "CommissionAndBetLimit": "Commission & Bet Limit",
         "MaxBet": "Max per Bet",
         "MaxPerEvent": "Max per Event",
-        "MemberCommission": "Member Commission"
+        "MemberCommission": "Member Commission",
+        "Commission": "Commission"
     };
 
     labels["zh-hans"] = {
         "CommissionAndBetLimit": "退水和限额",
         "MaxBet": "单注最高",
         "MaxPerEvent": "单场最高",
-        "MemberCommission": "会员退水设定"
+        "MemberCommission": "会员退水设定",
+        "Commission": "退水设定"
     };
 
     labels["zh-tw"] = {
         "CommissionAndBetLimit": "退水和限額",
         "MaxBet": "單注最高",
         "MaxPerEvent": "單場最高",
-        "MemberCommission": "會員退水設定"
+        "MemberCommission": "會員退水設定",
+        "Commission": "退水設定"
     };
 
     var messages = {};

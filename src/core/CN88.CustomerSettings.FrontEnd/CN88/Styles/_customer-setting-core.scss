@@ -2,6 +2,10 @@
 @import "_variables";
 @import "_mixins";
 
+.customer-setting {
+    @include clearfix();
+}
+
 .setting-field {
     @include border($color: $field-border-color);
     height: 28px;
@@ -109,7 +113,7 @@ select.setting-field {
 
 .icon {
     background: {
-        image: url("Images/sprites.png");
+        image: url("Images/sprites.svg");
         position: 0 0;
         repeat: no-repeat;
     }
@@ -172,10 +176,7 @@ select.setting-field {
 
     &__item-group {
         @include clearfix();
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: flex;
+        @include flexbox();
         -webkit-flex-flow: row wrap;
         flex-wrap: wrap;
 
@@ -185,42 +186,16 @@ select.setting-field {
     }
 
     &__item {
-        @include col(50%);
         @include border(bottom);
-        @include border(right);
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: flex;
+        @include flexbox();
+        width: 100%;
 
-        &--even, &--odd {
-            border-right: none;
+        &--odd {
+            background-color: $block-item-odd-row-background-color;
         }
 
         &--last {
             border-bottom: none;
-            border-right: none;
-        }
-
-        &--before-extra-item {
-            @include border(right);
-        }
-
-        &--full-width {
-            @include col(100%);
-            border-right: none;
-
-            .block__lbl {
-                @include col(20%);
-            }
-
-            .block__value {
-                @include col(80%);
-            }
-
-            &.block__item--extra {
-                display: none;
-            }
         }
 
         &--error {
@@ -234,20 +209,14 @@ select.setting-field {
     }
 
     %adjust-height {
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: flex;
+        @include flexbox();
         height: 100%;
     }
 
     &__cell {
         @include border(right);
+        @include flexbox();
         align-items: center;
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: flex;
         padding: 5px;
 
         &--no-border {
@@ -263,7 +232,7 @@ select.setting-field {
         }
     }
 
-    &__cell-wrapper {
+    &__cell-group {
         @extend %adjust-height;
 
         &--readonly {
@@ -274,14 +243,15 @@ select.setting-field {
         }
     }
 
+    &__cell-sub-group {
+        @include flexbox();
+    }
+
     &__lbl {
         @extend .block__cell;
-        @include col(40%);
+        @include flexbox();
         align-items: center;
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: flex;
+        width: 20%;
 
         &--no-border {
             border: none;
@@ -296,9 +266,8 @@ select.setting-field {
         }
     }
 
-    &__lbl-group {
+    &__lbl-group, &__lbl-sub-group {
         @include clearfix();
-        @extend %adjust-height;
         background-color: $block-label-group-background-color;
         text-align: center;
         width: 100%;
@@ -309,43 +278,25 @@ select.setting-field {
         }
     }
 
+    &__lbl-group {
+        @extend %adjust-height;
+    }
+
+    &__lbl-sub-group {
+        @include flexbox();
+    }
+
     &__value {
         @extend .block__cell;
-        @include col(60%);
+        @include flexbox();
         align-items: center;
         border: none;
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: flex;
         height: auto !important;
         padding: 0;
+        width: 80%;
 
         > div {
             width: 100%;
         }
-    }
-}
-
-.full-width {
-    .block__item {
-        @include col(100%);
-        border-right: none;
-
-        &--extra {
-            display: none;
-        }
-
-        &--near-last {
-            @include border(bottom);
-        }
-    }
-
-    .block__lbl {
-        @include col(20%);
-    }
-
-    .block__value {
-        @include col(80%);
     }
 }

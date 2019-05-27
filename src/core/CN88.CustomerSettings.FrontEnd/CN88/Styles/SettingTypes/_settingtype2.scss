@@ -1,0 +1,23 @@
+﻿.mobile-view .setting-type-2 {
+    .commission-group {
+        margin: 5px 0;
+        width: 100% !important;
+
+        &__lbl {
+            padding-right: 5px;
+            width: 15%;
+        }
+
+        &__value {
+            width: 85%;
+
+            &--full-width {
+                width: 100%;
+            }
+        }
+    }
+
+    .tooltip--error .tooltip__content {
+        max-width: 150px;
+    }
+}

@@ -11,33 +11,20 @@
     display: none !important;
 }
 
-%col {
-    //display: inline-block;
-    float: left;
-}
-
-.w16-percent {
-    @include col(16%, true);
-}
-
 .w20-percent {
-    @include col(20%, true);
+    width: 20%;
 }
 
 .w25-percent {
-    @include col(25%, true);
-}
-
-.w28-percent {
-    @include col(28%, true);
+    width: 25%;
 }
 
 .w30-percent {
-    @include col(30%, true);
+    width: 30%;
 }
 
 .w33-percent {
-    @include col(33%, true);
+    width: 33%;
 
     &--last {
         width: 34% !important;
@@ -45,27 +32,31 @@
 }
 
 .w40-percent {
-    @include col(40%, true);
-}
-
-.w42-percent {
-    @include col(42%, true);
+    width: 40%;
 }
 
 .w50-percent {
-    @include col(50%, true);
+    width: 50%;
 }
 
 .w60-percent {
-    @include col(60%, true);
+    width: 60%;
+}
+
+.w70-percent {
+    width: 70%;
+}
+
+.w75-percent {
+    width: 70%;
 }
 
 .w80-percent {
-    @include col(80%, true);
+    width: 80%;
 }
 
 .w100-percent {
-    @include col(100%, true);
+    width: 100% !important;
 }
 
 .align-center {

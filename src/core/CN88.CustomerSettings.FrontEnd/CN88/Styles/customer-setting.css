@@ -77,6 +77,11 @@ input,
 optgroup,
 select,
 textarea {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
   color: inherit;
   font: inherit;
   line-height: normal;
@@ -108,6 +113,14 @@ button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
   padding: 0; }
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+textarea {
+  -webkit-appearance: none; }
 
 input[type='text']::-ms-clear,
 input[type='password']::-ms-clear,
@@ -224,43 +237,37 @@ th {
 .x-ng-cloak {
   display: none !important; }
 
-.w16-percent, .w20-percent, .w25-percent, .w28-percent, .w30-percent, .w33-percent, .w40-percent, .w42-percent, .w50-percent, .w60-percent, .w80-percent, .w100-percent, .block__item, .block__item--full-width, .block__item--full-width .block__lbl, .block__item--full-width .block__value, .block__lbl, .block__value, .full-width .block__item, .full-width .block__lbl, .full-width .block__value, .setting-type-1 .col {
-  float: left; }
-
-.w16-percent {
-  width: 16% !important; }
-
 .w20-percent {
-  width: 20% !important; }
+  width: 20%; }
 
 .w25-percent {
-  width: 25% !important; }
-
-.w28-percent {
-  width: 28% !important; }
+  width: 25%; }
 
 .w30-percent {
-  width: 30% !important; }
+  width: 30%; }
 
 .w33-percent {
-  width: 33% !important; }
+  width: 33%; }
   .w33-percent--last {
     width: 34% !important; }
 
 .w40-percent {
-  width: 40% !important; }
-
-.w42-percent {
-  width: 42% !important; }
+  width: 40%; }
 
 .w50-percent {
-  width: 50% !important; }
+  width: 50%; }
 
 .w60-percent {
-  width: 60% !important; }
+  width: 60%; }
+
+.w70-percent {
+  width: 70%; }
+
+.w75-percent {
+  width: 70%; }
 
 .w80-percent {
-  width: 80% !important; }
+  width: 80%; }
 
 .w100-percent {
   width: 100% !important; }
@@ -298,6 +305,11 @@ th {
  * A partial implementation of the Ruby display functions from Compass:
  * https://github.com/Compass/compass/blob/stable/core/lib/compass/core/sass_extensions/functions/display.rb
  */
+.customer-setting:after {
+  display: block;
+  content: "";
+  clear: both; }
+
 .setting-field {
   border: 1px solid #d2d2d2;
   height: 28px;
@@ -363,7 +375,7 @@ select.setting-field {
     opacity: 0.6; }
 
 .icon {
-  background-image: url("Images/sprites.png");
+  background-image: url("Images/sprites.svg");
   background-position: 0 0;
   background-repeat: no-repeat;
   display: inline-block;
@@ -419,29 +431,16 @@ select.setting-field {
     .block__item-group--last {
       border-bottom: 1px solid #d2d2d2; }
   .block__item {
-    width: 50%;
     border-bottom: 1px solid #d2d2d2;
-    border-right: 1px solid #d2d2d2;
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
-    display: flex; }
-    .block__item--even, .block__item--odd {
-      border-right: none; }
+    display: flex;
+    width: 100%; }
+    .block__item--odd {
+      background-color: #e8f1fe; }
     .block__item--last {
-      border-bottom: none;
-      border-right: none; }
-    .block__item--before-extra-item {
-      border-right: 1px solid #d2d2d2; }
-    .block__item--full-width {
-      width: 100%;
-      border-right: none; }
-      .block__item--full-width .block__lbl {
-        width: 20%; }
-      .block__item--full-width .block__value {
-        width: 80%; }
-      .block__item--full-width.block__item--extra {
-        display: none; }
+      border-bottom: none; }
     .block__item--error {
       border: none;
       color: #7b0f0f;
@@ -449,7 +448,7 @@ select.setting-field {
       line-height: 3;
       padding: 0 8px;
       width: 100%; }
-  .block .block__cell-wrapper, .block .block__lbl-group {
+  .block .block__cell-group, .block .block__lbl-group {
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -457,11 +456,11 @@ select.setting-field {
     height: 100%; }
   .block__cell, .block__lbl, .block__value {
     border-right: 1px solid #d2d2d2;
-    align-items: center;
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
     display: flex;
+    align-items: center;
     padding: 5px; }
     .block__cell--no-border {
       border: none; }
@@ -469,59 +468,55 @@ select.setting-field {
       border-top: 1px solid #d2d2d2; }
     .block__cell.align-center, .align-center.block__lbl, .align-center.block__value {
       justify-content: center; }
-  .block__cell-wrapper--readonly .block__cell, .block__cell-wrapper--readonly .block__lbl, .block__cell-wrapper--readonly .block__value {
+  .block__cell-group--readonly .block__cell, .block__cell-group--readonly .block__lbl, .block__cell-group--readonly .block__value {
     height: 100%;
     min-height: 38px; }
-  .block__lbl {
-    width: 40%;
-    align-items: center;
+  .block__cell-sub-group {
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
     display: flex; }
+  .block__lbl {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    width: 20%; }
     .block__lbl--no-border {
       border: none; }
     .block__lbl--padding-left {
       padding-left: 28px; }
     .block__lbl .showing-name {
       flex-grow: 1; }
-  .block__lbl-group {
+  .block__lbl-group, .block__lbl-sub-group {
     background-color: #f4f1f1;
     text-align: center;
     width: 100%; }
-    .block__lbl-group:after {
+    .block__lbl-group:after, .block__lbl-sub-group:after {
       display: block;
       content: "";
       clear: both; }
-    .block__lbl-group .block__lbl {
+    .block__lbl-group .block__lbl, .block__lbl-sub-group .block__lbl {
       justify-content: center;
       min-height: 33px; }
+  .block__lbl-sub-group {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex; }
   .block__value {
-    width: 60%;
-    align-items: center;
-    border: none;
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
     display: flex;
+    align-items: center;
+    border: none;
     height: auto !important;
-    padding: 0; }
+    padding: 0;
+    width: 80%; }
     .block__value > div {
       width: 100%; }
-
-.full-width .block__item {
-  width: 100%;
-  border-right: none; }
-  .full-width .block__item--extra {
-    display: none; }
-  .full-width .block__item--near-last {
-    border-bottom: 1px solid #d2d2d2; }
-
-.full-width .block__lbl {
-  width: 20%; }
-
-.full-width .block__value {
-  width: 80%; }
 
 /*
  * A partial implementation of the Ruby list functions from Compass:
@@ -913,43 +908,37 @@ select.setting-field {
 .x-ng-cloak {
   display: none !important; }
 
-.w16-percent, .w20-percent, .w25-percent, .w28-percent, .w30-percent, .w33-percent, .w40-percent, .w42-percent, .w50-percent, .w60-percent, .w80-percent, .w100-percent, .block__item, .block__item--full-width, .block__item--full-width .block__lbl, .block__item--full-width .block__value, .block__lbl, .block__value, .full-width .block__item, .full-width .block__lbl, .full-width .block__value, .setting-type-1 .col {
-  float: left; }
-
-.w16-percent {
-  width: 16% !important; }
-
 .w20-percent {
-  width: 20% !important; }
+  width: 20%; }
 
 .w25-percent {
-  width: 25% !important; }
-
-.w28-percent {
-  width: 28% !important; }
+  width: 25%; }
 
 .w30-percent {
-  width: 30% !important; }
+  width: 30%; }
 
 .w33-percent {
-  width: 33% !important; }
+  width: 33%; }
   .w33-percent--last {
     width: 34% !important; }
 
 .w40-percent {
-  width: 40% !important; }
-
-.w42-percent {
-  width: 42% !important; }
+  width: 40%; }
 
 .w50-percent {
-  width: 50% !important; }
+  width: 50%; }
 
 .w60-percent {
-  width: 60% !important; }
+  width: 60%; }
+
+.w70-percent {
+  width: 70%; }
+
+.w75-percent {
+  width: 70%; }
 
 .w80-percent {
-  width: 80% !important; }
+  width: 80%; }
 
 .w100-percent {
   width: 100% !important; }
@@ -963,24 +952,41 @@ select.setting-field {
 .align-right {
   text-align: right; }
 
-.setting-type-1 .col {
-  width: 50% !important;
-  padding: 30px 3% 15px 30px; }
-  .setting-type-1 .col--last {
+/*
+ * A partial implementation of the Ruby list functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/lists.rb
+ */
+/*
+ * A partial implementation of the Ruby constants functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/constants.rb
+ */
+/*
+ * A partial implementation of the Ruby display functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/core/lib/compass/core/sass_extensions/functions/display.rb
+ */
+.setting-type-1 .section {
+  float: left;
+  padding: 30px 3% 15px 30px;
+  width: 50%; }
+  .setting-type-1 .section--last {
     padding-left: 3%;
     padding-right: 30px; }
 
-.setting-type-1 .row {
+.setting-type-1 .row, .setting-type-1 .setting-field-group {
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
   display: flex;
   align-items: center;
   margin: 10px 0 10px 30px; }
-  .setting-type-1 .row:after {
+  .setting-type-1 .row:after, .setting-type-1 .setting-field-group:after {
     display: block;
     content: "";
     clear: both; }
+  .setting-type-1 .row__lbl, .setting-type-1 .setting-field-group__lbl {
+    width: 40%; }
+  .setting-type-1 .row__ctrl, .setting-type-1 .setting-field-group__ctrl {
+    width: 60%; }
 
 .setting-type-1 .sub-header {
   border-bottom: 2px solid #7b0f0f;
@@ -1000,6 +1006,8 @@ select.setting-field {
     min-width: initial; }
     .setting-type-1 .general-data .username-selection .setting-field--first {
       margin-left: 0; }
+    .setting-type-1 .general-data .username-selection .setting-field--last {
+      margin-right: 0; }
 
 .setting-type-1 .customer-credit {
   margin-bottom: 30px; }
@@ -1042,6 +1050,64 @@ select.setting-field {
 .setting-type-1 .password-rule .note {
   font-weight: bold; }
 
+.mobile-view .setting-type-1 .section {
+  float: initial;
+  padding: 10px;
+  width: 100%; }
+
+.mobile-view .setting-type-1 .sub-header {
+  border-bottom-width: 1px;
+  font-weight: bold;
+  padding-bottom: 5px;
+  padding-left: 0; }
+
+.mobile-view .setting-type-1 .setting-field-group {
+  flex-direction: column;
+  margin: 12px 0; }
+  .mobile-view .setting-type-1 .setting-field-group__lbl {
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    width: 100%; }
+  .mobile-view .setting-type-1 .setting-field-group__ctrl {
+    width: 100%; }
+
+.mobile-view .setting-type-1 .customer-credit {
+  margin-bottom: 10px; }
+  .mobile-view .setting-type-1 .customer-credit .available-credit-group {
+    flex-direction: row;
+    justify-content: space-between; }
+    .mobile-view .setting-type-1 .customer-credit .available-credit-group label {
+      margin: 0; }
+
+.mobile-view .setting-type-1 .position-taking__group-name {
+  margin-top: 20px;
+  text-transform: uppercase; }
+
+.mobile-view .setting-type-1 .position-taking--edit .sub-header {
+  margin-bottom: 8px; }
+
+.mobile-view .setting-type-1 .horizontal-stretch {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; }
+
+.mobile-view .setting-type-2 .commission-group {
+  margin: 5px 0;
+  width: 100% !important; }
+  .mobile-view .setting-type-2 .commission-group__lbl {
+    padding-right: 5px;
+    width: 15%; }
+  .mobile-view .setting-type-2 .commission-group__value {
+    width: 85%; }
+    .mobile-view .setting-type-2 .commission-group__value--full-width {
+      width: 100%; }
+
+.mobile-view .setting-type-2 .tooltip--error .tooltip__content {
+  max-width: 150px; }
+
 /*
  * A partial implementation of the Ruby list functions from Compass:
  * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/lists.rb
@@ -1074,3 +1140,96 @@ select.setting-field {
 
 .last-setting-type .block {
   margin-bottom: 0; }
+
+/*
+ * A partial implementation of the Ruby list functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/lists.rb
+ */
+/*
+ * A partial implementation of the Ruby constants functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/constants.rb
+ */
+/*
+ * A partial implementation of the Ruby display functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/core/lib/compass/core/sass_extensions/functions/display.rb
+ */
+/*
+ * A partial implementation of the Ruby list functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/lists.rb
+ */
+/*
+ * A partial implementation of the Ruby constants functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/constants.rb
+ */
+/*
+ * A partial implementation of the Ruby display functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/core/lib/compass/core/sass_extensions/functions/display.rb
+ */
+.mobile-view body {
+  font-size: 10.5px;
+  padding-top: 0; }
+
+.mobile-view input,
+.mobile-view optgroup,
+.mobile-view select,
+.mobile-view textarea {
+  font-size: 16px; }
+
+.mobile-view .setting-field--has-constraint, .mobile-view .setting-field--constraint {
+  width: 100%; }
+
+.mobile-view .setting-field--constraint {
+  margin-top: 5px;
+  text-align: right; }
+
+.mobile-view .block:after {
+  display: block;
+  content: "";
+  clear: both; }
+
+.mobile-view .block__header {
+  color: #852423;
+  font-weight: bold;
+  padding-left: 10px;
+  text-transform: uppercase; }
+
+.mobile-view .block__sub-header {
+  font-weight: bold;
+  padding: 0 5px; }
+
+.mobile-view .block__content {
+  margin: 5px 10px; }
+
+.mobile-view .block__cell, .mobile-view .block__lbl, .mobile-view .block__value {
+  flex-direction: column; }
+
+.mobile-view .block__lbl, .mobile-view .block__value {
+  flex-direction: initial; }
+
+.mobile-view .btn-container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  background: #fff;
+  bottom: 0;
+  flex-direction: column-reverse;
+  left: 0;
+  margin: 0;
+  padding: 12px 5px;
+  position: sticky;
+  position: -webkit-sticky;
+  right: 0;
+  z-index: 2; }
+  .mobile-view .btn-container .btn {
+    box-shadow: none;
+    margin: 0 0 16px;
+    width: 100%; }
+    .mobile-view .btn-container .btn--cancel {
+      margin-bottom: 0; }
+
+.mobile-view .msg__content {
+  padding-top: 2.5px; }
+
+.mobile-view .tooltip__content {
+  text-transform: initial; }

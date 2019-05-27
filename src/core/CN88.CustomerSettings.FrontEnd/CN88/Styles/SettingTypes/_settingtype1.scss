@@ -1,4 +1,5 @@
 ﻿@import "../other";
+@import "../_mixins";
 @import "../variables";
 
 $sub-header-border-color: #7b0f0f;
@@ -6,9 +7,10 @@ $position-taking-effective-date-warning-bg-color: $tooltip-error-bg-color;
 $position-taking-constraint-value-color: #737373;
 
 .setting-type-1 {
-    .col {
-        @include col(50%, true);
+    .section {
+        float: left;
         padding: 30px 3% 15px 30px;
+        width: 50%;
 
         &--last {
             padding-left: 3%;
@@ -16,14 +18,19 @@ $position-taking-constraint-value-color: #737373;
         }
     }
 
-    .row {
+    .row, .setting-field-group {
         @include clearfix();
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: flex;
+        @include flexbox();
         align-items: center;
         margin: 10px 0 10px 30px;
+
+        &__lbl {
+            width: 40%;
+        }
+
+        &__ctrl {
+            width: 60%;
+        }
     }
 
     .sub-header {
@@ -52,6 +59,10 @@ $position-taking-constraint-value-color: #737373;
                 &--first {
                     margin-left: 0;
                 }
+
+                &--last {
+                    margin-right: 0;
+                }
             }
         }
     }
@@ -72,10 +83,7 @@ $position-taking-constraint-value-color: #737373;
         }
 
         &--has-constraint {
-            display: -webkit-box;
-            display: -moz-box;
-            display: -ms-flexbox;
-            display: flex;
+            @include flexbox();
             justify-content: space-between;
         }
 
@@ -118,5 +126,67 @@ $position-taking-constraint-value-color: #737373;
         .note {
             font-weight: bold;
         }
+    }
+}
+
+.mobile-view .setting-type-1 {
+    .section {
+        float: initial;
+        padding: 10px;
+        width: 100%;
+    }
+
+    .sub-header {
+        border-bottom-width: 1px;
+        font-weight: bold;
+        padding-bottom: 5px;
+        padding-left: 0;
+    }
+
+    .setting-field-group {
+        flex-direction: column;
+        margin: 12px 0;
+
+        &__lbl {
+            margin-bottom: 3px;
+            text-transform: uppercase;
+            width: 100%;
+        }
+
+        &__ctrl {
+            width: 100%;
+        }
+    }
+
+    .customer-credit {
+        margin-bottom: 10px;
+
+        .available-credit-group {
+            flex-direction: row;
+            justify-content: space-between;
+
+            label {
+                margin: 0;
+            }
+        }
+    }
+
+    .position-taking {
+        &__group-name {
+            margin-top: 20px;
+            text-transform: uppercase;
+        }
+
+        &--edit {
+            .sub-header {
+                margin-bottom: 8px;
+            }
+        }
+    }
+
+    .horizontal-stretch {
+        @include flexbox();
+        align-items: center;
+        justify-content: space-between;
     }
 }

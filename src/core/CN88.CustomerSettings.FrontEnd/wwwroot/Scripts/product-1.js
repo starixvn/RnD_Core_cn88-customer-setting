@@ -34975,6 +34975,13 @@ var CustomerSetting;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(ParametersService.prototype, "isMobileView", {
+            get: function () {
+                return this.isMobile && this.isPhone;
+            },
+            enumerable: true,
+            configurable: true
+        });
         ParametersService.prototype.getSettingQuery = function () {
             return this.query;
         };
@@ -34992,6 +34999,8 @@ var CustomerSetting;
                 this.hashKey = params.hashKey;
                 this.actorLv = params.actorLevel ? params.actorLevel : undefined;
                 this.editable = params.editable || false;
+                this.isMobile = params.isMobile || false;
+                this.isPhone = params.isPhone || false;
                 this.query = new CustomerSetting.SettingQuery(params.productId, uplineId, customerLevel, params.customerId, isNew);
             }
         };
@@ -35284,6 +35293,7 @@ var CustomerSetting;
             this.uplineId = uplineId;
             this.isNew = this.parametersService.isNew;
             this.isEditable = this.parametersService.isEditable;
+            this.isMobileView = this.parametersService.isMobileView;
             this.hashKey = this.parametersService.hashKey;
             if (setting) {
                 this.customerId = setting.customerId;
@@ -35325,6 +35335,8 @@ var CustomerSetting;
                 }
             }
             this.systemId = this.parametersService.systemId;
+            this.isMobileView = this.parametersService.isMobileView;
+            this.isEditForm = !this.parametersService.isNew;
             this.requestService.registerSharedScope(this);
             angular.element(this.$window.document).ready(function () {
                 _this.querySetting();
@@ -35335,9 +35347,9 @@ var CustomerSetting;
         };
         CustomerSettingController.prototype.update = function (callback) {
             if (callback === void 0) { callback = this.updateCallback; }
-            var changedSettings = this.settingTypesSharedValuesService.isNew ? this.setting.getEditableSettings() : this.setting.getChanges();
+            var changedSettings = this.parametersService.isNew ? this.setting.getEditableSettings() : this.setting.getChanges();
             var command;
-            var path = this.settingTypesSharedValuesService.isNew
+            var path = this.parametersService.isNew
                 ? this.appConfigService.getCreatePath()
                 : this.appConfigService.getUpdatePath();
             this.requestMsgResult = undefined;
@@ -35596,6 +35608,7 @@ var CustomerSetting;
             scope.productId = this.settingTypesSharedValuesService.productId;
             scope.productName = this.settingTypesSharedValuesService.productName;
             scope.isNew = this.settingTypesSharedValuesService.isNew;
+            scope.isMobileView = this.settingTypesSharedValuesService.isMobileView;
             scope.isEditable = this.settingTypesSharedValuesService.isEditable && scope.settingType.displayMode === CustomerSetting.DisplayMode.editable;
             scope.avaiCustomerLevels = CustomerSetting.Level;
             if (this.instantiateSettingItem) {
@@ -35632,7 +35645,7 @@ var CustomerSetting;
         function DefaultSettingTypeGroupingDirective() {
             var _this = this;
             _super.apply(this, arguments);
-            this.template = '<div class="block setting-type-{{settingType.id}} {{cssClass}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div><div class="block__item-group" data-ng-class="{ \'block__item-group--last\': $last }" data-ng-if="settingType | validSettingType" data-ng-repeat="group in sportGroups"><div class="block__sub-header" data-ng-if="settingType.settingLevel === avaiSettingLevels.sportTypeBetType" data-sport-type="{{group[0].sportTypeId}}">{{group[0].sportTypeName}}</div><div class="block__item" data-ng-repeat="item in group" data-ng-class="{ \'block__item--last\': $last, \'block__item--near-last\': $index === group.length - 2 && $index % 2 === 0, \'block__item--before-extra-item\': $last && group.length % 2 === 1 && group.length > 1, \'block__item--odd\': $odd, \'block__item--full-width\': group.length === 1 }"><div class="block__lbl" data-ng-class="{ \'block__lbl--padding-left\': settingType.settingLevel === avaiSettingLevels.sportTypeBetType }" data-product="{{productId}}" data-sport-type="{{item.sportTypeId}}" data-bet-type="{{item.betTypeId}}">{{item | showingName:settingType.settingLevel:productName }}</div><div class="block__value" data-ng-include="valueTemplateUrl"></div></div></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{sportGroups[0][0].errorMessage}}</div></div>';
+            this.template = '<div class="block setting-type-{{settingType.id}} {{cssClass}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="block__content"><div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div><div class="block__item-group" data-ng-class="{ \'block__item-group--last\': $last }" data-ng-if="settingType | validSettingType" data-ng-repeat="group in sportGroups"><div class="block__sub-header" data-ng-if="settingType.settingLevel === avaiSettingLevels.sportTypeBetType" data-sport-type="{{group[0].sportTypeId}}">{{group[0].sportTypeName}}</div><div class="block__item" data-ng-repeat="item in group" data-ng-class="{ \'block__item--last\': $last, \'block__item--odd\': $odd && isMobileView }"><div class="block__lbl" data-ng-class="{ \'block__lbl--padding-left\': (settingType.settingLevel === avaiSettingLevels.sportTypeBetType) && !isMobileView }" data-product="{{productId}}" data-sport-type="{{item.sportTypeId}}" data-bet-type="{{item.betTypeId}}">{{item | showingName:settingType.settingLevel:productName }}</div><div class="block__value" data-ng-include="valueTemplateUrl"></div></div></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{sportGroups[0][0].errorMessage}}</div></div></div>';
             this.link = function (scope) {
                 _this.linkInternal(scope);
             };
@@ -35686,54 +35699,6 @@ var CustomerSetting;
         };
     }
     CustomerSetting.ModuleRegister.filter("showingName", ShowingName);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var PercentageDropdownDirective = (function () {
-        function PercentageDropdownDirective(valueRangeService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
-            this.restrict = "E";
-            this.link = function (scope) {
-                if (scope.autoRefresh) {
-                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
-                        _this.initializeRange(scope);
-                    });
-                }
-                else {
-                    _this.initializeRange(scope);
-                }
-            };
-            this.valueRangeService = valueRangeService;
-        }
-        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    value: "=ngModel",
-                    min: "=",
-                    max: "=",
-                    step: "=?",
-                    precision: "=?",
-                    placeholder: "@",
-                    placeholderVisible: "=?",
-                    autoRefresh: "=?"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
-            scope.precision = scope.precision || 0;
-            scope.factor = Math.pow(10, scope.precision);
-            scope.step = scope.step || 1;
-            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
-        };
-        PercentageDropdownDirective.$inject = ["valueRangeService"];
-        return PercentageDropdownDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36083,6 +36048,55 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var SettingTypeDirectiveLoader = (function () {
+        function SettingTypeDirectiveLoader($compile) {
+            var _this = this;
+            this.replace = true;
+            this.link = function (scope, element) {
+                scope.$watch("setting.settingTypes", function () {
+                    _this.generateNodes(scope, element);
+                });
+            };
+            this.$compile = $compile;
+            this.loadedSettingTypes = [];
+        }
+        Object.defineProperty(SettingTypeDirectiveLoader.prototype, "scope", {
+            get: function () {
+                return {
+                    setting: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingTypeDirectiveLoader.prototype.generateNodes = function (scope, element) {
+            var _this = this;
+            if (scope.setting && scope.setting.settingTypes && angular.isArray(scope.setting.settingTypes)) {
+                scope.setting.settingTypes.forEach(function (settingType, index) {
+                    var loaded = _this.loadedSettingTypes.some(function (item) {
+                        return item === settingType.id;
+                    });
+                    if (!loaded) {
+                        var settingTypeNodeTemplate = CustomerSetting.StringFormater.format("<st{0} data-setting-type=\"setting.settingTypes[{1}]\"></st{0}>", settingType.id, index);
+                        var settingTypeElement = angular.element(settingTypeNodeTemplate);
+                        if (index === scope.setting.settingTypes.length - 1) {
+                            settingTypeElement.addClass("last-setting-type");
+                        }
+                        element.append(settingTypeElement);
+                        _this.$compile(settingTypeElement)(scope);
+                        _this.loadedSettingTypes.push(settingType.id);
+                    }
+                });
+            }
+        };
+        SettingTypeDirectiveLoader.$inject = ["$compile"];
+        return SettingTypeDirectiveLoader;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     (function (PositionModel) {
         PositionModel[PositionModel["relative"] = 1] = "relative";
         PositionModel[PositionModel["absolute"] = 2] = "absolute";
@@ -36227,55 +36241,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    var SettingTypeDirectiveLoader = (function () {
-        function SettingTypeDirectiveLoader($compile) {
-            var _this = this;
-            this.replace = true;
-            this.link = function (scope, element) {
-                scope.$watch("setting.settingTypes", function () {
-                    _this.generateNodes(scope, element);
-                });
-            };
-            this.$compile = $compile;
-            this.loadedSettingTypes = [];
-        }
-        Object.defineProperty(SettingTypeDirectiveLoader.prototype, "scope", {
-            get: function () {
-                return {
-                    setting: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingTypeDirectiveLoader.prototype.generateNodes = function (scope, element) {
-            var _this = this;
-            if (scope.setting && scope.setting.settingTypes && angular.isArray(scope.setting.settingTypes)) {
-                scope.setting.settingTypes.forEach(function (settingType, index) {
-                    var loaded = _this.loadedSettingTypes.some(function (item) {
-                        return item === settingType.id;
-                    });
-                    if (!loaded) {
-                        var settingTypeNodeTemplate = CustomerSetting.StringFormater.format("<st{0} data-setting-type=\"setting.settingTypes[{1}]\"></st{0}>", settingType.id, index);
-                        var settingTypeElement = angular.element(settingTypeNodeTemplate);
-                        if (index === scope.setting.settingTypes.length - 1) {
-                            settingTypeElement.addClass("last-setting-type");
-                        }
-                        element.append(settingTypeElement);
-                        _this.$compile(settingTypeElement)(scope);
-                        _this.loadedSettingTypes.push(settingType.id);
-                    }
-                });
-            }
-        };
-        SettingTypeDirectiveLoader.$inject = ["$compile"];
-        return SettingTypeDirectiveLoader;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     (function (System) {
         System[System["nap"] = 1] = "nap";
         System[System["alpha"] = 2] = "alpha";
@@ -36286,11 +36251,59 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var PercentageDropdownDirective = (function () {
+        function PercentageDropdownDirective(valueRangeService) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
+            this.restrict = "E";
+            this.link = function (scope) {
+                if (scope.autoRefresh) {
+                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
+                        _this.initializeRange(scope);
+                    });
+                }
+                else {
+                    _this.initializeRange(scope);
+                }
+            };
+            this.valueRangeService = valueRangeService;
+        }
+        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    value: "=ngModel",
+                    min: "=",
+                    max: "=",
+                    step: "=?",
+                    precision: "=?",
+                    placeholder: "@",
+                    placeholderVisible: "=?",
+                    autoRefresh: "=?"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
+            scope.precision = scope.precision || 0;
+            scope.factor = Math.pow(10, scope.precision);
+            scope.step = scope.step || 1;
+            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
+        };
+        PercentageDropdownDirective.$inject = ["valueRangeService"];
+        return PercentageDropdownDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
         var AgentGeneralDataDirective = (function () {
             function AgentGeneralDataDirective() {
-                this.template = '<div><div data-ng-if="isEditable"><div class="row" data-ng-if="isNew"><label class="w40-percent">{{::(\'Master\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | st1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="row"><label class="w40-percent">{{::(\'Username\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div></div></div>';
+                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Master\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl horizontal-stretch" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
             }
             return AgentGeneralDataDirective;
         }());
@@ -36329,7 +36342,7 @@ var CustomerSetting;
     (function (SettingType1) {
         var MasterGeneralDataDirective = (function () {
             function MasterGeneralDataDirective() {
-                this.template = '<div><div data-ng-if="isEditable"><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | st1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="row"><label class="w40-percent">{{::(\'Username\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div></div></div>';
+                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl horizontal-stretch" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
             }
             return MasterGeneralDataDirective;
         }());
@@ -36537,7 +36550,7 @@ var CustomerSetting;
         var MemberGeneralDataDirective = (function () {
             function MemberGeneralDataDirective(crossingSettingTypesServiceBus) {
                 var _this = this;
-                this.template = '<div><div data-ng-if="isEditable"><div class="row" data-ng-if="isNew"><label class="w40-percent">{{::(\'Agent\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'SpreadGroup\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="row"><label class="w40-percent">{{::(\'Name\' | st1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'MemberPasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="row"><label class="w40-percent">{{::(\'Username\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div></div></div>';
+                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Agent\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl horizontal-stretch" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'SpreadGroup\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'MemberPasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
                 this.link = function (scope) {
                     if (scope.isNew) {
                         scope.updateSpreadGroup = function () {
@@ -36760,7 +36773,7 @@ var CustomerSetting;
         var SuperGeneralDataDirective = (function () {
             function SuperGeneralDataDirective(appConfigService, requestService) {
                 var _this = this;
-                this.template = '<div><div data-ng-if="isEditable"><div class="row"><label class="w40-percent"><span>{{::(\'Headline\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="dropdown-container w60-percent" data-ng-if="isNew"><st1-headline-suggestion class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.uplineUsername" data-ng-blur="validateAndLoadHeadlineCurrency($event)" data-setting-field="uplineUsername"></st1-headline-suggestion></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.uplineUsername}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="w60-percent" data-ng-if="isNew"><input type="text" maxlength="30" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.username" data-setting-field="username"></div><label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="row" data-ng-if="isNew"><label class="w40-percent"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="password" maxlength="30" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="row"><label class="w40-percent">{{::(\'FirstName\' | st1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="row"><label class="w40-percent">{{::(\'LastName\' | st1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.lastName"></div></div><div class="row"><label class="w40-percent">{{::(\'Phone\' | st1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.phone"></div></div><div class="row"><label class="w40-percent">{{::(\'MobilePhone\' | st1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.mobilePhone"></div></div><div class="row"><label class="w40-percent">{{::(\'Fax\' | st1Label)}}</label><div class="w60-percent"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.fax"></div></div></div><div data-ng-if="!isEditable"><div class="row"><label class="w40-percent">{{::(\'Username\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.username}}</label></div></div></div>';
+                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Headline\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="dropdown-container setting-field-group__ctrl" data-ng-if="isNew"><st1-headline-suggestion class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.uplineUsername" data-ng-blur="validateAndLoadHeadlineCurrency($event)" data-setting-field="uplineUsername"></st1-headline-suggestion></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-if="isNew"><input type="text" maxlength="30" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.username" data-setting-field="username"></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="30" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'FirstName\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'LastName\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.lastName"></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Phone\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.phone"></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'MobilePhone\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.mobilePhone"></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Fax\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.fax"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
                 this.link = function (scope) {
                     if (scope.isNew) {
                         var requestPath = _this.appConfigService.buildPath(SuperGeneralDataDirective.validatingAndLoadingHeadlineCurrencyPath);
@@ -36797,7 +36810,7 @@ var CustomerSetting;
             function UsernameSuffixGroupDirective(requestService, appConfigService) {
                 var _this = this;
                 this.replace = true;
-                this.template = '<div class="username-selection"><st1-username-suffix data-ng-repeat="suffix in accountDetail.usernameSuffixes track by $index" data-ng-class="{ \'setting-field--first\': $first }" data-suffix-index="$index" data-suffix="suffix" data-validate-username="validateUsername"></st1-username-suffix><span class="icon icon--valid-username" data-ng-if="isChanged && isValid"></span> <span class="icon icon--invalid-username" data-ng-if="isChanged && !isValid"></span></div>';
+                this.template = '<div class="username-selection"><st1-username-suffix data-ng-repeat="suffix in accountDetail.usernameSuffixes track by $index" data-ng-class="{ \'setting-field--first\': $first, \'setting-field--last\': $last }" data-suffix-index="$index" data-suffix="suffix" data-validate-username="validateUsername"></st1-username-suffix><span class="icon icon--valid-username" data-ng-if="isChanged && isValid"></span> <span class="icon icon--invalid-username" data-ng-if="isChanged && !isValid"></span></div>';
                 this.link = function (scope) {
                     scope.selectedSuffixes = scope.accountDetail.usernameSuffixes.slice();
                     scope.accountDetail.username = scope.accountDetail.uplineUsername + scope.selectedSuffixes.join("");
@@ -36878,7 +36891,7 @@ var CustomerSetting;
     (function (SettingType1) {
         var AgentPositionTakingDirective = (function () {
             function AgentPositionTakingDirective() {
-                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name position-taking--has-constraint"><span>{{ptItem.sportTypeName}}</span> <span class="position-taking__constraint-group"><span class="position-taking__constraint">{{\'MinAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.minAllowedPT | formatPercentage}}</span></span> <span class="position-taking__constraint">{{\'MaxAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.maxAllowedPT | formatPercentage}}</span></span></span></div><div data-ng-if="isEditable && isNew"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label><div class="w60-percent" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div><div class="w60-percent" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT"><select class="setting-field setting-field--fullwidth" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"><option>-</option></select></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label><div class="w60-percent" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div><div class="w60-percent" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT"><select class="setting-field setting-field--fullwidth" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"><option>-</option></select></div></div></div><div data-ng-if="isEditable && !isNew"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.currentMasterPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.currentAgentPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div></div></div><div data-ng-if="!isEditable"><div class="row"><label class="w40-percent">{{::(\'MasterPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.masterPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'AgentPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.agentPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div></div>';
+                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name position-taking--has-constraint"><span>{{ptItem.sportTypeName}}</span> <span class="position-taking__constraint-group"><span class="position-taking__constraint">{{\'MinAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.minAllowedPT | formatPercentage}}</span></span> <span class="position-taking__constraint">{{\'MaxAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.maxAllowedPT | formatPercentage}}</span></span></span></div><div data-ng-if="isEditable && isNew"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'MasterPT\' | st1Label)}}</label><div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div><div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT"><select class="setting-field setting-field--fullwidth" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"><option>-</option></select></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'AgentPT\' | st1Label)}}</label><div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div><div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT"><select class="setting-field setting-field--fullwidth" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"><option>-</option></select></div></div></div><div data-ng-if="isEditable && !isNew"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'MasterPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w30-percent">{{ptItem.currentMasterPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'AgentPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w30-percent">{{ptItem.currentAgentPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'MasterPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w30-percent">{{ptItem.masterPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'AgentPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w30-percent">{{ptItem.agentPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div></div></div>';
                 this.replace = true;
             }
             return AgentPositionTakingDirective;
@@ -36893,7 +36906,7 @@ var CustomerSetting;
     (function (SettingType1) {
         var MasterPositionTakingDirective = (function () {
             function MasterPositionTakingDirective() {
-                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name">{{ptItem.sportTypeName}}</div><div class="row" data-ng-if="isEditable && isNew"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superPT" data-min="ptItem.minSuperPT" data-max="ptItem.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superPT\'}}"></percentage-dropdown></div></div><div class="row" data-ng-if="isEditable && !isNew"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.currentSuperPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superPT" data-min="ptItem.minSuperPT" data-max="ptItem.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superPT\'}}"></percentage-dropdown></div></div><div class="row" data-ng-if="!isEditable"><label class="w40-percent">{{::(\'SuperPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.superPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div>';
+                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name">{{ptItem.sportTypeName}}</div><div class="setting-field-group" data-ng-if="isEditable && isNew"><label class="setting-field-group__lbl">{{::(\'SuperPT\' | st1Label)}}</label><div class="setting-field-group__ctrl"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superPT" data-min="ptItem.minSuperPT" data-max="ptItem.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superPT\'}}"></percentage-dropdown></div></div><div class="setting-field-group" data-ng-if="isEditable && !isNew"><label class="setting-field-group__lbl">{{::(\'SuperPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w30-percent">{{ptItem.currentSuperPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superPT" data-min="ptItem.minSuperPT" data-max="ptItem.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superPT\'}}"></percentage-dropdown></div></div></div><div class="setting-field-group" data-ng-if="!isEditable"><label class="setting-field-group__lbl">{{::(\'SuperPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w30-percent">{{ptItem.superPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div></div>';
                 this.replace = true;
             }
             return MasterPositionTakingDirective;
@@ -36908,7 +36921,7 @@ var CustomerSetting;
     (function (SettingType1) {
         var SuperPositionTakingDirective = (function () {
             function SuperPositionTakingDirective() {
-                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name">{{ptItem.sportTypeName}}</div><div data-ng-if="isEditable && isNew"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMinPT" data-min="ptItem.minSuperMinPT" data-max="ptItem.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMinPT\'}}"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="w60-percent"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMaxPT" data-min="ptItem.minSuperMaxPT" data-max="ptItem.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMaxPT\'}}"></percentage-dropdown></div></div></div><div data-ng-if="isEditable && !isNew"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.currentSuperMinPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMinPT" data-min="ptItem.minSuperMinPT" data-max="ptItem.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMinPT\'}}"></percentage-dropdown></div></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.currentSuperMaxPT | formatPercentage}}</label> <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMaxPT" data-min="ptItem.minSuperMaxPT" data-max="ptItem.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMaxPT\'}}"></percentage-dropdown></div></div></div><div data-ng-if="!isEditable"><div class="row"><label class="w40-percent">{{::(\'SuperMinPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.superMinPT | formatPercentage}}</label> <label class="w30-percent">-</label></div><div class="row"><label class="w40-percent">{{::(\'SuperMaxPT\' | st1Label)}}</label> <label class="w30-percent">{{ptItem.superMaxPT | formatPercentage}}</label> <label class="w30-percent">-</label></div></div></div>';
+                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name">{{ptItem.sportTypeName}}</div><div data-ng-if="isEditable && isNew"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="setting-field-group__ctrl"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMinPT" data-min="ptItem.minSuperMinPT" data-max="ptItem.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMinPT\'}}"></percentage-dropdown></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="setting-field-group__ctrl"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMaxPT" data-min="ptItem.minSuperMaxPT" data-max="ptItem.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMaxPT\'}}"></percentage-dropdown></div></div></div><div data-ng-if="isEditable && !isNew"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.currentSuperMinPT | formatPercentage}}</label> <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMinPT" data-min="ptItem.minSuperMinPT" data-max="ptItem.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMinPT\'}}"></percentage-dropdown></div></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.currentSuperMaxPT | formatPercentage}}</label> <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMaxPT" data-min="ptItem.minSuperMaxPT" data-max="ptItem.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMaxPT\'}}"></percentage-dropdown></div></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.superMinPT | formatPercentage}}</label> <label class="w50-percent">-</label></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.superMaxPT | formatPercentage}}</label> <label class="w50-percent">-</label></div></div></div></div>';
                 this.replace = true;
             }
             return SuperPositionTakingDirective;
@@ -37252,7 +37265,7 @@ var CustomerSetting;
             function AccountDetailDirective(resourceService, settingTypesSharedValuesService) {
                 var _this = this;
                 _super.call(this, settingTypesSharedValuesService, null);
-                this.template = '<div class="setting-type-1"><div class="block {{avaiCustomerLevels[actorLevel]}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }" data-setting-field-group="settingType.settingItems[0]" data-resource-service-name="st1ResourceService"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="col" data-ng-if="settingType | validSettingType"><st1-general-data data-account-detail="settingType.settingItems[0]" data-is-editable="isEditable"></st1-general-data></div><div class="col col--last" data-ng-if="settingType | validSettingType"><st1-customer-credit data-account-detail="settingType.settingItems[0]" data-is-editable="isEditable" data-precision="settingType.creditPrecision"></st1-customer-credit><st1-position-taking data-ng-if="isEditable && settingType.settingItems[0].ptItems.length > 0" data-account-detail="settingType.settingItems[0]" data-is-editable="isEditable"></st1-position-taking></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{settingType.settingItems[0].errorMessage}}</div></div></div>';
+                this.template = '<div class="setting-type-1"><div class="block {{avaiCustomerLevels[actorLevel]}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }" data-setting-field-group="settingType.settingItems[0]" data-resource-service-name="st1ResourceService"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="section" data-ng-if="settingType | validSettingType"><st1-general-data data-account-detail="settingType.settingItems[0]" data-is-editable="isEditable"></st1-general-data></div><div class="section section--last" data-ng-if="settingType | validSettingType"><st1-customer-credit data-account-detail="settingType.settingItems[0]" data-is-editable="isEditable" data-precision="settingType.creditPrecision"></st1-customer-credit><st1-position-taking data-ng-if="isEditable && settingType.settingItems[0].ptItems.length > 0" data-account-detail="settingType.settingItems[0]" data-is-editable="isEditable"></st1-position-taking></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{settingType.settingItems[0].errorMessage}}</div></div></div>';
                 this.link = function (scope) {
                     _this.linkInternal(scope);
                     scope.settingTypeName = _this.resourceService.getLabel("AccountDetail");
@@ -37294,7 +37307,7 @@ var CustomerSetting;
             __extends(CustomerCreditDirective, _super);
             function CustomerCreditDirective() {
                 _super.apply(this, arguments);
-                this.template = '<div class="customer-credit"><div class="sub-header">{{::(\'Credit\' | st1Label)}}</div><div data-ng-if="isEditable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'Currency\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.currency.name}}</label></div><div class="row"><label class="w40-percent"><span>{{::(\'Credits\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="text" maxlength="17" class="setting-field setting-field--fullwidth setting-field--number" data-numeric-input="creditPrecision" data-strict-format="true" data-ng-model="accountDetail.credit" data-ng-disabled="!accountDetail.isAllowedUpdateCredit" data-setting-field="credit"></div></div><div class="row" data-ng-if="!isNew"><label class="w40-percent">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="available-credit w60-percent">>= {{accountDetail.minCredit | number:creditPrecision}}</label></div></div><div data-ng-if="customerLevel !== avaiCustomerLevels.super"><div class="row"><label class="w40-percent"><span>{{::(\'Credits\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="w60-percent"><input type="text" maxlength="17" class="setting-field setting-field--fullwidth setting-field--number" data-numeric-input="creditPrecision" data-strict-format="true" data-ng-model="accountDetail.credit" data-ng-disabled="!accountDetail.isAllowedUpdateCredit" data-setting-field="credit"></div></div><div class="row"><label class="w40-percent">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="available-credit w60-percent">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label></div></div></div><div data-ng-if="!isEditable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'Currency\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.currency.name}}</label></div><div class="row"><label class="w40-percent">{{::(\'Credits\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label></div><div class="row"><label class="w40-percent">{{::(\'CreditBalance\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.creditBalance | number:creditPrecision}}</label></div></div><div data-ng-if="customerLevel !== avaiCustomerLevels.super"><div class="row"><label class="w40-percent">{{::(\'Credits\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label></div><div class="row"><label class="w40-percent">{{::(\'CreditBalance\' | st1Label)}}</label> <label class="w60-percent">{{accountDetail.creditBalance | number:creditPrecision}}</label></div></div></div></div>';
+                this.template = '<div class="customer-credit"><div class="sub-header">{{::(\'Credit\' | st1Label)}}</div><div data-ng-if="isEditable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Currency\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.currency.name}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Credits\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="text" maxlength="17" class="setting-field setting-field--fullwidth setting-field--number" data-numeric-input="creditPrecision" data-strict-format="true" data-ng-model="accountDetail.credit" data-ng-disabled="!accountDetail.isAllowedUpdateCredit" data-setting-field="credit"></div></div><div class="setting-field-group available-credit-group" data-ng-if="!isNew"><label class="setting-field-group__lbl">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="available-credit setting-field-group__ctrl">>= {{accountDetail.minCredit | number:creditPrecision}}</label></div></div><div data-ng-if="customerLevel !== avaiCustomerLevels.super"><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Credits\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="text" maxlength="17" class="setting-field setting-field--fullwidth setting-field--number" data-numeric-input="creditPrecision" data-strict-format="true" data-ng-model="accountDetail.credit" data-ng-disabled="!accountDetail.isAllowedUpdateCredit" data-setting-field="credit"></div></div><div class="setting-field-group available-credit-group"><label class="setting-field-group__lbl">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="available-credit setting-field-group__ctrl">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label></div></div></div><div data-ng-if="!isEditable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Currency\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.currency.name}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Credits\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.credit | number:creditPrecision}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'CreditBalance\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.creditBalance | number:creditPrecision}}</label></div></div><div data-ng-if="customerLevel !== avaiCustomerLevels.super"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Credits\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.credit | number:creditPrecision}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'CreditBalance\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.creditBalance | number:creditPrecision}}</label></div></div></div></div>';
             }
             Object.defineProperty(CustomerCreditDirective.prototype, "scope", {
                 get: function () {
@@ -37407,12 +37420,7 @@ var CustomerSetting;
             CommissionAndBetLimitSettingItem.prototype.toJson = function () {
                 var json = _super.prototype.toJson.call(this);
                 if (this.isNew && this.customerLevel === CustomerSetting.Level.member && this.mappedCommissionGroups.length > 0) {
-                    if (this.layoutType === SettingType2.LayoutType.multipleGroups) {
-                        json.commissionGroups = [this.mappedCommissionGroups[this.memberSpreadGroupIndex]];
-                    }
-                    else {
-                        json.commissionGroups = [this.mappedCommissionGroups[0]];
-                    }
+                    json.commissionGroups = [this.mappedCommissionGroups[this.memberSpreadGroupIndex]];
                 }
                 return json;
             };
@@ -37587,7 +37595,6 @@ var CustomerSetting;
                     _this.linkInternal(scope);
                     scope.headerTemplateUrl = "./SettingType2/commission-and-bet-limit-header-template.html";
                     scope.valueTemplateUrl = "./SettingType2/commission-and-bet-limit-value-template.html";
-                    scope.cssClass = "full-width";
                     scope.settingTypeName = _this.resourceService.getLabel("CommissionAndBetLimit");
                     scope.availableLayoutTypes = SettingType2.LayoutType;
                     scope.commissionPrecision = scope.settingType.commissionPrecision;
@@ -37624,7 +37631,9 @@ var CustomerSetting;
                             var memberSelectedSpreadGroupIndex = scope.availableCommissionGroups.indexOf(newMemberGroupName);
                             scope.settingType.settingItems.forEach(function (settingItem) {
                                 var commissionAndBetLimitItem = settingItem;
-                                commissionAndBetLimitItem.memberSpreadGroupIndex = memberSelectedSpreadGroupIndex;
+                                if (commissionAndBetLimitItem.layoutType === SettingType2.LayoutType.multipleGroups) {
+                                    commissionAndBetLimitItem.memberSpreadGroupIndex = memberSelectedSpreadGroupIndex;
+                                }
                             });
                         });
                     }
@@ -37673,8 +37682,8 @@ var CustomerSetting;
 
 angular.module("customerSetting").run(["$templateCache", function($templateCache) {$templateCache.put("./tooltip.html","<div class=\"tooltip tooltip--{{tooltipType}}\" data-ng-show=\"tooltipMessage && beingShowed\"><div class=\"tooltip__content\" data-ng-bind-html=\"tooltipMessage | unsafe\"></div></div>");
 $templateCache.put("./SettingType1/headline-suggestion-item-template.html","<a href=\"#\" data-headline-suggestion-item data-ng-bind-html=\"match.label | uibTypeaheadHighlight:query\" ng-attr-title=\"{{match.label}}\"></a>");
-$templateCache.put("./SettingType2/commission-and-bet-limit-header-template.html","<div class=\"block__lbl\"></div><div class=\"w80-percent\"><div class=\"block__lbl-group w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__lbl\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"item in availableCommissionGroups\">{{item}}</div></div><div class=\"block__lbl-group block__lbl w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member\">{{::(\'MemberCommission\' | st2Label)}}</div><div class=\"block__lbl-group w50-percent\"><div class=\"block__lbl w50-percent\"><span>{{::(\'MaxPerEvent\' | st2Label)}}</span> <span class=\"icon icon--command icon--info icon--margin-left\" data-tooltip=\"{{\'MaxPerEventNote\' | st2Message}}\" data-tooltip-type=\"info\" data-inner-tooltip=\"info\"></span></div><div class=\"block__lbl block__lbl--no-border w50-percent\"><span>{{::(\'MaxBet\' | st2Label)}}</span> <span class=\"icon icon--command icon--info icon--margin-left\" data-tooltip=\"{{\'MaxBetNote\' | st2Message}}\" data-tooltip-type=\"info\" data-inner-tooltip=\"true\"></span></div></div></div>");
-$templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html","<div class=\"block__cell-wrapper\" data-ng-if=\"isEditable\" data-setting-field-group=\"item\" data-resource-service-name=\"st2ResourceService\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups track by $index\"><percentage-dropdown data-ng-if=\"commissionGroup\" data-ng-model=\"commissionGroup.value\" data-setting-field=\"{{\'commissionGroups-\' + $index}}\" data-min=\"commissionGroup.minValue\" data-max=\"commissionGroup.maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell align-center w100-percent\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex]\" data-ng-model=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].value\" data-setting-field=\"{{\'commissionGroups-\' + item.memberSpreadGroupIndex}}\" data-min=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue\" data-max=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\" data-auto-refresh=\"true\"></percentage-dropdown></div><div class=\"block__cell w50-percent align-center\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"block__cell-wrapper w50-percent\"><div class=\"block__cell w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxPerEventConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxPerEvent\" data-setting-field=\"maxPerEvent\"> <span class=\"setting-field--constraint\" data-ng-if=\"customerLevel !== avaiCustomerLevels.super\">&lt;={{item.maxMaxPerEvent | number:betSettingPrecision}}</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && hasMaxPerEventConstraint\">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span></div><div class=\"block__cell block__cell--no-border w50-percent\" data-ng-class=\"{\'align-center\': !hasMaxBetConstraint}\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxBet\" data-setting-field=\"maxBet\"> <span class=\"setting-field--constraint\" data-ng-if=\"customerLevel !== avaiCustomerLevels.super\">&lt;={{item.maxMaxBet | number:betSettingPrecision}}</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && hasMaxBetConstraint\">>={{item.minMaxBet | number:betSettingPrecision}}</span></div></div></div><div class=\"block__cell-wrapper block__cell-wrapper--readonly\" data-ng-if=\"!isEditable\"><div class=\"block__cell-wrapper w50-percent\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__cell align-center\" data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups\">{{commissionGroup.value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center w100-percent\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div></div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.multipleGroups\">{{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell align-center w50-percent\" data-ng-if=\"customerLevel === avaiCustomerLevels.member && item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div><div class=\"w50-percent w50-percent\"><div class=\"block__cell align-center w50-percent\">{{item.maxPerEvent | number:betSettingPrecision}}</div><div class=\"block__cell align-center block__cell--no-border w50-percent\">{{item.maxBet | number:betSettingPrecision}}</div></div></div>");}]);
+$templateCache.put("./SettingType2/commission-and-bet-limit-header-template.html","<div class=\"block__lbl\"></div><div class=\"block__lbl-group w80-percent\"><div class=\"block__lbl-sub-group\" data-ng-class=\"{ \'w30-percent\': isMobileView, \'w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__lbl\" data-ng-if=\"!isMobileView\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"item in availableCommissionGroups\">{{item}}</div><div class=\"block__lbl w100-percent\" data-ng-if=\"isMobileView\">{{::(\'Commission\' | st2Label)}}</div></div><div class=\"block__lbl-sub-group block__lbl\" data-ng-class=\"{ \'w30-percent\': isMobileView, \'w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel === avaiCustomerLevels.member\">{{::(\'MemberCommission\' | st2Label)}}</div><div class=\"block__lbl-sub-group\" data-ng-class=\"{ \'w70-percent\': isMobileView, \'w50-percent\': !isMobileView }\"><div class=\"block__lbl w50-percent\"><span>{{::(\'MaxPerEvent\' | st2Label)}}</span> <span class=\"icon icon--command icon--info icon--margin-left\" data-tooltip=\"{{\'MaxPerEventNote\' | st2Message}}\" data-tooltip-type=\"info\" data-inner-tooltip=\"info\"></span></div><div class=\"block__lbl block__lbl--no-border w50-percent\"><span>{{::(\'MaxBet\' | st2Label)}}</span> <span class=\"icon icon--command icon--info icon--margin-left\" data-tooltip=\"{{\'MaxBetNote\' | st2Message}}\" data-tooltip-type=\"info\" data-inner-tooltip=\"true\"></span></div></div></div>");
+$templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html","<div class=\"block__cell-group\" data-ng-if=\"isEditable\" data-setting-field-group=\"item\" data-resource-service-name=\"st2ResourceService\"><div data-ng-class=\"{ \'block__cell align-center w30-percent\': isMobileView, \'block__cell-sub-group w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-class=\"{ \'commission-group\': isMobileView, \'block__cell align-center\': !isMobileView }\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups track by $index\"><label class=\"commission-group__lbl\" data-ng-if=\"isMobileView && commissionGroup.name\">{{commissionGroup.name}}</label><percentage-dropdown data-ng-class=\"{ \'commission-group__value\': isMobileView }\" data-ng-if=\"commissionGroup\" data-ng-model=\"commissionGroup.value\" data-setting-field=\"{{\'commissionGroups-\' + $index}}\" data-min=\"commissionGroup.minValue\" data-max=\"commissionGroup.maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"w100-percent\" data-ng-class=\"{ \'block__cell align-center\': !isMobileView }\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-class=\"{ \'commission-group__value--full-width\': isMobileView }\" data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div></div><div class=\"block__cell align-center\" data-ng-class=\"{ \'w30-percent\': isMobileView, \'w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel === avaiCustomerLevels.member\"><percentage-dropdown data-ng-class=\"{ \'commission-group__value--full-width\': isMobileView }\" data-ng-if=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex]\" data-ng-model=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].value\" data-setting-field=\"{{\'commissionGroups-\' + item.memberSpreadGroupIndex}}\" data-min=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue\" data-max=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\" data-auto-refresh=\"true\"></percentage-dropdown></div><div class=\"block__cell-sub-group\" data-ng-class=\"{ \'w70-percent\': isMobileView, \'w50-percent\': !isMobileView }\"><div class=\"block__cell w50-percent\" data-ng-class=\"{ \'align-center\': !hasMaxPerEventConstraint || isMobileView }\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxPerEvent\" data-setting-field=\"maxPerEvent\"> <span class=\"setting-field--constraint\" data-ng-if=\"customerLevel !== avaiCustomerLevels.super\">&lt;={{item.maxMaxPerEvent | number:betSettingPrecision}}</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && hasMaxPerEventConstraint\">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span></div><div class=\"block__cell block__cell--no-border w50-percent\" data-ng-class=\"{ \'align-center\': !hasMaxBetConstraint || isMobileView }\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxBet\" data-setting-field=\"maxBet\"> <span class=\"setting-field--constraint\" data-ng-if=\"customerLevel !== avaiCustomerLevels.super\">&lt;={{item.maxMaxBet | number:betSettingPrecision}}</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && hasMaxBetConstraint\">>={{item.minMaxBet | number:betSettingPrecision}}</span></div></div></div><div class=\"block__cell-group block__cell-group--readonly\" data-ng-if=\"!isEditable\"><div data-ng-class=\"{ \'block__cell w30-percent\': isMobileView, \'block__cell-sub-group w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-class=\"{ \'commission-group\': isMobileView, \'block__cell align-center\': !isMobileView }\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups\"><label class=\"commission-group__lbl\" data-ng-if=\"isMobileView && commissionGroup.name\">{{commissionGroup.name}}</label> <label class=\"commission-group__value\">{{commissionGroup.value | formatPercentage:commissionPrecision}}</label></div><div class=\"align-center w100-percent\" data-ng-class=\"{ \'block__cell\': !isMobileView }\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div></div><div class=\"block__cell align-center\" data-ng-class=\"{ \'w30-percent\': isMobileView, \'w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel === avaiCustomerLevels.member\">{{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell-sub-group\" data-ng-class=\"{ \'w70-percent\': isMobileView, \'w50-percent\': !isMobileView }\"><div class=\"block__cell align-center w50-percent\">{{item.maxPerEvent | number:betSettingPrecision}}</div><div class=\"block__cell align-center block__cell--no-border w50-percent\">{{item.maxBet | number:betSettingPrecision}}</div></div></div>");}]);
 /*jshint -W101,-W106,-W044,-W098*/
 
 (function () {
@@ -37904,21 +37913,24 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "CommissionAndBetLimit": "Commission & Bet Limit",
         "MaxBet": "Max per Bet",
         "MaxPerEvent": "Max per Event",
-        "MemberCommission": "Member Commission"
+        "MemberCommission": "Member Commission",
+        "Commission": "Commission"
     };
 
     labels["zh-hans"] = {
         "CommissionAndBetLimit": "退水和限额",
         "MaxBet": "单注最高",
         "MaxPerEvent": "单场最高",
-        "MemberCommission": "会员退水设定"
+        "MemberCommission": "会员退水设定",
+        "Commission": "退水设定"
     };
 
     labels["zh-tw"] = {
         "CommissionAndBetLimit": "退水和限額",
         "MaxBet": "單注最高",
         "MaxPerEvent": "單場最高",
-        "MemberCommission": "會員退水設定"
+        "MemberCommission": "會員退水設定",
+        "Commission": "退水設定"
     };
 
     var messages = {};

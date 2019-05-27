@@ -1,0 +1,92 @@
+﻿@import "./Compass/_compass";
+@import "_mixins";
+@import "_variables";
+
+$mobile-base-font-root: 10.5px;
+$input-font-size: 16px;
+$block-header-color: #852423;
+
+.mobile-view {
+    body {
+        font-size: $mobile-base-font-root;
+        padding-top: 0;
+    }
+
+    input,
+    optgroup,
+    select,
+    textarea {
+        font-size: $input-font-size;
+    }
+
+    .setting-field {
+        &--has-constraint, &--constraint {
+            width: 100%;
+        }
+
+        &--constraint {
+            margin-top: 5px;
+            text-align: right;
+        }
+    }
+
+    .block {
+        @include clearfix();
+
+        &__header {
+            color: $block-header-color;
+            font-weight: bold;
+            padding-left: 10px;
+            text-transform: uppercase;
+        }
+
+        &__sub-header {
+            font-weight: bold;
+            padding: 0 5px;
+        }
+
+        &__content {
+            margin: 5px 10px;
+        }
+
+        &__cell {
+            flex-direction: column;
+        }
+
+        &__lbl, &__value {
+            flex-direction: initial;
+        }
+    }
+
+    .btn-container {
+        @include flexbox();
+        background: $default-background-color;
+        bottom: 0;
+        flex-direction: column-reverse;
+        left: 0;
+        margin: 0;
+        padding: 12px 5px;
+        position: sticky;
+        position: -webkit-sticky;
+        right: 0;
+        z-index: 2;
+
+        .btn {
+            box-shadow: none;
+            margin: 0 0 16px;
+            width: 100%;
+
+            &--cancel {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .msg__content {
+        padding-top: $font-size-root - $mobile-base-font-root;
+    }
+
+    .tooltip__content {
+        text-transform: initial;
+    }
+}

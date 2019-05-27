@@ -9,11 +9,11 @@
              data-ng-class="{ 'block__header--error': !(settingType | validSettingType) }">
             {{settingTypeName}}
         </div>
-        <div class="col" data-ng-if="settingType | validSettingType">
+        <div class="section" data-ng-if="settingType | validSettingType">
             <st1-general-data data-account-detail="settingType.settingItems[0]"
                               data-is-editable="isEditable"></st1-general-data>
         </div>
-        <div class="col col--last" data-ng-if="settingType | validSettingType">
+        <div class="section section--last" data-ng-if="settingType | validSettingType">
             <st1-customer-credit data-account-detail="settingType.settingItems[0]"
                                  data-is-editable="isEditable"
                                  data-precision="settingType.creditPrecision"></st1-customer-credit>

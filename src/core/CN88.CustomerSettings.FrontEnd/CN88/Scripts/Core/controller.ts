@@ -27,6 +27,8 @@ namespace CustomerSetting {
             "settingTypesSharedValuesService"];
 
         public systemId: number;
+        public isMobileView: boolean;
+        public isEditForm: boolean;
         public setting: Setting;
         public warningMessages: Result | UpdatingSettingResult;
         public requestMsgResult: Result | UpdatingSettingResult;
@@ -82,6 +84,8 @@ namespace CustomerSetting {
             /* tslint:enable:no-string-literal */
 
             this.systemId = this.parametersService.systemId;
+            this.isMobileView = this.parametersService.isMobileView;
+            this.isEditForm = !this.parametersService.isNew;
             this.requestService.registerSharedScope(this);
 
             angular.element(this.$window.document).ready(() => {
@@ -94,9 +98,9 @@ namespace CustomerSetting {
         }
 
         public update(callback: ISuccessfulUpdatingCallback = this.updateCallback): void {
-            var changedSettings: Setting = this.settingTypesSharedValuesService.isNew ? this.setting.getEditableSettings() : this.setting.getChanges();
+            var changedSettings: Setting = this.parametersService.isNew ? this.setting.getEditableSettings() : this.setting.getChanges();
             var command: SettingCommand;
-            var path: string = this.settingTypesSharedValuesService.isNew
+            var path: string = this.parametersService.isNew
                 ? this.appConfigService.getCreatePath()
                 : this.appConfigService.getUpdatePath();
 

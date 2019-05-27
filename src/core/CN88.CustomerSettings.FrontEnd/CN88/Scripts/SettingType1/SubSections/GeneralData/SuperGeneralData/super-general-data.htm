@@ -1,38 +1,38 @@
 ﻿<div>
     <div data-ng-if="isEditable">
-        <div class="row">
-            <label class="w40-percent">
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">
                 <span>{{::('Headline' | st1Label)}}</span>
                 <span class="required-field-mark" data-ng-if="isNew"> *</span>
             </label>
-            <div class="dropdown-container w60-percent" data-ng-if="isNew">
+            <div class="dropdown-container setting-field-group__ctrl" data-ng-if="isNew">
                 <st1-headline-suggestion class="setting-field setting-field--fullwidth"
                                          data-ng-model="accountDetail.uplineUsername"
                                          data-ng-blur="validateAndLoadHeadlineCurrency($event)"
                                          data-setting-field="uplineUsername" />
             </div>
-            <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.uplineUsername}}</label>
+            <label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.uplineUsername}}</label>
         </div>
-        <div class="row">
-            <label class="w40-percent">
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">
                 <span>{{::('Username' | st1Label)}}</span>
                 <span class="required-field-mark" data-ng-if="isNew"> *</span>
             </label>
-            <div class="w60-percent" data-ng-if="isNew">
+            <div class="setting-field-group__ctrl" data-ng-if="isNew">
                 <input type="text"
                        maxlength="30"
                        class="setting-field setting-field--fullwidth"
                        data-ng-model="accountDetail.username"
                        data-setting-field="username" />
             </div>
-            <label class="w60-percent" data-ng-if="!isNew">{{accountDetail.username}}</label>
+            <label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label>
         </div>
-        <div class="row" data-ng-if="isNew">
-            <label class="w40-percent">
+        <div class="setting-field-group" data-ng-if="isNew">
+            <label class="setting-field-group__lbl">
                 <span>{{::('Password' | st1Label)}}</span>
                 <span class="required-field-mark"> *</span>
             </label>
-            <div class="w60-percent">
+            <div class="setting-field-group__ctrl">
                 <input type="password"
                        maxlength="30"
                        class="setting-field setting-field--fullwidth"
@@ -40,45 +40,45 @@
                        data-setting-field="password" />
             </div>
         </div>
-        <div class="row">
-            <label class="w40-percent">{{::('FirstName' | st1Label)}}</label>
-            <div class="w60-percent">
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('FirstName' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl">
                 <input type="text"
                        maxlength="50"
                        class="setting-field setting-field--fullwidth"
                        data-ng-model="accountDetail.firstName" />
             </div>
         </div>
-        <div class="row">
-            <label class="w40-percent">{{::('LastName' | st1Label)}}</label>
-            <div class="w60-percent">
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('LastName' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl">
                 <input type="text"
                        maxlength="50"
                        class="setting-field setting-field--fullwidth"
                        data-ng-model="accountDetail.lastName" />
             </div>
         </div>
-        <div class="row">
-            <label class="w40-percent">{{::('Phone' | st1Label)}}</label>
-            <div class="w60-percent">
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('Phone' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl">
                 <input type="text"
                        maxlength="50"
                        class="setting-field setting-field--fullwidth"
                        data-ng-model="accountDetail.phone" />
             </div>
         </div>
-        <div class="row">
-            <label class="w40-percent">{{::('MobilePhone' | st1Label)}}</label>
-            <div class="w60-percent">
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('MobilePhone' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl">
                 <input type="text"
                        maxlength="50"
                        class="setting-field setting-field--fullwidth"
                        data-ng-model="accountDetail.mobilePhone" />
             </div>
         </div>
-        <div class="row">
-            <label class="w40-percent">{{::('Fax' | st1Label)}}</label>
-            <div class="w60-percent">
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('Fax' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl">
                 <input type="text"
                        maxlength="50"
                        class="setting-field setting-field--fullwidth"
@@ -87,9 +87,9 @@
         </div>
     </div>
     <div data-ng-if="!isEditable">
-        <div class="row">
-            <label class="w40-percent">{{::('Username' | st1Label)}}</label>
-            <label class="w60-percent">{{accountDetail.username}}</label>
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('Username' | st1Label)}}</label>
+            <label class="setting-field-group__ctrl">{{accountDetail.username}}</label>
         </div>
     </div>
 </div>

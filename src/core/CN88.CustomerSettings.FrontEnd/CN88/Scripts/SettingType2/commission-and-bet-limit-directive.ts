@@ -38,7 +38,6 @@ namespace CustomerSetting.SettingType2 {
 
             scope.headerTemplateUrl = "./SettingType2/commission-and-bet-limit-header-template.html";
             scope.valueTemplateUrl = "./SettingType2/commission-and-bet-limit-value-template.html";
-            scope.cssClass = "full-width";
             scope.settingTypeName = this.resourceService.getLabel("CommissionAndBetLimit");
             scope.availableLayoutTypes = LayoutType;
             scope.commissionPrecision = (<CommissionAndBetLimitSettingType>scope.settingType).commissionPrecision;
@@ -84,7 +83,9 @@ namespace CustomerSetting.SettingType2 {
                     scope.settingType.settingItems.forEach((settingItem: ISettingItem) => {
                         var commissionAndBetLimitItem: CommissionAndBetLimitSettingItem = <CommissionAndBetLimitSettingItem>settingItem;
 
-                        commissionAndBetLimitItem.memberSpreadGroupIndex = memberSelectedSpreadGroupIndex;
+                        if (commissionAndBetLimitItem.layoutType === LayoutType.multipleGroups) {
+                            commissionAndBetLimitItem.memberSpreadGroupIndex = memberSelectedSpreadGroupIndex;
+                        }
                     });
                 });
             }

@@ -2,16 +2,16 @@
     <div class="sub-header">{{::('Credit' | st1Label)}}</div>
     <div data-ng-if="isEditable">
         <div data-ng-if="customerLevel === avaiCustomerLevels.super">
-            <div class="row">
-                <label class="w40-percent">{{::('Currency' | st1Label)}}</label>
-                <label class="w60-percent">{{accountDetail.currency.name}}</label>
+            <div class="setting-field-group">
+                <label class="setting-field-group__lbl">{{::('Currency' | st1Label)}}</label>
+                <label class="setting-field-group__ctrl">{{accountDetail.currency.name}}</label>
             </div>
-            <div class="row">
-                <label class="w40-percent">
+            <div class="setting-field-group">
+                <label class="setting-field-group__lbl">
                     <span>{{::('Credits' | st1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
-                <div class="w60-percent">
+                <div class="setting-field-group__ctrl">
                     <input type="text"
                            maxlength="17"
                            class="setting-field setting-field--fullwidth setting-field--number"
@@ -22,18 +22,18 @@
                            data-setting-field="credit" />
                 </div>
             </div>
-            <div class="row" data-ng-if="!isNew">
-                <label class="w40-percent">{{::('AvailableCreditRange' | st1Label)}}</label>
-                <label class="available-credit w60-percent">>= {{accountDetail.minCredit | number:creditPrecision}}</label>
+            <div class="setting-field-group available-credit-group" data-ng-if="!isNew">
+                <label class="setting-field-group__lbl">{{::('AvailableCreditRange' | st1Label)}}</label>
+                <label class="available-credit setting-field-group__ctrl">>= {{accountDetail.minCredit | number:creditPrecision}}</label>
             </div>
         </div>
         <div data-ng-if="customerLevel !== avaiCustomerLevels.super">
-            <div class="row">
-                <label class="w40-percent">
+            <div class="setting-field-group">
+                <label class="setting-field-group__lbl">
                     <span>{{::('Credits' | st1Label)}}</span>
                     <span class="required-field-mark"> *</span>
                 </label>
-                <div class="w60-percent">
+                <div class="setting-field-group__ctrl">
                     <input type="text"
                            maxlength="17"
                            class="setting-field setting-field--fullwidth setting-field--number"
@@ -44,35 +44,35 @@
                            data-setting-field="credit" />
                 </div>
             </div>
-            <div class="row">
-                <label class="w40-percent">{{::('AvailableCreditRange' | st1Label)}}</label>
-                <label class="available-credit w60-percent">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label>
+            <div class="setting-field-group available-credit-group">
+                <label class="setting-field-group__lbl">{{::('AvailableCreditRange' | st1Label)}}</label>
+                <label class="available-credit setting-field-group__ctrl">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label>
             </div>
         </div>
     </div>
     <div data-ng-if="!isEditable">
         <div data-ng-if="customerLevel === avaiCustomerLevels.super">
-            <div class="row">
-                <label class="w40-percent">{{::('Currency' | st1Label)}}</label>
-                <label class="w60-percent">{{accountDetail.currency.name}}</label>
+            <div class="setting-field-group">
+                <label class="setting-field-group__lbl">{{::('Currency' | st1Label)}}</label>
+                <label class="setting-field-group__ctrl">{{accountDetail.currency.name}}</label>
             </div>
-            <div class="row">
-                <label class="w40-percent">{{::('Credits' | st1Label)}}</label>
-                <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label>
+            <div class="setting-field-group">
+                <label class="setting-field-group__lbl">{{::('Credits' | st1Label)}}</label>
+                <label class="setting-field-group__ctrl">{{accountDetail.credit | number:creditPrecision}}</label>
             </div>
-            <div class="row">
-                <label class="w40-percent">{{::('CreditBalance' | st1Label)}}</label>
-                <label class="w60-percent">{{accountDetail.creditBalance | number:creditPrecision}}</label>
+            <div class="setting-field-group">
+                <label class="setting-field-group__lbl">{{::('CreditBalance' | st1Label)}}</label>
+                <label class="setting-field-group__ctrl">{{accountDetail.creditBalance | number:creditPrecision}}</label>
             </div>
         </div>
         <div data-ng-if="customerLevel !== avaiCustomerLevels.super">
-            <div class="row">
-                <label class="w40-percent">{{::('Credits' | st1Label)}}</label>
-                <label class="w60-percent">{{accountDetail.credit | number:creditPrecision}}</label>
+            <div class="setting-field-group">
+                <label class="setting-field-group__lbl">{{::('Credits' | st1Label)}}</label>
+                <label class="setting-field-group__ctrl">{{accountDetail.credit | number:creditPrecision}}</label>
             </div>
-            <div class="row">
-                <label class="w40-percent">{{::('CreditBalance' | st1Label)}}</label>
-                <label class="w60-percent">{{accountDetail.creditBalance | number:creditPrecision}}</label>
+            <div class="setting-field-group">
+                <label class="setting-field-group__lbl">{{::('CreditBalance' | st1Label)}}</label>
+                <label class="setting-field-group__ctrl">{{accountDetail.creditBalance | number:creditPrecision}}</label>
             </div>
         </div>
     </div>

@@ -1,5 +1,7 @@
 ﻿<!DOCTYPE html>
-<html data-ng-app="customerSetting">
+<html data-ng-app="customerSetting"
+      data-ng-controller="customerSettingController as ctrl"
+      data-ng-class="{ 'mobile-view': ctrl.isMobileView }">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
@@ -9,8 +11,7 @@
 </head>
 <body data-ng-cloak>
     <block-ui></block-ui>
-    <div data-ng-controller="customerSettingController as ctrl"
-         class="system-{{ctrl.systemId}}">
+    <div class="system-{{ctrl.systemId}}">
         <div class="msg-container" data-ng-show="ctrl.warningMessages || ctrl.requestMsgResult">
             <setting-result data-result="ctrl.warningMessages"></setting-result>
             <setting-result data-result="ctrl.requestMsgResult"></setting-result>

@@ -10,21 +10,17 @@
     }
 }
 
-@mixin col($width: 20%, $important: false) {
-    @extend %col;
-
-    @if ($important) {
-        width: $width !important;
-    }
-    @else {
-        width: $width;
-    }
-}
-
 @mixin clearfix() {
     &:after {
         display: block;
         content: "";
         clear: both;
     }
+}
+
+@mixin flexbox() {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
 }

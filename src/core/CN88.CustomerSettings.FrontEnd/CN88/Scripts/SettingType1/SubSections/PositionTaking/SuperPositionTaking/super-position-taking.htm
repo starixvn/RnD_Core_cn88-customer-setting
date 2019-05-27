@@ -1,9 +1,9 @@
 ﻿<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index">
     <div class="position-taking__group-name">{{ptItem.sportTypeName}}</div>
     <div data-ng-if="isEditable && isNew">
-        <div class="row">
-            <label class="w40-percent">{{::('SuperMinPT' | st1Label)}}</label>
-            <div class="w60-percent">
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('SuperMinPT' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl">
                 <percentage-dropdown class="setting-field--fullwidth"
                                      data-ng-model="ptItem.superMinPT"
                                      data-min="ptItem.minSuperMinPT"
@@ -12,9 +12,9 @@
                                      data-setting-field="{{'ptItems-' + $index + '-superMinPT'}}"></percentage-dropdown>
             </div>
         </div>
-        <div class="row">
-            <label class="w40-percent">{{::('SuperMaxPT' | st1Label)}}</label>
-            <div class="w60-percent">
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('SuperMaxPT' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl">
                 <percentage-dropdown class="setting-field--fullwidth"
                                      data-ng-model="ptItem.superMaxPT"
                                      data-min="ptItem.minSuperMaxPT"
@@ -25,43 +25,51 @@
         </div>
     </div>
     <div data-ng-if="isEditable && !isNew">
-        <div class="row">
-            <label class="w40-percent">{{::('SuperMinPT' | st1Label)}}</label>
-            <label class="w30-percent">{{ptItem.currentSuperMinPT | formatPercentage}}</label>
-            <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label>
-            <div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly">
-                <percentage-dropdown class="setting-field--fullwidth"
-                                     data-ng-model="ptItem.superMinPT"
-                                     data-min="ptItem.minSuperMinPT"
-                                     data-max="ptItem.maxSuperMinPT"
-                                     data-step="accountDetail.intervalValue"
-                                     data-setting-field="{{'ptItems-' + $index + '-superMinPT'}}"></percentage-dropdown>
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('SuperMinPT' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl horizontal-stretch">
+                <label class="w50-percent">{{ptItem.currentSuperMinPT | formatPercentage}}</label>
+                <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label>
+                <div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly">
+                    <percentage-dropdown class="setting-field--fullwidth"
+                                         data-ng-model="ptItem.superMinPT"
+                                         data-min="ptItem.minSuperMinPT"
+                                         data-max="ptItem.maxSuperMinPT"
+                                         data-step="accountDetail.intervalValue"
+                                         data-setting-field="{{'ptItems-' + $index + '-superMinPT'}}"></percentage-dropdown>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <label class="w40-percent">{{::('SuperMaxPT' | st1Label)}}</label>
-            <label class="w30-percent">{{ptItem.currentSuperMaxPT | formatPercentage}}</label>
-            <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label>
-            <div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly">
-                <percentage-dropdown class="setting-field--fullwidth"
-                                     data-ng-model="ptItem.superMaxPT"
-                                     data-min="ptItem.minSuperMaxPT"
-                                     data-max="ptItem.maxSuperMaxPT"
-                                     data-step="accountDetail.intervalValue"
-                                     data-setting-field="{{'ptItems-' + $index + '-superMaxPT'}}"></percentage-dropdown>
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('SuperMaxPT' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl horizontal-stretch">
+                <label class="w50-percent">{{ptItem.currentSuperMaxPT | formatPercentage}}</label>
+                <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label>
+                <div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly">
+                    <percentage-dropdown class="setting-field--fullwidth"
+                                         data-ng-model="ptItem.superMaxPT"
+                                         data-min="ptItem.minSuperMaxPT"
+                                         data-max="ptItem.maxSuperMaxPT"
+                                         data-step="accountDetail.intervalValue"
+                                         data-setting-field="{{'ptItems-' + $index + '-superMaxPT'}}"></percentage-dropdown>
+                </div>
             </div>
         </div>
     </div>
     <div data-ng-if="!isEditable">
-        <div class="row">
-            <label class="w40-percent">{{::('SuperMinPT' | st1Label)}}</label>
-            <label class="w30-percent">{{ptItem.superMinPT | formatPercentage}}</label>
-            <label class="w30-percent">-</label>
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('SuperMinPT' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl horizontal-stretch">
+                <label class="w50-percent">{{ptItem.superMinPT | formatPercentage}}</label>
+                <label class="w50-percent">-</label>
+            </div>
         </div>
-        <div class="row">
-            <label class="w40-percent">{{::('SuperMaxPT' | st1Label)}}</label>
-            <label class="w30-percent">{{ptItem.superMaxPT | formatPercentage}}</label>
-            <label class="w30-percent">-</label>
+        <div class="setting-field-group">
+            <label class="setting-field-group__lbl">{{::('SuperMaxPT' | st1Label)}}</label>
+            <div class="setting-field-group__ctrl horizontal-stretch">
+                <label class="w50-percent">{{ptItem.superMaxPT | formatPercentage}}</label>
+                <label class="w50-percent">-</label>
+            </div>
         </div>
     </div>
 </div>
