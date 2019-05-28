@@ -1,6 +1,7 @@
 ﻿namespace CN88.CustomerSetting.Client.Models
 {
     using System.Collections.Generic;
+    using CN88.CustomerSetting.Client.Helpers;
 
     public class SettingFormQuery
     {
@@ -24,6 +25,8 @@
 
         public byte ActorLevel { get; set; }
 
+        public BrowserInfo BrowserInfo { get; set; }
+
         internal string ToJson()
         {
             var properties = new List<string>();
@@ -39,7 +42,11 @@
             properties.Add(string.Format("\"isCreateNew\": {0},", IsCreateNew.ToString().ToLowerInvariant()));
             properties.Add(string.Format("\"editable\": {0},", (!IsReadOnly).ToString().ToLowerInvariant()));
 
-            properties.Add(string.Format("\"customerId\": {0}", CustomerId.HasValue ? CustomerId.Value : 0));
+            properties.Add(string.Format("\"customerId\": {0},", CustomerId.HasValue ? CustomerId.Value : 0));
+
+            properties.Add(string.Format("\"isMobile\": {0},", BrowserInfo.IsMobile.ToString().ToLowerInvariant()));
+            properties.Add(string.Format("\"isPhone\": {0},", BrowserInfo.IsPhone.ToString().ToLowerInvariant()));
+            properties.Add(string.Format("\"isTablet\": {0}", BrowserInfo.IsTablet.ToString().ToLowerInvariant()));
 
             properties.Add("}");
 

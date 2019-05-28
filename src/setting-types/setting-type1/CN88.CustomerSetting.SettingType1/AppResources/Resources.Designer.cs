@@ -403,6 +403,15 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You cannot do this action because this account&apos;&apos;s upline is not active..
+        /// </summary>
+        internal static string Msg_40043 {
+            get {
+                return ResourceManager.GetString("Msg_40043", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Insufficient credit..
         /// </summary>
         internal static string Msg_70024 {

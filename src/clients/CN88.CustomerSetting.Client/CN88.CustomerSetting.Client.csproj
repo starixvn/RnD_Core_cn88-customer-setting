@@ -83,6 +83,7 @@
     <Compile Include="Controllers\ViewCN88CustomerSettingController.cs" />
     <Compile Include="CN88CustomerSettingRegistration.cs" />
     <Compile Include="Exceptions\CustomerSettingException.cs" />
+    <Compile Include="Helpers\BrowserHelper.cs" />
     <Compile Include="Helpers\HmacAuthenticator.cs" />
     <Compile Include="Helpers\IPHelper.cs" />
     <Compile Include="Helpers\RandomHelper.cs" />

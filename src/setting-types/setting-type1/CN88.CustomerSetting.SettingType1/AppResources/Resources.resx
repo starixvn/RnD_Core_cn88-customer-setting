@@ -286,4 +286,7 @@ Notes: your password is cAsE sEnSiTiVe</value>
   <data name="Msg_20041" xml:space="preserve">
     <value>Invalid possess.</value>
   </data>
+  <data name="Msg_40043" xml:space="preserve">
+    <value>You cannot do this action because this account''s upline is not active.</value>
+  </data>
 </root>
