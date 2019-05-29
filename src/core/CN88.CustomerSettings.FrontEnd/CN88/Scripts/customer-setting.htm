@@ -4,12 +4,12 @@
       data-ng-class="{ 'mobile-view': ctrl.isMobileView }">
 <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
     <title></title>
     <link rel="stylesheet" type="text/css" href="{{cdnUri}}/styles/customer-setting.min.css?v={{version}}" />
     <link rel="stylesheet" type="text/css" href="{{customCss}}" />
 </head>
-<body data-ng-cloak>
+<body data-ng-cloak onclick="">
     <block-ui></block-ui>
     <div class="system-{{ctrl.systemId}}">
         <div class="msg-container" data-ng-show="ctrl.warningMessages || ctrl.requestMsgResult">

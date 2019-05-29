@@ -2,7 +2,7 @@
      data-ng-if="isEditable"
      data-setting-field-group="item"
      data-resource-service-name="st2ResourceService">
-    <div data-ng-class="{ 'block__cell align-center w30-percent': isMobileView, 'block__cell-sub-group w50-percent': !isMobileView }"
+    <div data-ng-class="{ 'block__cell align-center w33-percent': isMobileView, 'block__cell-sub-group w50-percent': !isMobileView }"
          data-ng-if="customerLevel !== avaiCustomerLevels.member">
         <div data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
              data-ng-style="eachGroupStyle"
@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="block__cell align-center"
-         data-ng-class="{ 'w30-percent': isMobileView, 'w50-percent': !isMobileView }"
+         data-ng-class="{ 'w33-percent': isMobileView, 'w50-percent': !isMobileView }"
          data-ng-if="customerLevel === avaiCustomerLevels.member">
         <percentage-dropdown data-ng-class="{ 'commission-group__value--full-width': isMobileView }"
                              data-ng-if="item.mappedCommissionGroups[item.memberSpreadGroupIndex]"
@@ -44,7 +44,7 @@
                              data-precision="commissionPrecision"
                              data-auto-refresh="true"></percentage-dropdown>
     </div>
-    <div class="block__cell-sub-group" data-ng-class="{ 'w70-percent': isMobileView, 'w50-percent': !isMobileView }">
+    <div class="block__cell-sub-group" data-ng-class="{ 'w67-percent': isMobileView, 'w50-percent': !isMobileView }">
         <div class="block__cell w50-percent"
              data-ng-class="{ 'align-center': !hasMaxPerEventConstraint || isMobileView }">
             <input type="text"
@@ -70,7 +70,7 @@
     </div>
 </div>
 <div class="block__cell-group block__cell-group--readonly" data-ng-if="!isEditable">
-    <div data-ng-class="{ 'block__cell w30-percent': isMobileView, 'block__cell-sub-group w50-percent': !isMobileView }"
+    <div data-ng-class="{ 'block__cell align-center w33-percent': isMobileView, 'block__cell-sub-group w50-percent': !isMobileView }"
          data-ng-if="customerLevel !== avaiCustomerLevels.member">
         <div data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
              data-ng-style="eachGroupStyle"
@@ -79,18 +79,18 @@
             <label class="commission-group__lbl" data-ng-if="isMobileView && commissionGroup.name">{{commissionGroup.name}}</label>
             <label class="commission-group__value">{{commissionGroup.value | formatPercentage:commissionPrecision}}</label>
         </div>
-        <div class="align-center w100-percent"
+        <div class="w100-percent"
              data-ng-class="{ 'block__cell': !isMobileView }"
              data-ng-if="item.layoutType === availableLayoutTypes.singleGroup">
             {{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}
         </div>
     </div>
     <div class="block__cell align-center"
-         data-ng-class="{ 'w30-percent': isMobileView, 'w50-percent': !isMobileView }"
+         data-ng-class="{ 'w33-percent': isMobileView, 'w50-percent': !isMobileView }"
          data-ng-if="customerLevel === avaiCustomerLevels.member">
         {{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}
     </div>
-    <div class="block__cell-sub-group" data-ng-class="{ 'w70-percent': isMobileView, 'w50-percent': !isMobileView }">
+    <div class="block__cell-sub-group" data-ng-class="{ 'w67-percent': isMobileView, 'w50-percent': !isMobileView }">
         <div class="block__cell align-center w50-percent">{{item.maxPerEvent | number:betSettingPrecision}}</div>
         <div class="block__cell align-center block__cell--no-border w50-percent">{{item.maxBet | number:betSettingPrecision}}</div>
     </div>

@@ -1,7 +1,7 @@
 ﻿<div class="block__lbl"></div>
 <div class="block__lbl-group w80-percent">
     <div class="block__lbl-sub-group"
-         data-ng-class="{ 'w30-percent': isMobileView, 'w50-percent': !isMobileView }"
+         data-ng-class="{ 'w33-percent': isMobileView, 'w50-percent': !isMobileView }"
          data-ng-if="customerLevel !== avaiCustomerLevels.member">
         <div class="block__lbl"
              data-ng-if="!isMobileView"
@@ -10,10 +10,10 @@
         <div class="block__lbl w100-percent" data-ng-if="isMobileView">{{::('Commission' | st2Label)}}</div>
     </div>
     <div class="block__lbl-sub-group block__lbl"
-         data-ng-class="{ 'w30-percent': isMobileView, 'w50-percent': !isMobileView }"
+         data-ng-class="{ 'w33-percent': isMobileView, 'w50-percent': !isMobileView }"
          data-ng-if="customerLevel === avaiCustomerLevels.member">{{::('MemberCommission' | st2Label)}}</div>
     <div class="block__lbl-sub-group"
-         data-ng-class="{ 'w70-percent': isMobileView, 'w50-percent': !isMobileView }">
+         data-ng-class="{ 'w67-percent': isMobileView, 'w50-percent': !isMobileView }">
         <div class="block__lbl w50-percent">
             <span>{{::('MaxPerEvent' | st2Label)}}</span>
             <span class="icon icon--command icon--info icon--margin-left"

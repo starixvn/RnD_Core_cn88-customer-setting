@@ -8,7 +8,7 @@
 
 .setting-field {
     @include border($color: $field-border-color);
-    height: 28px;
+    height: $setting-field-height;
     padding: 0 4px;
 
     &:focus {

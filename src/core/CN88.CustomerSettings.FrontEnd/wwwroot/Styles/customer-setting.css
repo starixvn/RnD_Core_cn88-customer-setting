@@ -260,6 +260,9 @@ th {
 .w60-percent {
   width: 60%; }
 
+.w67-percent {
+  width: 67%; }
+
 .w70-percent {
   width: 70%; }
 
@@ -931,6 +934,9 @@ select.setting-field {
 .w60-percent {
   width: 60%; }
 
+.w67-percent {
+  width: 67%; }
+
 .w70-percent {
   width: 70%; }
 
@@ -1050,6 +1056,14 @@ select.setting-field {
 .setting-type-1 .password-rule .note {
   font-weight: bold; }
 
+.setting-type-1 .horizontal-stretch {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; }
+
 .mobile-view .setting-type-1 .section {
   float: initial;
   padding: 10px;
@@ -1083,15 +1097,17 @@ select.setting-field {
   margin-top: 20px;
   text-transform: uppercase; }
 
+.mobile-view .setting-type-1 .position-taking--has-constraint span:first-child {
+  width: 25%; }
+
+.mobile-view .setting-type-1 .position-taking__constraint-group {
+  text-align: right;
+  width: 75%; }
+
 .mobile-view .setting-type-1 .position-taking--edit .sub-header {
   margin-bottom: 8px; }
 
 .mobile-view .setting-type-1 .horizontal-stretch {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: flex;
-  align-items: center;
   justify-content: space-between; }
 
 .mobile-view .setting-type-2 .commission-group {
@@ -1166,12 +1182,13 @@ select.setting-field {
  * https://github.com/Compass/compass/blob/stable/core/lib/compass/core/sass_extensions/functions/display.rb
  */
 .mobile-view body {
+  cursor: pointer;
   font-size: 10.5px;
   padding-top: 0; }
 
 .mobile-view input,
-.mobile-view optgroup,
 .mobile-view select,
+.mobile-view optgroup,
 .mobile-view textarea {
   font-size: 16px; }
 
@@ -1198,7 +1215,7 @@ select.setting-field {
   padding: 0 5px; }
 
 .mobile-view .block__content {
-  margin: 5px 10px; }
+  margin: 10px; }
 
 .mobile-view .block__cell, .mobile-view .block__lbl, .mobile-view .block__value {
   flex-direction: column; }
@@ -1216,7 +1233,7 @@ select.setting-field {
   flex-direction: column-reverse;
   left: 0;
   margin: 0;
-  padding: 12px 5px;
+  padding: 12px;
   position: sticky;
   position: -webkit-sticky;
   right: 0;

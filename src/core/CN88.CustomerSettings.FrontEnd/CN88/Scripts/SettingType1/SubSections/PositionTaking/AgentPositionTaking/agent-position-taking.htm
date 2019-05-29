@@ -46,9 +46,9 @@
         <div class="setting-field-group">
             <label class="setting-field-group__lbl">{{::('MasterPT' | st1Label)}}</label>
             <div class="setting-field-group__ctrl horizontal-stretch">
-                <label class="w30-percent">{{ptItem.currentMasterPT | formatPercentage}}</label>
-                <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label>
-                <div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly">
+                <label class="w50-percent">{{ptItem.currentMasterPT | formatPercentage}}</label>
+                <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label>
+                <div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly">
                     <percentage-dropdown class="setting-field--fullwidth"
                                          data-ng-model="ptItem.masterPT"
                                          data-min="0"
@@ -61,9 +61,9 @@
         <div class="setting-field-group">
             <label class="setting-field-group__lbl">{{::('AgentPT' | st1Label)}}</label>
             <div class="setting-field-group__ctrl horizontal-stretch">
-                <label class="w30-percent">{{ptItem.currentAgentPT | formatPercentage}}</label>
-                <label class="w30-percent" data-ng-if="accountDetail.isPTReadOnly">-</label>
-                <div class="w30-percent" data-ng-if="!accountDetail.isPTReadOnly">
+                <label class="w50-percent">{{ptItem.currentAgentPT | formatPercentage}}</label>
+                <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label>
+                <div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly">
                     <percentage-dropdown class="setting-field--fullwidth"
                                          data-ng-model="ptItem.agentPT"
                                          data-min="0"
@@ -78,15 +78,15 @@
         <div class="setting-field-group">
             <label class="setting-field-group__lbl">{{::('MasterPT' | st1Label)}}</label>
             <div class="setting-field-group__ctrl horizontal-stretch">
-                <label class="w30-percent">{{ptItem.masterPT | formatPercentage}}</label>
-                <label class="w30-percent">-</label>
+                <label class="w50-percent">{{ptItem.masterPT | formatPercentage}}</label>
+                <label class="w50-percent">-</label>
             </div>
         </div>
         <div class="setting-field-group">
             <label class="setting-field-group__lbl">{{::('AgentPT' | st1Label)}}</label>
             <div class="setting-field-group__ctrl horizontal-stretch">
-                <label class="w30-percent">{{ptItem.agentPT | formatPercentage}}</label>
-                <label class="w30-percent">-</label>
+                <label class="w50-percent">{{ptItem.agentPT | formatPercentage}}</label>
+                <label class="w50-percent">-</label>
             </div>
         </div>
     </div>

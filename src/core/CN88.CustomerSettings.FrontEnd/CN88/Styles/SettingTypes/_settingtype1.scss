@@ -127,6 +127,12 @@ $position-taking-constraint-value-color: #737373;
             font-weight: bold;
         }
     }
+
+    .horizontal-stretch {
+        @include flexbox();
+        align-items: center;
+        justify-content: space-between;
+    }
 }
 
 .mobile-view .setting-type-1 {
@@ -177,6 +183,17 @@ $position-taking-constraint-value-color: #737373;
             text-transform: uppercase;
         }
 
+        &--has-constraint {
+            span:first-child {
+                width: 25%;
+            }
+        }
+
+        &__constraint-group {
+            text-align: right;
+            width: 75%;
+        }
+
         &--edit {
             .sub-header {
                 margin-bottom: 8px;
@@ -185,8 +202,6 @@ $position-taking-constraint-value-color: #737373;
     }
 
     .horizontal-stretch {
-        @include flexbox();
-        align-items: center;
         justify-content: space-between;
     }
 }
