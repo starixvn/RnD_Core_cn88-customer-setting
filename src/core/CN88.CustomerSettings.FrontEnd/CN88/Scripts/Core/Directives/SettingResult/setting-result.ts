@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
 /// <reference path="../../models/result.ts" />
+/// <reference path="../../services/scroll-service.ts" />
 /// <reference path="../../module-registrater.ts" />
 
 namespace CustomerSetting {
@@ -8,7 +9,7 @@ namespace CustomerSetting {
     }
 
     class SettingResultDirective implements ng.IDirective {
-        public static $inject: string[] = ["$rootScope", "$window"];
+        public static $inject: string[] = ["$rootScope", "scrollService"];
 
         public replace: boolean = true;
 
@@ -25,17 +26,17 @@ namespace CustomerSetting {
                 this.$rootScope.$emit("page-height-changed");
 
                 if (result) {
-                    this.$window.scrollTo(0, 0);
+                    this.scrollService.scrollTo(0, 0);
                 }
             });
         };
 
         private $rootScope: ng.IRootScopeService;
-        private $window: ng.IWindowService;
+        private scrollService: ng.IWindowService;
 
-        constructor($rootScope: ng.IRootScopeService, $window: ng.IWindowService) {
+        constructor($rootScope: ng.IRootScopeService, scrollService: ng.IWindowService) {
             this.$rootScope = $rootScope;
-            this.$window = $window;
+            this.scrollService = scrollService;
         }
     }
 

@@ -2,6 +2,8 @@
 /// <reference path="../../models/enums/position-model.ts" />
 /// <reference path="../../models/result.ts" />
 /// <reference path="../../resources/resource-service.ts" />
+/// <reference path="../../services/scroll-service.ts" />
+/// <reference path="../../module-registrater.ts" />
 
 namespace CustomerSetting {
     interface ITooltipScope extends ng.IScope {
@@ -16,7 +18,7 @@ namespace CustomerSetting {
     }
 
     class TooltipDirective implements ng.IDirective {
-        public static $inject: string[] = ["$window", "$compile", "$timeout", "$templateCache", "$rootScope"];
+        public static $inject: string[] = ["$window", "$compile", "$timeout", "$templateCache", "$rootScope", "scrollService"];
 
         public restrict: string = "A";
         public priority: number = 100;
@@ -107,18 +109,21 @@ namespace CustomerSetting {
         private $timeout: ng.ITimeoutService;
         private $templateCache: ng.ITemplateCacheService;
         private $rootScope: ng.IRootScopeService;
+        private scrollService: ScrollService;
 
         constructor(
             $window: ng.IWindowService,
             $compile: ng.ICompileService,
             $timeout: ng.ITimeoutService,
             $templateCache: ng.ITemplateCacheService,
-            $rootScope: ng.IRootScopeService) {
+            $rootScope: ng.IRootScopeService,
+            scrollService: ScrollService) {
             this.$window = $window;
             this.$compile = $compile;
             this.$timeout = $timeout;
             this.$templateCache = $templateCache;
             this.$rootScope = $rootScope;
+            this.scrollService = scrollService;
         }
 
         private calculateTooltipPosition(
@@ -177,7 +182,7 @@ namespace CustomerSetting {
                 });
 
                 if (autoScrollTo && (top < this.$window.pageYOffset || left < this.$window.pageXOffset)) {
-                    this.$window.scrollTo(left, top);
+                    this.scrollService.scrollTo(left, top);
                 }
             });
         }

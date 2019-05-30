@@ -70,7 +70,7 @@
     </div>
 </div>
 <div class="block__cell-group block__cell-group--readonly" data-ng-if="!isEditable">
-    <div data-ng-class="{ 'block__cell w33-percent': isMobileView, 'block__cell-sub-group w50-percent': !isMobileView }"
+    <div data-ng-class="{ 'block__cell align-center w33-percent': isMobileView, 'block__cell-sub-group w50-percent': !isMobileView }"
          data-ng-if="customerLevel !== avaiCustomerLevels.member">
         <div data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"
              data-ng-style="eachGroupStyle"
@@ -86,7 +86,7 @@
         </div>
     </div>
     <div class="block__cell"
-         data-ng-class="{ 'w33-percent': isMobileView, 'align-center w50-percent': !isMobileView }"
+         data-ng-class="{ 'align-center w33-percent': isMobileView, 'align-center w50-percent': !isMobileView }"
          data-ng-if="customerLevel === avaiCustomerLevels.member">
         {{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}
     </div>
