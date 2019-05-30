@@ -1052,7 +1052,7 @@ select.setting-field {
 
 .mobile-view .setting-type-1 .section {
   float: initial;
-  padding: 10px 10px 0;
+  padding: 12px 12px 0;
   width: 100%; }
 
 .mobile-view .setting-type-1 .sub-header {
@@ -1227,7 +1227,7 @@ select.setting-field {
   padding: 0 5px; }
 
 .mobile-view .block__content {
-  margin: 10px; }
+  margin: 10px 12px; }
 
 .mobile-view .block__cell, .mobile-view .block__lbl, .mobile-view .block__value {
   flex-direction: column; }
@@ -1249,7 +1249,7 @@ select.setting-field {
   bottom: 0;
   justify-content: space-between;
   margin: 0;
-  padding: 12px;
+  padding: 12px 12px 20px;
   position: sticky;
   position: -webkit-sticky;
   z-index: 2; }
