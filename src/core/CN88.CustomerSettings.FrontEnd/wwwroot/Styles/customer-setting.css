@@ -1230,20 +1230,19 @@ select.setting-field {
   display: flex;
   background: #fff;
   bottom: 0;
-  flex-direction: column-reverse;
-  left: 0;
+  justify-content: space-between;
   margin: 0;
   padding: 12px;
   position: sticky;
   position: -webkit-sticky;
-  right: 0;
   z-index: 2; }
   .mobile-view .btn-container .btn {
-    box-shadow: none;
-    margin: 0 0 16px;
-    width: 100%; }
-    .mobile-view .btn-container .btn--cancel {
-      margin-bottom: 0; }
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    box-shadow: none; }
 
 .mobile-view .msg__content {
   padding-top: 2.5px; }

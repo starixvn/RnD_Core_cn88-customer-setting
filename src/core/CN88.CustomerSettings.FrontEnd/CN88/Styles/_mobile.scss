@@ -63,23 +63,16 @@ $block-header-color: #852423;
         @include flexbox();
         background: $default-background-color;
         bottom: 0;
-        flex-direction: column-reverse;
-        left: 0;
+        justify-content: space-between;
         margin: 0;
         padding: 12px;
         position: sticky;
         position: -webkit-sticky;
-        right: 0;
         z-index: 2;
 
         .btn {
+            @include flex(1);
             box-shadow: none;
-            margin: 0 0 16px;
-            width: 100%;
-
-            &--cancel {
-                margin-bottom: 0;
-            }
         }
     }
 
