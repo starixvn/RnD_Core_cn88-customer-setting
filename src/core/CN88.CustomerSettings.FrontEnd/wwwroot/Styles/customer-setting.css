@@ -275,15 +275,6 @@ th {
 .w100-percent {
   width: 100% !important; }
 
-.align-center {
-  text-align: center; }
-
-.align-left {
-  text-align: left; }
-
-.align-right {
-  text-align: right; }
-
 /*
  * A partial implementation of the Ruby list functions from Compass:
  * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/lists.rb
@@ -469,8 +460,12 @@ select.setting-field {
       border: none; }
     .block__cell--border-top {
       border-top: 1px solid #d2d2d2; }
+    .block__cell.align-left, .align-left.block__lbl, .align-left.block__value {
+      justify-content: flex-start; }
     .block__cell.align-center, .align-center.block__lbl, .align-center.block__value {
       justify-content: center; }
+    .block__cell.align-right, .align-right.block__lbl, .align-right.block__value {
+      justify-content: flex-end; }
   .block__cell-group--readonly .block__cell, .block__cell-group--readonly .block__lbl, .block__cell-group--readonly .block__value {
     height: 100%;
     min-height: 38px; }
@@ -949,15 +944,6 @@ select.setting-field {
 .w100-percent {
   width: 100% !important; }
 
-.align-center {
-  text-align: center; }
-
-.align-left {
-  text-align: left; }
-
-.align-right {
-  text-align: right; }
-
 /*
  * A partial implementation of the Ruby list functions from Compass:
  * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/lists.rb
@@ -1066,7 +1052,7 @@ select.setting-field {
 
 .mobile-view .setting-type-1 .section {
   float: initial;
-  padding: 10px;
+  padding: 10px 10px 0;
   width: 100%; }
 
 .mobile-view .setting-type-1 .sub-header {
@@ -1110,19 +1096,31 @@ select.setting-field {
 .mobile-view .setting-type-1 .horizontal-stretch {
   justify-content: space-between; }
 
-.mobile-view .setting-type-2 .commission-group {
+.mobile-view .setting-type-2 .commission-group--multiple {
   margin: 5px 0;
   width: 100% !important; }
-  .mobile-view .setting-type-2 .commission-group__lbl {
-    padding-right: 5px;
-    width: 15%; }
-  .mobile-view .setting-type-2 .commission-group__value {
-    width: 85%; }
-    .mobile-view .setting-type-2 .commission-group__value--full-width {
-      width: 100%; }
+
+.mobile-view .setting-type-2 .commission-group--single {
+  padding-bottom: 20px; }
+
+.mobile-view .setting-type-2 .commission-group__lbl {
+  padding-right: 5px;
+  width: 15%; }
+
+.mobile-view .setting-type-2 .commission-group__value {
+  width: 85%; }
+  .mobile-view .setting-type-2 .commission-group__value--full-width {
+    width: 100%; }
 
 .mobile-view .setting-type-2 .tooltip--error .tooltip__content {
   max-width: 150px; }
+
+.mobile-view .setting-type-2 .block__cell-group--readonly .block__cell, .mobile-view .setting-type-2 .block__cell-group--readonly .block__lbl, .mobile-view .setting-type-2 .block__cell-group--readonly .block__value {
+  flex-direction: initial; }
+
+.mobile-view .setting-type-2 .block__cell-group--readonly .commission-group--multiple {
+  margin: 5px 0;
+  width: 100% !important; }
 
 /*
  * A partial implementation of the Ruby list functions from Compass:

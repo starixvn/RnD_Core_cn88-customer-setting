@@ -1,7 +1,13 @@
 ﻿.mobile-view .setting-type-2 {
     .commission-group {
-        margin: 5px 0;
-        width: 100% !important;
+        &--multiple {
+            margin: 5px 0;
+            width: 100% !important;
+        }
+
+        &--single {
+            padding-bottom: 20px;
+        }
 
         &__lbl {
             padding-right: 5px;
@@ -19,5 +25,18 @@
 
     .tooltip--error .tooltip__content {
         max-width: 150px;
+    }
+
+    .block__cell-group--readonly {
+        .block__cell {
+            flex-direction: initial;
+        }
+
+        .commission-group {
+            &--multiple {
+                margin: 5px 0;
+                width: 100% !important;
+            }
+        }
     }
 }
