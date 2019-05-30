@@ -1047,8 +1047,7 @@ select.setting-field {
   display: -moz-box;
   display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: space-between; }
+  align-items: center; }
 
 .mobile-view .setting-type-1 .section {
   float: initial;
@@ -1063,9 +1062,9 @@ select.setting-field {
 
 .mobile-view .setting-type-1 .setting-field-group {
   flex-direction: column;
-  margin: 12px 0; }
+  margin: 15px 0; }
   .mobile-view .setting-type-1 .setting-field-group__lbl {
-    margin-bottom: 3px;
+    margin-bottom: 4px;
     text-transform: uppercase;
     width: 100%; }
   .mobile-view .setting-type-1 .setting-field-group__ctrl {
@@ -1079,19 +1078,18 @@ select.setting-field {
     .mobile-view .setting-type-1 .customer-credit .available-credit-group label {
       margin: 0; }
 
-.mobile-view .setting-type-1 .position-taking__group-name {
-  margin-top: 20px;
-  text-transform: uppercase; }
-
-.mobile-view .setting-type-1 .position-taking--has-constraint span:first-child {
-  width: 25%; }
-
-.mobile-view .setting-type-1 .position-taking__constraint-group {
-  text-align: right;
-  width: 75%; }
-
-.mobile-view .setting-type-1 .position-taking--edit .sub-header {
-  margin-bottom: 8px; }
+.mobile-view .setting-type-1 .position-taking {
+  padding-top: 12px; }
+  .mobile-view .setting-type-1 .position-taking__group-name {
+    margin-top: 10px;
+    text-transform: uppercase; }
+  .mobile-view .setting-type-1 .position-taking--has-constraint span:first-child {
+    width: 25%; }
+  .mobile-view .setting-type-1 .position-taking__constraint-group {
+    text-align: right;
+    width: 75%; }
+  .mobile-view .setting-type-1 .position-taking--edit .sub-header {
+    margin-bottom: 8px; }
 
 .mobile-view .setting-type-1 .horizontal-stretch {
   justify-content: space-between; }
@@ -1204,19 +1202,21 @@ select.setting-field {
 .mobile-view textarea {
   font-size: 16px; }
 
-.mobile-view .setting-field--has-constraint, .mobile-view .setting-field--constraint {
-  width: 100%; }
-
-.mobile-view .setting-field--constraint {
-  margin-top: 5px;
-  text-align: right; }
+.mobile-view .setting-field {
+  padding: 0 5px; }
+  .mobile-view .setting-field--has-constraint, .mobile-view .setting-field--constraint {
+    width: 100%; }
+  .mobile-view .setting-field--constraint {
+    margin-top: 5px;
+    text-align: right; }
 
 .mobile-view select.setting-field {
   appearance: none;
   -moz-appearance: none;
   -webkit-appearance: none;
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAG0lEQVR42mNgwAfKy8v/48I4FeA0AacVDFQBAP9wJkE/KhUMAAAAAElFTkSuQmCC") no-repeat right 5px center;
-  padding: 2px 18px 2px 2px; }
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAG0lEQVR42mNgwAfKy8v/48I4FeA0AacVDFQBAP9wJkE/KhUMAAAAAElFTkSuQmCC) no-repeat right 5px center;
+  background-color: #fff;
+  padding: 2px 18px 2px 5px; }
 
 .mobile-view .block:after {
   display: block;
@@ -1256,7 +1256,7 @@ select.setting-field {
   bottom: 0;
   justify-content: space-between;
   margin: 0;
-  padding: 12px 12px 20px;
+  padding: 12px;
   position: sticky;
   position: -webkit-sticky;
   z-index: 2; }

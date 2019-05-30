@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
 /// <reference path="../module-registrater.ts" />
+/// <reference path="parameters-service.ts" />
 
 namespace CustomerSetting {
     export class ScrollService {

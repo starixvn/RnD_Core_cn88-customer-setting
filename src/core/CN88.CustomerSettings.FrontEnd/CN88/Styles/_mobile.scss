@@ -21,6 +21,8 @@ $block-header-color: #852423;
     }
 
     .setting-field {
+        padding: 0 5px;
+
         &--has-constraint, &--constraint {
             width: 100%;
         }
@@ -35,8 +37,9 @@ $block-header-color: #852423;
         appearance: none;
         -moz-appearance: none;
         -webkit-appearance: none;
-        background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAG0lEQVR42mNgwAfKy8v/48I4FeA0AacVDFQBAP9wJkE/KhUMAAAAAElFTkSuQmCC") no-repeat right 5px center;
-        padding: 2px 18px 2px 2px;
+        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAG0lEQVR42mNgwAfKy8v/48I4FeA0AacVDFQBAP9wJkE/KhUMAAAAAElFTkSuQmCC) no-repeat right 5px center;
+        background-color: $default-background-color;
+        padding: 2px 18px 2px 5px;
     }
 
     .block {
@@ -81,7 +84,7 @@ $block-header-color: #852423;
         bottom: 0;
         justify-content: space-between;
         margin: 0;
-        padding: 12px 12px 20px;
+        padding: 12px;
         position: sticky;
         position: -webkit-sticky;
         z-index: 2;

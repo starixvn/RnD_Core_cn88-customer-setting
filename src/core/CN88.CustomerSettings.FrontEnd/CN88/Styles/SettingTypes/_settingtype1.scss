@@ -131,7 +131,6 @@ $position-taking-constraint-value-color: #737373;
     .horizontal-stretch {
         @include flexbox();
         align-items: center;
-        justify-content: space-between;
     }
 }
 
@@ -151,10 +150,10 @@ $position-taking-constraint-value-color: #737373;
 
     .setting-field-group {
         flex-direction: column;
-        margin: 12px 0;
+        margin: 15px 0;
 
         &__lbl {
-            margin-bottom: 3px;
+            margin-bottom: 4px;
             text-transform: uppercase;
             width: 100%;
         }
@@ -178,8 +177,10 @@ $position-taking-constraint-value-color: #737373;
     }
 
     .position-taking {
+        padding-top: 12px;
+
         &__group-name {
-            margin-top: 20px;
+            margin-top: 10px;
             text-transform: uppercase;
         }
 
