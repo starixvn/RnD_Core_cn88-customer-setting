@@ -1211,6 +1211,13 @@ select.setting-field {
   margin-top: 5px;
   text-align: right; }
 
+.mobile-view select.setting-field {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAG0lEQVR42mNgwAfKy8v/48I4FeA0AacVDFQBAP9wJkE/KhUMAAAAAElFTkSuQmCC") no-repeat right 5px center;
+  padding: 2px 18px 2px 2px; }
+
 .mobile-view .block:after {
   display: block;
   content: "";
