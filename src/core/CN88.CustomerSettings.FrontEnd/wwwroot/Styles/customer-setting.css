@@ -1096,6 +1096,18 @@ select.setting-field {
 .mobile-view .setting-type-1 .horizontal-stretch {
   justify-content: space-between; }
 
+/*
+ * A partial implementation of the Ruby list functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/lists.rb
+ */
+/*
+ * A partial implementation of the Ruby constants functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/constants.rb
+ */
+/*
+ * A partial implementation of the Ruby display functions from Compass:
+ * https://github.com/Compass/compass/blob/stable/core/lib/compass/core/sass_extensions/functions/display.rb
+ */
 .mobile-view .setting-type-2 .commission-group--multiple {
   margin: 5px 0;
   width: 100% !important; }
@@ -1115,12 +1127,14 @@ select.setting-field {
 .mobile-view .setting-type-2 .tooltip--error .tooltip__content {
   max-width: 150px; }
 
-.mobile-view .setting-type-2 .block__cell-group--readonly .block__cell, .mobile-view .setting-type-2 .block__cell-group--readonly .block__lbl, .mobile-view .setting-type-2 .block__cell-group--readonly .block__value {
+.mobile-view .setting-type-2 .block__cell-group--readonly .bet-limit .block__cell, .mobile-view .setting-type-2 .block__cell-group--readonly .bet-limit .block__lbl, .mobile-view .setting-type-2 .block__cell-group--readonly .bet-limit .block__value {
   flex-direction: initial; }
 
 .mobile-view .setting-type-2 .block__cell-group--readonly .commission-group--multiple {
-  margin: 5px 0;
-  width: 100% !important; }
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex; }
 
 /*
  * A partial implementation of the Ruby list functions from Compass:
@@ -1220,6 +1234,11 @@ select.setting-field {
 
 .mobile-view .block__lbl, .mobile-view .block__value {
   flex-direction: initial; }
+
+.mobile-view .last-setting-type {
+  padding-bottom: 0; }
+  .mobile-view .last-setting-type .block__content {
+    margin-bottom: 0; }
 
 .mobile-view .btn-container {
   display: -webkit-box;

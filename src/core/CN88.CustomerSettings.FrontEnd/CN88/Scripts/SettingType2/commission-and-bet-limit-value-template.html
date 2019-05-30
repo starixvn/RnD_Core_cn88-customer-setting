@@ -90,7 +90,7 @@
          data-ng-if="customerLevel === avaiCustomerLevels.member">
         {{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}
     </div>
-    <div class="block__cell-sub-group" data-ng-class="{ 'w67-percent': isMobileView, 'w50-percent': !isMobileView }">
+    <div class="block__cell-sub-group bet-limit" data-ng-class="{ 'w67-percent': isMobileView, 'w50-percent': !isMobileView }">
         <div class="block__cell align-right w50-percent">{{item.maxPerEvent | number:betSettingPrecision}}</div>
         <div class="block__cell align-right block__cell--no-border w50-percent">{{item.maxBet | number:betSettingPrecision}}</div>
     </div>

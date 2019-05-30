@@ -1,4 +1,6 @@
-﻿.mobile-view .setting-type-2 {
+﻿@import "../_mixins";
+
+.mobile-view .setting-type-2 {
     .commission-group {
         &--multiple {
             margin: 5px 0;
@@ -28,14 +30,13 @@
     }
 
     .block__cell-group--readonly {
-        .block__cell {
+        .bet-limit .block__cell {
             flex-direction: initial;
         }
 
         .commission-group {
             &--multiple {
-                margin: 5px 0;
-                width: 100% !important;
+                @include flexbox();
             }
         }
     }

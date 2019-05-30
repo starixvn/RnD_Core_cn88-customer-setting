@@ -59,6 +59,14 @@ $block-header-color: #852423;
         }
     }
 
+    .last-setting-type {
+        padding-bottom: 0;
+
+        .block__content {
+            margin-bottom: 0;
+        }
+    }
+
     .btn-container {
         @include flexbox();
         background: $default-background-color;
