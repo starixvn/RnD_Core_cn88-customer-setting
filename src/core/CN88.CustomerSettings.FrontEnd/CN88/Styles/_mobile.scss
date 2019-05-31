@@ -20,6 +20,10 @@ $block-header-color: #852423;
         font-size: $input-font-size;
     }
 
+    .msg-container {
+        margin: 12px 12px 5px;
+    }
+
     .setting-field {
         padding: 0 5px;
 
@@ -100,6 +104,7 @@ $block-header-color: #852423;
     }
 
     .tooltip__content {
+        max-width: 230px;
         text-transform: initial;
     }
 }

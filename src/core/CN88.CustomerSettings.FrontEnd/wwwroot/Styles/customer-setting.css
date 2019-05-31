@@ -1202,6 +1202,9 @@ select.setting-field {
 .mobile-view textarea {
   font-size: 16px; }
 
+.mobile-view .msg-container {
+  margin: 12px 12px 5px; }
+
 .mobile-view .setting-field {
   padding: 0 5px; }
   .mobile-view .setting-field--has-constraint, .mobile-view .setting-field--constraint {
@@ -1272,4 +1275,5 @@ select.setting-field {
   padding-top: 2.5px; }
 
 .mobile-view .tooltip__content {
+  max-width: 230px;
   text-transform: initial; }
