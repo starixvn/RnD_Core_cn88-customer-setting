@@ -1216,7 +1216,7 @@ select.setting-field {
   -webkit-appearance: none;
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAG0lEQVR42mNgwAfKy8v/48I4FeA0AacVDFQBAP9wJkE/KhUMAAAAAElFTkSuQmCC) no-repeat right 5px center;
   background-color: #fff;
-  padding: 2px 18px 2px 5px; }
+  padding: 2px 16px 2px 5px; }
 
 .mobile-view .block:after {
   display: block;
