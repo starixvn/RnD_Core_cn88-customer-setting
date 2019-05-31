@@ -90,9 +90,7 @@ select.setting-field {
         &:hover:enabled,
         &:focus:enabled,
         &:active:enabled {
-            background-color: $cancel-button-hover-background-color;
-            border: none;
-            color: $button-text-color;
+            background-color: $cancel-button-hover-background-color !important;
         }
     }
 
@@ -257,7 +255,6 @@ select.setting-field {
 
     &__lbl {
         @extend .block__cell;
-        @include flexbox();
         align-items: center;
         width: 20%;
 
@@ -296,7 +293,6 @@ select.setting-field {
 
     &__value {
         @extend .block__cell;
-        @include flexbox();
         align-items: center;
         border: none;
         height: auto !important;

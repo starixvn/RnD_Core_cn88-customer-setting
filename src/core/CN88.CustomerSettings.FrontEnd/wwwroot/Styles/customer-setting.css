@@ -358,9 +358,7 @@ select.setting-field {
     background-color: #fff;
     color: #737373; }
     .btn--cancel:hover:enabled, .btn--cancel:focus:enabled, .btn--cancel:active:enabled {
-      background-color: #a5a5a5;
-      border: none;
-      color: #fff; }
+      background-color: #f2f2f2 !important; }
   .btn--margin-right {
     margin-right: 10px; }
   .btn:hover:enabled, .btn:focus:enabled, .btn:active:enabled {
@@ -475,10 +473,6 @@ select.setting-field {
     display: -ms-flexbox;
     display: flex; }
   .block__lbl {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
     align-items: center;
     width: 20%; }
     .block__lbl--no-border {
@@ -504,10 +498,6 @@ select.setting-field {
     display: -ms-flexbox;
     display: flex; }
   .block__value {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
     align-items: center;
     border: none;
     height: auto !important;
@@ -1047,12 +1037,15 @@ select.setting-field {
   display: -moz-box;
   display: -ms-flexbox;
   display: flex;
-  align-items: center; }
+  align-items: center;
+  justify-content: space-between; }
 
 .mobile-view .setting-type-1 .section {
   float: initial;
-  padding: 12px 12px 0;
+  padding: 20px 12px 0;
   width: 100%; }
+  .mobile-view .setting-type-1 .section--first {
+    padding-top: 10px; }
 
 .mobile-view .setting-type-1 .sub-header {
   border-bottom-width: 1px;
@@ -1062,13 +1055,20 @@ select.setting-field {
 
 .mobile-view .setting-type-1 .setting-field-group {
   flex-direction: column;
-  margin: 15px 0; }
+  margin: 15px 0 0; }
   .mobile-view .setting-type-1 .setting-field-group__lbl {
     margin-bottom: 4px;
     text-transform: uppercase;
     width: 100%; }
   .mobile-view .setting-type-1 .setting-field-group__ctrl {
     width: 100%; }
+
+.mobile-view .setting-type-1 .general-data .username-selection {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center; }
 
 .mobile-view .setting-type-1 .customer-credit {
   margin-bottom: 10px; }
@@ -1081,7 +1081,7 @@ select.setting-field {
 .mobile-view .setting-type-1 .position-taking {
   padding-top: 12px; }
   .mobile-view .setting-type-1 .position-taking__group-name {
-    margin-top: 10px;
+    margin: 15px 0 0;
     text-transform: uppercase; }
   .mobile-view .setting-type-1 .position-taking--has-constraint span:first-child {
     width: 25%; }
@@ -1091,8 +1091,8 @@ select.setting-field {
   .mobile-view .setting-type-1 .position-taking--edit .sub-header {
     margin-bottom: 8px; }
 
-.mobile-view .setting-type-1 .horizontal-stretch {
-  justify-content: space-between; }
+.mobile-view .setting-type-1--readonly .customer-credit {
+  margin-bottom: 0; }
 
 /*
  * A partial implementation of the Ruby list functions from Compass:
@@ -1221,29 +1221,26 @@ select.setting-field {
   background-color: #fff;
   padding: 2px 16px 2px 5px; }
 
-.mobile-view .block:after {
-  display: block;
-  content: "";
-  clear: both; }
-
-.mobile-view .block__header {
-  color: #852423;
-  font-weight: bold;
-  padding-left: 10px;
-  text-transform: uppercase; }
-
-.mobile-view .block__sub-header {
-  font-weight: bold;
-  padding: 0 5px; }
-
-.mobile-view .block__content {
-  margin: 10px 12px; }
-
-.mobile-view .block__cell, .mobile-view .block__lbl, .mobile-view .block__value {
-  flex-direction: column; }
-
-.mobile-view .block__lbl, .mobile-view .block__value {
-  flex-direction: initial; }
+.mobile-view .block {
+  padding-bottom: 20px; }
+  .mobile-view .block:after {
+    display: block;
+    content: "";
+    clear: both; }
+  .mobile-view .block__header {
+    color: #852423;
+    font-weight: bold;
+    padding-left: 10px;
+    text-transform: uppercase; }
+  .mobile-view .block__sub-header {
+    font-weight: bold;
+    padding: 0 5px; }
+  .mobile-view .block__content {
+    margin: 10px 12px; }
+  .mobile-view .block__cell, .mobile-view .block__lbl, .mobile-view .block__value {
+    flex-direction: column; }
+  .mobile-view .block__lbl, .mobile-view .block__value {
+    flex-direction: initial; }
 
 .mobile-view .last-setting-type {
   padding-bottom: 0; }
@@ -1259,7 +1256,7 @@ select.setting-field {
   bottom: 0;
   justify-content: space-between;
   margin: 0;
-  padding: 12px;
+  padding: 15px 12px;
   position: sticky;
   position: -webkit-sticky;
   z-index: 2; }

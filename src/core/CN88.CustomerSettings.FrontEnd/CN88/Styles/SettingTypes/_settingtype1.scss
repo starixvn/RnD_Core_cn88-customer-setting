@@ -131,14 +131,19 @@ $position-taking-constraint-value-color: #737373;
     .horizontal-stretch {
         @include flexbox();
         align-items: center;
+        justify-content: space-between;
     }
 }
 
 .mobile-view .setting-type-1 {
     .section {
         float: initial;
-        padding: 12px 12px 0;
+        padding: 20px 12px 0;
         width: 100%;
+
+        &--first {
+            padding-top: 10px;
+        }
     }
 
     .sub-header {
@@ -150,7 +155,7 @@ $position-taking-constraint-value-color: #737373;
 
     .setting-field-group {
         flex-direction: column;
-        margin: 15px 0;
+        margin: 15px 0 0;
 
         &__lbl {
             margin-bottom: 4px;
@@ -160,6 +165,13 @@ $position-taking-constraint-value-color: #737373;
 
         &__ctrl {
             width: 100%;
+        }
+    }
+
+    .general-data {
+        .username-selection {
+            @include flexbox();
+            align-items: center;
         }
     }
 
@@ -180,7 +192,7 @@ $position-taking-constraint-value-color: #737373;
         padding-top: 12px;
 
         &__group-name {
-            margin-top: 10px;
+            margin: 15px 0 0;
             text-transform: uppercase;
         }
 
@@ -202,7 +214,9 @@ $position-taking-constraint-value-color: #737373;
         }
     }
 
-    .horizontal-stretch {
-        justify-content: space-between;
+    &--readonly {
+        .customer-credit {
+            margin-bottom: 0;
+        }
     }
 }

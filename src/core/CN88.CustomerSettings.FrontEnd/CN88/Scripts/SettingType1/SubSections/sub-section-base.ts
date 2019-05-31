@@ -9,6 +9,7 @@ namespace CustomerSetting.SettingType1 {
         accountDetail: AccountDetailSettingItem;
         isNew: boolean;
         isEditable: boolean;
+        isMobileView: boolean;
         avaiCustomerLevels: Object;
     }
 
@@ -37,6 +38,7 @@ namespace CustomerSetting.SettingType1 {
         protected linkInternal(scope: ISubSectionsSharedScopeScope): void {
             scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
             scope.isNew = this.settingTypesSharedValuesService.isNew;
+            scope.isMobileView = this.settingTypesSharedValuesService.isMobileView;
             scope.avaiCustomerLevels = Level;
         }
     }

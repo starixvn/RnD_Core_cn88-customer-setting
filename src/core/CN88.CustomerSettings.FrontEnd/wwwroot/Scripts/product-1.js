@@ -35624,6 +35624,140 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    (function (SettingLevel) {
+        SettingLevel[SettingLevel["product"] = 1] = "product";
+        SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
+        SettingLevel[SettingLevel["betType"] = 3] = "betType";
+        SettingLevel[SettingLevel["sportTypeBetType"] = 4] = "sportTypeBetType";
+    })(CustomerSetting.SettingLevel || (CustomerSetting.SettingLevel = {}));
+    var SettingLevel = CustomerSetting.SettingLevel;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingTypeBaseDirective = (function () {
+        function SettingTypeBaseDirective(settingTypesSharedValuesService, instantiateSettingItem) {
+            var _this = this;
+            this.replace = true;
+            this.link = function (scope) {
+                _this.linkInternal(scope);
+            };
+            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
+            this.instantiateSettingItem = instantiateSettingItem;
+        }
+        Object.defineProperty(SettingTypeBaseDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    settingType: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingTypeBaseDirective.prototype.linkInternal = function (scope) {
+            var _this = this;
+            scope.actorLevel = this.settingTypesSharedValuesService.actorLevel;
+            scope.customerId = this.settingTypesSharedValuesService.customerId;
+            scope.uplineId = this.settingTypesSharedValuesService.uplineId;
+            scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
+            scope.productId = this.settingTypesSharedValuesService.productId;
+            scope.productName = this.settingTypesSharedValuesService.productName;
+            scope.isNew = this.settingTypesSharedValuesService.isNew;
+            scope.isMobileView = this.settingTypesSharedValuesService.isMobileView;
+            scope.isEditable = this.settingTypesSharedValuesService.isEditable && scope.settingType.displayMode === CustomerSetting.DisplayMode.editable;
+            scope.avaiCustomerLevels = CustomerSetting.Level;
+            if (this.instantiateSettingItem) {
+                if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
+                    if (scope.settingType.isError) {
+                        if (scope.settingType.settingItems.length > 0) {
+                            scope.settingType.settingItems[0] = new CustomerSetting.ErrorSettingItem(scope.settingType.settingItems[0]);
+                        }
+                    }
+                    else {
+                        scope.settingType.settingItems.forEach(function (item, index) {
+                            if (item) {
+                                scope.settingType.settingItems[index] = _this.instantiateSettingItem(item, scope.isNew, scope.customerLevel, scope.uplineId);
+                            }
+                        });
+                    }
+                }
+            }
+        };
+        return SettingTypeBaseDirective;
+    }());
+    CustomerSetting.SettingTypeBaseDirective = SettingTypeBaseDirective;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    var DefaultSettingTypeGroupingDirective = (function (_super) {
+        __extends(DefaultSettingTypeGroupingDirective, _super);
+        function DefaultSettingTypeGroupingDirective() {
+            var _this = this;
+            _super.apply(this, arguments);
+            this.template = '<div class="block setting-type-{{settingType.id}} {{cssClass}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="block__content"><div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div><div class="block__item-group" data-ng-class="{ \'block__item-group--last\': $last }" data-ng-if="settingType | validSettingType" data-ng-repeat="group in sportGroups"><div class="block__sub-header" data-ng-if="settingType.settingLevel === avaiSettingLevels.sportTypeBetType" data-sport-type="{{group[0].sportTypeId}}">{{group[0].sportTypeName}}</div><div class="block__item" data-ng-repeat="item in group" data-ng-class="{ \'block__item--last\': $last, \'block__item--odd\': $odd && isMobileView }"><div class="block__lbl" data-ng-class="{ \'block__lbl--padding-left\': (settingType.settingLevel === avaiSettingLevels.sportTypeBetType) && !isMobileView }" data-product="{{productId}}" data-sport-type="{{item.sportTypeId}}" data-bet-type="{{item.betTypeId}}">{{item | showingName:settingType.settingLevel:productName }}</div><div class="block__value" data-ng-include="valueTemplateUrl"></div></div></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{sportGroups[0][0].errorMessage}}</div></div></div>';
+            this.link = function (scope) {
+                _this.linkInternal(scope);
+            };
+        }
+        DefaultSettingTypeGroupingDirective.prototype.linkInternal = function (scope) {
+            _super.prototype.linkInternal.call(this, scope);
+            scope.avaiSettingLevels = CustomerSetting.SettingLevel;
+            if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
+                if (scope.settingType.settingLevel === CustomerSetting.SettingLevel.sportTypeBetType) {
+                    scope.sportGroups = this.groupSettingItemsBySportType(scope.settingType.settingItems);
+                }
+                else {
+                    scope.sportGroups = [scope.settingType.settingItems];
+                }
+            }
+        };
+        DefaultSettingTypeGroupingDirective.prototype.groupSettingItemsBySportType = function (settingItems) {
+            var currentSportTypeId = -1;
+            var result = [];
+            var group;
+            settingItems.forEach(function (item) {
+                var settingItem = item;
+                if (currentSportTypeId !== settingItem.sportTypeId) {
+                    if (group) {
+                        result.push(group);
+                    }
+                    currentSportTypeId = settingItem.sportTypeId;
+                    group = [];
+                }
+                group.push(settingItem);
+            });
+            if (group) {
+                result.push(group);
+            }
+            return result;
+        };
+        return DefaultSettingTypeGroupingDirective;
+    }(CustomerSetting.SettingTypeBaseDirective));
+    CustomerSetting.DefaultSettingTypeGroupingDirective = DefaultSettingTypeGroupingDirective;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    function ShowingName() {
+        return function (settingItem, settingLevel, productName) {
+            return settingLevel === CustomerSetting.SettingLevel.product
+                ? productName
+                : (settingLevel === CustomerSetting.SettingLevel.sportType
+                    ? settingItem.sportTypeName
+                    : settingItem.betTypeName);
+        };
+    }
+    CustomerSetting.ModuleRegister.filter("showingName", ShowingName);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var NumericInputDirective = (function () {
         function NumericInputDirective($filter, appConfigService) {
             var _this = this;
@@ -35774,140 +35908,6 @@ var CustomerSetting;
         return NumericInputDirective;
     }());
     CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    (function (SettingLevel) {
-        SettingLevel[SettingLevel["product"] = 1] = "product";
-        SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
-        SettingLevel[SettingLevel["betType"] = 3] = "betType";
-        SettingLevel[SettingLevel["sportTypeBetType"] = 4] = "sportTypeBetType";
-    })(CustomerSetting.SettingLevel || (CustomerSetting.SettingLevel = {}));
-    var SettingLevel = CustomerSetting.SettingLevel;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingTypeBaseDirective = (function () {
-        function SettingTypeBaseDirective(settingTypesSharedValuesService, instantiateSettingItem) {
-            var _this = this;
-            this.replace = true;
-            this.link = function (scope) {
-                _this.linkInternal(scope);
-            };
-            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
-            this.instantiateSettingItem = instantiateSettingItem;
-        }
-        Object.defineProperty(SettingTypeBaseDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    settingType: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingTypeBaseDirective.prototype.linkInternal = function (scope) {
-            var _this = this;
-            scope.actorLevel = this.settingTypesSharedValuesService.actorLevel;
-            scope.customerId = this.settingTypesSharedValuesService.customerId;
-            scope.uplineId = this.settingTypesSharedValuesService.uplineId;
-            scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
-            scope.productId = this.settingTypesSharedValuesService.productId;
-            scope.productName = this.settingTypesSharedValuesService.productName;
-            scope.isNew = this.settingTypesSharedValuesService.isNew;
-            scope.isMobileView = this.settingTypesSharedValuesService.isMobileView;
-            scope.isEditable = this.settingTypesSharedValuesService.isEditable && scope.settingType.displayMode === CustomerSetting.DisplayMode.editable;
-            scope.avaiCustomerLevels = CustomerSetting.Level;
-            if (this.instantiateSettingItem) {
-                if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
-                    if (scope.settingType.isError) {
-                        if (scope.settingType.settingItems.length > 0) {
-                            scope.settingType.settingItems[0] = new CustomerSetting.ErrorSettingItem(scope.settingType.settingItems[0]);
-                        }
-                    }
-                    else {
-                        scope.settingType.settingItems.forEach(function (item, index) {
-                            if (item) {
-                                scope.settingType.settingItems[index] = _this.instantiateSettingItem(item, scope.isNew, scope.customerLevel, scope.uplineId);
-                            }
-                        });
-                    }
-                }
-            }
-        };
-        return SettingTypeBaseDirective;
-    }());
-    CustomerSetting.SettingTypeBaseDirective = SettingTypeBaseDirective;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomerSetting;
-(function (CustomerSetting) {
-    var DefaultSettingTypeGroupingDirective = (function (_super) {
-        __extends(DefaultSettingTypeGroupingDirective, _super);
-        function DefaultSettingTypeGroupingDirective() {
-            var _this = this;
-            _super.apply(this, arguments);
-            this.template = '<div class="block setting-type-{{settingType.id}} {{cssClass}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="block__content"><div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div><div class="block__item-group" data-ng-class="{ \'block__item-group--last\': $last }" data-ng-if="settingType | validSettingType" data-ng-repeat="group in sportGroups"><div class="block__sub-header" data-ng-if="settingType.settingLevel === avaiSettingLevels.sportTypeBetType" data-sport-type="{{group[0].sportTypeId}}">{{group[0].sportTypeName}}</div><div class="block__item" data-ng-repeat="item in group" data-ng-class="{ \'block__item--last\': $last, \'block__item--odd\': $odd && isMobileView }"><div class="block__lbl" data-ng-class="{ \'block__lbl--padding-left\': (settingType.settingLevel === avaiSettingLevels.sportTypeBetType) && !isMobileView }" data-product="{{productId}}" data-sport-type="{{item.sportTypeId}}" data-bet-type="{{item.betTypeId}}">{{item | showingName:settingType.settingLevel:productName }}</div><div class="block__value" data-ng-include="valueTemplateUrl"></div></div></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{sportGroups[0][0].errorMessage}}</div></div></div>';
-            this.link = function (scope) {
-                _this.linkInternal(scope);
-            };
-        }
-        DefaultSettingTypeGroupingDirective.prototype.linkInternal = function (scope) {
-            _super.prototype.linkInternal.call(this, scope);
-            scope.avaiSettingLevels = CustomerSetting.SettingLevel;
-            if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
-                if (scope.settingType.settingLevel === CustomerSetting.SettingLevel.sportTypeBetType) {
-                    scope.sportGroups = this.groupSettingItemsBySportType(scope.settingType.settingItems);
-                }
-                else {
-                    scope.sportGroups = [scope.settingType.settingItems];
-                }
-            }
-        };
-        DefaultSettingTypeGroupingDirective.prototype.groupSettingItemsBySportType = function (settingItems) {
-            var currentSportTypeId = -1;
-            var result = [];
-            var group;
-            settingItems.forEach(function (item) {
-                var settingItem = item;
-                if (currentSportTypeId !== settingItem.sportTypeId) {
-                    if (group) {
-                        result.push(group);
-                    }
-                    currentSportTypeId = settingItem.sportTypeId;
-                    group = [];
-                }
-                group.push(settingItem);
-            });
-            if (group) {
-                result.push(group);
-            }
-            return result;
-        };
-        return DefaultSettingTypeGroupingDirective;
-    }(CustomerSetting.SettingTypeBaseDirective));
-    CustomerSetting.DefaultSettingTypeGroupingDirective = DefaultSettingTypeGroupingDirective;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    function ShowingName() {
-        return function (settingItem, settingLevel, productName) {
-            return settingLevel === CustomerSetting.SettingLevel.product
-                ? productName
-                : (settingLevel === CustomerSetting.SettingLevel.sportType
-                    ? settingItem.sportTypeName
-                    : settingItem.betTypeName);
-        };
-    }
-    CustomerSetting.ModuleRegister.filter("showingName", ShowingName);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36359,11 +36359,25 @@ var CustomerSetting;
     (function (SettingType1) {
         var AgentGeneralDataDirective = (function () {
             function AgentGeneralDataDirective() {
-                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Master\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl horizontal-stretch" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
+                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Master\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
             }
             return AgentGeneralDataDirective;
         }());
         CustomerSetting.ModuleRegister.directive("st1AgentGeneralData", AgentGeneralDataDirective);
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var MasterGeneralDataDirective = (function () {
+            function MasterGeneralDataDirective() {
+                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
+            }
+            return MasterGeneralDataDirective;
+        }());
+        CustomerSetting.ModuleRegister.directive("st1MasterGeneralData", MasterGeneralDataDirective);
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -36389,20 +36403,6 @@ var CustomerSetting;
             return HeadlineSuggestionDirective;
         }());
         CustomerSetting.ModuleRegister.directive("st1HeadlineSuggestion", HeadlineSuggestionDirective);
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var MasterGeneralDataDirective = (function () {
-            function MasterGeneralDataDirective() {
-                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl horizontal-stretch" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
-            }
-            return MasterGeneralDataDirective;
-        }());
-        CustomerSetting.ModuleRegister.directive("st1MasterGeneralData", MasterGeneralDataDirective);
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -36590,6 +36590,7 @@ var CustomerSetting;
             SubSectionBaseDirective.prototype.linkInternal = function (scope) {
                 scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
                 scope.isNew = this.settingTypesSharedValuesService.isNew;
+                scope.isMobileView = this.settingTypesSharedValuesService.isMobileView;
                 scope.avaiCustomerLevels = CustomerSetting.Level;
             };
             SubSectionBaseDirective.$inject = ["settingTypesSharedValuesService"];
@@ -36606,7 +36607,7 @@ var CustomerSetting;
         var MemberGeneralDataDirective = (function () {
             function MemberGeneralDataDirective(crossingSettingTypesServiceBus) {
                 var _this = this;
-                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Agent\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl horizontal-stretch" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'SpreadGroup\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'MemberPasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
+                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Agent\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'SpreadGroup\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'MemberPasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
                 this.link = function (scope) {
                     if (scope.isNew) {
                         scope.updateSpreadGroup = function () {
@@ -37321,7 +37322,7 @@ var CustomerSetting;
             function AccountDetailDirective(resourceService, settingTypesSharedValuesService) {
                 var _this = this;
                 _super.call(this, settingTypesSharedValuesService, null);
-                this.template = '<div class="setting-type-1"><div class="block {{avaiCustomerLevels[actorLevel]}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }" data-setting-field-group="settingType.settingItems[0]" data-resource-service-name="st1ResourceService"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="section" data-ng-if="settingType | validSettingType"><st1-general-data data-account-detail="settingType.settingItems[0]" data-is-editable="isEditable"></st1-general-data></div><div class="section section--last" data-ng-if="settingType | validSettingType"><st1-customer-credit data-account-detail="settingType.settingItems[0]" data-is-editable="isEditable" data-precision="settingType.creditPrecision"></st1-customer-credit><st1-position-taking data-ng-if="isEditable && settingType.settingItems[0].ptItems.length > 0" data-account-detail="settingType.settingItems[0]" data-is-editable="isEditable"></st1-position-taking></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{settingType.settingItems[0].errorMessage}}</div></div></div>';
+                this.template = '<div class="setting-type-1" data-ng-class="{ \'setting-type-1--readonly\': !isEditable }"><div class="block {{avaiCustomerLevels[actorLevel]}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }" data-setting-field-group="settingType.settingItems[0]" data-resource-service-name="st1ResourceService"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="section section--first" data-ng-if="settingType | validSettingType"><st1-general-data data-account-detail="settingType.settingItems[0]" data-is-editable="isEditable"></st1-general-data></div><div class="section section--last" data-ng-if="settingType | validSettingType"><st1-customer-credit data-account-detail="settingType.settingItems[0]" data-is-editable="isEditable" data-precision="settingType.creditPrecision"></st1-customer-credit><st1-position-taking data-ng-if="isEditable && settingType.settingItems[0].ptItems.length > 0" data-account-detail="settingType.settingItems[0]" data-is-editable="isEditable"></st1-position-taking></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{settingType.settingItems[0].errorMessage}}</div></div></div>';
                 this.link = function (scope) {
                     _this.linkInternal(scope);
                     scope.settingTypeName = _this.resourceService.getLabel("AccountDetail");

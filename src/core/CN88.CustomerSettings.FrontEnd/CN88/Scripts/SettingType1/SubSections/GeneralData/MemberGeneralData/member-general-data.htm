@@ -9,7 +9,9 @@
                 <span>{{::('Username' | st1Label)}}</span>
                 <span class="required-field-mark" data-ng-if="isNew"> *</span>
             </label>
-            <div class="setting-field-group__ctrl horizontal-stretch" data-ng-if="isNew">
+            <div class="setting-field-group__ctrl"
+                 data-ng-class="{ 'horizontal-stretch': isMobileView }"
+                 data-ng-if="isNew">
                 <span class="upline-username">{{accountDetail.uplineUsername}}</span>
                 <st1-username-suffix-group></st1-username-suffix-group>
             </div>

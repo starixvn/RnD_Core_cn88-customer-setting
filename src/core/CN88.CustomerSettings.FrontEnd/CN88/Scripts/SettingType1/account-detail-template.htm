@@ -1,4 +1,5 @@
-﻿<div class="setting-type-1">
+﻿<div class="setting-type-1"
+     data-ng-class="{ 'setting-type-1--readonly': !isEditable }">
     <div class="block {{avaiCustomerLevels[actorLevel]}}"
          data-ng-show="settingType"
          data-ng-class="{ 'block--error': !(settingType | validSettingType) }"
@@ -9,7 +10,7 @@
              data-ng-class="{ 'block__header--error': !(settingType | validSettingType) }">
             {{settingTypeName}}
         </div>
-        <div class="section" data-ng-if="settingType | validSettingType">
+        <div class="section section--first" data-ng-if="settingType | validSettingType">
             <st1-general-data data-account-detail="settingType.settingItems[0]"
                               data-is-editable="isEditable"></st1-general-data>
         </div>
