@@ -26,9 +26,9 @@ namespace CustomerSetting {
             "requestService",
             "settingTypesSharedValuesService"];
 
+        public title: string;
         public systemId: number;
         public isMobileView: boolean;
-        public isEditForm: boolean;
         public setting: Setting;
         public warningMessages: Result | UpdatingSettingResult;
         public requestMsgResult: Result | UpdatingSettingResult;
@@ -85,7 +85,7 @@ namespace CustomerSetting {
 
             this.systemId = this.parametersService.systemId;
             this.isMobileView = this.parametersService.isMobileView;
-            this.isEditForm = !this.parametersService.isNew;
+            this.title = this.detectTitle();
             this.requestService.registerSharedScope(this);
 
             angular.element(this.$window.document).ready(() => {
@@ -153,6 +153,40 @@ namespace CustomerSetting {
                     this.settingTypesSharedValuesService.register(this.setting, this.parametersService.uplineId);
                 });
             }
+        }
+
+        private detectTitle(): string {
+            var customerLevel = this.parametersService.getSettingQuery().customerLevel;
+            var isCreatingCustomer = this.parametersService.isNew;
+            var isEditingCustomer = !this.parametersService.isNew && this.parametersService.isEditable;
+
+            if (isCreatingCustomer) {
+                switch (customerLevel) {
+                    case Level.super:
+                        return this.resourceService.getLabel("NewSuper");
+                    case Level.master:
+                        return this.resourceService.getLabel("NewMaster");
+                    case Level.agent:
+                        return this.resourceService.getLabel("NewAgent");
+                    case Level.member:
+                        return this.resourceService.getLabel("NewMember");
+                }
+            }
+
+            if (isEditingCustomer) {
+                switch (customerLevel) {
+                    case Level.super:
+                        return this.resourceService.getLabel("EditSuper");
+                    case Level.master:
+                        return this.resourceService.getLabel("EditMaster");
+                    case Level.agent:
+                        return this.resourceService.getLabel("EditAgent");
+                    case Level.member:
+                        return this.resourceService.getLabel("EditMember");
+                }
+            }
+
+            return this.resourceService.getLabel("MySettings");
         }
     }
 

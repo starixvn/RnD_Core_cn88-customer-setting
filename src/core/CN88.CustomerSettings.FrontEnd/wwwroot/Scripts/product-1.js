@@ -35336,7 +35336,7 @@ var CustomerSetting;
             }
             this.systemId = this.parametersService.systemId;
             this.isMobileView = this.parametersService.isMobileView;
-            this.isEditForm = !this.parametersService.isNew;
+            this.title = this.detectTitle();
             this.requestService.registerSharedScope(this);
             angular.element(this.$window.document).ready(function () {
                 _this.querySetting();
@@ -35394,6 +35394,36 @@ var CustomerSetting;
                     _this.settingTypesSharedValuesService.register(_this.setting, _this.parametersService.uplineId);
                 });
             }
+        };
+        CustomerSettingController.prototype.detectTitle = function () {
+            var customerLevel = this.parametersService.getSettingQuery().customerLevel;
+            var isCreatingCustomer = this.parametersService.isNew;
+            var isEditingCustomer = !this.parametersService.isNew && this.parametersService.isEditable;
+            if (isCreatingCustomer) {
+                switch (customerLevel) {
+                    case CustomerSetting.Level.super:
+                        return this.resourceService.getLabel("NewSuper");
+                    case CustomerSetting.Level.master:
+                        return this.resourceService.getLabel("NewMaster");
+                    case CustomerSetting.Level.agent:
+                        return this.resourceService.getLabel("NewAgent");
+                    case CustomerSetting.Level.member:
+                        return this.resourceService.getLabel("NewMember");
+                }
+            }
+            if (isEditingCustomer) {
+                switch (customerLevel) {
+                    case CustomerSetting.Level.super:
+                        return this.resourceService.getLabel("EditSuper");
+                    case CustomerSetting.Level.master:
+                        return this.resourceService.getLabel("EditMaster");
+                    case CustomerSetting.Level.agent:
+                        return this.resourceService.getLabel("EditAgent");
+                    case CustomerSetting.Level.member:
+                        return this.resourceService.getLabel("EditMember");
+                }
+            }
+            return this.resourceService.getLabel("MySettings");
         };
         CustomerSettingController.$inject = [
             "$window",
@@ -35594,140 +35624,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    (function (SettingLevel) {
-        SettingLevel[SettingLevel["product"] = 1] = "product";
-        SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
-        SettingLevel[SettingLevel["betType"] = 3] = "betType";
-        SettingLevel[SettingLevel["sportTypeBetType"] = 4] = "sportTypeBetType";
-    })(CustomerSetting.SettingLevel || (CustomerSetting.SettingLevel = {}));
-    var SettingLevel = CustomerSetting.SettingLevel;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingTypeBaseDirective = (function () {
-        function SettingTypeBaseDirective(settingTypesSharedValuesService, instantiateSettingItem) {
-            var _this = this;
-            this.replace = true;
-            this.link = function (scope) {
-                _this.linkInternal(scope);
-            };
-            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
-            this.instantiateSettingItem = instantiateSettingItem;
-        }
-        Object.defineProperty(SettingTypeBaseDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    settingType: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingTypeBaseDirective.prototype.linkInternal = function (scope) {
-            var _this = this;
-            scope.actorLevel = this.settingTypesSharedValuesService.actorLevel;
-            scope.customerId = this.settingTypesSharedValuesService.customerId;
-            scope.uplineId = this.settingTypesSharedValuesService.uplineId;
-            scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
-            scope.productId = this.settingTypesSharedValuesService.productId;
-            scope.productName = this.settingTypesSharedValuesService.productName;
-            scope.isNew = this.settingTypesSharedValuesService.isNew;
-            scope.isMobileView = this.settingTypesSharedValuesService.isMobileView;
-            scope.isEditable = this.settingTypesSharedValuesService.isEditable && scope.settingType.displayMode === CustomerSetting.DisplayMode.editable;
-            scope.avaiCustomerLevels = CustomerSetting.Level;
-            if (this.instantiateSettingItem) {
-                if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
-                    if (scope.settingType.isError) {
-                        if (scope.settingType.settingItems.length > 0) {
-                            scope.settingType.settingItems[0] = new CustomerSetting.ErrorSettingItem(scope.settingType.settingItems[0]);
-                        }
-                    }
-                    else {
-                        scope.settingType.settingItems.forEach(function (item, index) {
-                            if (item) {
-                                scope.settingType.settingItems[index] = _this.instantiateSettingItem(item, scope.isNew, scope.customerLevel, scope.uplineId);
-                            }
-                        });
-                    }
-                }
-            }
-        };
-        return SettingTypeBaseDirective;
-    }());
-    CustomerSetting.SettingTypeBaseDirective = SettingTypeBaseDirective;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomerSetting;
-(function (CustomerSetting) {
-    var DefaultSettingTypeGroupingDirective = (function (_super) {
-        __extends(DefaultSettingTypeGroupingDirective, _super);
-        function DefaultSettingTypeGroupingDirective() {
-            var _this = this;
-            _super.apply(this, arguments);
-            this.template = '<div class="block setting-type-{{settingType.id}} {{cssClass}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="block__content"><div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div><div class="block__item-group" data-ng-class="{ \'block__item-group--last\': $last }" data-ng-if="settingType | validSettingType" data-ng-repeat="group in sportGroups"><div class="block__sub-header" data-ng-if="settingType.settingLevel === avaiSettingLevels.sportTypeBetType" data-sport-type="{{group[0].sportTypeId}}">{{group[0].sportTypeName}}</div><div class="block__item" data-ng-repeat="item in group" data-ng-class="{ \'block__item--last\': $last, \'block__item--odd\': $odd && isMobileView }"><div class="block__lbl" data-ng-class="{ \'block__lbl--padding-left\': (settingType.settingLevel === avaiSettingLevels.sportTypeBetType) && !isMobileView }" data-product="{{productId}}" data-sport-type="{{item.sportTypeId}}" data-bet-type="{{item.betTypeId}}">{{item | showingName:settingType.settingLevel:productName }}</div><div class="block__value" data-ng-include="valueTemplateUrl"></div></div></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{sportGroups[0][0].errorMessage}}</div></div></div>';
-            this.link = function (scope) {
-                _this.linkInternal(scope);
-            };
-        }
-        DefaultSettingTypeGroupingDirective.prototype.linkInternal = function (scope) {
-            _super.prototype.linkInternal.call(this, scope);
-            scope.avaiSettingLevels = CustomerSetting.SettingLevel;
-            if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
-                if (scope.settingType.settingLevel === CustomerSetting.SettingLevel.sportTypeBetType) {
-                    scope.sportGroups = this.groupSettingItemsBySportType(scope.settingType.settingItems);
-                }
-                else {
-                    scope.sportGroups = [scope.settingType.settingItems];
-                }
-            }
-        };
-        DefaultSettingTypeGroupingDirective.prototype.groupSettingItemsBySportType = function (settingItems) {
-            var currentSportTypeId = -1;
-            var result = [];
-            var group;
-            settingItems.forEach(function (item) {
-                var settingItem = item;
-                if (currentSportTypeId !== settingItem.sportTypeId) {
-                    if (group) {
-                        result.push(group);
-                    }
-                    currentSportTypeId = settingItem.sportTypeId;
-                    group = [];
-                }
-                group.push(settingItem);
-            });
-            if (group) {
-                result.push(group);
-            }
-            return result;
-        };
-        return DefaultSettingTypeGroupingDirective;
-    }(CustomerSetting.SettingTypeBaseDirective));
-    CustomerSetting.DefaultSettingTypeGroupingDirective = DefaultSettingTypeGroupingDirective;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    function ShowingName() {
-        return function (settingItem, settingLevel, productName) {
-            return settingLevel === CustomerSetting.SettingLevel.product
-                ? productName
-                : (settingLevel === CustomerSetting.SettingLevel.sportType
-                    ? settingItem.sportTypeName
-                    : settingItem.betTypeName);
-        };
-    }
-    CustomerSetting.ModuleRegister.filter("showingName", ShowingName);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     var NumericInputDirective = (function () {
         function NumericInputDirective($filter, appConfigService) {
             var _this = this;
@@ -35878,6 +35774,140 @@ var CustomerSetting;
         return NumericInputDirective;
     }());
     CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    (function (SettingLevel) {
+        SettingLevel[SettingLevel["product"] = 1] = "product";
+        SettingLevel[SettingLevel["sportType"] = 2] = "sportType";
+        SettingLevel[SettingLevel["betType"] = 3] = "betType";
+        SettingLevel[SettingLevel["sportTypeBetType"] = 4] = "sportTypeBetType";
+    })(CustomerSetting.SettingLevel || (CustomerSetting.SettingLevel = {}));
+    var SettingLevel = CustomerSetting.SettingLevel;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingTypeBaseDirective = (function () {
+        function SettingTypeBaseDirective(settingTypesSharedValuesService, instantiateSettingItem) {
+            var _this = this;
+            this.replace = true;
+            this.link = function (scope) {
+                _this.linkInternal(scope);
+            };
+            this.settingTypesSharedValuesService = settingTypesSharedValuesService;
+            this.instantiateSettingItem = instantiateSettingItem;
+        }
+        Object.defineProperty(SettingTypeBaseDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    settingType: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingTypeBaseDirective.prototype.linkInternal = function (scope) {
+            var _this = this;
+            scope.actorLevel = this.settingTypesSharedValuesService.actorLevel;
+            scope.customerId = this.settingTypesSharedValuesService.customerId;
+            scope.uplineId = this.settingTypesSharedValuesService.uplineId;
+            scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
+            scope.productId = this.settingTypesSharedValuesService.productId;
+            scope.productName = this.settingTypesSharedValuesService.productName;
+            scope.isNew = this.settingTypesSharedValuesService.isNew;
+            scope.isMobileView = this.settingTypesSharedValuesService.isMobileView;
+            scope.isEditable = this.settingTypesSharedValuesService.isEditable && scope.settingType.displayMode === CustomerSetting.DisplayMode.editable;
+            scope.avaiCustomerLevels = CustomerSetting.Level;
+            if (this.instantiateSettingItem) {
+                if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
+                    if (scope.settingType.isError) {
+                        if (scope.settingType.settingItems.length > 0) {
+                            scope.settingType.settingItems[0] = new CustomerSetting.ErrorSettingItem(scope.settingType.settingItems[0]);
+                        }
+                    }
+                    else {
+                        scope.settingType.settingItems.forEach(function (item, index) {
+                            if (item) {
+                                scope.settingType.settingItems[index] = _this.instantiateSettingItem(item, scope.isNew, scope.customerLevel, scope.uplineId);
+                            }
+                        });
+                    }
+                }
+            }
+        };
+        return SettingTypeBaseDirective;
+    }());
+    CustomerSetting.SettingTypeBaseDirective = SettingTypeBaseDirective;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    var DefaultSettingTypeGroupingDirective = (function (_super) {
+        __extends(DefaultSettingTypeGroupingDirective, _super);
+        function DefaultSettingTypeGroupingDirective() {
+            var _this = this;
+            _super.apply(this, arguments);
+            this.template = '<div class="block setting-type-{{settingType.id}} {{cssClass}}" data-ng-show="settingType" data-ng-class="{ \'block--error\': !(settingType | validSettingType) }"><div class="block__header" data-setting-type="{{settingType.id}}" data-ng-class="{ \'block__header--error\': !(settingType | validSettingType) }">{{settingTypeName}}</div><div class="block__content"><div class="block__lbl-group" data-ng-include="headerTemplateUrl"></div><div class="block__item-group" data-ng-class="{ \'block__item-group--last\': $last }" data-ng-if="settingType | validSettingType" data-ng-repeat="group in sportGroups"><div class="block__sub-header" data-ng-if="settingType.settingLevel === avaiSettingLevels.sportTypeBetType" data-sport-type="{{group[0].sportTypeId}}">{{group[0].sportTypeName}}</div><div class="block__item" data-ng-repeat="item in group" data-ng-class="{ \'block__item--last\': $last, \'block__item--odd\': $odd && isMobileView }"><div class="block__lbl" data-ng-class="{ \'block__lbl--padding-left\': (settingType.settingLevel === avaiSettingLevels.sportTypeBetType) && !isMobileView }" data-product="{{productId}}" data-sport-type="{{item.sportTypeId}}" data-bet-type="{{item.betTypeId}}">{{item | showingName:settingType.settingLevel:productName }}</div><div class="block__value" data-ng-include="valueTemplateUrl"></div></div></div><div class="block__item block__item--error" data-ng-if="!(settingType | validSettingType)">{{sportGroups[0][0].errorMessage}}</div></div></div>';
+            this.link = function (scope) {
+                _this.linkInternal(scope);
+            };
+        }
+        DefaultSettingTypeGroupingDirective.prototype.linkInternal = function (scope) {
+            _super.prototype.linkInternal.call(this, scope);
+            scope.avaiSettingLevels = CustomerSetting.SettingLevel;
+            if (scope.settingType && angular.isArray(scope.settingType.settingItems)) {
+                if (scope.settingType.settingLevel === CustomerSetting.SettingLevel.sportTypeBetType) {
+                    scope.sportGroups = this.groupSettingItemsBySportType(scope.settingType.settingItems);
+                }
+                else {
+                    scope.sportGroups = [scope.settingType.settingItems];
+                }
+            }
+        };
+        DefaultSettingTypeGroupingDirective.prototype.groupSettingItemsBySportType = function (settingItems) {
+            var currentSportTypeId = -1;
+            var result = [];
+            var group;
+            settingItems.forEach(function (item) {
+                var settingItem = item;
+                if (currentSportTypeId !== settingItem.sportTypeId) {
+                    if (group) {
+                        result.push(group);
+                    }
+                    currentSportTypeId = settingItem.sportTypeId;
+                    group = [];
+                }
+                group.push(settingItem);
+            });
+            if (group) {
+                result.push(group);
+            }
+            return result;
+        };
+        return DefaultSettingTypeGroupingDirective;
+    }(CustomerSetting.SettingTypeBaseDirective));
+    CustomerSetting.DefaultSettingTypeGroupingDirective = DefaultSettingTypeGroupingDirective;
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    function ShowingName() {
+        return function (settingItem, settingLevel, productName) {
+            return settingLevel === CustomerSetting.SettingLevel.product
+                ? productName
+                : (settingLevel === CustomerSetting.SettingLevel.sportType
+                    ? settingItem.sportTypeName
+                    : settingItem.betTypeName);
+        };
+    }
+    CustomerSetting.ModuleRegister.filter("showingName", ShowingName);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36321,51 +36351,6 @@ var CustomerSetting;
         System[System["internalAlpha"] = 3] = "internalAlpha";
     })(CustomerSetting.System || (CustomerSetting.System = {}));
     var System = CustomerSetting.System;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var AgentPositionTakingDirective = (function () {
-            function AgentPositionTakingDirective() {
-                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name position-taking--has-constraint"><span>{{ptItem.sportTypeName}}</span> <span class="position-taking__constraint-group"><span class="position-taking__constraint">{{\'MinAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.minAllowedPT | formatPercentage}}</span></span> <span class="position-taking__constraint">{{\'MaxAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.maxAllowedPT | formatPercentage}}</span></span></span></div><div data-ng-if="isEditable && isNew"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'MasterPT\' | st1Label)}}</label><div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div><div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT"><select class="setting-field setting-field--fullwidth" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"><option>-</option></select></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'AgentPT\' | st1Label)}}</label><div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div><div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT"><select class="setting-field setting-field--fullwidth" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"><option>-</option></select></div></div></div><div data-ng-if="isEditable && !isNew"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'MasterPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.currentMasterPT | formatPercentage}}</label> <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'AgentPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.currentAgentPT | formatPercentage}}</label> <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'MasterPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.masterPT | formatPercentage}}</label> <label class="w50-percent">-</label></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'AgentPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.agentPT | formatPercentage}}</label> <label class="w50-percent">-</label></div></div></div></div>';
-                this.replace = true;
-            }
-            return AgentPositionTakingDirective;
-        }());
-        CustomerSetting.ModuleRegister.directive("st1AgentPositionTaking", AgentPositionTakingDirective);
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var MasterPositionTakingDirective = (function () {
-            function MasterPositionTakingDirective() {
-                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name">{{ptItem.sportTypeName}}</div><div class="setting-field-group" data-ng-if="isEditable && isNew"><label class="setting-field-group__lbl">{{::(\'SuperPT\' | st1Label)}}</label><div class="setting-field-group__ctrl"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superPT" data-min="ptItem.minSuperPT" data-max="ptItem.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superPT\'}}"></percentage-dropdown></div></div><div class="setting-field-group" data-ng-if="isEditable && !isNew"><label class="setting-field-group__lbl">{{::(\'SuperPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.currentSuperPT | formatPercentage}}</label> <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superPT" data-min="ptItem.minSuperPT" data-max="ptItem.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superPT\'}}"></percentage-dropdown></div></div></div><div class="setting-field-group" data-ng-if="!isEditable"><label class="setting-field-group__lbl">{{::(\'SuperPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.superPT | formatPercentage}}</label> <label class="w50-percent">-</label></div></div></div>';
-                this.replace = true;
-            }
-            return MasterPositionTakingDirective;
-        }());
-        CustomerSetting.ModuleRegister.directive("st1MasterPositionTaking", MasterPositionTakingDirective);
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var SuperPositionTakingDirective = (function () {
-            function SuperPositionTakingDirective() {
-                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name">{{ptItem.sportTypeName}}</div><div data-ng-if="isEditable && isNew"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="setting-field-group__ctrl"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMinPT" data-min="ptItem.minSuperMinPT" data-max="ptItem.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMinPT\'}}"></percentage-dropdown></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="setting-field-group__ctrl"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMaxPT" data-min="ptItem.minSuperMaxPT" data-max="ptItem.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMaxPT\'}}"></percentage-dropdown></div></div></div><div data-ng-if="isEditable && !isNew"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.currentSuperMinPT | formatPercentage}}</label> <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMinPT" data-min="ptItem.minSuperMinPT" data-max="ptItem.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMinPT\'}}"></percentage-dropdown></div></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.currentSuperMaxPT | formatPercentage}}</label> <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMaxPT" data-min="ptItem.minSuperMaxPT" data-max="ptItem.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMaxPT\'}}"></percentage-dropdown></div></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.superMinPT | formatPercentage}}</label> <label class="w50-percent">-</label></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.superMaxPT | formatPercentage}}</label> <label class="w50-percent">-</label></div></div></div></div>';
-                this.replace = true;
-            }
-            return SuperPositionTakingDirective;
-        }());
-        CustomerSetting.ModuleRegister.directive("st1SuperPositionTaking", SuperPositionTakingDirective);
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36956,6 +36941,51 @@ var CustomerSetting;
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var AgentPositionTakingDirective = (function () {
+            function AgentPositionTakingDirective() {
+                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name position-taking--has-constraint"><span>{{ptItem.sportTypeName}}</span> <span class="position-taking__constraint-group"><span class="position-taking__constraint">{{\'MinAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.minAllowedPT | formatPercentage}}</span></span> <span class="position-taking__constraint">{{\'MaxAllowed\' | st1Label}} <span class="position-taking__constraint__value">{{ptItem.maxAllowedPT | formatPercentage}}</span></span></span></div><div data-ng-if="isEditable && isNew"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'MasterPT\' | st1Label)}}</label><div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div><div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT"><select class="setting-field setting-field--fullwidth" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"><option>-</option></select></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'AgentPT\' | st1Label)}}</label><div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT <= ptItem.maxAllowedPT"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div><div class="setting-field-group__ctrl" data-ng-if="ptItem.minAllowedPT > ptItem.maxAllowedPT"><select class="setting-field setting-field--fullwidth" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"><option>-</option></select></div></div></div><div data-ng-if="isEditable && !isNew"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'MasterPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.currentMasterPT | formatPercentage}}</label> <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.masterPT" data-min="0" data-max="ptItem.maxMasterPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-masterPT\'}}"></percentage-dropdown></div></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'AgentPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.currentAgentPT | formatPercentage}}</label> <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.agentPT" data-min="0" data-max="ptItem.maxAgentPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-agentPT\'}}"></percentage-dropdown></div></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'MasterPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.masterPT | formatPercentage}}</label> <label class="w50-percent">-</label></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'AgentPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.agentPT | formatPercentage}}</label> <label class="w50-percent">-</label></div></div></div></div>';
+                this.replace = true;
+            }
+            return AgentPositionTakingDirective;
+        }());
+        CustomerSetting.ModuleRegister.directive("st1AgentPositionTaking", AgentPositionTakingDirective);
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var MasterPositionTakingDirective = (function () {
+            function MasterPositionTakingDirective() {
+                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name">{{ptItem.sportTypeName}}</div><div class="setting-field-group" data-ng-if="isEditable && isNew"><label class="setting-field-group__lbl">{{::(\'SuperPT\' | st1Label)}}</label><div class="setting-field-group__ctrl"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superPT" data-min="ptItem.minSuperPT" data-max="ptItem.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superPT\'}}"></percentage-dropdown></div></div><div class="setting-field-group" data-ng-if="isEditable && !isNew"><label class="setting-field-group__lbl">{{::(\'SuperPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.currentSuperPT | formatPercentage}}</label> <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superPT" data-min="ptItem.minSuperPT" data-max="ptItem.maxSuperPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superPT\'}}"></percentage-dropdown></div></div></div><div class="setting-field-group" data-ng-if="!isEditable"><label class="setting-field-group__lbl">{{::(\'SuperPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.superPT | formatPercentage}}</label> <label class="w50-percent">-</label></div></div></div>';
+                this.replace = true;
+            }
+            return MasterPositionTakingDirective;
+        }());
+        CustomerSetting.ModuleRegister.directive("st1MasterPositionTaking", MasterPositionTakingDirective);
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var SuperPositionTakingDirective = (function () {
+            function SuperPositionTakingDirective() {
+                this.template = '<div data-ng-repeat="ptItem in accountDetail.ptItems track by $index"><div class="position-taking__group-name">{{ptItem.sportTypeName}}</div><div data-ng-if="isEditable && isNew"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="setting-field-group__ctrl"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMinPT" data-min="ptItem.minSuperMinPT" data-max="ptItem.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMinPT\'}}"></percentage-dropdown></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="setting-field-group__ctrl"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMaxPT" data-min="ptItem.minSuperMaxPT" data-max="ptItem.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMaxPT\'}}"></percentage-dropdown></div></div></div><div data-ng-if="isEditable && !isNew"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.currentSuperMinPT | formatPercentage}}</label> <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMinPT" data-min="ptItem.minSuperMinPT" data-max="ptItem.maxSuperMinPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMinPT\'}}"></percentage-dropdown></div></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.currentSuperMaxPT | formatPercentage}}</label> <label class="w50-percent" data-ng-if="accountDetail.isPTReadOnly">-</label><div class="w50-percent" data-ng-if="!accountDetail.isPTReadOnly"><percentage-dropdown class="setting-field--fullwidth" data-ng-model="ptItem.superMaxPT" data-min="ptItem.minSuperMaxPT" data-max="ptItem.maxSuperMaxPT" data-step="accountDetail.intervalValue" data-setting-field="{{\'ptItems-\' + $index + \'-superMaxPT\'}}"></percentage-dropdown></div></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMinPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.superMinPT | formatPercentage}}</label> <label class="w50-percent">-</label></div></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'SuperMaxPT\' | st1Label)}}</label><div class="setting-field-group__ctrl horizontal-stretch"><label class="w50-percent">{{ptItem.superMaxPT | formatPercentage}}</label> <label class="w50-percent">-</label></div></div></div></div>';
+                this.replace = true;
+            }
+            return SuperPositionTakingDirective;
+        }());
+        CustomerSetting.ModuleRegister.directive("st1SuperPositionTaking", SuperPositionTakingDirective);
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -37361,15 +37391,15 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
-        var PositionTakingDirective = (function (_super) {
-            __extends(PositionTakingDirective, _super);
-            function PositionTakingDirective() {
+        var GeneralDataDirective = (function (_super) {
+            __extends(GeneralDataDirective, _super);
+            function GeneralDataDirective() {
                 _super.apply(this, arguments);
-                this.template = '<div class="position-taking" data-ng-class="{ \'position-taking--edit\': !isNew && !accountDetail.isPTReadOnly }"><div class="sub-header">{{::(\'PositionTaking\' | st1Label)}}</div><div class="msg msg--error" data-ng-if="isEditable && !isNew && !accountDetail.isPTReadOnly"><div class="icon msg__icon"></div><div class="msg__content">{{\'PTEffectiveTime\' | st1Message:(accountDetail.ptEffectiveTime | formatDateTime)}}</div></div><st1-super-position-taking data-ng-if="customerLevel === avaiCustomerLevels.super"></st1-super-position-taking><st1-master-position-taking data-ng-if="customerLevel === avaiCustomerLevels.master"></st1-master-position-taking><st1-agent-position-taking data-ng-if="customerLevel === avaiCustomerLevels.agent"></st1-agent-position-taking></div>';
+                this.template = '<div class="general-data"><div class="sub-header">{{::(\'GeneralData\' | st1Label)}}</div><st1-super-general-data data-ng-if="customerLevel === avaiCustomerLevels.super"></st1-super-general-data><st1-master-general-data data-ng-if="customerLevel === avaiCustomerLevels.master"></st1-master-general-data><st1-agent-general-data data-ng-if="customerLevel === avaiCustomerLevels.agent"></st1-agent-general-data><st1-member-general-data data-ng-if="customerLevel === avaiCustomerLevels.member"></st1-member-general-data></div>';
             }
-            return PositionTakingDirective;
+            return GeneralDataDirective;
         }(SettingType1.SubSectionBaseDirective));
-        CustomerSetting.ModuleRegister.directive("st1PositionTaking", PositionTakingDirective);
+        CustomerSetting.ModuleRegister.directive("st1GeneralData", GeneralDataDirective);
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -37382,15 +37412,15 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
-        var GeneralDataDirective = (function (_super) {
-            __extends(GeneralDataDirective, _super);
-            function GeneralDataDirective() {
+        var PositionTakingDirective = (function (_super) {
+            __extends(PositionTakingDirective, _super);
+            function PositionTakingDirective() {
                 _super.apply(this, arguments);
-                this.template = '<div class="general-data"><div class="sub-header">{{::(\'GeneralData\' | st1Label)}}</div><st1-super-general-data data-ng-if="customerLevel === avaiCustomerLevels.super"></st1-super-general-data><st1-master-general-data data-ng-if="customerLevel === avaiCustomerLevels.master"></st1-master-general-data><st1-agent-general-data data-ng-if="customerLevel === avaiCustomerLevels.agent"></st1-agent-general-data><st1-member-general-data data-ng-if="customerLevel === avaiCustomerLevels.member"></st1-member-general-data></div>';
+                this.template = '<div class="position-taking" data-ng-class="{ \'position-taking--edit\': !isNew && !accountDetail.isPTReadOnly }"><div class="sub-header">{{::(\'PositionTaking\' | st1Label)}}</div><div class="msg msg--error" data-ng-if="isEditable && !isNew && !accountDetail.isPTReadOnly"><div class="icon msg__icon"></div><div class="msg__content">{{\'PTEffectiveTime\' | st1Message:(accountDetail.ptEffectiveTime | formatDateTime)}}</div></div><st1-super-position-taking data-ng-if="customerLevel === avaiCustomerLevels.super"></st1-super-position-taking><st1-master-position-taking data-ng-if="customerLevel === avaiCustomerLevels.master"></st1-master-position-taking><st1-agent-position-taking data-ng-if="customerLevel === avaiCustomerLevels.agent"></st1-agent-position-taking></div>';
             }
-            return GeneralDataDirective;
+            return PositionTakingDirective;
         }(SettingType1.SubSectionBaseDirective));
-        CustomerSetting.ModuleRegister.directive("st1GeneralData", GeneralDataDirective);
+        CustomerSetting.ModuleRegister.directive("st1PositionTaking", PositionTakingDirective);
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -37716,18 +37746,45 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
     var labels = {};
 
     labels["en-us"] = {
+        "NewSuper": "New SMA",
+        "NewMaster": "New Master Agent",
+        "NewAgent": "New Agent",
+        "NewMember": "New Member",
+        "EditSuper": "Edit SMA",
+        "EditMaster": "Edit Master Agent",
+        "EditAgent": "Edit Agent",
+        "EditMember": "Edit Member",
+        "MySettings": "My Settings",
         "Cancel": "Cancel",
         "Save": "Save",
         "SaveAndNew": "Save & New"
     };
 
     labels["zh-hans"] = {
+        "NewSuper": "新增股东",
+        "NewMaster": "新增总代理",
+        "NewAgent": "新增代理",
+        "NewMember": "新增会员",
+        "EditSuper": "编辑股东",
+        "EditMaster": "编辑总代理",
+        "EditAgent": "编辑代理商",
+        "EditMember": "编辑会员",
+        "MySettings": "我的设定",
         "Cancel": "取消",
         "Save": "保存",
         "SaveAndNew": "保存与新增"
     };
 
     labels["zh-tw"] = {
+        "NewSuper": "新增股東",
+        "NewMaster": "新增總代理",
+        "NewAgent": "新增代理",
+        "NewMember": "新增會員",
+        "EditSuper": "編輯股東",
+        "EditMaster": "編輯總代理",
+        "EditAgent": "編輯代理商",
+        "EditMember": "編輯會員",
+        "MySettings": "我的設定",
         "Cancel": "取消",
         "Save": "保存",
         "SaveAndNew": "保存與新增"

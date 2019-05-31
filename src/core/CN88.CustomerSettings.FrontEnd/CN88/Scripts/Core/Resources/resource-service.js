@@ -4,18 +4,45 @@
     var labels = {};
 
     labels["en-us"] = {
+        "NewSuper": "New SMA",
+        "NewMaster": "New Master Agent",
+        "NewAgent": "New Agent",
+        "NewMember": "New Member",
+        "EditSuper": "Edit SMA",
+        "EditMaster": "Edit Master Agent",
+        "EditAgent": "Edit Agent",
+        "EditMember": "Edit Member",
+        "MySettings": "My Settings",
         "Cancel": "Cancel",
         "Save": "Save",
         "SaveAndNew": "Save & New"
     };
 
     labels["zh-hans"] = {
+        "NewSuper": "新增股东",
+        "NewMaster": "新增总代理",
+        "NewAgent": "新增代理",
+        "NewMember": "新增会员",
+        "EditSuper": "编辑股东",
+        "EditMaster": "编辑总代理",
+        "EditAgent": "编辑代理商",
+        "EditMember": "编辑会员",
+        "MySettings": "我的设定",
         "Cancel": "取消",
         "Save": "保存",
         "SaveAndNew": "保存与新增"
     };
 
     labels["zh-tw"] = {
+        "NewSuper": "新增股東",
+        "NewMaster": "新增總代理",
+        "NewAgent": "新增代理",
+        "NewMember": "新增會員",
+        "EditSuper": "編輯股東",
+        "EditMaster": "編輯總代理",
+        "EditAgent": "編輯代理商",
+        "EditMember": "編輯會員",
+        "MySettings": "我的設定",
         "Cancel": "取消",
         "Save": "保存",
         "SaveAndNew": "保存與新增"
