@@ -36406,6 +36406,8 @@ var CustomerSetting;
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
+
+
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -36475,158 +36477,6 @@ var CustomerSetting;
         SettingType1.AccountDetailSettingItem = AccountDetailSettingItem;
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
-
-
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var MemberAccountDetailSettingItem = (function (_super) {
-            __extends(MemberAccountDetailSettingItem, _super);
-            function MemberAccountDetailSettingItem(accountDetail, isNew, customerLevel, hashKey) {
-                if (isNew === void 0) { isNew = false; }
-                if (customerLevel === void 0) { customerLevel = null; }
-                if (hashKey === void 0) { hashKey = null; }
-                if (accountDetail) {
-                    _super.call(this, accountDetail, isNew, customerLevel, hashKey);
-                    this.usernameSuffixes = accountDetail.usernameSuffixes;
-                    this.spreadGroups = accountDetail.spreadGroups;
-                    this.spreadGroup = accountDetail.spreadGroup;
-                }
-                this.ignoredProperties = this.ignoredProperties.concat(["usernameSuffixes", "spreadGroups"]);
-                if (!this.isNew) {
-                    this.ignoredProperties.push("spreadGroup");
-                }
-            }
-            MemberAccountDetailSettingItem.prototype.validate = function () {
-                if (!this.validateUsername()) {
-                    return false;
-                }
-                if (this.isNew && !this.validatePassword()) {
-                    return false;
-                }
-                if (!this.validateCredit()) {
-                    return false;
-                }
-                if (this.isNew && !this.validateOddsSpread()) {
-                    return false;
-                }
-                this.resetValidationState();
-                return true;
-            };
-            MemberAccountDetailSettingItem.prototype.validatePassword = function () {
-                if (!this.password || this.password.length === 0) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
-                    return false;
-                }
-                var memberPasswordPattern = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*[\s])).{6,10}$/;
-                if (!memberPasswordPattern.test(this.password)) {
-                    this.validationState = new CustomerSetting.ValidationResult("MemberPasswordRules", "password");
-                    return false;
-                }
-                if (this.confirmPassword !== this.password) {
-                    this.validationState = new CustomerSetting.ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
-                    return false;
-                }
-                return true;
-            };
-            MemberAccountDetailSettingItem.prototype.validateCredit = function () {
-                if (!CustomerSetting.isNumber(this.credit)) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "credit");
-                    return false;
-                }
-                if (this.credit < this.minCredit) {
-                    this.validationState = new CustomerSetting.ValidationResult("CreditsMustBeGreaterThanOrEqualTo", "credit", [this.minCredit], { precision: 2 });
-                    return false;
-                }
-                if (this.credit > this.maxCredit) {
-                    this.validationState = new CustomerSetting.ValidationResult("CreditsMustBeLessThanOrEqualTo", "credit", [this.maxCredit], { precision: 2 });
-                    return false;
-                }
-                return true;
-            };
-            MemberAccountDetailSettingItem.prototype.validateOddsSpread = function () {
-                if (!this.spreadGroup) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "spreadGroup");
-                    return false;
-                }
-                return true;
-            };
-            return MemberAccountDetailSettingItem;
-        }(SettingType1.AccountDetailSettingItem));
-        SettingType1.MemberAccountDetailSettingItem = MemberAccountDetailSettingItem;
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var SubSectionBaseDirective = (function () {
-            function SubSectionBaseDirective(settingTypesSharedValuesService) {
-                var _this = this;
-                this.replace = true;
-                this.link = function (scope) {
-                    _this.linkInternal(scope);
-                };
-                this.settingTypesSharedValuesService = settingTypesSharedValuesService;
-            }
-            Object.defineProperty(SubSectionBaseDirective.prototype, "scope", {
-                get: function () {
-                    return {
-                        accountDetail: "=",
-                        isEditable: "="
-                    };
-                },
-                enumerable: true,
-                configurable: true
-            });
-            SubSectionBaseDirective.prototype.linkInternal = function (scope) {
-                scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
-                scope.isNew = this.settingTypesSharedValuesService.isNew;
-                scope.isMobileView = this.settingTypesSharedValuesService.isMobileView;
-                scope.avaiCustomerLevels = CustomerSetting.Level;
-            };
-            SubSectionBaseDirective.$inject = ["settingTypesSharedValuesService"];
-            return SubSectionBaseDirective;
-        }());
-        SettingType1.SubSectionBaseDirective = SubSectionBaseDirective;
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var MemberGeneralDataDirective = (function () {
-            function MemberGeneralDataDirective(crossingSettingTypesServiceBus) {
-                var _this = this;
-                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Agent\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'SpreadGroup\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'MemberPasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
-                this.link = function (scope) {
-                    if (scope.isNew) {
-                        scope.updateSpreadGroup = function () {
-                            _this.crossingSettingTypesServiceBus.execute("updateMemberSpreadGroup", {
-                                newMemberGroup: scope.accountDetail.spreadGroup.groupName
-                            });
-                        };
-                    }
-                };
-                this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
-            }
-            MemberGeneralDataDirective.$inject = ["crossingSettingTypesServiceBus"];
-            return MemberGeneralDataDirective;
-        }());
-        CustomerSetting.ModuleRegister.directive("st1MemberGeneralData", MemberGeneralDataDirective);
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -36827,6 +36677,42 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
+        var SubSectionBaseDirective = (function () {
+            function SubSectionBaseDirective(settingTypesSharedValuesService) {
+                var _this = this;
+                this.replace = true;
+                this.link = function (scope) {
+                    _this.linkInternal(scope);
+                };
+                this.settingTypesSharedValuesService = settingTypesSharedValuesService;
+            }
+            Object.defineProperty(SubSectionBaseDirective.prototype, "scope", {
+                get: function () {
+                    return {
+                        accountDetail: "=",
+                        isEditable: "="
+                    };
+                },
+                enumerable: true,
+                configurable: true
+            });
+            SubSectionBaseDirective.prototype.linkInternal = function (scope) {
+                scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
+                scope.isNew = this.settingTypesSharedValuesService.isNew;
+                scope.isMobileView = this.settingTypesSharedValuesService.isMobileView;
+                scope.avaiCustomerLevels = CustomerSetting.Level;
+            };
+            SubSectionBaseDirective.$inject = ["settingTypesSharedValuesService"];
+            return SubSectionBaseDirective;
+        }());
+        SettingType1.SubSectionBaseDirective = SubSectionBaseDirective;
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
         var SuperGeneralDataDirective = (function () {
             function SuperGeneralDataDirective(appConfigService, requestService) {
                 var _this = this;
@@ -36856,6 +36742,120 @@ var CustomerSetting;
             return SuperGeneralDataDirective;
         }());
         CustomerSetting.ModuleRegister.directive("st1SuperGeneralData", SuperGeneralDataDirective);
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var MemberAccountDetailSettingItem = (function (_super) {
+            __extends(MemberAccountDetailSettingItem, _super);
+            function MemberAccountDetailSettingItem(accountDetail, isNew, customerLevel, hashKey) {
+                if (isNew === void 0) { isNew = false; }
+                if (customerLevel === void 0) { customerLevel = null; }
+                if (hashKey === void 0) { hashKey = null; }
+                if (accountDetail) {
+                    _super.call(this, accountDetail, isNew, customerLevel, hashKey);
+                    this.usernameSuffixes = accountDetail.usernameSuffixes;
+                    this.spreadGroups = accountDetail.spreadGroups;
+                    this.spreadGroup = accountDetail.spreadGroup;
+                }
+                this.ignoredProperties = this.ignoredProperties.concat(["usernameSuffixes", "spreadGroups"]);
+                if (!this.isNew) {
+                    this.ignoredProperties.push("spreadGroup");
+                }
+            }
+            MemberAccountDetailSettingItem.prototype.validate = function () {
+                if (!this.validateUsername()) {
+                    return false;
+                }
+                if (this.isNew && !this.validatePassword()) {
+                    return false;
+                }
+                if (!this.validateCredit()) {
+                    return false;
+                }
+                if (this.isNew && !this.validateOddsSpread()) {
+                    return false;
+                }
+                this.resetValidationState();
+                return true;
+            };
+            MemberAccountDetailSettingItem.prototype.validatePassword = function () {
+                if (!this.password || this.password.length === 0) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
+                    return false;
+                }
+                var memberPasswordPattern = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*[\s])).{6,10}$/;
+                if (!memberPasswordPattern.test(this.password)) {
+                    this.validationState = new CustomerSetting.ValidationResult("MemberPasswordRules", "password");
+                    return false;
+                }
+                if (this.confirmPassword !== this.password) {
+                    this.validationState = new CustomerSetting.ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
+                    return false;
+                }
+                return true;
+            };
+            MemberAccountDetailSettingItem.prototype.validateCredit = function () {
+                if (!CustomerSetting.isNumber(this.credit)) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "credit");
+                    return false;
+                }
+                if (this.credit < this.minCredit) {
+                    this.validationState = new CustomerSetting.ValidationResult("CreditsMustBeGreaterThanOrEqualTo", "credit", [this.minCredit], { precision: 2 });
+                    return false;
+                }
+                if (this.credit > this.maxCredit) {
+                    this.validationState = new CustomerSetting.ValidationResult("CreditsMustBeLessThanOrEqualTo", "credit", [this.maxCredit], { precision: 2 });
+                    return false;
+                }
+                return true;
+            };
+            MemberAccountDetailSettingItem.prototype.validateOddsSpread = function () {
+                if (!this.spreadGroup) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "spreadGroup");
+                    return false;
+                }
+                return true;
+            };
+            return MemberAccountDetailSettingItem;
+        }(SettingType1.AccountDetailSettingItem));
+        SettingType1.MemberAccountDetailSettingItem = MemberAccountDetailSettingItem;
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var MemberGeneralDataDirective = (function () {
+            function MemberGeneralDataDirective(crossingSettingTypesServiceBus) {
+                var _this = this;
+                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Agent\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'SpreadGroup\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'MemberPasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
+                this.link = function (scope) {
+                    if (scope.isNew) {
+                        scope.updateSpreadGroup = function () {
+                            _this.crossingSettingTypesServiceBus.execute("updateMemberSpreadGroup", {
+                                newMemberGroup: scope.accountDetail.spreadGroup.groupName
+                            });
+                        };
+                    }
+                };
+                this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
+            }
+            MemberGeneralDataDirective.$inject = ["crossingSettingTypesServiceBus"];
+            return MemberGeneralDataDirective;
+        }());
+        CustomerSetting.ModuleRegister.directive("st1MemberGeneralData", MemberGeneralDataDirective);
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -37740,7 +37740,7 @@ var CustomerSetting;
 angular.module("customerSetting").run(["$templateCache", function($templateCache) {$templateCache.put("./tooltip.html","<div class=\"tooltip tooltip--{{tooltipType}}\" data-ng-show=\"tooltipMessage && beingShowed\"><div class=\"tooltip__content\" data-ng-bind-html=\"tooltipMessage | unsafe\"></div></div>");
 $templateCache.put("./SettingType1/headline-suggestion-item-template.html","<a href=\"#\" data-headline-suggestion-item data-ng-bind-html=\"match.label | uibTypeaheadHighlight:query\" ng-attr-title=\"{{match.label}}\"></a>");
 $templateCache.put("./SettingType2/commission-and-bet-limit-header-template.html","<div class=\"block__lbl\"></div><div class=\"block__lbl-group w80-percent\"><div class=\"block__lbl-sub-group\" data-ng-class=\"{ \'w33-percent\': isMobileView, \'w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div class=\"block__lbl\" data-ng-if=\"!isMobileView\" data-ng-style=\"eachGroupStyle\" data-ng-repeat=\"item in availableCommissionGroups\">{{item}}</div><div class=\"block__lbl w100-percent\" data-ng-if=\"isMobileView\">{{::(\'Commission\' | st2Label)}}</div></div><div class=\"block__lbl-sub-group block__lbl\" data-ng-class=\"{ \'w33-percent\': isMobileView, \'w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel === avaiCustomerLevels.member\">{{::(\'MemberCommission\' | st2Label)}}</div><div class=\"block__lbl-sub-group\" data-ng-class=\"{ \'w67-percent\': isMobileView, \'w50-percent\': !isMobileView }\"><div class=\"block__lbl w50-percent\"><span>{{::(\'MaxPerEvent\' | st2Label)}}</span> <span class=\"icon icon--command icon--info icon--margin-left\" data-tooltip=\"{{\'MaxPerEventNote\' | st2Message}}\" data-tooltip-type=\"info\" data-inner-tooltip=\"info\"></span></div><div class=\"block__lbl block__lbl--no-border w50-percent\"><span>{{::(\'MaxBet\' | st2Label)}}</span> <span class=\"icon icon--command icon--info icon--margin-left\" data-tooltip=\"{{\'MaxBetNote\' | st2Message}}\" data-tooltip-type=\"info\" data-inner-tooltip=\"true\"></span></div></div></div>");
-$templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html","<div class=\"block__cell-group\" data-ng-if=\"isEditable\" data-setting-field-group=\"item\" data-resource-service-name=\"st2ResourceService\"><div data-ng-class=\"{ \'block__cell align-center w33-percent\': isMobileView, \'block__cell-sub-group w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-class=\"{ \'commission-group--multiple\': isMobileView, \'block__cell align-center\': !isMobileView }\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups track by $index\"><label class=\"commission-group__lbl\" data-ng-if=\"isMobileView && commissionGroup.name\">{{commissionGroup.name}}</label><percentage-dropdown data-ng-class=\"{ \'commission-group__value\': isMobileView }\" data-ng-if=\"commissionGroup\" data-ng-model=\"commissionGroup.value\" data-setting-field=\"{{\'commissionGroups-\' + $index}}\" data-min=\"commissionGroup.minValue\" data-max=\"commissionGroup.maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"w100-percent\" data-ng-class=\"{ \'commission-group--single\': isMobileView && (hasMaxBetConstraint || hasMaxPerEventConstraint) , \'block__cell align-center\': !isMobileView }\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-class=\"{ \'commission-group__value--full-width\': isMobileView }\" data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div></div><div class=\"block__cell align-center\" data-ng-class=\"{ \'w33-percent\': isMobileView, \'commission-group--single\': isMobileView && (hasMaxBetConstraint || hasMaxPerEventConstraint), \'w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel === avaiCustomerLevels.member\"><percentage-dropdown data-ng-class=\"{ \'commission-group__value--full-width\': isMobileView }\" data-ng-if=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex]\" data-ng-model=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].value\" data-setting-field=\"{{\'commissionGroups-\' + item.memberSpreadGroupIndex}}\" data-min=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue\" data-max=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\" data-auto-refresh=\"true\"></percentage-dropdown></div><div class=\"block__cell-sub-group\" data-ng-class=\"{ \'w67-percent\': isMobileView, \'w50-percent\': !isMobileView }\"><div class=\"block__cell w50-percent\" data-ng-class=\"{ \'align-center\': !hasMaxPerEventConstraint || isMobileView }\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxPerEvent\" data-setting-field=\"maxPerEvent\"> <span class=\"setting-field--constraint\" data-ng-if=\"customerLevel !== avaiCustomerLevels.super\">&lt;={{item.maxMaxPerEvent | number:betSettingPrecision}}</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && hasMaxPerEventConstraint\">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span></div><div class=\"block__cell block__cell--no-border w50-percent\" data-ng-class=\"{ \'align-center\': !hasMaxBetConstraint || isMobileView }\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxBet\" data-setting-field=\"maxBet\"> <span class=\"setting-field--constraint\" data-ng-if=\"customerLevel !== avaiCustomerLevels.super\">&lt;={{item.maxMaxBet | number:betSettingPrecision}}</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && hasMaxBetConstraint\">>={{item.minMaxBet | number:betSettingPrecision}}</span></div></div></div><div class=\"block__cell-group block__cell-group--readonly\" data-ng-if=\"!isEditable\"><div data-ng-class=\"{ \'block__cell align-center w33-percent\': isMobileView, \'block__cell-sub-group w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-class=\"{ \'commission-group--multiple\': isMobileView, \'block__cell align-center\': !isMobileView }\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups\"><label class=\"commission-group__lbl\" data-ng-if=\"isMobileView && commissionGroup.name\">{{commissionGroup.name}}</label> <label class=\"commission-group__value\">{{commissionGroup.value | formatPercentage:commissionPrecision}}</label></div><div class=\"w100-percent\" data-ng-class=\"{ \'block__cell\': !isMobileView }\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div></div><div class=\"block__cell\" data-ng-class=\"{ \'align-center w33-percent\': isMobileView, \'align-center w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel === avaiCustomerLevels.member\">{{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell-sub-group bet-limit\" data-ng-class=\"{ \'w67-percent\': isMobileView, \'w50-percent\': !isMobileView }\"><div class=\"block__cell align-right w50-percent\">{{item.maxPerEvent | number:betSettingPrecision}}</div><div class=\"block__cell align-right block__cell--no-border w50-percent\">{{item.maxBet | number:betSettingPrecision}}</div></div></div>");}]);
+$templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html","<div class=\"block__cell-group\" data-ng-if=\"isEditable\" data-setting-field-group=\"item\" data-resource-service-name=\"st2ResourceService\"><div data-ng-class=\"{ \'block__cell align-center w33-percent\': isMobileView, \'block__cell-sub-group w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-class=\"{ \'commission-group--multiple\': isMobileView, \'block__cell align-center\': !isMobileView }\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups track by $index\"><label class=\"commission-group__lbl\" data-ng-if=\"isMobileView && commissionGroup.name\">{{commissionGroup.name}}</label><percentage-dropdown data-ng-class=\"{ \'commission-group__value\': isMobileView }\" data-ng-if=\"commissionGroup\" data-ng-model=\"commissionGroup.value\" data-setting-field=\"{{\'commissionGroups-\' + $index}}\" data-min=\"commissionGroup.minValue\" data-max=\"commissionGroup.maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div><div class=\"w100-percent\" data-ng-class=\"{ \'commission-group--single\': isMobileView && (hasMaxBetConstraint || hasMaxPerEventConstraint) , \'block__cell align-center\': !isMobileView }\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\"><percentage-dropdown data-ng-class=\"{ \'commission-group__value--full-width\': isMobileView }\" data-ng-if=\"item.mappedCommissionGroups[0]\" data-ng-model=\"item.mappedCommissionGroups[0].value\" data-setting-field=\"commissionGroups-0\" data-min=\"item.mappedCommissionGroups[0].minValue\" data-max=\"item.mappedCommissionGroups[0].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\"></percentage-dropdown></div></div><div class=\"block__cell align-center\" data-ng-class=\"{ \'w33-percent\': isMobileView, \'commission-group--single\': isMobileView && (hasMaxBetConstraint || hasMaxPerEventConstraint), \'w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel === avaiCustomerLevels.member\"><percentage-dropdown data-ng-class=\"{ \'commission-group__value--full-width\': isMobileView }\" data-ng-if=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex]\" data-ng-model=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].value\" data-setting-field=\"{{\'commissionGroups-\' + item.memberSpreadGroupIndex}}\" data-min=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue\" data-max=\"item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue\" data-step=\"item.intervalValue\" data-precision=\"commissionPrecision\" data-auto-refresh=\"true\"></percentage-dropdown></div><div class=\"block__cell-sub-group\" data-ng-class=\"{ \'w67-percent\': isMobileView, \'w50-percent\': !isMobileView }\"><div class=\"block__cell w50-percent\" data-ng-class=\"{ \'align-center\': !hasMaxPerEventConstraint || isMobileView }\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxPerEvent\" data-setting-field=\"maxPerEvent\"> <span class=\"setting-field--constraint\" data-ng-if=\"customerLevel !== avaiCustomerLevels.super\">&lt;={{item.maxMaxPerEvent | number:betSettingPrecision}}</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && hasMaxPerEventConstraint\">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span></div><div class=\"block__cell block__cell--no-border w50-percent\" data-ng-class=\"{ \'align-center\': !hasMaxBetConstraint || isMobileView }\"><input type=\"text\" maxlength=\"14\" class=\"setting-field setting-field--number setting-field--has-constraint\" data-numeric-input data-ng-model=\"item.maxBet\" data-setting-field=\"maxBet\"> <span class=\"setting-field--constraint\" data-ng-if=\"customerLevel !== avaiCustomerLevels.super\">&lt;={{item.maxMaxBet | number:betSettingPrecision}}</span> <span class=\"setting-field--constraint\" data-ng-if=\"(customerLevel === avaiCustomerLevels.super) && hasMaxBetConstraint\">>={{item.minMaxBet | number:betSettingPrecision}}</span></div></div></div><div class=\"block__cell-group block__cell-group--readonly\" data-ng-if=\"!isEditable\"><div data-ng-class=\"{ \'block__cell align-center w33-percent\': isMobileView, \'block__cell-sub-group w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel !== avaiCustomerLevels.member\"><div data-ng-if=\"item.layoutType === availableLayoutTypes.multipleGroups\" data-ng-style=\"eachGroupStyle\" data-ng-class=\"{ \'commission-group--multiple\': isMobileView, \'block__cell align-center\': !isMobileView }\" data-ng-repeat=\"commissionGroup in item.mappedCommissionGroups\"><label class=\"commission-group__lbl\" data-ng-if=\"isMobileView && commissionGroup.name\">{{commissionGroup.name}}</label> <label class=\"commission-group__value\">{{commissionGroup.value | formatPercentage:commissionPrecision}}</label></div><div class=\"w100-percent\" data-ng-class=\"{ \'block__cell align-center\': !isMobileView }\" data-ng-if=\"item.layoutType === availableLayoutTypes.singleGroup\">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</div></div><div class=\"block__cell\" data-ng-class=\"{ \'w33-percent\': isMobileView, \'align-center w50-percent\': !isMobileView }\" data-ng-if=\"customerLevel === avaiCustomerLevels.member\">{{item.mappedCommissionGroups[item.memberSpreadGroupIndex].value | formatPercentage:commissionPrecision}}</div><div class=\"block__cell-sub-group bet-limit\" data-ng-class=\"{ \'w67-percent\': isMobileView, \'w50-percent\': !isMobileView }\"><div class=\"block__cell w50-percent\" data-ng-class=\"{ \'align-right\': isMobileView, \'align-center\': !isMobileView }\">{{item.maxPerEvent | number:betSettingPrecision}}</div><div class=\"block__cell block__cell--no-border w50-percent\" data-ng-class=\"{ \'align-right\': isMobileView, \'align-center\': !isMobileView }\">{{item.maxBet | number:betSettingPrecision}}</div></div></div>");}]);
 /*jshint -W101,-W106,-W044,-W098*/
 
 (function () {
