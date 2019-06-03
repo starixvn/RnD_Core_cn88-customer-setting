@@ -142,7 +142,7 @@ namespace CustomerSetting {
                 var elementRect: ClientRect = target[0].getBoundingClientRect();
                 var tooltipRect: ClientRect = tooltip.children()[0].getBoundingClientRect();
 
-                var arrowWidth: number = 7;
+                var arrowWidth: number = 5;
                 var scrollbarOffset: number = 17;
 
                 var bodyRect: ClientRect = this.$window.document.body.getBoundingClientRect();

@@ -16,7 +16,7 @@
         @include opacity(1);
         font-weight: normal;
         line-height: 1.5;
-        margin-bottom: 8px;
+        margin-bottom: 5px;
         max-width: 300px;
         padding: 4px 8px;
         position: relative;
@@ -41,14 +41,14 @@
 
         &:after {
             border-color: rgba(255,255,204,0);
-            border-width: 7px;
-            margin-left: -7px;
+            border-width: 5px;
+            margin-left: -5px;
         }
 
         &:before {
             border-color: rgba(204,153,51,0);
-            border-width: 8px;
-            margin-left: -8px;
+            border-width: 6px;
+            margin-left: -6px;
         }
     }
 
@@ -125,24 +125,24 @@
     .tooltip__content {
         margin: {
             bottom: 0;
-            right: 8px;
+            right: 5px;
         }
 
         &:after, &:before {
             border-color: transparent;
-            border-width: 8px;
+            border-width: 5px;
             left: initial;
             right: 0;
-            margin-top: -8px;
+            margin-top: -5px;
             top: 50%;
         }
 
         &:after {
-            margin-right: -15px;
+            margin-right: -10px;
         }
 
         &:before {
-            margin-right: -16px;
+            margin-right: -11px;
         }
     }
 
@@ -199,17 +199,17 @@
     .tooltip__content {
         &:after, &:before {
             left: initial;
-            right: 0;
+            right: 5px;
         }
 
         &:after {
             margin-left: 0;
-            margin-right: 8px;
+            margin-right: 6px;
         }
 
         &:before {
             margin-left: 0;
-            margin-right: 7px;
+            margin-right: 5px;
         }
     }
 }
@@ -218,23 +218,23 @@
     .tooltip__content {
         margin: {
             bottom: 0;
-            left: 8px;
+            left: 5px;
         }
 
         &:after, &:before {
             border-color: transparent;
-            border-width: 8px;
+            border-width: 5px;
             left: 0;
-            margin-top: -8px;
+            margin-top: -5px;
             top: 50%;
         }
 
         &:after {
-            margin-left: -15px;
+            margin-left: -10px;
         }
 
         &:before {
-            margin-left: -16px;
+            margin-left: -11px;
         }
     }
 
@@ -290,15 +290,15 @@
 .tooltip--top-left {
     .tooltip__content {
         &:after, &:before {
-            left: 0;
+            left: 5px;
         }
 
         &:after {
-            margin-left: 8px;
+            margin-left: 6px;
         }
 
         &:before {
-            margin-left: 7px;
+            margin-left: 5px;
         }
     }
 }
@@ -307,23 +307,22 @@
     .tooltip__content {
         margin: {
             bottom: 0;
-            top: 8px;
+            top: 5px;
         }
 
         &:after, &:before {
-            border-color: transparent;
-            border-width: 8px;
+            border-width:5px;
             left: 50%;
-            margin-left: -16px;
+            margin-left: -10px;
             top: 0;
         }
 
         &:after {
-            margin-top: -15px;
+            margin-top: -10px;
         }
 
         &:before {
-            margin-top: -16px;
+            margin-top: -11px;
         }
     }
 
