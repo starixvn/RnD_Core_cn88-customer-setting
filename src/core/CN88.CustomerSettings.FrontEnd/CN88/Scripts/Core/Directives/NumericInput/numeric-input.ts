@@ -38,6 +38,8 @@ namespace CustomerSetting {
 
             scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
 
+            element.attr("inputmode", "numeric");
+
             element.on("focus", () => {
                 element.data("focused", true);
             });

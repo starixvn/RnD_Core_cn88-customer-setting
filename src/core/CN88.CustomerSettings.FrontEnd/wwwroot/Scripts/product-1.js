@@ -35770,6 +35770,7 @@ var CustomerSetting;
                 var latestValidValue;
                 var latestValidFormattedValue;
                 scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
+                element.attr("inputmode", "numeric");
                 element.on("focus", function () {
                     element.data("focused", true);
                 });
