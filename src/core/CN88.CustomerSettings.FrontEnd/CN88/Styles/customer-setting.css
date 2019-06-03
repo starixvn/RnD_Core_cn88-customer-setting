@@ -1294,4 +1294,5 @@ select.setting-field {
 
 .mobile-view .tooltip__content {
   max-width: 230px;
+  text-align: initial;
   text-transform: initial; }
