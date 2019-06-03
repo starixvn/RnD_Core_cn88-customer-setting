@@ -1,7 +1,8 @@
 ﻿<div class="block__cell-group"
      data-ng-if="isEditable"
      data-setting-field-group="item"
-     data-resource-service-name="st2ResourceService">
+     data-resource-service-name="st2ResourceService"
+     data-force-error-tooltip-at-top="true">
     <div data-ng-class="{ 'block__cell align-center w33-percent': isMobileView, 'block__cell-sub-group w50-percent': !isMobileView }"
          data-ng-if="customerLevel !== avaiCustomerLevels.member">
         <div data-ng-if="item.layoutType === availableLayoutTypes.multipleGroups"

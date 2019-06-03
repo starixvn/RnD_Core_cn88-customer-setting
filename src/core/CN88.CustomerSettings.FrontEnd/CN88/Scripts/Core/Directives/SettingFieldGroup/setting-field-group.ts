@@ -19,6 +19,7 @@ namespace CustomerSetting {
         settingItem: DefaultSettingItem;
         resourceServiceName: string;
         customFilterName: string;
+        forceErrorTooltipAtTop: boolean;
         registeredFields: KeyValuePair<string, ISettingFieldHTMLControl>[];
         errorMessage: string;
         dirtyField: ng.IAugmentedJQuery;
@@ -35,7 +36,8 @@ namespace CustomerSetting {
             return {
                 settingItem: "=settingFieldGroup",
                 resourceServiceName: "@",
-                customFilterName: "@"
+                customFilterName: "@",
+                forceErrorTooltipAtTop: "@"
             };
         }
 
@@ -43,7 +45,7 @@ namespace CustomerSetting {
             var errorTooltipContainer: ng.IAugmentedJQuery = angular.element("<span></span>");
 
             errorTooltipContainer.addClass("error-tooltip-container");
-            errorTooltipContainer.attr("data-tooltip", "{{errorMessage}}");
+            errorTooltipContainer.attr("data-tooltip", "");
             errorTooltipContainer.attr("data-manual", "true");
             errorTooltipContainer.attr("data-tooltip-type", "error");
 
@@ -105,7 +107,7 @@ namespace CustomerSetting {
                             var inputElement: HTMLInputElement = <HTMLInputElement>scope.dirtyField[0];
 
                             this.toggleAffectedFieldsState(scope, validationState.affectedFields);
-                            tooltipController.showTooltipAt(errorMessage, scope.dirtyField);
+                            tooltipController.showTooltipAt(errorMessage, scope.dirtyField, scope.forceErrorTooltipAtTop);
 
                             if (inputElement.focus) {
                                 inputElement.focus();

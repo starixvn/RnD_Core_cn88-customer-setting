@@ -679,6 +679,18 @@ select.setting-field {
 .tooltip--right.tooltip--info .tooltip__content:before {
   border-left-color: #b7b7b7; }
 
+.tooltip--top-right .tooltip__content:after, .tooltip--top-right .tooltip__content:before {
+  left: initial;
+  right: 0; }
+
+.tooltip--top-right .tooltip__content:after {
+  margin-left: 0;
+  margin-right: 8px; }
+
+.tooltip--top-right .tooltip__content:before {
+  margin-left: 0;
+  margin-right: 7px; }
+
 .tooltip--left .tooltip__content {
   margin-bottom: 0;
   margin-left: 8px; }
@@ -716,6 +728,15 @@ select.setting-field {
 
 .tooltip--left.tooltip--info .tooltip__content:before {
   border-right-color: #b7b7b7; }
+
+.tooltip--top-left .tooltip__content:after, .tooltip--top-left .tooltip__content:before {
+  left: 0; }
+
+.tooltip--top-left .tooltip__content:after {
+  margin-left: 8px; }
+
+.tooltip--top-left .tooltip__content:before {
+  margin-left: 7px; }
 
 .tooltip--bottom .tooltip__content {
   margin-bottom: 0;
@@ -1123,7 +1144,7 @@ select.setting-field {
     width: 100%; }
 
 .mobile-view .setting-type-2 .tooltip--error .tooltip__content {
-  max-width: 150px; }
+  max-width: 120px; }
 
 .mobile-view .setting-type-2 .block__cell-group--readonly .bet-limit .block__cell, .mobile-view .setting-type-2 .block__cell-group--readonly .bet-limit .block__lbl, .mobile-view .setting-type-2 .block__cell-group--readonly .bet-limit .block__value {
   flex-direction: initial; }

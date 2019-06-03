@@ -195,6 +195,25 @@
     }
 }
 
+.tooltip--top-right {
+    .tooltip__content {
+        &:after, &:before {
+            left: initial;
+            right: 0;
+        }
+
+        &:after {
+            margin-left: 0;
+            margin-right: 8px;
+        }
+
+        &:before {
+            margin-left: 0;
+            margin-right: 7px;
+        }
+    }
+}
+
 .tooltip--left {
     .tooltip__content {
         margin: {
@@ -264,6 +283,22 @@
             &:before {
                 border-right-color: $tooltip-info-border-color;
             }
+        }
+    }
+}
+
+.tooltip--top-left {
+    .tooltip__content {
+        &:after, &:before {
+            left: 0;
+        }
+
+        &:after {
+            margin-left: 8px;
+        }
+
+        &:before {
+            margin-left: 7px;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿/// <reference path="../../../typings/angularjs/angular.d.ts" />
-/// <reference path="../../models/enums/position-model.ts" />
 /// <reference path="../../models/result.ts" />
 /// <reference path="../../resources/resource-service.ts" />
 /// <reference path="../../services/scroll-service.ts" />
@@ -9,10 +8,10 @@ namespace CustomerSetting {
     interface ITooltipScope extends ng.IScope {
         tooltipMessage: string;
         tooltipType: string;
-        tooltipPositionModel: PositionModel;
-        target: ng.IAugmentedJQuery;
         innerTooltip: boolean;
         manual: boolean;
+        forceTop: boolean;
+        target: ng.IAugmentedJQuery;
         beingShowed: boolean;
         relocate: Function;
     }
@@ -27,15 +26,16 @@ namespace CustomerSetting {
             return {
                 tooltipMessage: "@tooltip",
                 tooltipType: "@",
-                tooltipPositionModel: "@",
                 innerTooltip: "@",
-                manual: "@"
+                manual: "@",
+                forceTop: "@"
             };
         }
 
         public controller: any = ["$scope", function ($scope: ITooltipScope) {
-            this.showTooltipAt = (tooltipMessage: string, target: ng.IAugmentedJQuery) => {
+            this.showTooltipAt = (tooltipMessage: string, target: ng.IAugmentedJQuery, forceTop: boolean) => {
                 $scope.target = target;
+                $scope.forceTop = forceTop;
 
                 if ($scope.tooltipMessage === tooltipMessage) {
                     $scope.relocate();
@@ -57,7 +57,7 @@ namespace CustomerSetting {
                     this.calculateTooltipPosition(
                         scope.target,
                         tooltip,
-                        scope.tooltipPositionModel,
+                        scope.forceTop,
                         scope.manual);
                 }
             };
@@ -129,45 +129,48 @@ namespace CustomerSetting {
         private calculateTooltipPosition(
             target: ng.IAugmentedJQuery,
             tooltip: ng.IAugmentedJQuery,
-            positionModel: PositionModel,
+            forceTop: boolean,
             autoScrollTo: boolean): void {
             if (!target || target.length === 0 || !tooltip || tooltip.length === 0) {
                 return;
             }
 
             this.$timeout(() => {
-                tooltip.removeClass("tooltip--right tooltip--left tooltip--bottom");
+                tooltip.removeClass("tooltip--right tooltip--top-right tooltip--left tooltip--top-left tooltip--bottom");
                 tooltip.css({ "left": "0px", "visibility": "hidden" });
 
                 var elementRect: ClientRect = target[0].getBoundingClientRect();
                 var tooltipRect: ClientRect = tooltip.children()[0].getBoundingClientRect();
 
-                var topOffset: number = 0;
-                var leftOffset: number = 0;
-
                 var arrowWidth: number = 7;
                 var scrollbarOffset: number = 17;
 
-                if ((+positionModel || PositionModel.relative) === PositionModel.relative) {
-                    var bodyRect: ClientRect = this.$window.document.body.getBoundingClientRect();
-
-                    topOffset = bodyRect.top;
-                    leftOffset = bodyRect.left;
-                }
-
+                var bodyRect: ClientRect = this.$window.document.body.getBoundingClientRect();
+                var topOffset = bodyRect.top;
+                var leftOffset = bodyRect.left;
                 var top: number = elementRect.top - topOffset - tooltipRect.height - arrowWidth;
                 var left: number = elementRect.left + (elementRect.width - tooltipRect.width) / 2 - leftOffset;
 
                 if (this.$window.innerWidth - scrollbarOffset < left + tooltipRect.width) {
-                    top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2;
-                    left = elementRect.left - tooltipRect.width - arrowWidth;
-                    tooltip.addClass("tooltip--right");
+                    if (forceTop) {
+                        left = elementRect.right - tooltipRect.width - leftOffset;
+                        tooltip.addClass("tooltip--top-right");
+                    } else {
+                        top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2;
+                        left = elementRect.left - tooltipRect.width - arrowWidth;
+                        tooltip.addClass("tooltip--right");
+                    }
                 }
 
                 if (left < 0) {
-                    top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2;
-                    left = elementRect.left + elementRect.width;
-                    tooltip.addClass("tooltip--left");
+                    if (forceTop) {
+                        left = elementRect.right;
+                        tooltip.addClass("tooltip--top-left");
+                    } else {
+                        top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2;
+                        left = elementRect.left + elementRect.width;
+                        tooltip.addClass("tooltip--left");
+                    }
                 }
 
                 if (top < 0) {
