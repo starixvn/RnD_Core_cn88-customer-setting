@@ -33,17 +33,19 @@
         </div>
     </div>
     <div class="block__cell align-center"
-         data-ng-class="{ 'w33-percent': isMobileView, 'commission-group--single': isMobileView && (hasMaxBetConstraint || hasMaxPerEventConstraint), 'w50-percent': !isMobileView }"
+         data-ng-class="{ 'w33-percent': isMobileView, 'w50-percent': !isMobileView }"
          data-ng-if="customerLevel === avaiCustomerLevels.member">
-        <percentage-dropdown data-ng-class="{ 'commission-group__value--full-width': isMobileView }"
-                             data-ng-if="item.mappedCommissionGroups[item.memberSpreadGroupIndex]"
-                             data-ng-model="item.mappedCommissionGroups[item.memberSpreadGroupIndex].value"
-                             data-setting-field="{{'commissionGroups-' + item.memberSpreadGroupIndex}}"
-                             data-min="item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue"
-                             data-max="item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue"
-                             data-step="item.intervalValue"
-                             data-precision="commissionPrecision"
-                             data-auto-refresh="true"></percentage-dropdown>
+        <div data-ng-class="{ 'commission-group--single': isMobileView && (hasMaxBetConstraint || hasMaxPerEventConstraint) }">
+            <percentage-dropdown data-ng-class="{ 'commission-group__value--full-width': isMobileView }"
+                                 data-ng-if="item.mappedCommissionGroups[item.memberSpreadGroupIndex]"
+                                 data-ng-model="item.mappedCommissionGroups[item.memberSpreadGroupIndex].value"
+                                 data-setting-field="{{'commissionGroups-' + item.memberSpreadGroupIndex}}"
+                                 data-min="item.mappedCommissionGroups[item.memberSpreadGroupIndex].minValue"
+                                 data-max="item.mappedCommissionGroups[item.memberSpreadGroupIndex].maxValue"
+                                 data-step="item.intervalValue"
+                                 data-precision="commissionPrecision"
+                                 data-auto-refresh="true"></percentage-dropdown>
+        </div>
     </div>
     <div class="block__cell-sub-group" data-ng-class="{ 'w67-percent': isMobileView, 'w50-percent': !isMobileView }">
         <div class="block__cell w50-percent"

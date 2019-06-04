@@ -437,8 +437,7 @@ select.setting-field {
       border: none;
       color: #7b0f0f;
       justify-content: center;
-      line-height: 3;
-      padding: 0 8px;
+      padding: 8px;
       width: 100%; }
   .block .block__cell-group, .block .block__lbl-group {
     display: -webkit-box;
