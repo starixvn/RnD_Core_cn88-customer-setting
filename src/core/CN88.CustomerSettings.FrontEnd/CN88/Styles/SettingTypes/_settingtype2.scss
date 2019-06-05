@@ -8,6 +8,8 @@
         }
 
         &--single {
+            @include flexbox();
+            justify-content: flex-end;
             padding-bottom: 20px;
         }
 
@@ -37,6 +39,10 @@
         .commission-group {
             &--multiple {
                 @include flexbox();
+            }
+
+            &--single {
+                padding-bottom: 0;
             }
         }
     }

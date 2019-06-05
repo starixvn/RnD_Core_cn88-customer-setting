@@ -9,7 +9,7 @@
              data-ng-style="eachGroupStyle"
              data-ng-class="{ 'commission-group--multiple': isMobileView, 'block__cell align-center': !isMobileView }"
              data-ng-repeat="commissionGroup in item.mappedCommissionGroups track by $index">
-            <label class="commission-group__lbl" data-ng-if="isMobileView && commissionGroup.name">{{commissionGroup.name}}</label>
+            <label class="commission-group__lbl" data-ng-if="isMobileView">{{commissionGroup.name}}</label>
             <percentage-dropdown data-ng-class="{ 'commission-group__value': isMobileView }"
                                  data-ng-if="commissionGroup"
                                  data-ng-model="commissionGroup.value"
@@ -22,7 +22,7 @@
         <div class="w100-percent"
              data-ng-class="{ 'commission-group--single': isMobileView && (hasMaxBetConstraint || hasMaxPerEventConstraint) , 'block__cell align-center': !isMobileView }"
              data-ng-if="item.layoutType === availableLayoutTypes.singleGroup">
-            <percentage-dropdown data-ng-class="{ 'commission-group__value--full-width': isMobileView }"
+            <percentage-dropdown data-ng-class="{ 'commission-group__value': isMobileView }"
                                  data-ng-if="item.mappedCommissionGroups[0]"
                                  data-ng-model="item.mappedCommissionGroups[0].value"
                                  data-setting-field="commissionGroups-0"
@@ -35,7 +35,7 @@
     <div class="block__cell align-center"
          data-ng-class="{ 'w33-percent': isMobileView, 'w50-percent': !isMobileView }"
          data-ng-if="customerLevel === avaiCustomerLevels.member">
-        <div data-ng-class="{ 'commission-group--single': isMobileView && (hasMaxBetConstraint || hasMaxPerEventConstraint) }">
+        <div data-ng-class="{ 'commission-group--single w100-percent': isMobileView }">
             <percentage-dropdown data-ng-class="{ 'commission-group__value--full-width': isMobileView }"
                                  data-ng-if="item.mappedCommissionGroups[item.memberSpreadGroupIndex]"
                                  data-ng-model="item.mappedCommissionGroups[item.memberSpreadGroupIndex].value"
@@ -79,13 +79,14 @@
              data-ng-style="eachGroupStyle"
              data-ng-class="{ 'commission-group--multiple': isMobileView, 'block__cell align-center': !isMobileView }"
              data-ng-repeat="commissionGroup in item.mappedCommissionGroups">
-            <label class="commission-group__lbl" data-ng-if="isMobileView && commissionGroup.name">{{commissionGroup.name}}</label>
+            <label class="commission-group__lbl" data-ng-if="isMobileView">{{commissionGroup.name}}</label>
             <label class="commission-group__value">{{commissionGroup.value | formatPercentage:commissionPrecision}}</label>
         </div>
         <div class="w100-percent"
-             data-ng-class="{ 'block__cell align-center': !isMobileView }"
+             data-ng-class="{ 'commission-group--single': isMobileView, 'block__cell align-center': !isMobileView }"
              data-ng-if="item.layoutType === availableLayoutTypes.singleGroup">
-            {{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}
+            <label class="commission-group__value">{{item.mappedCommissionGroups[0].value | formatPercentage:commissionPrecision}}</label>
+            
         </div>
     </div>
     <div class="block__cell"

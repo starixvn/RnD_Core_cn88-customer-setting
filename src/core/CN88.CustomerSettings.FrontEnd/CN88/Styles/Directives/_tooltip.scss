@@ -199,7 +199,7 @@
     .tooltip__content {
         &:after, &:before {
             left: initial;
-            right: 5px;
+            right: 0;
         }
 
         &:after {
@@ -290,7 +290,7 @@
 .tooltip--top-left {
     .tooltip__content {
         &:after, &:before {
-            left: 5px;
+            left: 0;
         }
 
         &:after {

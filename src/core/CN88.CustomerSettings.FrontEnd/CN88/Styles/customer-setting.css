@@ -680,7 +680,7 @@ select.setting-field {
 
 .tooltip--top-right .tooltip__content:after, .tooltip--top-right .tooltip__content:before {
   left: initial;
-  right: 5px; }
+  right: 0; }
 
 .tooltip--top-right .tooltip__content:after {
   margin-left: 0;
@@ -729,7 +729,7 @@ select.setting-field {
   border-right-color: #b7b7b7; }
 
 .tooltip--top-left .tooltip__content:after, .tooltip--top-left .tooltip__content:before {
-  left: 5px; }
+  left: 0; }
 
 .tooltip--top-left .tooltip__content:after {
   margin-left: 6px; }
@@ -1130,6 +1130,11 @@ select.setting-field {
   width: 100% !important; }
 
 .mobile-view .setting-type-2 .commission-group--single {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: flex-end;
   padding-bottom: 20px; }
 
 .mobile-view .setting-type-2 .commission-group__lbl {
@@ -1152,6 +1157,9 @@ select.setting-field {
   display: -moz-box;
   display: -ms-flexbox;
   display: flex; }
+
+.mobile-view .setting-type-2 .block__cell-group--readonly .commission-group--single {
+  padding-bottom: 0; }
 
 /*
  * A partial implementation of the Ruby list functions from Compass:
