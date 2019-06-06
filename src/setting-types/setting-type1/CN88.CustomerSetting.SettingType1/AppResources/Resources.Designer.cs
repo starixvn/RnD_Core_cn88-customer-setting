@@ -403,7 +403,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You cannot do this action because this account&apos;&apos;s upline is not active..
+        ///   Looks up a localized string similar to You cannot do this action because this account&apos;s upline is not active..
         /// </summary>
         internal static string Msg_40043 {
             get {
