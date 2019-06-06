@@ -104,9 +104,17 @@ $block-header-color: #852423;
         padding-top: $font-size-root - $mobile-base-font-root;
     }
 
-    .tooltip__content {
-        max-width: 230px;
-        text-align: initial;
-        text-transform: initial;
+    .tooltip {
+        &--error {
+            .tooltip__content {
+                max-width: 250px;
+            }
+        }
+
+        &__content {
+            max-width: 230px;
+            text-align: initial;
+            text-transform: initial;
+        }
     }
 }

@@ -1298,6 +1298,9 @@ select.setting-field {
 .mobile-view .msg__content {
   padding-top: 2.5px; }
 
+.mobile-view .tooltip--error .tooltip__content {
+  max-width: 250px; }
+
 .mobile-view .tooltip__content {
   max-width: 230px;
   text-align: initial;
