@@ -87,7 +87,7 @@ namespace CustomerSetting.SettingType1 {
             return true;
         }
 
-        private validatePassword(): boolean {
+        protected validatePassword(): boolean {
             if (!this.password || this.password.length === 0) {
                 this.validationState = new ValidationResult("RequiredField", "password");
 

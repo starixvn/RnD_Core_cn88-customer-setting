@@ -75,31 +75,6 @@ namespace CustomerSetting.SettingType1 {
             return true;
         }
 
-        private validatePassword(): boolean {
-            if (!this.password || this.password.length === 0) {
-                this.validationState = new ValidationResult("RequiredField", "password");
-
-                return false;
-            }
-
-            var passwordPattern: RegExp
-                = /^(((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]))(?!.*[\s])).{8,16}$/;
-
-            if (!passwordPattern.test(this.password)) {
-                this.validationState = new ValidationResult("PasswordRules", "password");
-
-                return false;
-            }
-
-            if (this.confirmPassword !== this.password) {
-                this.validationState = new ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
-
-                return false;
-            }
-
-            return true;
-        }
-
         private validateCredit(): boolean {
             if (!isNumber(this.credit)) {
                 this.validationState = new ValidationResult("RequiredField", "credit");

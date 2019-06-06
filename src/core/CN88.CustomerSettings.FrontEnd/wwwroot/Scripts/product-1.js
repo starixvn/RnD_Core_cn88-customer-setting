@@ -36120,6 +36120,39 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var SettingResultDirective = (function () {
+        function SettingResultDirective($rootScope, scrollService) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
+            this.link = function (scope) {
+                scope.$watch("result", function (result) {
+                    _this.$rootScope.$emit("page-height-changed");
+                    if (result) {
+                        _this.scrollService.scrollTo(0, 0);
+                    }
+                });
+            };
+            this.$rootScope = $rootScope;
+            this.scrollService = scrollService;
+        }
+        Object.defineProperty(SettingResultDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    result: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingResultDirective.$inject = ["$rootScope", "scrollService"];
+        return SettingResultDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var SettingTypeDirectiveLoader = (function () {
         function SettingTypeDirectiveLoader($compile) {
             var _this = this;
@@ -36313,39 +36346,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    var SettingResultDirective = (function () {
-        function SettingResultDirective($rootScope, scrollService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
-            this.link = function (scope) {
-                scope.$watch("result", function (result) {
-                    _this.$rootScope.$emit("page-height-changed");
-                    if (result) {
-                        _this.scrollService.scrollTo(0, 0);
-                    }
-                });
-            };
-            this.$rootScope = $rootScope;
-            this.scrollService = scrollService;
-        }
-        Object.defineProperty(SettingResultDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    result: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingResultDirective.$inject = ["$rootScope", "scrollService"];
-        return SettingResultDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     (function (System) {
         System[System["nap"] = 1] = "nap";
         System[System["alpha"] = 2] = "alpha";
@@ -36360,7 +36360,7 @@ var CustomerSetting;
     (function (SettingType1) {
         var AgentGeneralDataDirective = (function () {
             function AgentGeneralDataDirective() {
-                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Master\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
+                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Master\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
             }
             return AgentGeneralDataDirective;
         }());
@@ -36399,7 +36399,7 @@ var CustomerSetting;
     (function (SettingType1) {
         var MasterGeneralDataDirective = (function () {
             function MasterGeneralDataDirective() {
-                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="16" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
+                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
             }
             return MasterGeneralDataDirective;
         }());
@@ -36463,6 +36463,36 @@ var CustomerSetting;
                 }
                 return true;
             };
+            AccountDetailSettingItem.prototype.validatePassword = function () {
+                if (!this.password || this.password.length === 0) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
+                    return false;
+                }
+                if (!this.validatePasswordStrength()) {
+                    return false;
+                }
+                if (this.confirmPassword !== this.password) {
+                    this.validationState = new CustomerSetting.ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
+                    return false;
+                }
+                return true;
+            };
+            AccountDetailSettingItem.prototype.validatePasswordStrength = function () {
+                var _this = this;
+                var mustMetRule = /^(?!.*[\s]).{6,12}$/;
+                var optionalRules = [
+                    /[A-Z]/,
+                    /[a-z]/,
+                    /[0-9]/,
+                    /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/
+                ];
+                var numberOfMetOptionalRules = optionalRules.filter(function (rule) { return rule.test(_this.password); }).length;
+                if (!mustMetRule.test(this.password) || numberOfMetOptionalRules < 2) {
+                    this.validationState = new CustomerSetting.ValidationResult("PasswordRules", "password");
+                    return false;
+                }
+                return true;
+            };
             AccountDetailSettingItem.prototype.toJson = function () {
                 var accountDetail = _super.prototype.toJson.call(this);
                 if (this.isNew) {
@@ -36519,22 +36549,6 @@ var CustomerSetting;
                     return false;
                 }
                 this.resetValidationState();
-                return true;
-            };
-            MemberAccountDetailSettingItem.prototype.validatePassword = function () {
-                if (!this.password || this.password.length === 0) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
-                    return false;
-                }
-                var memberPasswordPattern = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*[\s])).{6,10}$/;
-                if (!memberPasswordPattern.test(this.password)) {
-                    this.validationState = new CustomerSetting.ValidationResult("MemberPasswordRules", "password");
-                    return false;
-                }
-                if (this.confirmPassword !== this.password) {
-                    this.validationState = new CustomerSetting.ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
-                    return false;
-                }
                 return true;
             };
             MemberAccountDetailSettingItem.prototype.validateCredit = function () {
@@ -36608,7 +36622,7 @@ var CustomerSetting;
         var MemberGeneralDataDirective = (function () {
             function MemberGeneralDataDirective(crossingSettingTypesServiceBus) {
                 var _this = this;
-                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Agent\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'SpreadGroup\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'MemberPasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="10" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
+                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Agent\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'SpreadGroup\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
                 this.link = function (scope) {
                     if (scope.isNew) {
                         scope.updateSpreadGroup = function () {
@@ -37152,22 +37166,6 @@ var CustomerSetting;
                     }
                 }
                 this.resetValidationState();
-                return true;
-            };
-            MasterAccountDetailSettingItem.prototype.validatePassword = function () {
-                if (!this.password || this.password.length === 0) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "password");
-                    return false;
-                }
-                var passwordPattern = /^(((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]))(?!.*[\s])).{8,16}$/;
-                if (!passwordPattern.test(this.password)) {
-                    this.validationState = new CustomerSetting.ValidationResult("PasswordRules", "password");
-                    return false;
-                }
-                if (this.confirmPassword !== this.password) {
-                    this.validationState = new CustomerSetting.ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
-                    return false;
-                }
                 return true;
             };
             MasterAccountDetailSettingItem.prototype.validateCredit = function () {
@@ -37922,8 +37920,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
     messages["en-us"] = {
         "RequiredField": "This field is required.",
         "ConfirmPasswordMustMatchPassword": "Confirm Password must match Password.",
-        "PasswordRules": "<div class='password-rule'><div>Password must be at least 8 characters without white-space and contain at least 3 of the following:<ul><li>Uppercase letter [A-Z]</li><li>Lowercase letter [a-z]</li><li>Numeric [0-9]</li><li>Special character (!,,#,etc..)</li></ul></div><div><span class='note'>For example:</span> 59D7!4$h, 493abcDE</div><div><span class='note'>Note:</span> your password is cAsE sEnSiTiVe</div></div>",
-        "MemberPasswordRules": "<div class='password-rule'><div>Password must be 6-10 characters without white-space and contain at least 1 uppercase letter, 1 lowercase letter, 1 numeric digit. (e.g. 493abcDE, 59D7!4$h)</div><div><span class='note'>Note:</span> your password is cAsE sEnSiTiVe</div></div>",
+        "PasswordRules": "<div class='password-rule'><div>Password must be between 6 to 12 characters without white-space and contain at least 2 of the following:<ul><li>Uppercase letter [A-Z]</li><li>Lowercase letter [a-z]</li><li>Numeric [0-9]</li><li>Special character (!,,#,etc..)</li></ul></div><div><span class='note'>For example:</span> BCD!$#H, 4593abcd</div><div><span class='note'>Note:</span> your password is cAsE sEnSiTiVe</div></div>",
         "InvalidPassword": "Invalid password.",
         "SpreadGroupRule": "Once the account is created, Spread Group can no longer be changed.",
         "SuperMinPTIsOutOfRange": "SMA Min Possess is out of range.",
@@ -37943,8 +37940,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
     messages["zh-hans"] = {
         "RequiredField": "必填字段",
         "ConfirmPasswordMustMatchPassword": "确认密码必须与密码匹配。",
-        "PasswordRules": "<div class='password-rule'><div>密码必须至少为8个字符且没有空格，并且至少包含以下3个条件：<ul><li>大写字母[A-Z]</li><li>小写字母[a-z]</li><li>数字[0-9]</li><li>特殊字符（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> 59D7!4$h, 493abcDE</div><div><span class='note'>注意：</span> 您的密码输入的时候要注意字母的大小写</div></div>",
-        "MemberPasswordRules": "<div class='password-rule'><div>密码必须是6-10个字符，没有空格，并且包含至少1个大写字母，1个小写字母，1个数字。（例如493abcDE，59D7!4$h）</div><div><span class='note'>注意：</span> 您的密码输入的时候要注意字母的大小写</div></div>",
+        "PasswordRules": "<div class='password-rule'><div>密码必须是6-10个字符，没有空格，并且至少包含以下3个条件：<ul><li>大写字母[A-Z]</li><li>小写字母[a-z]</li><li>数字[0-9]</li><li>特殊字符（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> BCD!$#H, 4593abcd</div><div><span class='note'>注意：</span> 您的密码输入的时候要注意字母的大小写</div></div>",
         "InvalidPassword": "无效的密码",
         "SpreadGroupRule": "帐号一旦新增后, 此项目无法更改。",
         "SuperMinPTIsOutOfRange": "股东最低占成数超出范围。",
@@ -37964,8 +37960,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
     messages["zh-tw"] = {
         "RequiredField": "必填欄位",
         "ConfirmPasswordMustMatchPassword": "確認密碼必須與密碼相符。",
-        "PasswordRules": "<div class='password-rule'><div>密碼必須至少為8個字元且沒有空格，並且至少包含以下3個條件：<ul><li>大寫字母[A-Z]</li><li>小寫字母[a-z]</li><li>數字[0-9]</li><li>特殊字元（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> 59D7!4$h, 493abcDE</div><div><span class='note'>注意：</span> 您的密碼輸入的時候要注意字母的大小寫</div></div>",
-        "MemberPasswordRules": "<div class='password-rule'><div>密碼必須是6-10個字元，沒有空格，並且包含至少1個大寫字母，1個小寫字母，1個數字。 （例如493abcDE，59D7!4$h）</div><div><span class='note'>注意：</span> 您的密碼輸入的時候要注意字母的大小寫</div></div>",
+        "PasswordRules": "<div class='password-rule'><div>密碼必須是6-10個字元，沒有空格，並且至少包含以下3個條件：<ul><li>大寫字母[A-Z]</li><li>小寫字母[a-z]</li><li>數字[0-9]</li><li>特殊字元（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> BCD!$#H, 4593abcd</div><div><span class='note'>注意：</span> 您的密碼輸入的時候要注意字母的大小寫</div></div>",
         "InvalidPassword": "無效的密碼",
         "SpreadGroupRule": "帳號一旦新增後, 此項目即無法更改。",
         "SuperMinPTIsOutOfRange": "股東最低佔成數超出範圍。",

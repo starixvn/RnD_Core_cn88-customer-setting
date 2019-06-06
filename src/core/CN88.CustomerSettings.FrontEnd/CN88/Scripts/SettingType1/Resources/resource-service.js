@@ -101,8 +101,7 @@
     messages["en-us"] = {
         "RequiredField": "This field is required.",
         "ConfirmPasswordMustMatchPassword": "Confirm Password must match Password.",
-        "PasswordRules": "<div class='password-rule'><div>Password must be at least 8 characters without white-space and contain at least 3 of the following:<ul><li>Uppercase letter [A-Z]</li><li>Lowercase letter [a-z]</li><li>Numeric [0-9]</li><li>Special character (!,,#,etc..)</li></ul></div><div><span class='note'>For example:</span> 59D7!4$h, 493abcDE</div><div><span class='note'>Note:</span> your password is cAsE sEnSiTiVe</div></div>",
-        "MemberPasswordRules": "<div class='password-rule'><div>Password must be 6-10 characters without white-space and contain at least 1 uppercase letter, 1 lowercase letter, 1 numeric digit. (e.g. 493abcDE, 59D7!4$h)</div><div><span class='note'>Note:</span> your password is cAsE sEnSiTiVe</div></div>",
+        "PasswordRules": "<div class='password-rule'><div>Password must be between 6 to 12 characters without white-space and contain at least 2 of the following:<ul><li>Uppercase letter [A-Z]</li><li>Lowercase letter [a-z]</li><li>Numeric [0-9]</li><li>Special character (!,,#,etc..)</li></ul></div><div><span class='note'>For example:</span> BCD!$#H, 4593abcd</div><div><span class='note'>Note:</span> your password is cAsE sEnSiTiVe</div></div>",
         "InvalidPassword": "Invalid password.",
         "SpreadGroupRule": "Once the account is created, Spread Group can no longer be changed.",
         "SuperMinPTIsOutOfRange": "SMA Min Possess is out of range.",
@@ -122,8 +121,7 @@
     messages["zh-hans"] = {
         "RequiredField": "必填字段",
         "ConfirmPasswordMustMatchPassword": "确认密码必须与密码匹配。",
-        "PasswordRules": "<div class='password-rule'><div>密码必须至少为8个字符且没有空格，并且至少包含以下3个条件：<ul><li>大写字母[A-Z]</li><li>小写字母[a-z]</li><li>数字[0-9]</li><li>特殊字符（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> 59D7!4$h, 493abcDE</div><div><span class='note'>注意：</span> 您的密码输入的时候要注意字母的大小写</div></div>",
-        "MemberPasswordRules": "<div class='password-rule'><div>密码必须是6-10个字符，没有空格，并且包含至少1个大写字母，1个小写字母，1个数字。（例如493abcDE，59D7!4$h）</div><div><span class='note'>注意：</span> 您的密码输入的时候要注意字母的大小写</div></div>",
+        "PasswordRules": "<div class='password-rule'><div>密码必须是6-10个字符，没有空格，并且至少包含以下3个条件：<ul><li>大写字母[A-Z]</li><li>小写字母[a-z]</li><li>数字[0-9]</li><li>特殊字符（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> BCD!$#H, 4593abcd</div><div><span class='note'>注意：</span> 您的密码输入的时候要注意字母的大小写</div></div>",
         "InvalidPassword": "无效的密码",
         "SpreadGroupRule": "帐号一旦新增后, 此项目无法更改。",
         "SuperMinPTIsOutOfRange": "股东最低占成数超出范围。",
@@ -143,8 +141,7 @@
     messages["zh-tw"] = {
         "RequiredField": "必填欄位",
         "ConfirmPasswordMustMatchPassword": "確認密碼必須與密碼相符。",
-        "PasswordRules": "<div class='password-rule'><div>密碼必須至少為8個字元且沒有空格，並且至少包含以下3個條件：<ul><li>大寫字母[A-Z]</li><li>小寫字母[a-z]</li><li>數字[0-9]</li><li>特殊字元（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> 59D7!4$h, 493abcDE</div><div><span class='note'>注意：</span> 您的密碼輸入的時候要注意字母的大小寫</div></div>",
-        "MemberPasswordRules": "<div class='password-rule'><div>密碼必須是6-10個字元，沒有空格，並且包含至少1個大寫字母，1個小寫字母，1個數字。 （例如493abcDE，59D7!4$h）</div><div><span class='note'>注意：</span> 您的密碼輸入的時候要注意字母的大小寫</div></div>",
+        "PasswordRules": "<div class='password-rule'><div>密碼必須是6-10個字元，沒有空格，並且至少包含以下3個條件：<ul><li>大寫字母[A-Z]</li><li>小寫字母[a-z]</li><li>數字[0-9]</li><li>特殊字元（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> BCD!$#H, 4593abcd</div><div><span class='note'>注意：</span> 您的密碼輸入的時候要注意字母的大小寫</div></div>",
         "InvalidPassword": "無效的密碼",
         "SpreadGroupRule": "帳號一旦新增後, 此項目即無法更改。",
         "SuperMinPTIsOutOfRange": "股東最低佔成數超出範圍。",

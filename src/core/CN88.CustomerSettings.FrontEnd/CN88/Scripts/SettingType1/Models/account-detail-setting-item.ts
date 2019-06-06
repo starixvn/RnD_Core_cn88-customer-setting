@@ -77,6 +77,45 @@ namespace CustomerSetting.SettingType1 {
             return true;
         }
 
+        protected validatePassword(): boolean {
+            if (!this.password || this.password.length === 0) {
+                this.validationState = new ValidationResult("RequiredField", "password");
+
+                return false;
+            }
+
+            if (!this.validatePasswordStrength()) {
+                return false;
+            }
+
+            if (this.confirmPassword !== this.password) {
+                this.validationState = new ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private validatePasswordStrength(): boolean {
+            var mustMetRule = /^(?!.*[\s]).{6,12}$/;
+            var optionalRules = [
+                /[A-Z]/,
+                /[a-z]/,
+                /[0-9]/,
+                /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/
+            ];
+            var numberOfMetOptionalRules: number = optionalRules.filter((rule: RegExp) => rule.test(this.password)).length;
+
+            if (!mustMetRule.test(this.password) || numberOfMetOptionalRules < 2) {
+                this.validationState = new ValidationResult("PasswordRules", "password");
+
+                return false;
+            }
+
+            return true;
+        }
+
         public toJson(): any {
             var accountDetail: any = super.toJson();
 

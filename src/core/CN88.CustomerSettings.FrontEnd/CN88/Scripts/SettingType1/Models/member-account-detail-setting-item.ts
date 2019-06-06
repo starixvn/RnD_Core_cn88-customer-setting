@@ -53,30 +53,6 @@ namespace CustomerSetting.SettingType1 {
             return true;
         }
 
-        private validatePassword(): boolean {
-            if (!this.password || this.password.length === 0) {
-                this.validationState = new ValidationResult("RequiredField", "password");
-
-                return false;
-            }
-
-            var memberPasswordPattern: RegExp = /^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*[\s])).{6,10}$/;
-
-            if (!memberPasswordPattern.test(this.password)) {
-                this.validationState = new ValidationResult("MemberPasswordRules", "password");
-
-                return false;
-            }
-
-            if (this.confirmPassword !== this.password) {
-                this.validationState = new ValidationResult("ConfirmPasswordMustMatchPassword", "confirmPassword");
-
-                return false;
-            }
-
-            return true;
-        }
-
         private validateCredit(): boolean {
             if (!isNumber(this.credit)) {
                 this.validationState = new ValidationResult("RequiredField", "credit");
