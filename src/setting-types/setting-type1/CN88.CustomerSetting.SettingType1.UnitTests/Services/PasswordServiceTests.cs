@@ -7,7 +7,7 @@
     [TestFixture(Category = "SettingType1-AccountDetail")]
     public class PasswordServiceTests
     {
-        private PasswordServiceImpl passwordService = new PasswordServiceImpl();
+        private readonly PasswordServiceImpl passwordService = new PasswordServiceImpl();
 
         [TestCase("")]
         [TestCase(null)]
@@ -42,15 +42,25 @@
             Assert.AreEqual("C268E7827BABD7657E85A85811D281", result.Message);
         }
 
-        [TestCase("", false)]
-        [TestCase("1234aa", false)]
-        [TestCase("123456", false)]
-        [TestCase("fdghhj", false)]
-        [TestCase("@#@#@#@#@$$#", false)]
-        [TestCase("ĐFFSDFDSFSDSFD", false)]
-        public void IsMatchedRules_PasswordInvalid_ReturnFalse(string password, bool isMember)
+        [TestCase("")]
+        [TestCase("12aa")]
+        [TestCase("123456")]
+        [TestCase("fdghhj")]
+        [TestCase("@#@#@#@#@$$#")]
+        [TestCase("ĐFFSDFDSFSDSFD")]
+        public void IsMatchedRules_PasswordInvalid_ReturnFalse(string password)
         {
-            Assert.IsFalse(PasswordServiceImpl.IsMatchedRules(password, isMember));
+            Assert.IsFalse(PasswordServiceImpl.IsMatchedRules(password));
+        }
+
+        [TestCase("1234aa")]
+        [TestCase("fddff11")]
+        [TestCase("%^22333")]
+        [TestCase("ttttttt$$#")]
+        [TestCase("ĐFFSDFD%%SFD")]
+        public void IsMatchedRules_PasswordIsValid_ReturnTrue(string password)
+        {
+            Assert.IsTrue(PasswordServiceImpl.IsMatchedRules(password));
         }
     }
 }

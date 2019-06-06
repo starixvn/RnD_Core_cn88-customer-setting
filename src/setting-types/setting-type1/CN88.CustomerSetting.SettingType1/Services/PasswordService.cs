@@ -16,12 +16,12 @@
     public class PasswordServiceImpl : PasswordService
     {
         private const string HEX_DIGIT = "0123456789abcdef";
-        private static readonly Regex PasswordRule1 = new Regex(@"^(?=.*\d).{8,40}$");
-        private static readonly Regex PasswordRule2 = new Regex(@"^(?=.*[a-z]).{8,40}$");
-        private static readonly Regex PasswordRule3 = new Regex(@"^(?=.*[A-Z]).{8,40}$");
-        private static readonly Regex PasswordRule4 = new Regex(@"^(?=.*[\[\]\^\$\.\|\?\*\+\(\)\\~`\!@#%&\-_+={}'""<>:;,]).{8,40}$");
-        private static readonly Regex MemberPasswordRule = new Regex(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,10}$");
+        private static readonly Regex PasswordRule1 = new Regex(@"^(?=.*\d).{6,12}$");
+        private static readonly Regex PasswordRule2 = new Regex(@"^(?=.*[a-z]).{6,12}$");
+        private static readonly Regex PasswordRule3 = new Regex(@"^(?=.*[A-Z]).{6,12}$");
+        private static readonly Regex PasswordRule4 = new Regex(@"^(?=.*[\[\]\^\$\.\|\?\*\+\(\)\\~`\!@#%&\-_+={}'""<>:;,]).{6,12}$");
         private static readonly Regex NoWhiteSpace = new Regex(@"^\S*$");
+        private const int minRulesStatisfied = 2;
         private readonly IAseEncryptor aseEncryptor;
 
         public PasswordServiceImpl() : this(null)
@@ -61,15 +61,10 @@
                 return Result.Success;
             }
 
-            return !IsMatchedRules(password, customerLevel.IsMemberLevel())
-                ? Result.CreateErrorResult(BuildFailedPasswordValidationMessage(customerLevel))
+            return !IsMatchedRules(password)
+                ? Result.CreateErrorResult(Resources.PasswordRequire)
                 : Result.Success;
         }
-
-        private static string BuildFailedPasswordValidationMessage(Level customerLevel)
-            => customerLevel.IsMemberLevel()
-                                ? Resources.PasswordHint04
-                                : Resources.PasswordRequire;
 
         /// <summary>
         /// Password must be at least 8 characters without white space and contain at least 3 of the following:
@@ -81,19 +76,14 @@
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        internal static bool IsMatchedRules(string password, bool isMemberPassword)
+        internal static bool IsMatchedRules(string password)
         {
-            if (isMemberPassword)
-            {
-                return MemberPasswordRule.Match(password).Success && NoWhiteSpace.Match(password).Success;
-            }
-
             var r1 = PasswordRule1.Match(password).Success ? 1 : 0;
             var r2 = PasswordRule2.Match(password).Success ? 1 : 0;
             var r3 = PasswordRule3.Match(password).Success ? 1 : 0;
             var r4 = PasswordRule4.Match(password).Success ? 1 : 0;
 
-            const int minRulesStatisfied = 3;
+            
             return (r1 + r2 + r3 + r4 >= minRulesStatisfied) && NoWhiteSpace.Match(password).Success;
         }
 

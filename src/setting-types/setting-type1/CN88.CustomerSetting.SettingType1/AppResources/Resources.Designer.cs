@@ -489,15 +489,16 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password must be at least 8 characters without white-space and contain at least 3 of the following:
+        ///   Looks up a localized string similar to Password must be between 6 to 12 characters without white-space and contain at least 2 of the following:
         ///
-        ///  • Uppercase letter [A-Z] 
-        ///  • Lowercase letter [a-z] 
-        ///  • Numeric [0-9] 
-        ///  • Special character (!,@,#,etc..)
+        ///  • Uppercase letter [A-Z]
+        ///  • Lowercase letter [a-z]
+        ///  • Numeric [0-9]
+        ///  • Special character (!,,#,etc..)
+        ///  
+        ///For example: BCD!$#H, 4593abcd
         ///
-        ///For example: 59D7!4$h, 493abcDE
-        ///Notes: your password is cAsE sEnSiTiVe.
+        ///Note: your password is cAsE sEnSiTiVe.
         /// </summary>
         internal static string PasswordRequire {
             get {
