@@ -1095,7 +1095,8 @@ select.setting-field {
     flex-direction: row;
     justify-content: space-between; }
     .mobile-view .setting-type-1 .customer-credit .available-credit-group label {
-      margin: 0; }
+      margin: 0;
+      text-transform: initial; }
 
 .mobile-view .setting-type-1 .position-taking {
   padding-top: 12px; }
@@ -1107,6 +1108,8 @@ select.setting-field {
   .mobile-view .setting-type-1 .position-taking__constraint-group {
     text-align: right;
     width: 75%; }
+  .mobile-view .setting-type-1 .position-taking__constraint {
+    text-transform: initial; }
   .mobile-view .setting-type-1 .position-taking--edit .sub-header {
     margin-bottom: 8px; }
 
