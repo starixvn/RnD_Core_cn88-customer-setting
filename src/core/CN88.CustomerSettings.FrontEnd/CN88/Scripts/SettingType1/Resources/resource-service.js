@@ -121,7 +121,7 @@
     messages["zh-hans"] = {
         "RequiredField": "必填字段",
         "ConfirmPasswordMustMatchPassword": "确认密码必须与密码匹配。",
-        "PasswordRules": "<div class='password-rule'><div>密码必须是6-10个字符，没有空格，并且至少包含以下2个条件：<ul><li>大写字母[A-Z]</li><li>小写字母[a-z]</li><li>数字[0-9]</li><li>特殊字符（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> BCD!$#H, 4593abcd</div><div><span class='note'>注意：</span> 您的密码输入的时候要注意字母的大小写</div></div>",
+        "PasswordRules": "<div class='password-rule'><div>密码必须是6-12个字符且没有空格，并且至少包含以下2个条件：<ul><li>大写字母[A-Z]</li><li>小写字母[a-z]</li><li>数字[0-9]</li><li>特殊字符（!,,#等...）</li></ul></div><div><span class='note'>例如：</span>BCD!$#H, 4593abcd</div><div><span class='note'>注意：</span>您的密码输入的时候要注意字母的大小写</div></div>",
         "InvalidPassword": "无效的密码",
         "SpreadGroupRule": "帐号一旦新增后, 此项目无法更改。",
         "SuperMinPTIsOutOfRange": "股东最低占成数超出范围。",
@@ -141,7 +141,7 @@
     messages["zh-tw"] = {
         "RequiredField": "必填欄位",
         "ConfirmPasswordMustMatchPassword": "確認密碼必須與密碼相符。",
-        "PasswordRules": "<div class='password-rule'><div>密碼必須是6-10個字元，沒有空格，並且至少包含以下2個條件：<ul><li>大寫字母[A-Z]</li><li>小寫字母[a-z]</li><li>數字[0-9]</li><li>特殊字元（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> BCD!$#H, 4593abcd</div><div><span class='note'>注意：</span> 您的密碼輸入的時候要注意字母的大小寫</div></div>",
+        "PasswordRules": "<div class='password-rule'><div>密碼必須是6-12個字符且沒有空格，並且至少包含以下2個條件：<ul><li>大寫字母[A-Z]</li><li>小寫字母[a-z]</li><li>數字[0-9]</li><li>特殊字元（!,,#等...）</li></ul></div><div><span class='note'>例如：</span>BCD!$#H, 4593abcd</div><div><span class='note'>注意：</span>您的密碼輸入的時候要注意字母的大小寫</div></div>",
         "InvalidPassword": "無效的密碼",
         "SpreadGroupRule": "帳號一旦新增後, 此項目即無法更改。",
         "SuperMinPTIsOutOfRange": "股東最低佔成數超出範圍。",

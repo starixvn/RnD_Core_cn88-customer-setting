@@ -35913,6 +35913,54 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var PercentageDropdownDirective = (function () {
+        function PercentageDropdownDirective(valueRangeService) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
+            this.restrict = "E";
+            this.link = function (scope) {
+                if (scope.autoRefresh) {
+                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
+                        _this.initializeRange(scope);
+                    });
+                }
+                else {
+                    _this.initializeRange(scope);
+                }
+            };
+            this.valueRangeService = valueRangeService;
+        }
+        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    value: "=ngModel",
+                    min: "=",
+                    max: "=",
+                    step: "=?",
+                    precision: "=?",
+                    placeholder: "@",
+                    placeholderVisible: "=?",
+                    autoRefresh: "=?"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
+            scope.precision = scope.precision || 0;
+            scope.factor = Math.pow(10, scope.precision);
+            scope.step = scope.step || 1;
+            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
+        };
+        PercentageDropdownDirective.$inject = ["valueRangeService"];
+        return PercentageDropdownDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var SettingFieldGroupDirective = (function () {
         function SettingFieldGroupDirective($injector, $filter) {
             var _this = this;
@@ -36072,54 +36120,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    var PercentageDropdownDirective = (function () {
-        function PercentageDropdownDirective(valueRangeService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
-            this.restrict = "E";
-            this.link = function (scope) {
-                if (scope.autoRefresh) {
-                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
-                        _this.initializeRange(scope);
-                    });
-                }
-                else {
-                    _this.initializeRange(scope);
-                }
-            };
-            this.valueRangeService = valueRangeService;
-        }
-        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    value: "=ngModel",
-                    min: "=",
-                    max: "=",
-                    step: "=?",
-                    precision: "=?",
-                    placeholder: "@",
-                    placeholderVisible: "=?",
-                    autoRefresh: "=?"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
-            scope.precision = scope.precision || 0;
-            scope.factor = Math.pow(10, scope.precision);
-            scope.step = scope.step || 1;
-            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
-        };
-        PercentageDropdownDirective.$inject = ["valueRangeService"];
-        return PercentageDropdownDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     var SettingResultDirective = (function () {
         function SettingResultDirective($rootScope, scrollService) {
             var _this = this;
@@ -36149,55 +36149,6 @@ var CustomerSetting;
         return SettingResultDirective;
     }());
     CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingTypeDirectiveLoader = (function () {
-        function SettingTypeDirectiveLoader($compile) {
-            var _this = this;
-            this.replace = true;
-            this.link = function (scope, element) {
-                scope.$watch("setting.settingTypes", function () {
-                    _this.generateNodes(scope, element);
-                });
-            };
-            this.$compile = $compile;
-            this.loadedSettingTypes = [];
-        }
-        Object.defineProperty(SettingTypeDirectiveLoader.prototype, "scope", {
-            get: function () {
-                return {
-                    setting: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingTypeDirectiveLoader.prototype.generateNodes = function (scope, element) {
-            var _this = this;
-            if (scope.setting && scope.setting.settingTypes && angular.isArray(scope.setting.settingTypes)) {
-                scope.setting.settingTypes.forEach(function (settingType, index) {
-                    var loaded = _this.loadedSettingTypes.some(function (item) {
-                        return item === settingType.id;
-                    });
-                    if (!loaded) {
-                        var settingTypeNodeTemplate = CustomerSetting.StringFormater.format("<st{0} data-setting-type=\"setting.settingTypes[{1}]\"></st{0}>", settingType.id, index);
-                        var settingTypeElement = angular.element(settingTypeNodeTemplate);
-                        if (index === scope.setting.settingTypes.length - 1) {
-                            settingTypeElement.addClass("last-setting-type");
-                        }
-                        element.append(settingTypeElement);
-                        _this.$compile(settingTypeElement)(scope);
-                        _this.loadedSettingTypes.push(settingType.id);
-                    }
-                });
-            }
-        };
-        SettingTypeDirectiveLoader.$inject = ["$compile"];
-        return SettingTypeDirectiveLoader;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36346,6 +36297,55 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var SettingTypeDirectiveLoader = (function () {
+        function SettingTypeDirectiveLoader($compile) {
+            var _this = this;
+            this.replace = true;
+            this.link = function (scope, element) {
+                scope.$watch("setting.settingTypes", function () {
+                    _this.generateNodes(scope, element);
+                });
+            };
+            this.$compile = $compile;
+            this.loadedSettingTypes = [];
+        }
+        Object.defineProperty(SettingTypeDirectiveLoader.prototype, "scope", {
+            get: function () {
+                return {
+                    setting: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingTypeDirectiveLoader.prototype.generateNodes = function (scope, element) {
+            var _this = this;
+            if (scope.setting && scope.setting.settingTypes && angular.isArray(scope.setting.settingTypes)) {
+                scope.setting.settingTypes.forEach(function (settingType, index) {
+                    var loaded = _this.loadedSettingTypes.some(function (item) {
+                        return item === settingType.id;
+                    });
+                    if (!loaded) {
+                        var settingTypeNodeTemplate = CustomerSetting.StringFormater.format("<st{0} data-setting-type=\"setting.settingTypes[{1}]\"></st{0}>", settingType.id, index);
+                        var settingTypeElement = angular.element(settingTypeNodeTemplate);
+                        if (index === scope.setting.settingTypes.length - 1) {
+                            settingTypeElement.addClass("last-setting-type");
+                        }
+                        element.append(settingTypeElement);
+                        _this.$compile(settingTypeElement)(scope);
+                        _this.loadedSettingTypes.push(settingType.id);
+                    }
+                });
+            }
+        };
+        SettingTypeDirectiveLoader.$inject = ["$compile"];
+        return SettingTypeDirectiveLoader;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     (function (System) {
         System[System["nap"] = 1] = "nap";
         System[System["alpha"] = 2] = "alpha";
@@ -36406,6 +36406,8 @@ var CustomerSetting;
         CustomerSetting.ModuleRegister.directive("st1MasterGeneralData", MasterGeneralDataDirective);
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
+
+
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -36506,142 +36508,6 @@ var CustomerSetting;
         SettingType1.AccountDetailSettingItem = AccountDetailSettingItem;
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
-
-
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var MemberAccountDetailSettingItem = (function (_super) {
-            __extends(MemberAccountDetailSettingItem, _super);
-            function MemberAccountDetailSettingItem(accountDetail, isNew, customerLevel, hashKey) {
-                if (isNew === void 0) { isNew = false; }
-                if (customerLevel === void 0) { customerLevel = null; }
-                if (hashKey === void 0) { hashKey = null; }
-                if (accountDetail) {
-                    _super.call(this, accountDetail, isNew, customerLevel, hashKey);
-                    this.usernameSuffixes = accountDetail.usernameSuffixes;
-                    this.spreadGroups = accountDetail.spreadGroups;
-                    this.spreadGroup = accountDetail.spreadGroup;
-                }
-                this.ignoredProperties = this.ignoredProperties.concat(["usernameSuffixes", "spreadGroups"]);
-                if (!this.isNew) {
-                    this.ignoredProperties.push("spreadGroup");
-                }
-            }
-            MemberAccountDetailSettingItem.prototype.validate = function () {
-                if (!this.validateUsername()) {
-                    return false;
-                }
-                if (this.isNew && !this.validatePassword()) {
-                    return false;
-                }
-                if (!this.validateCredit()) {
-                    return false;
-                }
-                if (this.isNew && !this.validateOddsSpread()) {
-                    return false;
-                }
-                this.resetValidationState();
-                return true;
-            };
-            MemberAccountDetailSettingItem.prototype.validateCredit = function () {
-                if (!CustomerSetting.isNumber(this.credit)) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "credit");
-                    return false;
-                }
-                if (this.credit < this.minCredit) {
-                    this.validationState = new CustomerSetting.ValidationResult("CreditsMustBeGreaterThanOrEqualTo", "credit", [this.minCredit], { precision: 2 });
-                    return false;
-                }
-                if (this.credit > this.maxCredit) {
-                    this.validationState = new CustomerSetting.ValidationResult("CreditsMustBeLessThanOrEqualTo", "credit", [this.maxCredit], { precision: 2 });
-                    return false;
-                }
-                return true;
-            };
-            MemberAccountDetailSettingItem.prototype.validateOddsSpread = function () {
-                if (!this.spreadGroup) {
-                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "spreadGroup");
-                    return false;
-                }
-                return true;
-            };
-            return MemberAccountDetailSettingItem;
-        }(SettingType1.AccountDetailSettingItem));
-        SettingType1.MemberAccountDetailSettingItem = MemberAccountDetailSettingItem;
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var SubSectionBaseDirective = (function () {
-            function SubSectionBaseDirective(settingTypesSharedValuesService) {
-                var _this = this;
-                this.replace = true;
-                this.link = function (scope) {
-                    _this.linkInternal(scope);
-                };
-                this.settingTypesSharedValuesService = settingTypesSharedValuesService;
-            }
-            Object.defineProperty(SubSectionBaseDirective.prototype, "scope", {
-                get: function () {
-                    return {
-                        accountDetail: "=",
-                        isEditable: "="
-                    };
-                },
-                enumerable: true,
-                configurable: true
-            });
-            SubSectionBaseDirective.prototype.linkInternal = function (scope) {
-                scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
-                scope.isNew = this.settingTypesSharedValuesService.isNew;
-                scope.isMobileView = this.settingTypesSharedValuesService.isMobileView;
-                scope.avaiCustomerLevels = CustomerSetting.Level;
-            };
-            SubSectionBaseDirective.$inject = ["settingTypesSharedValuesService"];
-            return SubSectionBaseDirective;
-        }());
-        SettingType1.SubSectionBaseDirective = SubSectionBaseDirective;
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var MemberGeneralDataDirective = (function () {
-            function MemberGeneralDataDirective(crossingSettingTypesServiceBus) {
-                var _this = this;
-                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Agent\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'SpreadGroup\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
-                this.link = function (scope) {
-                    if (scope.isNew) {
-                        scope.updateSpreadGroup = function () {
-                            _this.crossingSettingTypesServiceBus.execute("updateMemberSpreadGroup", {
-                                newMemberGroup: scope.accountDetail.spreadGroup.groupName
-                            });
-                        };
-                    }
-                };
-                this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
-            }
-            MemberGeneralDataDirective.$inject = ["crossingSettingTypesServiceBus"];
-            return MemberGeneralDataDirective;
-        }());
-        CustomerSetting.ModuleRegister.directive("st1MemberGeneralData", MemberGeneralDataDirective);
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-
 
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -36842,6 +36708,42 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
+        var SubSectionBaseDirective = (function () {
+            function SubSectionBaseDirective(settingTypesSharedValuesService) {
+                var _this = this;
+                this.replace = true;
+                this.link = function (scope) {
+                    _this.linkInternal(scope);
+                };
+                this.settingTypesSharedValuesService = settingTypesSharedValuesService;
+            }
+            Object.defineProperty(SubSectionBaseDirective.prototype, "scope", {
+                get: function () {
+                    return {
+                        accountDetail: "=",
+                        isEditable: "="
+                    };
+                },
+                enumerable: true,
+                configurable: true
+            });
+            SubSectionBaseDirective.prototype.linkInternal = function (scope) {
+                scope.customerLevel = this.settingTypesSharedValuesService.customerLevel;
+                scope.isNew = this.settingTypesSharedValuesService.isNew;
+                scope.isMobileView = this.settingTypesSharedValuesService.isMobileView;
+                scope.avaiCustomerLevels = CustomerSetting.Level;
+            };
+            SubSectionBaseDirective.$inject = ["settingTypesSharedValuesService"];
+            return SubSectionBaseDirective;
+        }());
+        SettingType1.SubSectionBaseDirective = SubSectionBaseDirective;
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
         var SuperGeneralDataDirective = (function () {
             function SuperGeneralDataDirective(appConfigService, requestService) {
                 var _this = this;
@@ -36871,6 +36773,104 @@ var CustomerSetting;
             return SuperGeneralDataDirective;
         }());
         CustomerSetting.ModuleRegister.directive("st1SuperGeneralData", SuperGeneralDataDirective);
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var MemberAccountDetailSettingItem = (function (_super) {
+            __extends(MemberAccountDetailSettingItem, _super);
+            function MemberAccountDetailSettingItem(accountDetail, isNew, customerLevel, hashKey) {
+                if (isNew === void 0) { isNew = false; }
+                if (customerLevel === void 0) { customerLevel = null; }
+                if (hashKey === void 0) { hashKey = null; }
+                if (accountDetail) {
+                    _super.call(this, accountDetail, isNew, customerLevel, hashKey);
+                    this.usernameSuffixes = accountDetail.usernameSuffixes;
+                    this.spreadGroups = accountDetail.spreadGroups;
+                    this.spreadGroup = accountDetail.spreadGroup;
+                }
+                this.ignoredProperties = this.ignoredProperties.concat(["usernameSuffixes", "spreadGroups"]);
+                if (!this.isNew) {
+                    this.ignoredProperties.push("spreadGroup");
+                }
+            }
+            MemberAccountDetailSettingItem.prototype.validate = function () {
+                if (!this.validateUsername()) {
+                    return false;
+                }
+                if (this.isNew && !this.validatePassword()) {
+                    return false;
+                }
+                if (!this.validateCredit()) {
+                    return false;
+                }
+                if (this.isNew && !this.validateOddsSpread()) {
+                    return false;
+                }
+                this.resetValidationState();
+                return true;
+            };
+            MemberAccountDetailSettingItem.prototype.validateCredit = function () {
+                if (!CustomerSetting.isNumber(this.credit)) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "credit");
+                    return false;
+                }
+                if (this.credit < this.minCredit) {
+                    this.validationState = new CustomerSetting.ValidationResult("CreditsMustBeGreaterThanOrEqualTo", "credit", [this.minCredit], { precision: 2 });
+                    return false;
+                }
+                if (this.credit > this.maxCredit) {
+                    this.validationState = new CustomerSetting.ValidationResult("CreditsMustBeLessThanOrEqualTo", "credit", [this.maxCredit], { precision: 2 });
+                    return false;
+                }
+                return true;
+            };
+            MemberAccountDetailSettingItem.prototype.validateOddsSpread = function () {
+                if (!this.spreadGroup) {
+                    this.validationState = new CustomerSetting.ValidationResult("RequiredField", "spreadGroup");
+                    return false;
+                }
+                return true;
+            };
+            return MemberAccountDetailSettingItem;
+        }(SettingType1.AccountDetailSettingItem));
+        SettingType1.MemberAccountDetailSettingItem = MemberAccountDetailSettingItem;
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
+        var MemberGeneralDataDirective = (function () {
+            function MemberGeneralDataDirective(crossingSettingTypesServiceBus) {
+                var _this = this;
+                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl">{{::(\'Agent\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.uplineUsername}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'SpreadGroup\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'SpreadGroupRule\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl" data-ng-if="isNew"><select class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.spreadGroup" data-ng-options="spreadGroup.uGroup for spreadGroup in accountDetail.spreadGroups track by spreadGroup.uGroup" data-ng-change="updateSpreadGroup()"></select></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.spreadGroup.uGroup}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
+                this.link = function (scope) {
+                    if (scope.isNew) {
+                        scope.updateSpreadGroup = function () {
+                            _this.crossingSettingTypesServiceBus.execute("updateMemberSpreadGroup", {
+                                newMemberGroup: scope.accountDetail.spreadGroup.groupName
+                            });
+                        };
+                    }
+                };
+                this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
+            }
+            MemberGeneralDataDirective.$inject = ["crossingSettingTypesServiceBus"];
+            return MemberGeneralDataDirective;
+        }());
+        CustomerSetting.ModuleRegister.directive("st1MemberGeneralData", MemberGeneralDataDirective);
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -37940,7 +37940,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
     messages["zh-hans"] = {
         "RequiredField": "必填字段",
         "ConfirmPasswordMustMatchPassword": "确认密码必须与密码匹配。",
-        "PasswordRules": "<div class='password-rule'><div>密码必须是6-10个字符，没有空格，并且至少包含以下2个条件：<ul><li>大写字母[A-Z]</li><li>小写字母[a-z]</li><li>数字[0-9]</li><li>特殊字符（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> BCD!$#H, 4593abcd</div><div><span class='note'>注意：</span> 您的密码输入的时候要注意字母的大小写</div></div>",
+        "PasswordRules": "<div class='password-rule'><div>密码必须是6-12个字符且没有空格，并且至少包含以下2个条件：<ul><li>大写字母[A-Z]</li><li>小写字母[a-z]</li><li>数字[0-9]</li><li>特殊字符（!,,#等...）</li></ul></div><div><span class='note'>例如：</span>BCD!$#H, 4593abcd</div><div><span class='note'>注意：</span>您的密码输入的时候要注意字母的大小写</div></div>",
         "InvalidPassword": "无效的密码",
         "SpreadGroupRule": "帐号一旦新增后, 此项目无法更改。",
         "SuperMinPTIsOutOfRange": "股东最低占成数超出范围。",
@@ -37960,7 +37960,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
     messages["zh-tw"] = {
         "RequiredField": "必填欄位",
         "ConfirmPasswordMustMatchPassword": "確認密碼必須與密碼相符。",
-        "PasswordRules": "<div class='password-rule'><div>密碼必須是6-10個字元，沒有空格，並且至少包含以下2個條件：<ul><li>大寫字母[A-Z]</li><li>小寫字母[a-z]</li><li>數字[0-9]</li><li>特殊字元（!,,#等...）</li></ul></div><div><span class='note'>例如：</span> BCD!$#H, 4593abcd</div><div><span class='note'>注意：</span> 您的密碼輸入的時候要注意字母的大小寫</div></div>",
+        "PasswordRules": "<div class='password-rule'><div>密碼必須是6-12個字符且沒有空格，並且至少包含以下2個條件：<ul><li>大寫字母[A-Z]</li><li>小寫字母[a-z]</li><li>數字[0-9]</li><li>特殊字元（!,,#等...）</li></ul></div><div><span class='note'>例如：</span>BCD!$#H, 4593abcd</div><div><span class='note'>注意：</span>您的密碼輸入的時候要注意字母的大小寫</div></div>",
         "InvalidPassword": "無效的密碼",
         "SpreadGroupRule": "帳號一旦新增後, 此項目即無法更改。",
         "SuperMinPTIsOutOfRange": "股東最低佔成數超出範圍。",
