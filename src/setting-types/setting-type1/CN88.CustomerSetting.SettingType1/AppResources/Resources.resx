@@ -120,23 +120,6 @@
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
-  <data name="PasswordHint01" xml:space="preserve">
-    <value>Password must be at least 8 characters without white-space and contain at least 3 of the following:</value>
-  </data>
-  <data name="PasswordHint02" xml:space="preserve">
-    <value>&lt;li&gt;Uppercase letter [A-Z]&lt;/li&gt;
-&lt;li&gt;Lowercase letter [a-z]&lt;/li&gt;
-&lt;li&gt;Numeric [0-9]&lt;/li&gt;
-&lt;li&gt;Special character (!,,#,etc..)&lt;/li&gt;</value>
-  </data>
-  <data name="PasswordHint03" xml:space="preserve">
-    <value>&lt;p&gt;&lt;strong&gt;For example&lt;/strong&gt;: 59D7!4$h, 493abcDE&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: your password is cAsE sEnSiTiVe&lt;/p&gt;</value>
-  </data>
-  <data name="PasswordHint04" xml:space="preserve">
-    <value>Password must be 6-10 characters without white-space and contain at least 1 uppercase letter, 1 lowercase letter, 1 numeric digit. (e.g. 493abcDE, 59D7!4$h)
-Notes: your password is cAsE sEnSiTiVe.</value>
-  </data>
   <data name="PasswordRules" xml:space="preserve">
     <value>Password rules</value>
   </data>

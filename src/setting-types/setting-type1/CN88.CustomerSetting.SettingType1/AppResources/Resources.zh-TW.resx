@@ -123,33 +123,14 @@
   <data name="PasswordRules" xml:space="preserve">
     <value>密碼規則</value>
   </data>
-  <data name="PasswordHint01" xml:space="preserve">
-    <value>密码必须至少 8 个字符没有空格和包含至少 3个 以下：</value>
-  </data>
-  <data name="PasswordHint02" xml:space="preserve">
-    <value>&lt;li&gt;大写字母 [A-Z]&lt;/li&gt;
-&lt;li&gt;小写字母 [a-z]&lt;/li&gt;
-&lt;li&gt;数字 [0-9]&lt;/li&gt;
-&lt;li&gt; 特殊字符 （!、 @、 # 等。。)&lt;/li&gt;</value>
-  </data>
-  <data name="PasswordHint03" xml:space="preserve">
-    <value>&lt;p&gt;&lt;strong&gt;例如&lt;/strong&gt;59D7!4$h, 493abcDE&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;您的密码需有大小写&lt;/p&gt;</value>
-  </data>
-  <data name="PasswordHint04" xml:space="preserve">
-    <value>密码必须为 6-10 字符没有空格并包含至少 1  个大写字母、1  个小写字母 、 1  个数字。（例如 493abcDE, 59D7!4$h）
-注意： 您的密码需有大小写</value>
-  </data>
   <data name="PasswordRequire" xml:space="preserve">
-    <value>密码必须至少 8 个字符没有空格和包含至少 3个 以下：
-
-• 大写字母 [A-Z]
-• 小写字母 [a-z]
-• 数字 [0-9]
-• 特殊字符 （!、 @、 # 等。。)
-
-例如： 59D7!4$h, 493abcDE
-注意： 您的密码需有大小写</value>
+    <value>"密碼必須是6-12個字符且沒有空格，並且至少包含以下2個條件：
+- 大寫字母[A-Z]
+ - 小寫字母[a-z]
+ - 數字[0-9]
+- 特殊字元（!,,#等...）
+例如：BCD!$#H, 4593abcd
+注意：您的密碼輸入的時候要注意字母的大小寫"</value>
   </data>
   <data name="PasswordWrongRule" xml:space="preserve">
     <value>您的密码不符合最低安全要求</value>

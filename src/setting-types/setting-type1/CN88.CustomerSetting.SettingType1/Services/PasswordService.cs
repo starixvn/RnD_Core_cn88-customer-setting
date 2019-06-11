@@ -17,9 +17,9 @@
     {
         private const string HEX_DIGIT = "0123456789abcdef";
         private static readonly Regex PasswordRule1 = new Regex(@"^(?=.*\d).{6,12}$");
-        private static readonly Regex PasswordRule2 = new Regex(@"^(?=.*[a-z]).{6,12}$");
-        private static readonly Regex PasswordRule3 = new Regex(@"^(?=.*[A-Z]).{6,12}$");
-        private static readonly Regex PasswordRule4 = new Regex(@"^(?=.*[\[\]\^\$\.\|\?\*\+\(\)\\~`\!@#%&\-_+={}'""<>:;,]).{6,12}$");
+        private static readonly Regex PasswordRule2 = new Regex("^(?=.*[a-z]).{6,12}$");
+        private static readonly Regex PasswordRule3 = new Regex("^(?=.*[A-Z]).{6,12}$");
+        private static readonly Regex PasswordRule4 = new Regex(@"^(?=.*[\[\]\^\$\.\|\?\*\+\(\)\\~`\!@#%&\-_+={}'""<>:;,/]).{6,12}$");
         private static readonly Regex NoWhiteSpace = new Regex(@"^\S*$");
         private const int minRulesStatisfied = 2;
         private readonly IAseEncryptor aseEncryptor;

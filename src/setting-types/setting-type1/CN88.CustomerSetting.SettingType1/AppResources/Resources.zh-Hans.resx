@@ -163,12 +163,13 @@
     <value>新的信用额度超出范围，请刷新表单并重试。</value>
   </data>
   <data name="PasswordRequire" xml:space="preserve">
-    <value>密码必须至少为8个字符且没有空格，并且至少包含以下3个条件：  
-- 大写字母[A-Z] 
-- 小写字母[a-z] 
-- 数字[0-9] 
-- 特殊字符（!,,#等...） 
-例如：59D7!4$h，493abcDE 注意：您的密码输入的时候要注意字母的大小写</value>
+    <value>"密码必须是6-12个字符且没有空格，并且至少包含以下2个条件：
+- 大写字母[A-Z]
+- 小写字母[a-z]
+ - 数字[0-9]
+ - 特殊字符（!,,#等...）
+例如：BCD!$#H, 4593abcd
+注意：您的密码输入的时候要注意字母的大小写"</value>
   </data>
   <data name="Msg_20001" xml:space="preserve">
     <value>无效的占成数</value>

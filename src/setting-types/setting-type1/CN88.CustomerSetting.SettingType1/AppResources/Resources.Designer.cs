@@ -448,47 +448,6 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password must be at least 8 characters without white-space and contain at least 3 of the following:.
-        /// </summary>
-        internal static string PasswordHint01 {
-            get {
-                return ResourceManager.GetString("PasswordHint01", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;li&gt;Uppercase letter [A-Z]&lt;/li&gt;
-        ///&lt;li&gt;Lowercase letter [a-z]&lt;/li&gt;
-        ///&lt;li&gt;Numeric [0-9]&lt;/li&gt;
-        ///&lt;li&gt;Special character (!,,#,etc..)&lt;/li&gt;.
-        /// </summary>
-        internal static string PasswordHint02 {
-            get {
-                return ResourceManager.GetString("PasswordHint02", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;p&gt;&lt;strong&gt;For example&lt;/strong&gt;: 59D7!4$h, 493abcDE&lt;/p&gt;
-        ///&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: your password is cAsE sEnSiTiVe&lt;/p&gt;.
-        /// </summary>
-        internal static string PasswordHint03 {
-            get {
-                return ResourceManager.GetString("PasswordHint03", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Password must be 6-10 characters without white-space and contain at least 1 uppercase letter, 1 lowercase letter, 1 numeric digit. (e.g. 493abcDE, 59D7!4$h)
-        ///Notes: your password is cAsE sEnSiTiVe..
-        /// </summary>
-        internal static string PasswordHint04 {
-            get {
-                return ResourceManager.GetString("PasswordHint04", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Password must be between 6 to 12 characters without white-space and contain at least 2 of the following:
         ///
         ///  • Uppercase letter [A-Z]
