@@ -246,4 +246,7 @@
   <data name="Msg_20019" xml:space="preserve">
     <value>现有总代理占成数超出新设的股东最高占成数</value>
   </data>
+  <data name="Msg_40043" xml:space="preserve">
+    <value>此账户的上线仍未启用，您无法进行此行为。</value>
+  </data>
 </root>

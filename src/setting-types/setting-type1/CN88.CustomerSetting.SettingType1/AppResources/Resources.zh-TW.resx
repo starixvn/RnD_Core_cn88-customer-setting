@@ -249,4 +249,7 @@
   <data name="Msg_20043" xml:space="preserve">
     <value>佔成數數值衝突。請在新佔成數生效後重試。</value>
   </data>
+  <data name="Msg_40043" xml:space="preserve">
+    <value>由於此帳戶的上線未啟用，您無法完成此行為。</value>
+  </data>
 </root>
