@@ -9,20 +9,21 @@ $position-taking-constraint-value-color: #737373;
 .setting-type-1 {
     .section {
         float: left;
-        padding: 30px 3% 15px 30px;
+        padding: 30px 3% 15px 20px;
         width: 50%;
 
         &--last {
             padding-left: 3%;
-            padding-right: 30px;
+            padding-right: 20px;
         }
     }
 
-    .row, .setting-field-group {
+    .setting-field-group {
         @include clearfix();
         @include flexbox();
         align-items: center;
-        margin: 10px 0 10px 30px;
+        margin: 10px 0 0;
+        min-height: $setting-field-height;
 
         &__lbl {
             width: 40%;
@@ -36,7 +37,6 @@ $position-taking-constraint-value-color: #737373;
     .sub-header {
         border-bottom: 2 * $border-size solid $sub-header-border-color;
         margin-bottom: 15px;
-        padding-left: 15px;
         padding-bottom: 10px;
 
         &__title {
@@ -110,6 +110,10 @@ $position-taking-constraint-value-color: #737373;
                 }
             }
         }
+
+        .setting-field-group {
+            margin-left: 30px;
+        }
     }
 
     .icon {
@@ -150,12 +154,11 @@ $position-taking-constraint-value-color: #737373;
         border-bottom-width: 1px;
         font-weight: bold;
         padding-bottom: 5px;
-        padding-left: 0;
     }
 
     .setting-field-group {
         flex-direction: column;
-        margin: 15px 0 0;
+        margin-top: 15px;
 
         &__lbl {
             margin-bottom: 4px;
@@ -216,6 +219,10 @@ $position-taking-constraint-value-color: #737373;
             .sub-header {
                 margin-bottom: 8px;
             }
+        }
+
+        .setting-field-group {
+            margin-left: 0;
         }
     }
 

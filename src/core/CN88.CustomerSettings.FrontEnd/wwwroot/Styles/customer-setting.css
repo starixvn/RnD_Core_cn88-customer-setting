@@ -967,32 +967,32 @@ select.setting-field {
  */
 .setting-type-1 .section {
   float: left;
-  padding: 30px 3% 15px 30px;
+  padding: 30px 3% 15px 20px;
   width: 50%; }
   .setting-type-1 .section--last {
     padding-left: 3%;
-    padding-right: 30px; }
+    padding-right: 20px; }
 
-.setting-type-1 .row, .setting-type-1 .setting-field-group {
+.setting-type-1 .setting-field-group {
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
   display: flex;
   align-items: center;
-  margin: 10px 0 10px 30px; }
-  .setting-type-1 .row:after, .setting-type-1 .setting-field-group:after {
+  margin: 10px 0 0;
+  min-height: 28px; }
+  .setting-type-1 .setting-field-group:after {
     display: block;
     content: "";
     clear: both; }
-  .setting-type-1 .row__lbl, .setting-type-1 .setting-field-group__lbl {
+  .setting-type-1 .setting-field-group__lbl {
     width: 40%; }
-  .setting-type-1 .row__ctrl, .setting-type-1 .setting-field-group__ctrl {
+  .setting-type-1 .setting-field-group__ctrl {
     width: 60%; }
 
 .setting-type-1 .sub-header {
   border-bottom: 2px solid #7b0f0f;
   margin-bottom: 15px;
-  padding-left: 15px;
   padding-bottom: 10px; }
   .setting-type-1 .sub-header__title {
     margin-right: 20px; }
@@ -1042,6 +1042,9 @@ select.setting-field {
   .setting-type-1 .position-taking--edit .msg--error .msg__icon {
     background-position: -3px -23px; }
 
+.setting-type-1 .position-taking .setting-field-group {
+  margin-left: 30px; }
+
 .setting-type-1 .icon--valid-username {
   background-position: -29px -23px; }
 
@@ -1069,12 +1072,11 @@ select.setting-field {
 .mobile-view .setting-type-1 .sub-header {
   border-bottom-width: 1px;
   font-weight: bold;
-  padding-bottom: 5px;
-  padding-left: 0; }
+  padding-bottom: 5px; }
 
 .mobile-view .setting-type-1 .setting-field-group {
   flex-direction: column;
-  margin: 15px 0 0; }
+  margin-top: 15px; }
   .mobile-view .setting-type-1 .setting-field-group__lbl {
     margin-bottom: 4px;
     text-transform: uppercase;
@@ -1112,6 +1114,8 @@ select.setting-field {
     text-transform: initial; }
   .mobile-view .setting-type-1 .position-taking--edit .sub-header {
     margin-bottom: 8px; }
+  .mobile-view .setting-type-1 .position-taking .setting-field-group {
+    margin-left: 0; }
 
 .mobile-view .setting-type-1--readonly .customer-credit {
   margin-bottom: 0; }
