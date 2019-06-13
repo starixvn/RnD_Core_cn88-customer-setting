@@ -1105,11 +1105,9 @@ select.setting-field {
   .mobile-view .setting-type-1 .position-taking__group-name {
     margin: 15px 0 0;
     text-transform: uppercase; }
-  .mobile-view .setting-type-1 .position-taking--has-constraint span:first-child {
-    width: 25%; }
   .mobile-view .setting-type-1 .position-taking__constraint-group {
     text-align: right;
-    width: 75%; }
+    min-width: 64%; }
   .mobile-view .setting-type-1 .position-taking__constraint {
     text-transform: initial; }
   .mobile-view .setting-type-1 .position-taking--edit .sub-header {

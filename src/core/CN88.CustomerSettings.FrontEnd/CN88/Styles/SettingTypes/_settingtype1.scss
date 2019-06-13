@@ -200,15 +200,9 @@ $position-taking-constraint-value-color: #737373;
             text-transform: uppercase;
         }
 
-        &--has-constraint {
-            span:first-child {
-                width: 25%;
-            }
-        }
-
         &__constraint-group {
             text-align: right;
-            width: 75%;
+            min-width: 64%;
         }
 
         &__constraint {
