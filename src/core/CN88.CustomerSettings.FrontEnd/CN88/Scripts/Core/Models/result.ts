@@ -157,6 +157,7 @@ namespace CustomerSetting {
     }
 
     export class UpdatingSettingResult extends Result {
+        public customerId: number;
         public subResults: CustomerSettingResult[];
         public isFailed: boolean;
 
@@ -175,6 +176,8 @@ namespace CustomerSetting {
         constructor(result: any) {
             if (result) {
                 super(result.code, result.message, Result.detechMsgType(result));
+
+                this.customerId = result.custId;
 
                 if (result.isFailed) {
                     this.isFailed = result.isFailed;

@@ -12,7 +12,7 @@
 
 namespace CustomerSetting {
     interface ISuccessfulUpdatingCallback {
-        (isSuccessful: boolean): any;
+        (isNew: boolean, customerLevel: Level, customerId: number): any;
     }
 
     class CustomerSettingController {
@@ -136,7 +136,14 @@ namespace CustomerSetting {
                         this.requestMsgResult = undefined;
 
                         if (callback) {
-                            callback(settingResults.isSuccessful);
+                            var customerId = this.settingTypesSharedValuesService.isNew
+                                ? settingResults.customerId
+                                : this.settingTypesSharedValuesService.customerId;
+
+                            callback(
+                                this.settingTypesSharedValuesService.isNew,
+                                this.settingTypesSharedValuesService.customerLevel,
+                                customerId);
                         }
                     }
                 }, Defaults.displayingMsgTime);

@@ -425,8 +425,8 @@ var DemoFrom;
 /* tslint:disable */
 var showCN88CancelButton = true;
 var showCN88SaveAndNewButton = true;
-function cn88SuccessfulUpdatingCallback(isSuccessful) {
-    console.log("Be called after updating sucessfully!");
+function cn88SuccessfulUpdatingCallback(isNew, customerLevel, customerId) {
+    console.log("Be called after updating sucessfully!", isNew, customerLevel, customerId);
 }
 function cn88CancelCallback() {
     console.log("Cancel the form!");
