@@ -105,14 +105,8 @@ $block-header-color: #852423;
     }
 
     .tooltip {
-        &--error {
-            .tooltip__content {
-                max-width: 250px;
-            }
-        }
-
         &__content {
-            max-width: 230px;
+            max-width: 250px;
             text-align: initial;
             text-transform: initial;
         }
