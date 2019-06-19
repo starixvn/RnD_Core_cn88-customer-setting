@@ -20,7 +20,7 @@
                                  data-precision="commissionPrecision"></percentage-dropdown>
         </div>
         <div class="w100-percent"
-             data-ng-class="{ 'commission-group--single': isMobileView && (hasMaxBetConstraint || hasMaxPerEventConstraint) , 'block__cell align-center': !isMobileView }"
+             data-ng-class="{ 'commission-group--single': isMobileView , 'block__cell align-center': !isMobileView }"
              data-ng-if="item.layoutType === availableLayoutTypes.singleGroup">
             <percentage-dropdown data-ng-class="{ 'commission-group__value': isMobileView }"
                                  data-ng-if="item.mappedCommissionGroups[0]"
@@ -49,7 +49,7 @@
     </div>
     <div class="block__cell-sub-group" data-ng-class="{ 'w67-percent': isMobileView, 'w50-percent': !isMobileView }">
         <div class="block__cell w50-percent"
-             data-ng-class="{ 'align-center': !hasMaxPerEventConstraint || isMobileView }">
+             data-ng-class="{ 'align-center': !hasMaxPerEventConstraint || isMobileView, 'block__cell--self-adjust': !hasMaxPerEventConstraint && isMobileView }">
             <input type="text"
                    maxlength="14"
                    class="setting-field setting-field--number setting-field--has-constraint"
@@ -60,7 +60,7 @@
             <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && hasMaxPerEventConstraint">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span>
         </div>
         <div class="block__cell block__cell--no-border w50-percent"
-             data-ng-class="{ 'align-center': !hasMaxBetConstraint || isMobileView }">
+             data-ng-class="{ 'align-center': isMobileView }">
             <input type="text"
                    maxlength="14"
                    class="setting-field setting-field--number setting-field--has-constraint"
@@ -68,7 +68,7 @@
                    data-ng-model="item.maxBet"
                    data-setting-field="maxBet" />
             <span class="setting-field--constraint" data-ng-if="customerLevel !== avaiCustomerLevels.super">&lt;={{item.maxMaxBet | number:betSettingPrecision}}</span>
-            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && hasMaxBetConstraint">>={{item.minMaxBet | number:betSettingPrecision}}</span>
+            <span class="setting-field--constraint" data-ng-if="customerLevel === avaiCustomerLevels.super">>={{item.minMaxBet | number:betSettingPrecision}}</span>
         </div>
     </div>
 </div>

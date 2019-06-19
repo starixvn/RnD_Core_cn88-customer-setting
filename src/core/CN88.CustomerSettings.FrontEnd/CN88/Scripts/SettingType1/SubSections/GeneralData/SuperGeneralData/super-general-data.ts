@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../../../typings/angularjs/angular.d.ts" />
 /// <reference path="../../../../core/services/app-config-service.ts" />
+/// <reference path="../../../../core/services/crossing-setting-types-service-bus.ts" />
 /// <reference path="../../../../core/services/request-service.ts" />
 /// <reference path="../../../../core/module-registrater.ts" />
 /// <reference path="../../../models/currency.ts" />
@@ -12,7 +13,7 @@ namespace CustomerSetting.SettingType1 {
     }
 
     class SuperGeneralDataDirective implements ng.IDirective {
-        public static $inject: string[] = ["appConfigService", "requestService"];
+        public static $inject: string[] = ["appConfigService", "crossingSettingTypesServiceBus", "requestService"];
 
         private static validatingAndLoadingHeadlineCurrencyPath: string = "CreateCN88Customer/GetHeadlineCurrency";
 
@@ -33,8 +34,16 @@ namespace CustomerSetting.SettingType1 {
                         this.requestService.get(
                             requestPath,
                             { username: superAccountDetail.uplineUsername },
-                            (response: ng.IHttpPromiseCallbackArg<ICurrency>) => {
-                                superAccountDetail.currency = response.data ? response.data : null;
+                            (response: ng.IHttpPromiseCallbackArg<any>) => {
+                                var responseData = response.data;
+
+                                superAccountDetail.currency = responseData ? <ICurrency>responseData : null;
+
+                                this.crossingSettingTypesServiceBus.execute(
+                                    "reloadCurrency",
+                                    {
+                                        newCommissionAndBetLimits: responseData.newCommissionAndBetLimits
+                                    });
                             },
                             false);
                     }
@@ -43,11 +52,16 @@ namespace CustomerSetting.SettingType1 {
         };
 
         private appConfigService: AppConfigService;
+        private crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus;
         private requestService: RequestService;
 
-        constructor(appConfigService: AppConfigService, requestService: RequestService) {
-            this.requestService = requestService;
+        constructor(
+            appConfigService: AppConfigService,
+            crossingSettingTypesServiceBus: CrossingSettingTypesServiceBus,
+            requestService: RequestService) {
             this.appConfigService = appConfigService;
+            this.crossingSettingTypesServiceBus = crossingSettingTypesServiceBus;
+            this.requestService = requestService;
         }
     }
 

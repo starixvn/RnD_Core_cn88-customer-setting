@@ -57,6 +57,18 @@ namespace CustomerSetting.SettingType1 {
             }
         }
 
+        public toJson(): any {
+            var accountDetail: any = super.toJson();
+
+            if (this.isNew) {
+                var originalPassword: string = accountDetail.password;
+
+                accountDetail.password = originalPassword.encrypt(this.hashKey);
+            }
+
+            return accountDetail;
+        }
+
         public validate(): boolean {
             if (this.isNew && !this.validateUsername()) {
                 return false;
@@ -114,18 +126,6 @@ namespace CustomerSetting.SettingType1 {
             }
 
             return true;
-        }
-
-        public toJson(): any {
-            var accountDetail: any = super.toJson();
-
-            if (this.isNew) {
-                var originalPassword: string = accountDetail.password;
-
-                accountDetail.password = originalPassword.encrypt(this.hashKey);
-            }
-
-            return accountDetail;
         }
     }
 }

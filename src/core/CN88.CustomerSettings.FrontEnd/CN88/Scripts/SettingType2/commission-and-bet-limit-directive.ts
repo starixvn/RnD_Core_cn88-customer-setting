@@ -20,7 +20,6 @@ namespace CustomerSetting.SettingType2 {
         availableCommissionGroups: string[];
         availableLayoutTypes: Object;
         eachGroupStyle: {};
-        hasMaxBetConstraint: boolean;
         hasMaxPerEventConstraint: boolean;
         commissionPrecision: number;
         betSettingPrecision: number;
@@ -58,21 +57,32 @@ namespace CustomerSetting.SettingType2 {
                 }
 
                 if (scope.customerLevel === Level.super) {
-                    scope.hasMaxBetConstraint = scope.settingType.settingItems.some((settingItem: ISettingItem) => {
-                        var commissionAndBetLimitItem: CommissionAndBetLimitSettingItem = <CommissionAndBetLimitSettingItem>settingItem;
-
-                        return commissionAndBetLimitItem.minMaxBet > 0 || commissionAndBetLimitItem.maxMaxBet > 0;
-                    });
-
                     scope.hasMaxPerEventConstraint = scope.settingType.settingItems.some((settingItem: ISettingItem) => {
                         var commissionAndBetLimitItem: CommissionAndBetLimitSettingItem = <CommissionAndBetLimitSettingItem>settingItem;
 
                         return commissionAndBetLimitItem.minMaxPerEvent > 0 || commissionAndBetLimitItem.maxMaxPerEvent > 0;
                     });
                 } else {
-                    scope.hasMaxBetConstraint = true;
                     scope.hasMaxPerEventConstraint = true;
                 }
+            }
+
+            if (scope.customerLevel === Level.super) {
+                this.crossingSettingTypesServiceBus.register("reloadCurrency", (sharedData: any) => {
+                    var newCommissionAndBetLimits: ICommissionAndBetLimitConstraint[] = <ICommissionAndBetLimitConstraint[]>sharedData.newCommissionAndBetLimits;
+
+                    scope.settingType.settingItems.forEach((settingItem: ISettingItem) => {
+                        var commissionAndBetLimitItem: CommissionAndBetLimitSettingItem = <CommissionAndBetLimitSettingItem>settingItem;
+                        var matchedNewCommissionAndBetLimitItems: ICommissionAndBetLimitConstraint[] = newCommissionAndBetLimits.filter((newCommissionAndBetLimit: ICommissionAndBetLimitConstraint) => {
+                            return commissionAndBetLimitItem.sportTypeId === newCommissionAndBetLimit.sportTypeId
+                                && commissionAndBetLimitItem.betTypeId === newCommissionAndBetLimit.betTypeId;
+                        });
+
+                        if (matchedNewCommissionAndBetLimitItems.length > 0) {
+                            commissionAndBetLimitItem.updateConstraint(matchedNewCommissionAndBetLimitItems[0]);
+                        }
+                    });
+                });
             }
 
             if (scope.customerLevel === Level.member) {

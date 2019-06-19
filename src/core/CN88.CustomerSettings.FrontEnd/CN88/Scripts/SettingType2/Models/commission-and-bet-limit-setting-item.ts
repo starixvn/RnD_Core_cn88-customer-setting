@@ -6,6 +6,16 @@
 /// <reference path="layout-type.ts" />
 
 namespace CustomerSetting.SettingType2 {
+    export interface ICommissionAndBetLimitConstraint {
+        sportTypeId: number;
+        betTypeId: number;
+        commissionGroups: ICommissionGroup[];
+        minMaxBet: number;
+        maxMaxBet: number;
+        minMaxPerEvent: number;
+        maxMaxPerEvent: number;
+    }
+
     export class CommissionAndBetLimitSettingItem extends DefaultSettingItem {
         public commissionGroups: ICommissionGroup[];
         public maxBet: number;
@@ -82,6 +92,10 @@ namespace CustomerSetting.SettingType2 {
                     this.mappedCommissionGroups.push(null);
                 }
             });
+        }
+
+        public updateConstraint(newCommissionAndBetLimitItem: ICommissionAndBetLimitConstraint): void {
+            this.minMaxBet = newCommissionAndBetLimitItem.minMaxBet;
         }
 
         public validate(): boolean {
