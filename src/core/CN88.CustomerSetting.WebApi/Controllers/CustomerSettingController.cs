@@ -1,10 +1,13 @@
 ﻿namespace CN88.CustomerSetting.WebApi.Controllers
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using CN88.CustomerSetting.Models;
     using CN88.CustomerSetting.Models.Results;
     using CN88.CustomerSetting.Services;
+    using CN88.CustomerSetting.SettingType2.Models;
+    using CN88.CustomerSetting.SettingType2.Services;
     using CN88.CustomerSetting.WebApi.Models.Binders;
     using CN88.CustomerSetting.WebApi.Models.Requests;
     using Microsoft.AspNetCore.Authorization;
@@ -22,17 +25,20 @@
         private readonly CreateCustomerService createCustomerService;
         private readonly IHostingEnvironment hostingEnvironment;
         private readonly UpdateSettingService updateSettingService;
+        private readonly CurrencyBetSettingService currencyBetSettingService;
 
         public CustomerSettingController(
             QuerySettingService querySettingService,
             CreateCustomerService createCustomerService,
             UpdateSettingService updateSettingService,
-            IHostingEnvironment hostingEnvironment)
+            IHostingEnvironment hostingEnvironment,
+            CurrencyBetSettingService currencyBetSettingService)
         {
             this.querySettingService = querySettingService;
             this.hostingEnvironment = hostingEnvironment;
             this.createCustomerService = createCustomerService;
             this.updateSettingService = updateSettingService;
+            this.currencyBetSettingService = currencyBetSettingService;
         }
 
         [HttpPost]
@@ -58,8 +64,19 @@
             => createCustomerService.GetHeadlineSuggestionNames(username);
 
         [HttpGet]
-        public Task<Currency> GetHeadlineCurrency(string username)
-            => createCustomerService.GetHeadlineCurrency(username);
+        public async Task<dynamic> GetHeadlineCurrency(string username)
+        {
+            var currency = await createCustomerService.GetHeadlineCurrency(username);
+            var betSettings = currency!= null && !string.IsNullOrWhiteSpace(currency.Name) 
+                    ? await currencyBetSettingService.GetCurrencyBetSetting(currency.Name)
+                    : Enumerable.Empty<CommBetSettingItem>();
+
+            return new
+            {
+                currency,
+                betSettings
+            };
+        }
 
         [HttpGet]
         public string GetTemplate()

@@ -12,12 +12,15 @@
         [SpParam(Ignored = true)]
         public bool IsCreateNew { get; set; }
 
+        public string Currency { get; set; }
+
         public override string GetSettingKey()
             => IsCreateNew
                 ? "CS_CustomerIns_CommBetSetting_Sel"
                 : "CS_CustSetting_CommBetSetting_Sel";
 
         public override bool IsValid()
-            => RoleId > 0 && CustId >= 0;
+            => RoleId > 0 
+                && CustId >= 0;
     }
 }

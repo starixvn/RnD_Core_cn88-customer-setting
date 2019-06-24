@@ -5,6 +5,7 @@ namespace CN88.CustomerSetting.WebApi
     using System.Linq;
     using CN88.CustomerSetting.DataAccesses;
     using CN88.CustomerSetting.Services;
+    using CN88.CustomerSetting.SettingType2.Services;
     using CN88.CustomerSetting.WebApi.Configurations;
     using CN88.CustomerSetting.WebApi.Handlers;
     using CN88.CustomerSetting.WebApi.Middlewares;
@@ -65,6 +66,7 @@ namespace CN88.CustomerSetting.WebApi
                     .AddSingleton<SettingTypeServiceFactory, SettingTypeServiceFactoryImpl>()
                     .AddSingleton<CustomerDataAccess, CustomerDataAccessImpl>()
                     .AddSingleton<IRemotingRefService, RemotingRefService>()
+                    .AddSingleton<CurrencyBetSettingService, CurrencyBetSettingServiceImpl>()
                     .AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new Info { Title = "CN88 Customer Setting", Version = "v1" });
