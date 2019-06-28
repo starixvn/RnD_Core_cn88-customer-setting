@@ -35913,6 +35913,54 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var PercentageDropdownDirective = (function () {
+        function PercentageDropdownDirective(valueRangeService) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
+            this.restrict = "E";
+            this.link = function (scope) {
+                if (scope.autoRefresh) {
+                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
+                        _this.initializeRange(scope);
+                    });
+                }
+                else {
+                    _this.initializeRange(scope);
+                }
+            };
+            this.valueRangeService = valueRangeService;
+        }
+        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    value: "=ngModel",
+                    min: "=",
+                    max: "=",
+                    step: "=?",
+                    precision: "=?",
+                    placeholder: "@",
+                    placeholderVisible: "=?",
+                    autoRefresh: "=?"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
+            scope.precision = scope.precision || 0;
+            scope.factor = Math.pow(10, scope.precision);
+            scope.step = scope.step || 1;
+            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
+        };
+        PercentageDropdownDirective.$inject = ["valueRangeService"];
+        return PercentageDropdownDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var SettingFieldGroupDirective = (function () {
         function SettingFieldGroupDirective($injector, $filter) {
             var _this = this;
@@ -36068,54 +36116,6 @@ var CustomerSetting;
         return SettingFieldDirective;
     }());
     CustomerSetting.ModuleRegister.directive("settingField", SettingFieldDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var PercentageDropdownDirective = (function () {
-        function PercentageDropdownDirective(valueRangeService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
-            this.restrict = "E";
-            this.link = function (scope) {
-                if (scope.autoRefresh) {
-                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
-                        _this.initializeRange(scope);
-                    });
-                }
-                else {
-                    _this.initializeRange(scope);
-                }
-            };
-            this.valueRangeService = valueRangeService;
-        }
-        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    value: "=ngModel",
-                    min: "=",
-                    max: "=",
-                    step: "=?",
-                    precision: "=?",
-                    placeholder: "@",
-                    placeholderVisible: "=?",
-                    autoRefresh: "=?"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
-            scope.precision = scope.precision || 0;
-            scope.factor = Math.pow(10, scope.precision);
-            scope.step = scope.step || 1;
-            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
-        };
-        PercentageDropdownDirective.$inject = ["valueRangeService"];
-        return PercentageDropdownDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36372,6 +36372,20 @@ var CustomerSetting;
 (function (CustomerSetting) {
     var SettingType1;
     (function (SettingType1) {
+        var MasterGeneralDataDirective = (function () {
+            function MasterGeneralDataDirective() {
+                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
+            }
+            return MasterGeneralDataDirective;
+        }());
+        CustomerSetting.ModuleRegister.directive("st1MasterGeneralData", MasterGeneralDataDirective);
+    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingType1;
+    (function (SettingType1) {
         var HeadlineSuggestionDirective = (function () {
             function HeadlineSuggestionDirective(requestService, appConfigService) {
                 var _this = this;
@@ -36390,20 +36404,6 @@ var CustomerSetting;
             return HeadlineSuggestionDirective;
         }());
         CustomerSetting.ModuleRegister.directive("st1HeadlineSuggestion", HeadlineSuggestionDirective);
-    })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingType1;
-    (function (SettingType1) {
-        var MasterGeneralDataDirective = (function () {
-            function MasterGeneralDataDirective() {
-                this.template = '<div><div data-ng-if="isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Username\' | st1Label)}}</span> <span class="required-field-mark" data-ng-if="isNew">*</span></label><div class="setting-field-group__ctrl" data-ng-class="{ \'horizontal-stretch\': isMobileView }" data-ng-if="isNew"><span class="upline-username">{{accountDetail.uplineUsername}}</span><st1-username-suffix-group></st1-username-suffix-group></div><label class="setting-field-group__ctrl" data-ng-if="!isNew">{{accountDetail.username}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Name\' | st1Label)}}</label><div class="setting-field-group__ctrl"><input type="text" maxlength="50" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.firstName"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'Password\' | st1Label)}}</span> <span class="required-field-mark">*</span> <span class="icon icon--command icon--info" data-tooltip="{{\'PasswordRules\' | st1Message}}" data-tooltip-type="info" data-inner-tooltip="true"></span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.password" data-setting-field="password"></div></div><div class="setting-field-group" data-ng-if="isNew"><label class="setting-field-group__lbl"><span>{{::(\'ConfirmPassword\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="password" maxlength="12" class="setting-field setting-field--fullwidth" data-ng-model="accountDetail.confirmPassword" data-setting-field="confirmPassword"></div></div></div><div data-ng-if="!isEditable"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Username\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.username}}</label></div></div></div>';
-            }
-            return MasterGeneralDataDirective;
-        }());
-        CustomerSetting.ModuleRegister.directive("st1MasterGeneralData", MasterGeneralDataDirective);
     })(SettingType1 = CustomerSetting.SettingType1 || (CustomerSetting.SettingType1 = {}));
 })(CustomerSetting || (CustomerSetting = {}));
 
@@ -36860,7 +36860,7 @@ var CustomerSetting;
                                     var responseData = response.data;
                                     superAccountDetail.currency = responseData ? responseData : null;
                                     _this.crossingSettingTypesServiceBus.execute("reloadCurrency", {
-                                        newCommissionAndBetLimits: responseData.newCommissionAndBetLimits
+                                        newCommissionAndBetLimits: responseData.betSettings
                                     });
                                 }, false);
                             }

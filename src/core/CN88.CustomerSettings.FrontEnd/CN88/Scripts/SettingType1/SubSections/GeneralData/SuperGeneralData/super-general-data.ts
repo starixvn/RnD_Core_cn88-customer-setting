@@ -42,7 +42,7 @@ namespace CustomerSetting.SettingType1 {
                                 this.crossingSettingTypesServiceBus.execute(
                                     "reloadCurrency",
                                     {
-                                        newCommissionAndBetLimits: responseData.newCommissionAndBetLimits
+                                        newCommissionAndBetLimits: responseData.betSettings
                                     });
                             },
                             false);
