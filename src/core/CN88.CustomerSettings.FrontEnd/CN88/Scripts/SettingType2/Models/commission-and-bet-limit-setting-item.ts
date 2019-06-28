@@ -9,6 +9,7 @@ namespace CustomerSetting.SettingType2 {
     export interface ICommissionAndBetLimitConstraint {
         sportTypeId: number;
         betTypeId: number;
+        isLive: boolean;
         commissionGroups: ICommissionGroup[];
         minMaxBet: number;
         maxMaxBet: number;

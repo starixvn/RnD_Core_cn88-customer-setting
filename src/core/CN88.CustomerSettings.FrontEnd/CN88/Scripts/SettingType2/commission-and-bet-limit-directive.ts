@@ -75,7 +75,8 @@ namespace CustomerSetting.SettingType2 {
                         var commissionAndBetLimitItem: CommissionAndBetLimitSettingItem = <CommissionAndBetLimitSettingItem>settingItem;
                         var matchedNewCommissionAndBetLimitItems: ICommissionAndBetLimitConstraint[] = newCommissionAndBetLimits.filter((newCommissionAndBetLimit: ICommissionAndBetLimitConstraint) => {
                             return commissionAndBetLimitItem.sportTypeId === newCommissionAndBetLimit.sportTypeId
-                                && commissionAndBetLimitItem.betTypeId === newCommissionAndBetLimit.betTypeId;
+                                && commissionAndBetLimitItem.betTypeId === newCommissionAndBetLimit.betTypeId
+                                && commissionAndBetLimitItem.isLive === newCommissionAndBetLimit.isLive;
                         });
 
                         if (matchedNewCommissionAndBetLimitItems.length > 0) {
