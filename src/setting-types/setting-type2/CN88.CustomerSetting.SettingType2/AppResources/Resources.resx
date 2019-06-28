@@ -174,4 +174,7 @@
   <data name="Msg_10043" xml:space="preserve">
     <value>Max per Event is out of range.</value>
   </data>
+  <data name="Msg_10044" xml:space="preserve">
+    <value>The current Max Per Bet value is lower than Company Min Bet</value>
+  </data>
 </root>

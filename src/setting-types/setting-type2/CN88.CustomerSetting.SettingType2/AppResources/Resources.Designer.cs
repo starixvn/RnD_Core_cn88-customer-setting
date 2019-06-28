@@ -214,6 +214,15 @@ namespace CN88.CustomerSetting.SettingType2.AppResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The current Max Per Bet value is lower than Company Min Bet.
+        /// </summary>
+        internal static string Msg_10044 {
+            get {
+                return ResourceManager.GetString("Msg_10044", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please refresh the page and try again. Commission is out of range..
         /// </summary>
         internal static string Msg_11 {
