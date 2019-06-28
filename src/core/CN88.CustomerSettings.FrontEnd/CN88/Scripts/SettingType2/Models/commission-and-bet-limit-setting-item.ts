@@ -98,6 +98,10 @@ namespace CustomerSetting.SettingType2 {
             this.minMaxBet = newCommissionAndBetLimitItem.minMaxBet;
         }
 
+        public resetConstraint(): void {
+            this.minMaxBet = (<CommissionAndBetLimitSettingItem>this.oldSetting).minMaxBet;
+        }
+
         public validate(): boolean {
             if (!this.validateCommission()) {
                 return false;

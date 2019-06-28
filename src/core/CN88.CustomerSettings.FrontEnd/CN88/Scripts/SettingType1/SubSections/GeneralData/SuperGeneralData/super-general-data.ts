@@ -35,14 +35,21 @@ namespace CustomerSetting.SettingType1 {
                             requestPath,
                             { username: superAccountDetail.uplineUsername },
                             (response: ng.IHttpPromiseCallbackArg<any>) => {
-                                var responseData = response.data;
+                                var responseData: any = response.data;
+                                var currency: ICurrency = null;
+                                var newCommissionAndBetLimits: any = [];
 
-                                superAccountDetail.currency = responseData ? <ICurrency>responseData : null;
+                                if (responseData) {
+                                    currency = responseData.currency;
+                                    newCommissionAndBetLimits = responseData.betSettings;
+                                }
+
+                                superAccountDetail.currency = currency;
 
                                 this.crossingSettingTypesServiceBus.execute(
                                     "reloadCurrency",
                                     {
-                                        newCommissionAndBetLimits: responseData.betSettings
+                                        newCommissionAndBetLimits: newCommissionAndBetLimits
                                     });
                             },
                             false);

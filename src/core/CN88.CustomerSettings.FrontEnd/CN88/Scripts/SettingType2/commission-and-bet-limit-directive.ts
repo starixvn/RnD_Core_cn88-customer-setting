@@ -80,6 +80,8 @@ namespace CustomerSetting.SettingType2 {
 
                         if (matchedNewCommissionAndBetLimitItems.length > 0) {
                             commissionAndBetLimitItem.updateConstraint(matchedNewCommissionAndBetLimitItems[0]);
+                        } else {
+                            commissionAndBetLimitItem.resetConstraint();
                         }
                     });
                 });
