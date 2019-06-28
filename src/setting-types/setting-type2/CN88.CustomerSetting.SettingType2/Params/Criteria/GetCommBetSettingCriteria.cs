@@ -12,7 +12,7 @@
         [SpParam(Ignored = true)]
         public bool IsCreateNew { get; set; }
 
-        public string Currency { get; set; }
+        public int? Currency { get; set; }
 
         public override string GetSettingKey()
             => IsCreateNew

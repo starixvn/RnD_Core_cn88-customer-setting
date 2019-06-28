@@ -67,8 +67,14 @@
         public async Task<dynamic> GetHeadlineCurrency(string username)
         {
             var currency = await createCustomerService.GetHeadlineCurrency(username);
-            var betSettings = currency!= null && !string.IsNullOrWhiteSpace(currency.Name) 
-                    ? await currencyBetSettingService.GetCurrencyBetSetting(currency.Name)
+
+            if(currency == null)
+            {
+                return null;
+            }
+
+            var betSettings = currency.Id > 0
+                    ? await currencyBetSettingService.GetCurrencyBetSetting(currency.Id)
                     : Enumerable.Empty<CommBetSettingItem>();
 
             return new

@@ -26,7 +26,7 @@
         [Test]
         public async Task GetCurrencyBetSetting_Always_ReturnBetSettingItems()
         {
-            var currencyId = "currencyId";
+            var currencyId = 11;
             var commBetSettingDtos = new List<CommBetSettingDto>
             {
                 new CommBetSettingDto

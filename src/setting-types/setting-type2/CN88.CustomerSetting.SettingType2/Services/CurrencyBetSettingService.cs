@@ -11,7 +11,7 @@
 
     public interface CurrencyBetSettingService
     {
-        Task<IEnumerable<CommBetSettingItem>> GetCurrencyBetSetting(string currencyId);
+        Task<IEnumerable<CommBetSettingItem>> GetCurrencyBetSetting(int currencyId);
     }
 
     public class CurrencyBetSettingServiceImpl : CurrencyBetSettingService
@@ -23,7 +23,7 @@
             this.dynamicRepository = dynamicRepository;
         }
 
-        public async Task<IEnumerable<CommBetSettingItem>> GetCurrencyBetSetting(string currencyId)
+        public async Task<IEnumerable<CommBetSettingItem>> GetCurrencyBetSetting(int currencyId)
         {
             var comBetSettingDtoItems = await dynamicRepository.FetchAsync<CommBetSettingDto>(
                 new GetCommBetSettingCriteria
