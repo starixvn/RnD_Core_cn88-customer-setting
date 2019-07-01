@@ -1042,8 +1042,8 @@ select.setting-field {
   .setting-type-1 .position-taking--edit .msg--error .msg__icon {
     background-position: -3px -23px; }
 
-.setting-type-1 .position-taking .setting-field-group {
-  margin-left: 30px; }
+.setting-type-1 .position-taking .setting-field-group__lbl {
+  padding-left: 30px; }
 
 .setting-type-1 .icon--valid-username {
   background-position: -29px -23px; }
