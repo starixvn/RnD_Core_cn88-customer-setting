@@ -35762,6 +35762,54 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var PercentageDropdownDirective = (function () {
+        function PercentageDropdownDirective(valueRangeService) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
+            this.restrict = "E";
+            this.link = function (scope) {
+                if (scope.autoRefresh) {
+                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
+                        _this.initializeRange(scope);
+                    });
+                }
+                else {
+                    _this.initializeRange(scope);
+                }
+            };
+            this.valueRangeService = valueRangeService;
+        }
+        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    value: "=ngModel",
+                    min: "=",
+                    max: "=",
+                    step: "=?",
+                    precision: "=?",
+                    placeholder: "@",
+                    placeholderVisible: "=?",
+                    autoRefresh: "=?"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
+            scope.precision = scope.precision || 0;
+            scope.factor = Math.pow(10, scope.precision);
+            scope.step = scope.step || 1;
+            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
+        };
+        PercentageDropdownDirective.$inject = ["valueRangeService"];
+        return PercentageDropdownDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var NumericInputDirective = (function () {
         function NumericInputDirective($filter, appConfigService) {
             var _this = this;
@@ -35913,290 +35961,6 @@ var CustomerSetting;
         return NumericInputDirective;
     }());
     CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var PercentageDropdownDirective = (function () {
-        function PercentageDropdownDirective(valueRangeService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
-            this.restrict = "E";
-            this.link = function (scope) {
-                if (scope.autoRefresh) {
-                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
-                        _this.initializeRange(scope);
-                    });
-                }
-                else {
-                    _this.initializeRange(scope);
-                }
-            };
-            this.valueRangeService = valueRangeService;
-        }
-        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    value: "=ngModel",
-                    min: "=",
-                    max: "=",
-                    step: "=?",
-                    precision: "=?",
-                    placeholder: "@",
-                    placeholderVisible: "=?",
-                    autoRefresh: "=?"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
-            scope.precision = scope.precision || 0;
-            scope.factor = Math.pow(10, scope.precision);
-            scope.step = scope.step || 1;
-            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
-        };
-        PercentageDropdownDirective.$inject = ["valueRangeService"];
-        return PercentageDropdownDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingTypeDirectiveLoader = (function () {
-        function SettingTypeDirectiveLoader($compile) {
-            var _this = this;
-            this.replace = true;
-            this.link = function (scope, element) {
-                scope.$watch("setting.settingTypes", function () {
-                    _this.generateNodes(scope, element);
-                });
-            };
-            this.$compile = $compile;
-            this.loadedSettingTypes = [];
-        }
-        Object.defineProperty(SettingTypeDirectiveLoader.prototype, "scope", {
-            get: function () {
-                return {
-                    setting: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingTypeDirectiveLoader.prototype.generateNodes = function (scope, element) {
-            var _this = this;
-            if (scope.setting && scope.setting.settingTypes && angular.isArray(scope.setting.settingTypes)) {
-                scope.setting.settingTypes.forEach(function (settingType, index) {
-                    var loaded = _this.loadedSettingTypes.some(function (item) {
-                        return item === settingType.id;
-                    });
-                    if (!loaded) {
-                        var settingTypeNodeTemplate = CustomerSetting.StringFormater.format("<st{0} data-setting-type=\"setting.settingTypes[{1}]\"></st{0}>", settingType.id, index);
-                        var settingTypeElement = angular.element(settingTypeNodeTemplate);
-                        if (index === scope.setting.settingTypes.length - 1) {
-                            settingTypeElement.addClass("last-setting-type");
-                        }
-                        element.append(settingTypeElement);
-                        _this.$compile(settingTypeElement)(scope);
-                        _this.loadedSettingTypes.push(settingType.id);
-                    }
-                });
-            }
-        };
-        SettingTypeDirectiveLoader.$inject = ["$compile"];
-        return SettingTypeDirectiveLoader;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingResultDirective = (function () {
-        function SettingResultDirective($rootScope, scrollService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
-            this.link = function (scope) {
-                scope.$watch("result", function (result) {
-                    _this.$rootScope.$emit("page-height-changed");
-                    if (result) {
-                        _this.scrollService.scrollTo(0, 0);
-                    }
-                });
-            };
-            this.$rootScope = $rootScope;
-            this.scrollService = scrollService;
-        }
-        Object.defineProperty(SettingResultDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    result: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingResultDirective.$inject = ["$rootScope", "scrollService"];
-        return SettingResultDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    (function (System) {
-        System[System["nap"] = 1] = "nap";
-        System[System["alpha"] = 2] = "alpha";
-        System[System["internalAlpha"] = 3] = "internalAlpha";
-    })(CustomerSetting.System || (CustomerSetting.System = {}));
-    var System = CustomerSetting.System;
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var TooltipDirective = (function () {
-        function TooltipDirective($window, $compile, $timeout, $templateCache, $rootScope, scrollService) {
-            var _this = this;
-            this.restrict = "A";
-            this.priority = 100;
-            this.controller = ["$scope", function ($scope) {
-                    this.showTooltipAt = function (tooltipMessage, target, forceTop) {
-                        $scope.target = target;
-                        $scope.forceTop = forceTop;
-                        if ($scope.tooltipMessage === tooltipMessage) {
-                            $scope.relocate();
-                        }
-                        else {
-                            $scope.tooltipMessage = tooltipMessage;
-                        }
-                    };
-                    this.hideTooltip = function () {
-                        $scope.tooltipMessage = null;
-                    };
-                }];
-            this.link = function (scope, element) {
-                var template = _this.$templateCache.get("./tooltip.html");
-                var tooltip = angular.element(template);
-                var relocate = function () {
-                    if (scope.tooltipMessage) {
-                        _this.calculateTooltipPosition(scope.target, tooltip, scope.forceTop, scope.manual);
-                    }
-                };
-                var debounceResize = CustomerSetting.debounce(relocate, 100);
-                scope.tooltipType = scope.tooltipType || "info";
-                scope.target = element;
-                if (scope.manual) {
-                    scope.beingShowed = true;
-                }
-                else {
-                    tooltip.addClass("tooltip--on-hover");
-                    scope.target.on("mouseenter", function () {
-                        if (!scope.beingShowed) {
-                            tooltip.css({ "left": "0px", "visibility": "hidden" });
-                            scope.beingShowed = true;
-                            scope.$apply();
-                            relocate();
-                        }
-                    });
-                    scope.target.on("mouseleave", function () {
-                        if (scope.beingShowed) {
-                            scope.beingShowed = false;
-                            scope.$apply();
-                        }
-                    });
-                }
-                _this.$compile(tooltip)(scope);
-                if (scope.innerTooltip) {
-                    element.prepend(tooltip);
-                }
-                else {
-                    element.parent().prepend(tooltip);
-                }
-                scope.$watch("tooltipMessage", relocate);
-                scope.relocate = relocate;
-                angular.element(_this.$window).on("resize", debounceResize);
-                _this.$rootScope.$on("page-height-changed", debounceResize);
-            };
-            this.$window = $window;
-            this.$compile = $compile;
-            this.$timeout = $timeout;
-            this.$templateCache = $templateCache;
-            this.$rootScope = $rootScope;
-            this.scrollService = scrollService;
-        }
-        Object.defineProperty(TooltipDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    tooltipMessage: "@tooltip",
-                    tooltipType: "@",
-                    innerTooltip: "@",
-                    manual: "@",
-                    forceTop: "@"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        TooltipDirective.prototype.calculateTooltipPosition = function (target, tooltip, forceTop, autoScrollTo) {
-            var _this = this;
-            if (!target || target.length === 0 || !tooltip || tooltip.length === 0) {
-                return;
-            }
-            this.$timeout(function () {
-                tooltip.removeClass("tooltip--right tooltip--top-right tooltip--left tooltip--top-left tooltip--bottom");
-                tooltip.css({ "left": "0px", "visibility": "hidden" });
-                var elementRect = target[0].getBoundingClientRect();
-                var tooltipRect = tooltip.children()[0].getBoundingClientRect();
-                var arrowWidth = 5;
-                var scrollbarOffset = 17;
-                var bodyRect = _this.$window.document.body.getBoundingClientRect();
-                var topOffset = bodyRect.top;
-                var leftOffset = bodyRect.left;
-                var top = elementRect.top - topOffset - tooltipRect.height - arrowWidth;
-                var left = elementRect.left + (elementRect.width - tooltipRect.width) / 2 - leftOffset;
-                if (_this.$window.innerWidth - scrollbarOffset < left + tooltipRect.width) {
-                    if (forceTop) {
-                        left = elementRect.right - tooltipRect.width - leftOffset;
-                        tooltip.addClass("tooltip--top-right");
-                    }
-                    else {
-                        top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2;
-                        left = elementRect.left - tooltipRect.width - arrowWidth;
-                        tooltip.addClass("tooltip--right");
-                    }
-                }
-                if (left < 0) {
-                    if (forceTop) {
-                        left = elementRect.right;
-                        tooltip.addClass("tooltip--top-left");
-                    }
-                    else {
-                        top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2;
-                        left = elementRect.left + elementRect.width;
-                        tooltip.addClass("tooltip--left");
-                    }
-                }
-                if (top < 0) {
-                    top = elementRect.bottom - topOffset + arrowWidth;
-                    tooltip.addClass("tooltip--bottom");
-                }
-                tooltip.css({
-                    "top": top + "px",
-                    "left": left + "px",
-                    "visibility": "visible"
-                });
-                if (autoScrollTo && (top < _this.$window.pageYOffset || left < _this.$window.pageXOffset)) {
-                    _this.scrollService.scrollTo(left, top);
-                }
-            });
-        };
-        TooltipDirective.$inject = ["$window", "$compile", "$timeout", "$templateCache", "$rootScope", "scrollService"];
-        return TooltipDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("tooltip", TooltipDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36356,6 +36120,242 @@ var CustomerSetting;
         return SettingFieldDirective;
     }());
     CustomerSetting.ModuleRegister.directive("settingField", SettingFieldDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingResultDirective = (function () {
+        function SettingResultDirective($rootScope, scrollService) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
+            this.link = function (scope) {
+                scope.$watch("result", function (result) {
+                    _this.$rootScope.$emit("page-height-changed");
+                    if (result) {
+                        _this.scrollService.scrollTo(0, 0);
+                    }
+                });
+            };
+            this.$rootScope = $rootScope;
+            this.scrollService = scrollService;
+        }
+        Object.defineProperty(SettingResultDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    result: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingResultDirective.$inject = ["$rootScope", "scrollService"];
+        return SettingResultDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var TooltipDirective = (function () {
+        function TooltipDirective($window, $compile, $timeout, $templateCache, $rootScope, scrollService) {
+            var _this = this;
+            this.restrict = "A";
+            this.priority = 100;
+            this.controller = ["$scope", function ($scope) {
+                    this.showTooltipAt = function (tooltipMessage, target, forceTop) {
+                        $scope.target = target;
+                        $scope.forceTop = forceTop;
+                        if ($scope.tooltipMessage === tooltipMessage) {
+                            $scope.relocate();
+                        }
+                        else {
+                            $scope.tooltipMessage = tooltipMessage;
+                        }
+                    };
+                    this.hideTooltip = function () {
+                        $scope.tooltipMessage = null;
+                    };
+                }];
+            this.link = function (scope, element) {
+                var template = _this.$templateCache.get("./tooltip.html");
+                var tooltip = angular.element(template);
+                var relocate = function () {
+                    if (scope.tooltipMessage) {
+                        _this.calculateTooltipPosition(scope.target, tooltip, scope.forceTop, scope.manual);
+                    }
+                };
+                var debounceResize = CustomerSetting.debounce(relocate, 100);
+                scope.tooltipType = scope.tooltipType || "info";
+                scope.target = element;
+                if (scope.manual) {
+                    scope.beingShowed = true;
+                }
+                else {
+                    tooltip.addClass("tooltip--on-hover");
+                    scope.target.on("mouseenter", function () {
+                        if (!scope.beingShowed) {
+                            tooltip.css({ "left": "0px", "visibility": "hidden" });
+                            scope.beingShowed = true;
+                            scope.$apply();
+                            relocate();
+                        }
+                    });
+                    scope.target.on("mouseleave", function () {
+                        if (scope.beingShowed) {
+                            scope.beingShowed = false;
+                            scope.$apply();
+                        }
+                    });
+                }
+                _this.$compile(tooltip)(scope);
+                if (scope.innerTooltip) {
+                    element.prepend(tooltip);
+                }
+                else {
+                    element.parent().prepend(tooltip);
+                }
+                scope.$watch("tooltipMessage", relocate);
+                scope.relocate = relocate;
+                angular.element(_this.$window).on("resize", debounceResize);
+                _this.$rootScope.$on("page-height-changed", debounceResize);
+            };
+            this.$window = $window;
+            this.$compile = $compile;
+            this.$timeout = $timeout;
+            this.$templateCache = $templateCache;
+            this.$rootScope = $rootScope;
+            this.scrollService = scrollService;
+        }
+        Object.defineProperty(TooltipDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    tooltipMessage: "@tooltip",
+                    tooltipType: "@",
+                    innerTooltip: "@",
+                    manual: "@",
+                    forceTop: "@"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        TooltipDirective.prototype.calculateTooltipPosition = function (target, tooltip, forceTop, autoScrollTo) {
+            var _this = this;
+            if (!target || target.length === 0 || !tooltip || tooltip.length === 0) {
+                return;
+            }
+            this.$timeout(function () {
+                tooltip.removeClass("tooltip--right tooltip--top-right tooltip--left tooltip--top-left tooltip--bottom");
+                tooltip.css({ "left": "0px", "visibility": "hidden" });
+                var elementRect = target[0].getBoundingClientRect();
+                var tooltipRect = tooltip.children()[0].getBoundingClientRect();
+                var arrowWidth = 5;
+                var scrollbarOffset = 17;
+                var bodyRect = _this.$window.document.body.getBoundingClientRect();
+                var topOffset = bodyRect.top;
+                var leftOffset = bodyRect.left;
+                var top = elementRect.top - topOffset - tooltipRect.height - arrowWidth;
+                var left = elementRect.left + (elementRect.width - tooltipRect.width) / 2 - leftOffset;
+                if (_this.$window.innerWidth - scrollbarOffset < left + tooltipRect.width) {
+                    if (forceTop) {
+                        left = elementRect.right - tooltipRect.width - leftOffset;
+                        tooltip.addClass("tooltip--top-right");
+                    }
+                    else {
+                        top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2;
+                        left = elementRect.left - tooltipRect.width - arrowWidth;
+                        tooltip.addClass("tooltip--right");
+                    }
+                }
+                if (left < 0) {
+                    if (forceTop) {
+                        left = elementRect.right;
+                        tooltip.addClass("tooltip--top-left");
+                    }
+                    else {
+                        top = elementRect.top - topOffset - (tooltipRect.height - elementRect.height) / 2;
+                        left = elementRect.left + elementRect.width;
+                        tooltip.addClass("tooltip--left");
+                    }
+                }
+                if (top < 0) {
+                    top = elementRect.bottom - topOffset + arrowWidth;
+                    tooltip.addClass("tooltip--bottom");
+                }
+                tooltip.css({
+                    "top": top + "px",
+                    "left": left + "px",
+                    "visibility": "visible"
+                });
+                if (autoScrollTo && (top < _this.$window.pageYOffset || left < _this.$window.pageXOffset)) {
+                    _this.scrollService.scrollTo(left, top);
+                }
+            });
+        };
+        TooltipDirective.$inject = ["$window", "$compile", "$timeout", "$templateCache", "$rootScope", "scrollService"];
+        return TooltipDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("tooltip", TooltipDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingTypeDirectiveLoader = (function () {
+        function SettingTypeDirectiveLoader($compile) {
+            var _this = this;
+            this.replace = true;
+            this.link = function (scope, element) {
+                scope.$watch("setting.settingTypes", function () {
+                    _this.generateNodes(scope, element);
+                });
+            };
+            this.$compile = $compile;
+            this.loadedSettingTypes = [];
+        }
+        Object.defineProperty(SettingTypeDirectiveLoader.prototype, "scope", {
+            get: function () {
+                return {
+                    setting: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingTypeDirectiveLoader.prototype.generateNodes = function (scope, element) {
+            var _this = this;
+            if (scope.setting && scope.setting.settingTypes && angular.isArray(scope.setting.settingTypes)) {
+                scope.setting.settingTypes.forEach(function (settingType, index) {
+                    var loaded = _this.loadedSettingTypes.some(function (item) {
+                        return item === settingType.id;
+                    });
+                    if (!loaded) {
+                        var settingTypeNodeTemplate = CustomerSetting.StringFormater.format("<st{0} data-setting-type=\"setting.settingTypes[{1}]\"></st{0}>", settingType.id, index);
+                        var settingTypeElement = angular.element(settingTypeNodeTemplate);
+                        if (index === scope.setting.settingTypes.length - 1) {
+                            settingTypeElement.addClass("last-setting-type");
+                        }
+                        element.append(settingTypeElement);
+                        _this.$compile(settingTypeElement)(scope);
+                        _this.loadedSettingTypes.push(settingType.id);
+                    }
+                });
+            }
+        };
+        SettingTypeDirectiveLoader.$inject = ["$compile"];
+        return SettingTypeDirectiveLoader;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    (function (System) {
+        System[System["nap"] = 1] = "nap";
+        System[System["alpha"] = 2] = "alpha";
+        System[System["internalAlpha"] = 3] = "internalAlpha";
+    })(CustomerSetting.System || (CustomerSetting.System = {}));
+    var System = CustomerSetting.System;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36856,23 +36856,27 @@ var CustomerSetting;
                         var superAccountDetail = scope.accountDetail;
                         var lastValidatedHeadline;
                         scope.validateAndLoadHeadlineCurrency = function ($event) {
-                            if (superAccountDetail.uplineUsername
-                                && lastValidatedHeadline !== superAccountDetail.uplineUsername
-                                && !($event.relatedTarget && $event.relatedTarget.hasAttribute("data-headline-suggestion-item"))) {
+                            if (lastValidatedHeadline !== superAccountDetail.uplineUsername && !($event.relatedTarget && $event.relatedTarget.hasAttribute("data-headline-suggestion-item"))) {
                                 lastValidatedHeadline = superAccountDetail.uplineUsername;
-                                _this.requestService.get(requestPath, { username: superAccountDetail.uplineUsername }, function (response) {
-                                    var responseData = response.data;
-                                    var currency = null;
-                                    var newCommissionAndBetLimits = [];
-                                    if (responseData) {
-                                        currency = responseData.currency;
-                                        newCommissionAndBetLimits = responseData.betSettings;
-                                    }
-                                    superAccountDetail.currency = currency;
-                                    _this.crossingSettingTypesServiceBus.execute("reloadCurrency", {
-                                        newCommissionAndBetLimits: newCommissionAndBetLimits
-                                    });
-                                }, false);
+                                if (superAccountDetail.uplineUsername) {
+                                    _this.requestService.get(requestPath, { username: superAccountDetail.uplineUsername }, function (response) {
+                                        var responseData = response.data;
+                                        var currency = null;
+                                        var newCommissionAndBetLimits = [];
+                                        if (responseData) {
+                                            currency = responseData.currency;
+                                            newCommissionAndBetLimits = responseData.betSettings;
+                                        }
+                                        superAccountDetail.currency = currency;
+                                        _this.crossingSettingTypesServiceBus.execute("reloadCurrency", {
+                                            newCommissionAndBetLimits: newCommissionAndBetLimits
+                                        });
+                                    }, false);
+                                }
+                                else {
+                                    superAccountDetail.currency = null;
+                                    _this.crossingSettingTypesServiceBus.execute("reloadCurrency", { newCommissionAndBetLimits: [] });
+                                }
                             }
                         };
                     }

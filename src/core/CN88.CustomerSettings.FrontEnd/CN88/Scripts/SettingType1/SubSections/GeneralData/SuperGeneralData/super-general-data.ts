@@ -26,33 +26,36 @@ namespace CustomerSetting.SettingType1 {
                 var lastValidatedHeadline: string;
 
                 scope.validateAndLoadHeadlineCurrency = ($event: JQueryEventObject) => {
-                    if (superAccountDetail.uplineUsername
-                        && lastValidatedHeadline !== superAccountDetail.uplineUsername
-                        && !($event.relatedTarget && $event.relatedTarget.hasAttribute("data-headline-suggestion-item"))) {
+                    if (lastValidatedHeadline !== superAccountDetail.uplineUsername && !($event.relatedTarget && $event.relatedTarget.hasAttribute("data-headline-suggestion-item"))) {
                         lastValidatedHeadline = superAccountDetail.uplineUsername;
 
-                        this.requestService.get(
-                            requestPath,
-                            { username: superAccountDetail.uplineUsername },
-                            (response: ng.IHttpPromiseCallbackArg<any>) => {
-                                var responseData: any = response.data;
-                                var currency: ICurrency = null;
-                                var newCommissionAndBetLimits: any = [];
+                        if (superAccountDetail.uplineUsername) {
+                            this.requestService.get(
+                                requestPath,
+                                { username: superAccountDetail.uplineUsername },
+                                (response: ng.IHttpPromiseCallbackArg<any>) => {
+                                    var responseData: any = response.data;
+                                    var currency: ICurrency = null;
+                                    var newCommissionAndBetLimits: any = [];
 
-                                if (responseData) {
-                                    currency = responseData.currency;
-                                    newCommissionAndBetLimits = responseData.betSettings;
-                                }
+                                    if (responseData) {
+                                        currency = responseData.currency;
+                                        newCommissionAndBetLimits = responseData.betSettings;
+                                    }
 
-                                superAccountDetail.currency = currency;
+                                    superAccountDetail.currency = currency;
 
-                                this.crossingSettingTypesServiceBus.execute(
-                                    "reloadCurrency",
-                                    {
-                                        newCommissionAndBetLimits: newCommissionAndBetLimits
-                                    });
-                            },
-                            false);
+                                    this.crossingSettingTypesServiceBus.execute(
+                                        "reloadCurrency",
+                                        {
+                                            newCommissionAndBetLimits: newCommissionAndBetLimits
+                                        });
+                                },
+                                false);
+                        } else {
+                            superAccountDetail.currency = null;
+                            this.crossingSettingTypesServiceBus.execute("reloadCurrency", { newCommissionAndBetLimits: [] });
+                        }
                     }
                 };
             }
