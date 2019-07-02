@@ -34,9 +34,10 @@ namespace CustomerSetting {
         public requestMsgResult: Result | UpdatingSettingResult;
         public cancelButtonRequired: boolean;
         public cancelCallback: Function;
-        public updateCallback: ISuccessfulUpdatingCallback;
         public saveAndNewRequired: boolean;
         public saveAndNewCallback: ISuccessfulUpdatingCallback;
+        public saveRequired: boolean;
+        public saveCallback: ISuccessfulUpdatingCallback;
 
         private $window: ng.IWindowService;
         private $timeout: ng.ITimeoutService;
@@ -66,8 +67,14 @@ namespace CustomerSetting {
             $locale.NUMBER_FORMATS.GROUP_SEP = this.appConfigService.thousandSeparator;
             $locale.NUMBER_FORMATS.DECIMAL_SEP = this.appConfigService.decimalSeparator;
 
-            /* tslint:disable:no-string-literal */
-            this.updateCallback = this.$window.parent["cn88SuccessfulUpdatingCallback"];
+        /* tslint:disable:no-string-literal */
+            this.saveRequired = this.$window.parent["showCN88SaveButton"];
+            this.saveCallback = this.$window.parent["cn88SuccessfulUpdatingCallback"];
+
+            if (this.saveRequired === undefined || this.saveRequired === null) {
+                this.saveRequired = true
+            }
+
             this.cancelButtonRequired = this.$window.parent["showCN88CancelButton"];
 
             if (this.cancelButtonRequired) {
@@ -97,7 +104,7 @@ namespace CustomerSetting {
             this.update(this.saveAndNewCallback);
         }
 
-        public update(callback: ISuccessfulUpdatingCallback = this.updateCallback): void {
+        public update(callback: ISuccessfulUpdatingCallback = this.saveCallback): void {
             var changedSettings: Setting = this.parametersService.isNew ? this.setting.getEditableSettings() : this.setting.getChanges();
             var command: SettingCommand;
             var path: string = this.parametersService.isNew

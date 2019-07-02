@@ -21,7 +21,7 @@
             <div class="btn-container" data-ng-if="(ctrl.setting | editableForm) || ctrl.cancelCallback">
                 <button class="btn btn--cancel btn--margin-right" data-ng-if="ctrl.cancelCallback" data-ng-click="ctrl.cancelCallback()">{{'Cancel' | label}}</button>
                 <button class="btn btn--update btn--margin-right" data-ng-if="ctrl.saveAndNewRequired && (ctrl.setting | editableForm)" data-ng-click="ctrl.saveAndNew()">{{'SaveAndNew' | label}}</button>
-                <button class="btn btn--update" data-ng-if="ctrl.setting | editableForm" data-ng-click="ctrl.update()">{{'Save' | label}}</button>
+                <button class="btn btn--update" data-ng-if="ctrl.saveRequired && (ctrl.setting | editableForm)" data-ng-click="ctrl.update()">{{'Save' | label}}</button>
             </div>
         </div>
     </div>
