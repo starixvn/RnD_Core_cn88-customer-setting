@@ -115,7 +115,7 @@ namespace CN88.CustomerSetting.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Keno, Lottery.
+        ///   Looks up a localized string similar to RNG Keno, Lottery.
         /// </summary>
         public static string BetTypeName_1501_0 {
             get {
