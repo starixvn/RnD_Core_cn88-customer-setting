@@ -35969,39 +35969,6 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    var SettingResultDirective = (function () {
-        function SettingResultDirective($rootScope, scrollService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
-            this.link = function (scope) {
-                scope.$watch("result", function (result) {
-                    _this.$rootScope.$emit("page-height-changed");
-                    if (result) {
-                        _this.scrollService.scrollTo(0, 0);
-                    }
-                });
-            };
-            this.$rootScope = $rootScope;
-            this.scrollService = scrollService;
-        }
-        Object.defineProperty(SettingResultDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    result: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingResultDirective.$inject = ["$rootScope", "scrollService"];
-        return SettingResultDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
     var SettingFieldGroupDirective = (function () {
         function SettingFieldGroupDirective($injector, $filter) {
             var _this = this;
@@ -36157,6 +36124,39 @@ var CustomerSetting;
         return SettingFieldDirective;
     }());
     CustomerSetting.ModuleRegister.directive("settingField", SettingFieldDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    var SettingResultDirective = (function () {
+        function SettingResultDirective($rootScope, scrollService) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
+            this.link = function (scope) {
+                scope.$watch("result", function (result) {
+                    _this.$rootScope.$emit("page-height-changed");
+                    if (result) {
+                        _this.scrollService.scrollTo(0, 0);
+                    }
+                });
+            };
+            this.$rootScope = $rootScope;
+            this.scrollService = scrollService;
+        }
+        Object.defineProperty(SettingResultDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    result: "="
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SettingResultDirective.$inject = ["$rootScope", "scrollService"];
+        return SettingResultDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -37386,7 +37386,7 @@ var CustomerSetting;
             __extends(CustomerCreditDirective, _super);
             function CustomerCreditDirective() {
                 _super.apply(this, arguments);
-                this.template = '<div class="customer-credit"><div class="sub-header">{{::(\'Credit\' | st1Label)}}</div><div data-ng-if="isEditable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Currency\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.currency.name}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Credits\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="text" maxlength="17" class="setting-field setting-field--fullwidth setting-field--number" data-numeric-input="creditPrecision" data-strict-format="true" data-ng-model="accountDetail.credit" data-ng-disabled="!accountDetail.isAllowedUpdateCredit" data-setting-field="credit"></div></div><div class="setting-field-group available-credit-group" data-ng-if="!isNew"><label class="setting-field-group__lbl">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="available-credit setting-field-group__ctrl">>= {{accountDetail.minCredit | number:creditPrecision}}</label></div></div><div data-ng-if="customerLevel !== avaiCustomerLevels.super"><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Credits\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="text" maxlength="17" class="setting-field setting-field--fullwidth setting-field--number" data-numeric-input="creditPrecision" data-strict-format="true" data-ng-model="accountDetail.credit" data-ng-disabled="!accountDetail.isAllowedUpdateCredit" data-setting-field="credit"></div></div><div class="setting-field-group available-credit-group"><label class="setting-field-group__lbl">{{::(\'AvailableCreditRange\' | st1Label)}}</label> <label class="available-credit setting-field-group__ctrl">[{{accountDetail.minCredit | number:creditPrecision}}; {{accountDetail.maxCredit | number:creditPrecision}}]</label></div></div></div><div data-ng-if="!isEditable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Currency\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.currency.name}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Credits\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.credit | number:creditPrecision}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'CreditBalance\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.creditBalance | number:creditPrecision}}</label></div></div><div data-ng-if="customerLevel !== avaiCustomerLevels.super"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Credits\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.credit | number:creditPrecision}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'CreditBalance\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.creditBalance | number:creditPrecision}}</label></div></div></div></div>';
+                this.template = '<div class="customer-credit"><div class="sub-header">{{::(\'Credit\' | st1Label)}}</div><div data-ng-if="isEditable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Currency\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.currency.name}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Credits\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="text" maxlength="17" class="setting-field setting-field--fullwidth setting-field--number" data-numeric-input="creditPrecision" data-strict-format="true" data-ng-model="accountDetail.credit" data-ng-disabled="!accountDetail.isAllowedUpdateCredit" data-setting-field="credit"></div></div><div class="setting-field-group available-credit-group" data-ng-if="!isNew"><label class="setting-field-group__lbl">{{::(\'AvailableCredit\' | st1Label)}}</label> <label class="available-credit setting-field-group__ctrl">>= {{accountDetail.minCredit | number:creditPrecision}}</label></div></div><div data-ng-if="customerLevel !== avaiCustomerLevels.super"><div class="setting-field-group"><label class="setting-field-group__lbl"><span>{{::(\'Credits\' | st1Label)}}</span> <span class="required-field-mark">*</span></label><div class="setting-field-group__ctrl"><input type="text" maxlength="17" class="setting-field setting-field--fullwidth setting-field--number" data-numeric-input="creditPrecision" data-strict-format="true" data-ng-model="accountDetail.credit" data-ng-disabled="!accountDetail.isAllowedUpdateCredit" data-setting-field="credit"></div></div><div class="setting-field-group available-credit-group"><label class="setting-field-group__lbl">{{::(\'AvailableCredit\' | st1Label)}}</label> <label class="available-credit setting-field-group__ctrl">{{accountDetail.maxCredit | number:creditPrecision}}</label></div></div></div><div data-ng-if="!isEditable"><div data-ng-if="customerLevel === avaiCustomerLevels.super"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Currency\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.currency.name}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Credits\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.credit | number:creditPrecision}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'CreditBalance\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.creditBalance | number:creditPrecision}}</label></div></div><div data-ng-if="customerLevel !== avaiCustomerLevels.super"><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'Credits\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.credit | number:creditPrecision}}</label></div><div class="setting-field-group"><label class="setting-field-group__lbl">{{::(\'CreditBalance\' | st1Label)}}</label> <label class="setting-field-group__ctrl">{{accountDetail.creditBalance | number:creditPrecision}}</label></div></div></div></div>';
             }
             Object.defineProperty(CustomerCreditDirective.prototype, "scope", {
                 get: function () {
@@ -37884,7 +37884,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "Credit": "Credit",
         "Credits": "Credits",
         "CreditBalance": "Credit Balance",
-        "AvailableCreditRange": "Available Credit Range",
+        "AvailableCredit": "Available Credit",
         "Currency": "Currency",
         "PositionTaking": "Possess",
         "SuperMinPT": "SMA Min Possess",
@@ -37915,7 +37915,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "Credit": "信用额度",
         "Credits": "信用额度",
         "CreditBalance": " 剩余额度",
-        "AvailableCreditRange": "剩余额度",
+        "AvailableCredit": "剩余额度",
         "Currency": "货币",
         "PositionTaking": "占成数",
         "SuperMinPT": "股东最低占成数",
@@ -37946,7 +37946,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "Credit": "信用額度",
         "Credits": "信用額度",
         "CreditBalance": " 剩餘額度",
-        "AvailableCreditRange": "剩餘額度",
+        "AvailableCredit": "剩餘額度",
         "Currency": "貨幣",
         "PositionTaking": "佔成數",
         "SuperMinPT": "股東最低佔成數",
@@ -37975,7 +37975,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "TotalPTMustBeInRange": "Total Possess must be between {0}% and {1}%. Please try again.",
         "TotalPTRangeConflict": "Conflict between current possess and new possess values. Please try again after the new possess value takes effect.",
         "PTEffectiveTime": "Effective after: {0}",
-        "CreditsMustBeGreaterThanOrEqualTo": "Credits must be greater than or equal to {0}.",
+        "CreditsMustBeGreaterThanOrEqualTo": "Credits must be greater than or equal to used credit {0}.",
         "CreditsMustBeLessThanOrEqualTo": "Credits must be less than or equal to {0}.",
         "InvalidHeadline": "Invalid headline."
     };
