@@ -88,7 +88,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New Credit is out of range, please refresh the form and try again..
+        ///   Looks up a localized string similar to New Credits is out of range, please refresh the form and try again..
         /// </summary>
         internal static string InvalidCredit {
             get {
@@ -412,7 +412,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Insufficient credit..
+        ///   Looks up a localized string similar to Insufficient credits..
         /// </summary>
         internal static string Msg_70024 {
             get {
@@ -421,7 +421,7 @@ namespace CN88.CustomerSetting.SettingType1.AppResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Credit must be positive..
+        ///   Looks up a localized string similar to Credits must be positive..
         /// </summary>
         internal static string Msg_70025 {
             get {
