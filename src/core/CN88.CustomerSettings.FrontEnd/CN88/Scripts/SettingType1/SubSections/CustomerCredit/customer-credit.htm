@@ -1,5 +1,5 @@
 ﻿<div class="customer-credit">
-    <div class="sub-header">{{::('Credit' | st1Label)}}</div>
+    <div class="sub-header">{{::('Credits' | st1Label)}}</div>
     <div data-ng-if="isEditable">
         <div data-ng-if="customerLevel === avaiCustomerLevels.super">
             <div class="setting-field-group">
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="setting-field-group available-credit-group" data-ng-if="!isNew">
-                <label class="setting-field-group__lbl">{{::('AvailableCredit' | st1Label)}}</label>
+                <label class="setting-field-group__lbl">{{::('AvailableCredits' | st1Label)}}</label>
                 <label class="available-credit setting-field-group__ctrl">>= {{accountDetail.minCredit | number:creditPrecision}}</label>
             </div>
         </div>
@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div class="setting-field-group available-credit-group">
-                <label class="setting-field-group__lbl">{{::('AvailableCredit' | st1Label)}}</label>
+                <label class="setting-field-group__lbl">{{::('AvailableCredits' | st1Label)}}</label>
                 <label class="available-credit setting-field-group__ctrl">{{accountDetail.maxCredit | number:creditPrecision}}</label>
             </div>
         </div>
