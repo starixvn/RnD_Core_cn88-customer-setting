@@ -174,4 +174,7 @@
   <data name="Msg_10043" xml:space="preserve">
     <value>單場最高金額超出範圍。</value>
   </data>
+  <data name="Msg_10044" xml:space="preserve">
+    <value>當前單注最高金額低於公司的最低投注金額</value>
+  </data>
 </root>
