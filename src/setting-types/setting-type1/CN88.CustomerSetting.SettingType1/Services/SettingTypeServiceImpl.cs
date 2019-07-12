@@ -27,6 +27,7 @@
         private const int SettingTypeId = 1;
         private const int SpreadGroupCacheTimeInHours = 5;
         private const string SpreadGroupCacheKey = "CN88.CustomerSetting.SpreadGroupCacheKey";
+        private const string GMT8TimeZoneName = "China Standard Time";
 
         private readonly PasswordService passwordService;
 
@@ -45,6 +46,7 @@
         {
             this.passwordService = passwordService ?? new PasswordServiceImpl();
             MessageService = messageService ?? new MessageServiceImpl(ResourceService);
+
         }
 
         public override async Task<SettingType> GetCustomerSettingType(
@@ -197,7 +199,7 @@
             {
                 var editPTTime = await GetEditPTTime().ConfigureAwait(false);
                 settingItem.IsPTReadOnly = !editPTTime.IsEditablePT;
-                settingItem.PTEffectiveTime = editPTTime.EffectiveDate;
+                settingItem.PTEffectiveTime = ConvertToGMT8Time(editPTTime.EffectiveDate);
             }
 
             foreach (var ptItem in settingItem.PTItems)
@@ -206,6 +208,14 @@
             }
 
             return settingItem;
+        }
+
+        private static DateTime ConvertToGMT8Time(DateTime dateTime)
+        {
+            var utcTime = dateTime.ToUniversalTime();
+            var gmt8TimeInfo = TimeZoneInfo.FindSystemTimeZoneById(GMT8TimeZoneName);
+
+            return TimeZoneInfo.ConvertTimeFromUtc(utcTime, gmt8TimeInfo);
         }
 
         private async Task<AccountDetailSettingItem<SettingItemDefault>> GetSuperPTItems(int custId, bool isCreateNew)

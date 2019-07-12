@@ -627,7 +627,7 @@
         {
             dynamicRepository.GetAsync<EditPTTimeDto>(Arg.Any<GetPTEditTimeCriteria>())
                 .Returns(Task.FromResult(
-                    new EditPTTimeDto { IsEditablePT = isEditable, EffectiveDate = new DateTime(2000, 11, 11) }));
+                    new EditPTTimeDto { IsEditablePT = isEditable, EffectiveDate = new DateTime(2000, 11, 11, 0, 0, 0, DateTimeKind.Utc) }));
         }
 
         private async Task AssertGetPTSetting(Level level, bool isCreateNew)
@@ -770,7 +770,7 @@
             var settingItem = settingType.SettingItems.FirstOrDefault() as AccountDetailSettingItem<SettingItemDefault>;
 
             Assert.IsFalse(settingItem.IsPTReadOnly);
-            Assert.AreEqual(new DateTime(2000, 11, 11), settingItem.PTEffectiveTime);
+            Assert.AreEqual(new DateTime(2000, 11, 11, 8, 0, 0), settingItem.PTEffectiveTime);
         }
 
         [TestCase(2)]
