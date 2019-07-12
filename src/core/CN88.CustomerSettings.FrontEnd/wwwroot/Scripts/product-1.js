@@ -35126,9 +35126,16 @@ var CustomerSetting;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(AppConfigService.prototype, "timeFormat", {
+            get: function () {
+                return "HH:mm:ss";
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(AppConfigService.prototype, "dateTimeFormat", {
             get: function () {
-                return "yyyy-MM-dd hh:mm:ss";
+                return "yyyy-MM-dd HH:mm:ss";
             },
             enumerable: true,
             configurable: true
@@ -35766,6 +35773,161 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var NumericInputDirective = (function () {
+        function NumericInputDirective($filter, appConfigService) {
+            var _this = this;
+            this.restrict = "A";
+            this.link = function (scope, originalElement) {
+                var element = angular.element(originalElement[0]);
+                var input = element[0];
+                var maxLength = parseInt(element.attr("maxlength"), 10);
+                var modelCtrl = element.controller("ngModel");
+                var latestValidValue;
+                var latestValidFormattedValue;
+                scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
+                element.attr("inputmode", "numeric");
+                element.on("focus", function () {
+                    element.data("focused", true);
+                });
+                element.on("focusout", function () {
+                    element.data("focused", false);
+                    if (scope.strictFormat && scope.precision > 0) {
+                        latestValidValue = modelCtrl.$modelValue;
+                        latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
+                        element.val(latestValidFormattedValue);
+                    }
+                });
+                element.on("mouseup", function () {
+                    if (element.data("focused")) {
+                        input.select();
+                        element.data("focused", false);
+                    }
+                });
+                element.on("keydown", function (event) {
+                    var value = element.val();
+                    var cursorPosition = input.selectionStart;
+                    if (event.keyCode === 8) {
+                        if ((input.selectionStart === input.selectionEnd)
+                            && (cursorPosition > 0)
+                            && (value[cursorPosition - 1] === _this.thousandSeparator)) {
+                            input.selectionStart = cursorPosition - 1;
+                            input.selectionEnd = cursorPosition - 1;
+                        }
+                        return;
+                    }
+                    if (event.keyCode === 46) {
+                        if ((input.selectionStart === input.selectionEnd)
+                            && (cursorPosition > 0)
+                            && (value[cursorPosition] === _this.thousandSeparator)) {
+                            input.selectionStart = cursorPosition + 1;
+                            input.selectionEnd = cursorPosition + 1;
+                        }
+                        return;
+                    }
+                    if (event.keyCode === 69) {
+                        event.preventDefault();
+                        return;
+                    }
+                });
+                modelCtrl.$formatters.unshift(function () {
+                    latestValidValue = modelCtrl.$modelValue;
+                    latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
+                    return latestValidFormattedValue;
+                });
+                modelCtrl.$parsers.unshift(function (viewValue) {
+                    if (modelCtrl.$isEmpty(viewValue)) {
+                        latestValidValue = null;
+                        latestValidFormattedValue = viewValue;
+                        return latestValidValue;
+                    }
+                    if (latestValidFormattedValue === viewValue) {
+                        return latestValidValue;
+                    }
+                    var caretPosition = input.selectionStart;
+                    var _a = _this.parseAndFormatViewValue(viewValue, scope.precision, false), formattedValue = _a.formattedValue, value = _a.value;
+                    if (!isNaN(value) && (scope.negativeAllowed || value >= 0)) {
+                        var toBeValidValue = value;
+                        var toBeValidFormattedValue = formattedValue;
+                        var allowedLength = maxLength;
+                        if (scope.precision > 0 && toBeValidFormattedValue.indexOf(_this.decimalSeparator) < 0) {
+                            allowedLength = maxLength - scope.precision - 1;
+                        }
+                        if (toBeValidFormattedValue.length > allowedLength) {
+                            toBeValidValue = latestValidValue;
+                            toBeValidFormattedValue = latestValidFormattedValue;
+                        }
+                        latestValidValue = toBeValidValue;
+                        latestValidFormattedValue = toBeValidFormattedValue;
+                    }
+                    modelCtrl.$setViewValue(latestValidFormattedValue);
+                    modelCtrl.$render();
+                    _this.setCaretPosition(input, caretPosition, viewValue, latestValidFormattedValue);
+                    return latestValidValue;
+                });
+            };
+            this.numberFilter = $filter("number");
+            this.thousandSeparator = appConfigService.thousandSeparator;
+            this.decimalSeparator = appConfigService.decimalSeparator;
+        }
+        Object.defineProperty(NumericInputDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    precision: "=?numericInput",
+                    strictFormat: "@",
+                    negativeAllowed: "@"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        NumericInputDirective.prototype.parseAndFormatViewValue = function (viewValue, precision, rounding) {
+            var value;
+            var formattedValue = "";
+            var numberParts = viewValue ? viewValue.split(this.decimalSeparator) : [];
+            if (numberParts.length > 1) {
+                if (precision > 0 && !/[\,\.]/.test(numberParts[1])) {
+                    var plainIntegerPart = numberParts[0].replace(/[\,]/g, "");
+                    var decimalPart = rounding ? numberParts[1] : numberParts[1].substring(0, precision);
+                    value = +(plainIntegerPart + this.decimalSeparator + decimalPart);
+                    if (!isNaN(value)) {
+                        formattedValue = rounding
+                            ? this.numberFilter(value, precision)
+                            : this.numberFilter(plainIntegerPart) + this.decimalSeparator + decimalPart;
+                    }
+                }
+            }
+            else if (numberParts.length > 0) {
+                var plainNumber = numberParts[0].replace(/[\,]/g, "");
+                value = +plainNumber;
+                if (!isNaN(value)) {
+                    formattedValue = this.numberFilter(value);
+                }
+            }
+            return {
+                formattedValue: formattedValue,
+                value: value
+            };
+        };
+        NumericInputDirective.prototype.setCaretPosition = function (input, originalCaretPosition, originalValue, formattedValue) {
+            var caretPosition = originalCaretPosition;
+            if (originalValue.length !== caretPosition) {
+                var offset = originalValue.length - formattedValue.length;
+                caretPosition = Math.max(0, caretPosition - offset);
+                if (input.selectionStart === input.selectionEnd) {
+                    input.selectionEnd = caretPosition;
+                }
+                input.selectionStart = caretPosition;
+            }
+        };
+        NumericInputDirective.$inject = ["$filter", "appConfigService"];
+        NumericInputDirective.defaultPrecision = 0;
+        return NumericInputDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var PercentageDropdownDirective = (function () {
         function PercentageDropdownDirective(valueRangeService) {
             var _this = this;
@@ -35973,157 +36135,35 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
-    var NumericInputDirective = (function () {
-        function NumericInputDirective($filter, appConfigService) {
+    var SettingResultDirective = (function () {
+        function SettingResultDirective($rootScope, scrollService) {
             var _this = this;
-            this.restrict = "A";
-            this.link = function (scope, originalElement) {
-                var element = angular.element(originalElement[0]);
-                var input = element[0];
-                var maxLength = parseInt(element.attr("maxlength"), 10);
-                var modelCtrl = element.controller("ngModel");
-                var latestValidValue;
-                var latestValidFormattedValue;
-                scope.precision = scope.precision || NumericInputDirective.defaultPrecision;
-                element.attr("inputmode", "numeric");
-                element.on("focus", function () {
-                    element.data("focused", true);
-                });
-                element.on("focusout", function () {
-                    element.data("focused", false);
-                    if (scope.strictFormat && scope.precision > 0) {
-                        latestValidValue = modelCtrl.$modelValue;
-                        latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
-                        element.val(latestValidFormattedValue);
+            this.replace = true;
+            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
+            this.link = function (scope) {
+                scope.$watch("result", function (result) {
+                    _this.$rootScope.$emit("page-height-changed");
+                    if (result) {
+                        _this.scrollService.scrollTo(0, 0);
                     }
-                });
-                element.on("mouseup", function () {
-                    if (element.data("focused")) {
-                        input.select();
-                        element.data("focused", false);
-                    }
-                });
-                element.on("keydown", function (event) {
-                    var value = element.val();
-                    var cursorPosition = input.selectionStart;
-                    if (event.keyCode === 8) {
-                        if ((input.selectionStart === input.selectionEnd)
-                            && (cursorPosition > 0)
-                            && (value[cursorPosition - 1] === _this.thousandSeparator)) {
-                            input.selectionStart = cursorPosition - 1;
-                            input.selectionEnd = cursorPosition - 1;
-                        }
-                        return;
-                    }
-                    if (event.keyCode === 46) {
-                        if ((input.selectionStart === input.selectionEnd)
-                            && (cursorPosition > 0)
-                            && (value[cursorPosition] === _this.thousandSeparator)) {
-                            input.selectionStart = cursorPosition + 1;
-                            input.selectionEnd = cursorPosition + 1;
-                        }
-                        return;
-                    }
-                    if (event.keyCode === 69) {
-                        event.preventDefault();
-                        return;
-                    }
-                });
-                modelCtrl.$formatters.unshift(function () {
-                    latestValidValue = modelCtrl.$modelValue;
-                    latestValidFormattedValue = _this.numberFilter(modelCtrl.$modelValue, scope.precision);
-                    return latestValidFormattedValue;
-                });
-                modelCtrl.$parsers.unshift(function (viewValue) {
-                    if (modelCtrl.$isEmpty(viewValue)) {
-                        latestValidValue = null;
-                        latestValidFormattedValue = viewValue;
-                        return latestValidValue;
-                    }
-                    if (latestValidFormattedValue === viewValue) {
-                        return latestValidValue;
-                    }
-                    var caretPosition = input.selectionStart;
-                    var _a = _this.parseAndFormatViewValue(viewValue, scope.precision, false), formattedValue = _a.formattedValue, value = _a.value;
-                    if (!isNaN(value) && (scope.negativeAllowed || value >= 0)) {
-                        var toBeValidValue = value;
-                        var toBeValidFormattedValue = formattedValue;
-                        var allowedLength = maxLength;
-                        if (scope.precision > 0 && toBeValidFormattedValue.indexOf(_this.decimalSeparator) < 0) {
-                            allowedLength = maxLength - scope.precision - 1;
-                        }
-                        if (toBeValidFormattedValue.length > allowedLength) {
-                            toBeValidValue = latestValidValue;
-                            toBeValidFormattedValue = latestValidFormattedValue;
-                        }
-                        latestValidValue = toBeValidValue;
-                        latestValidFormattedValue = toBeValidFormattedValue;
-                    }
-                    modelCtrl.$setViewValue(latestValidFormattedValue);
-                    modelCtrl.$render();
-                    _this.setCaretPosition(input, caretPosition, viewValue, latestValidFormattedValue);
-                    return latestValidValue;
                 });
             };
-            this.numberFilter = $filter("number");
-            this.thousandSeparator = appConfigService.thousandSeparator;
-            this.decimalSeparator = appConfigService.decimalSeparator;
+            this.$rootScope = $rootScope;
+            this.scrollService = scrollService;
         }
-        Object.defineProperty(NumericInputDirective.prototype, "scope", {
+        Object.defineProperty(SettingResultDirective.prototype, "scope", {
             get: function () {
                 return {
-                    precision: "=?numericInput",
-                    strictFormat: "@",
-                    negativeAllowed: "@"
+                    result: "="
                 };
             },
             enumerable: true,
             configurable: true
         });
-        NumericInputDirective.prototype.parseAndFormatViewValue = function (viewValue, precision, rounding) {
-            var value;
-            var formattedValue = "";
-            var numberParts = viewValue ? viewValue.split(this.decimalSeparator) : [];
-            if (numberParts.length > 1) {
-                if (precision > 0 && !/[\,\.]/.test(numberParts[1])) {
-                    var plainIntegerPart = numberParts[0].replace(/[\,]/g, "");
-                    var decimalPart = rounding ? numberParts[1] : numberParts[1].substring(0, precision);
-                    value = +(plainIntegerPart + this.decimalSeparator + decimalPart);
-                    if (!isNaN(value)) {
-                        formattedValue = rounding
-                            ? this.numberFilter(value, precision)
-                            : this.numberFilter(plainIntegerPart) + this.decimalSeparator + decimalPart;
-                    }
-                }
-            }
-            else if (numberParts.length > 0) {
-                var plainNumber = numberParts[0].replace(/[\,]/g, "");
-                value = +plainNumber;
-                if (!isNaN(value)) {
-                    formattedValue = this.numberFilter(value);
-                }
-            }
-            return {
-                formattedValue: formattedValue,
-                value: value
-            };
-        };
-        NumericInputDirective.prototype.setCaretPosition = function (input, originalCaretPosition, originalValue, formattedValue) {
-            var caretPosition = originalCaretPosition;
-            if (originalValue.length !== caretPosition) {
-                var offset = originalValue.length - formattedValue.length;
-                caretPosition = Math.max(0, caretPosition - offset);
-                if (input.selectionStart === input.selectionEnd) {
-                    input.selectionEnd = caretPosition;
-                }
-                input.selectionStart = caretPosition;
-            }
-        };
-        NumericInputDirective.$inject = ["$filter", "appConfigService"];
-        NumericInputDirective.defaultPrecision = 0;
-        return NumericInputDirective;
+        SettingResultDirective.$inject = ["$rootScope", "scrollService"];
+        return SettingResultDirective;
     }());
-    CustomerSetting.ModuleRegister.directive("numericInput", NumericInputDirective);
+    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36173,39 +36213,6 @@ var CustomerSetting;
         return SettingTypeDirectiveLoader;
     }());
     CustomerSetting.ModuleRegister.directive("settingTypeLoader", SettingTypeDirectiveLoader);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var SettingResultDirective = (function () {
-        function SettingResultDirective($rootScope, scrollService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<div data-ng-show="result"><div class="msg msg--{{result.msgTypeName}}" data-ng-if="!result.subResults"><div class="icon msg__icon"></div><div class="msg__content">{{result.message}}</div></div><div data-ng-if="result.subResults" data-ng-repeat="subResult in result.subResults"><div class="msg__customer-name" data-ng-if="subResult.customerName">{{subResult.customerName}}</div><div class="msg msg--{{subResult.msgTypeName}}" data-ng-if="!subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content">{{subResult.message}}</div></div><div class="msg msg--{{settingResult.msgTypeName}}" data-ng-if="subResult.settingResults" data-ng-repeat="settingResult in subResult.settingResults"><div class="icon msg__icon"></div><div class="msg__content"><div class="msg__main-message">{{settingResult.message}}</div><div class="msg__sub-message" data-ng-if="settingResult.messages" data-ng-repeat="message in settingResult.messages track by $index">{{message}}</div></div></div></div></div>';
-            this.link = function (scope) {
-                scope.$watch("result", function (result) {
-                    _this.$rootScope.$emit("page-height-changed");
-                    if (result) {
-                        _this.scrollService.scrollTo(0, 0);
-                    }
-                });
-            };
-            this.$rootScope = $rootScope;
-            this.scrollService = scrollService;
-        }
-        Object.defineProperty(SettingResultDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    result: "="
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        SettingResultDirective.$inject = ["$rootScope", "scrollService"];
-        return SettingResultDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("settingResult", SettingResultDirective);
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -37971,7 +37978,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "AgentPTIsOutOfRange": "Agent Possess is out of range.",
         "TotalPTMustBeInRange": "Total Possess must be between {0}% and {1}%. Please try again.",
         "TotalPTRangeConflict": "Conflict between current possess and new possess values. Please try again after the new possess value takes effect.",
-        "PTEffectiveTime": "Effective after: {0}",
+        "PTEffectiveTime": "Effective after: {0} (Beijing time)",
         "CreditsMustBeGreaterThanOrEqualTo": "Credits must be greater than or equal to used credits {0}.",
         "CreditsMustBeLessThanOrEqualTo": "Credits must be less than or equal to {0}.",
         "InvalidHeadline": "Invalid headline."
@@ -37991,7 +37998,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "AgentPTIsOutOfRange": "代理商占成数超出范围。",
         "TotalPTMustBeInRange": "总占成数必须在{0}%和 {1}%之间。请重试",
         "TotalPTRangeConflict": "占成数数值冲突。请在新占成数生效后重试。",
-        "PTEffectiveTime": "{0} 后生效",
+        "PTEffectiveTime": "（北京时间）{0} 后生效",
         "CreditsMustBeGreaterThanOrEqualTo": "额度必须大于或等于已使用之额度{0}",
         "CreditsMustBeLessThanOrEqualTo": "信用额度必须小于或等于{0}。",
         "InvalidHeadline": "无效的股东。"
@@ -38011,7 +38018,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "AgentPTIsOutOfRange": "代理商佔成數超出範圍。",
         "TotalPTMustBeInRange": "總佔成數必須在{0}%和 {1}%之間。請重試",
         "TotalPTRangeConflict": "佔成數數值衝突。請在新佔成數生效後重試。",
-        "PTEffectiveTime": "{0} 後生效",
+        "PTEffectiveTime": "（北京時間）{0} 後生效",
         "CreditsMustBeGreaterThanOrEqualTo": "額度必須大於或等於已使用之額度{0}",
         "CreditsMustBeLessThanOrEqualTo": "信用額度必須小於或等於{0}。",
         "InvalidHeadline": "無效的股東。"

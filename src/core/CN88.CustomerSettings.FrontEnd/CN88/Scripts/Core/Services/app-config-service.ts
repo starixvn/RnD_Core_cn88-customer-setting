@@ -9,8 +9,12 @@ namespace CustomerSetting {
             return "yyyy-MM-dd";
         }
 
+        public get timeFormat(): string {
+            return "HH:mm:ss";
+        }
+
         public get dateTimeFormat(): string {
-            return "yyyy-MM-dd hh:mm:ss";
+            return "yyyy-MM-dd HH:mm:ss";
         }
 
         public get thousandSeparator(): string {

@@ -1,4 +1,5 @@
 ﻿/// <reference path="../../typings/angularjs/angular.d.ts" />
+/// <reference path="../services/app-config-service.ts" />
 /// <reference path="../module-registrater.ts" />
 
 namespace CustomerSetting {

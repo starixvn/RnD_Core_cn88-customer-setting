@@ -1112,8 +1112,8 @@ select.setting-field {
     text-transform: initial; }
   .mobile-view .setting-type-1 .position-taking--edit .sub-header {
     margin-bottom: 8px; }
-  .mobile-view .setting-type-1 .position-taking .setting-field-group {
-    margin-left: 0; }
+  .mobile-view .setting-type-1 .position-taking .setting-field-group__lbl {
+    padding-left: 0; }
 
 .mobile-view .setting-type-1--readonly .customer-credit {
   margin-bottom: 0; }
