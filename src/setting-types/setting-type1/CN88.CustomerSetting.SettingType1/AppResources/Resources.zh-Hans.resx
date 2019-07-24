@@ -127,7 +127,7 @@
     <value>已成功更新帐户详细信息</value>
   </data>
   <data name="Msg_40041" xml:space="preserve">
-    <value>无效的大股东</value>
+    <value>无效的总监</value>
   </data>
   <data name="Msg_30007" xml:space="preserve">
     <value>新设的股东最低占成数大于某几条下线的总占成数</value>
