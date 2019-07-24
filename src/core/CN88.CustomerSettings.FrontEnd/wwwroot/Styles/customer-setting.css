@@ -1166,9 +1166,6 @@ select.setting-field {
 .mobile-view .setting-type-2 .block__cell-group--readonly .commission-group--single {
   padding-bottom: 0; }
 
-.mobile-view .setting-type-2 .block__cell--self-adjust {
-  padding-bottom: 25px; }
-
 /*
  * A partial implementation of the Ruby list functions from Compass:
  * https://github.com/Compass/compass/blob/stable/lib/compass/sass_extensions/functions/lists.rb

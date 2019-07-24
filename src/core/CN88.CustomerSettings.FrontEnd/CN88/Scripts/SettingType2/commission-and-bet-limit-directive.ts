@@ -20,7 +20,6 @@ namespace CustomerSetting.SettingType2 {
         availableCommissionGroups: string[];
         availableLayoutTypes: Object;
         eachGroupStyle: {};
-        hasMaxPerEventConstraint: boolean;
         commissionPrecision: number;
         betSettingPrecision: number;
     }
@@ -55,16 +54,6 @@ namespace CustomerSetting.SettingType2 {
                         "min-width": (100 / scope.availableCommissionGroups.length) + "%"
                     };
                 }
-
-                if (scope.customerLevel === Level.super) {
-                    scope.hasMaxPerEventConstraint = scope.settingType.settingItems.some((settingItem: ISettingItem) => {
-                        var commissionAndBetLimitItem: CommissionAndBetLimitSettingItem = <CommissionAndBetLimitSettingItem>settingItem;
-
-                        return commissionAndBetLimitItem.minMaxPerEvent > 0 || commissionAndBetLimitItem.maxMaxPerEvent > 0;
-                    });
-                } else {
-                    scope.hasMaxPerEventConstraint = true;
-                }
             }
 
             if (scope.customerLevel === Level.super) {
@@ -80,9 +69,9 @@ namespace CustomerSetting.SettingType2 {
                         });
 
                         if (matchedNewCommissionAndBetLimitItems.length > 0) {
-                            commissionAndBetLimitItem.updateConstraint(matchedNewCommissionAndBetLimitItems[0]);
+                            commissionAndBetLimitItem.updateBetLimit(matchedNewCommissionAndBetLimitItems[0]);
                         } else {
-                            commissionAndBetLimitItem.resetConstraint();
+                            commissionAndBetLimitItem.resetBetLimit();
                         }
                     });
                 });

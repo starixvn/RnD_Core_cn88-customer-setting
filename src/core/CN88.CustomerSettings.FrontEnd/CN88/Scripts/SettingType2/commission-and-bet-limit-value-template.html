@@ -49,15 +49,14 @@
     </div>
     <div class="block__cell-sub-group" data-ng-class="{ 'w67-percent': isMobileView, 'w50-percent': !isMobileView }">
         <div class="block__cell w50-percent"
-             data-ng-class="{ 'align-center': !hasMaxPerEventConstraint || isMobileView, 'block__cell--self-adjust': !hasMaxPerEventConstraint && isMobileView }">
+             data-ng-class="{ 'align-center': isMobileView }">
             <input type="text"
                    maxlength="14"
                    class="setting-field setting-field--number setting-field--has-constraint"
                    data-numeric-input
                    data-ng-model="item.maxPerEvent"
                    data-setting-field="maxPerEvent" />
-            <span class="setting-field--constraint" data-ng-if="customerLevel !== avaiCustomerLevels.super">&lt;={{item.maxMaxPerEvent | number:betSettingPrecision}}</span>
-            <span class="setting-field--constraint" data-ng-if="(customerLevel === avaiCustomerLevels.super) && hasMaxPerEventConstraint">>={{item.minMaxPerEvent | number:betSettingPrecision}}</span>
+            <span class="setting-field--constraint">&lt;={{item.maxMaxPerEvent | number:betSettingPrecision}}</span>
         </div>
         <div class="block__cell block__cell--no-border w50-percent"
              data-ng-class="{ 'align-center': isMobileView }">
@@ -67,8 +66,7 @@
                    data-numeric-input
                    data-ng-model="item.maxBet"
                    data-setting-field="maxBet" />
-            <span class="setting-field--constraint" data-ng-if="customerLevel !== avaiCustomerLevels.super">&lt;={{item.maxMaxBet | number:betSettingPrecision}}</span>
-            <span class="setting-field--constraint" data-ng-if="customerLevel === avaiCustomerLevels.super">>={{item.minMaxBet | number:betSettingPrecision}}</span>
+            <span class="setting-field--constraint">&lt;={{item.maxMaxBet | number:betSettingPrecision}}</span>
         </div>
     </div>
 </div>

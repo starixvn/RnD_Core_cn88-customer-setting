@@ -11,8 +11,10 @@ namespace CustomerSetting.SettingType2 {
         betTypeId: number;
         isLive: boolean;
         commissionGroups: ICommissionGroup[];
+        maxBet: number;
         minMaxBet: number;
         maxMaxBet: number;
+        maxPerEvent: number;
         minMaxPerEvent: number;
         maxMaxPerEvent: number;
     }
@@ -95,12 +97,22 @@ namespace CustomerSetting.SettingType2 {
             });
         }
 
-        public updateConstraint(newCommissionAndBetLimitItem: ICommissionAndBetLimitConstraint): void {
+        public updateBetLimit(newCommissionAndBetLimitItem: ICommissionAndBetLimitConstraint): void {
+            this.maxBet = newCommissionAndBetLimitItem.maxBet;
             this.minMaxBet = newCommissionAndBetLimitItem.minMaxBet;
+            this.maxMaxBet = newCommissionAndBetLimitItem.maxMaxBet;
+            this.maxPerEvent = newCommissionAndBetLimitItem.maxPerEvent;
+            this.minMaxPerEvent = newCommissionAndBetLimitItem.minMaxPerEvent;
+            this.maxMaxPerEvent = newCommissionAndBetLimitItem.maxMaxPerEvent;
         }
 
-        public resetConstraint(): void {
+        public resetBetLimit(): void {
+            this.maxBet = (<CommissionAndBetLimitSettingItem>this.oldSetting).maxBet;
             this.minMaxBet = (<CommissionAndBetLimitSettingItem>this.oldSetting).minMaxBet;
+            this.maxMaxBet = (<CommissionAndBetLimitSettingItem>this.oldSetting).maxMaxBet;
+            this.maxPerEvent = (<CommissionAndBetLimitSettingItem>this.oldSetting).maxPerEvent;
+            this.minMaxPerEvent = (<CommissionAndBetLimitSettingItem>this.oldSetting).minMaxPerEvent;
+            this.maxMaxPerEvent = (<CommissionAndBetLimitSettingItem>this.oldSetting).maxMaxPerEvent;
         }
 
         public validate(): boolean {
@@ -158,24 +170,22 @@ namespace CustomerSetting.SettingType2 {
                 return false;
             }
 
+            if (this.maxPerEvent > this.maxMaxPerEvent) {
+                this.validationState = new ValidationResult("MaxPerEventMustBeLessThanOrEqualTo", "maxPerEvent", [this.maxMaxPerEvent]);
+
+                return false;
+            }
+
             if (this.maxBet < this.minMaxBet) {
                 this.validationState = new ValidationResult("MaxBetMustBeGreaterThanOrEqualTo", "maxBet", [this.minMaxBet]);
 
                 return false;
             }
 
-            if (this.customerLevel !== Level.super) {
-                if (this.maxPerEvent > this.maxMaxPerEvent) {
-                    this.validationState = new ValidationResult("MaxPerEventMustBeLessThanOrEqualTo", "maxPerEvent", [this.maxMaxPerEvent]);
+            if (this.maxBet > this.maxMaxBet) {
+                this.validationState = new ValidationResult("MaxBetMustBeLessThanOrEqualTo", "maxBet", [this.maxMaxBet]);
 
-                    return false;
-                }
-
-                if (this.maxBet > this.maxMaxBet) {
-                    this.validationState = new ValidationResult("MaxBetMustBeLessThanOrEqualTo", "maxBet", [this.maxMaxBet]);
-
-                    return false;
-                }
+                return false;
             }
 
             if (this.maxBet > this.maxPerEvent) {
