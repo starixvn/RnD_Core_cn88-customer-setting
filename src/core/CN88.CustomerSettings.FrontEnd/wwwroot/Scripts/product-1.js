@@ -37903,7 +37903,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
     };
 
     labels["zh-hans"] = {
-        "Headline": "大股东",
+        "Headline": "总监",
         "Master": "总代理",
         "Agent": "代理商",
         "AccountDetail": "帐户详细设定",
@@ -37933,7 +37933,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
     };
 
     labels["zh-tw"] = {
-        "Headline": "大股東",
+        "Headline": "總監",
         "Master": "總代理",
         "Agent": "代理商",
         "AccountDetail": "帳戶詳細設定",
@@ -38001,7 +38001,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "PTEffectiveTime": "（北京时间）{0} 后生效",
         "CreditsMustBeGreaterThanOrEqualTo": "额度必须大于或等于已使用之额度{0}",
         "CreditsMustBeLessThanOrEqualTo": "信用额度必须小于或等于{0}。",
-        "InvalidHeadline": "无效的股东。"
+        "InvalidHeadline": "无效的总监。"
     };
 
     messages["zh-tw"] = {
@@ -38021,7 +38021,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "PTEffectiveTime": "（北京時間）{0} 後生效",
         "CreditsMustBeGreaterThanOrEqualTo": "額度必須大於或等於已使用之額度{0}",
         "CreditsMustBeLessThanOrEqualTo": "信用額度必須小於或等於{0}。",
-        "InvalidHeadline": "無效的股東。"
+        "InvalidHeadline": "無效的總監。"
     };
 
     var settingType1Resources = {
