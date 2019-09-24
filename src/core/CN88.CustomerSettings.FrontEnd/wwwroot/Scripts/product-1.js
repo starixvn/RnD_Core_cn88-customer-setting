@@ -35928,6 +35928,54 @@ var CustomerSetting;
 
 var CustomerSetting;
 (function (CustomerSetting) {
+    var PercentageDropdownDirective = (function () {
+        function PercentageDropdownDirective(valueRangeService) {
+            var _this = this;
+            this.replace = true;
+            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
+            this.restrict = "E";
+            this.link = function (scope) {
+                if (scope.autoRefresh) {
+                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
+                        _this.initializeRange(scope);
+                    });
+                }
+                else {
+                    _this.initializeRange(scope);
+                }
+            };
+            this.valueRangeService = valueRangeService;
+        }
+        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
+            get: function () {
+                return {
+                    value: "=ngModel",
+                    min: "=",
+                    max: "=",
+                    step: "=?",
+                    precision: "=?",
+                    placeholder: "@",
+                    placeholderVisible: "=?",
+                    autoRefresh: "=?"
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
+            scope.precision = scope.precision || 0;
+            scope.factor = Math.pow(10, scope.precision);
+            scope.step = scope.step || 1;
+            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
+        };
+        PercentageDropdownDirective.$inject = ["valueRangeService"];
+        return PercentageDropdownDirective;
+    }());
+    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
     var SettingFieldGroupDirective = (function () {
         function SettingFieldGroupDirective($injector, $filter) {
             var _this = this;
@@ -36083,64 +36131,6 @@ var CustomerSetting;
         return SettingFieldDirective;
     }());
     CustomerSetting.ModuleRegister.directive("settingField", SettingFieldDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    var PercentageDropdownDirective = (function () {
-        function PercentageDropdownDirective(valueRangeService) {
-            var _this = this;
-            this.replace = true;
-            this.template = '<select class="setting-field" data-ng-options="item as (item | formatPercentage:precision) for item in range"><option data-ng-if="placeholder" data-ng-disabled="!placeholderVisible" data-ng-hide="!placeholderVisible" selected value>{{placeholder}}</option></select>';
-            this.restrict = "E";
-            this.link = function (scope) {
-                if (scope.autoRefresh) {
-                    scope.$watchGroup(["value", "min", "max", "step", "factor"], function () {
-                        _this.initializeRange(scope);
-                    });
-                }
-                else {
-                    _this.initializeRange(scope);
-                }
-            };
-            this.valueRangeService = valueRangeService;
-        }
-        Object.defineProperty(PercentageDropdownDirective.prototype, "scope", {
-            get: function () {
-                return {
-                    value: "=ngModel",
-                    min: "=",
-                    max: "=",
-                    step: "=?",
-                    precision: "=?",
-                    placeholder: "@",
-                    placeholderVisible: "=?",
-                    autoRefresh: "=?"
-                };
-            },
-            enumerable: true,
-            configurable: true
-        });
-        PercentageDropdownDirective.prototype.initializeRange = function (scope) {
-            scope.precision = scope.precision || 0;
-            scope.factor = Math.pow(10, scope.precision);
-            scope.step = scope.step || 1;
-            scope.range = this.valueRangeService.generateRanges(scope.value, scope.min, scope.max, scope.step, scope.factor);
-        };
-        PercentageDropdownDirective.$inject = ["valueRangeService"];
-        return PercentageDropdownDirective;
-    }());
-    CustomerSetting.ModuleRegister.directive("percentageDropdown", PercentageDropdownDirective);
-})(CustomerSetting || (CustomerSetting = {}));
-
-var CustomerSetting;
-(function (CustomerSetting) {
-    (function (System) {
-        System[System["nap"] = 1] = "nap";
-        System[System["alpha"] = 2] = "alpha";
-        System[System["internalAlpha"] = 3] = "internalAlpha";
-    })(CustomerSetting.System || (CustomerSetting.System = {}));
-    var System = CustomerSetting.System;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -36367,6 +36357,16 @@ var CustomerSetting;
         return TooltipDirective;
     }());
     CustomerSetting.ModuleRegister.directive("tooltip", TooltipDirective);
+})(CustomerSetting || (CustomerSetting = {}));
+
+var CustomerSetting;
+(function (CustomerSetting) {
+    (function (System) {
+        System[System["nap"] = 1] = "nap";
+        System[System["alpha"] = 2] = "alpha";
+        System[System["internalAlpha"] = 3] = "internalAlpha";
+    })(CustomerSetting.System || (CustomerSetting.System = {}));
+    var System = CustomerSetting.System;
 })(CustomerSetting || (CustomerSetting = {}));
 
 var CustomerSetting;
@@ -37997,7 +37997,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "AgentPTIsOutOfRange": "代理商占成数超出范围。",
         "TotalPTMustBeInRange": "总占成数必须在{0}%和 {1}%之间。请重试",
         "TotalPTRangeConflict": "占成数数值冲突。请在新占成数生效后重试。",
-        "PTEffectiveTime": "（北京时间）{0} 后生效",
+        "PTEffectiveTime": "新占成数设定将在 (北京时间) {0} 后生效",
         "CreditsMustBeGreaterThanOrEqualTo": "额度必须大于或等于已使用之额度{0}",
         "CreditsMustBeLessThanOrEqualTo": "信用额度必须小于或等于{0}。",
         "InvalidHeadline": "无效的总监。"
@@ -38017,7 +38017,7 @@ $templateCache.put("./SettingType2/commission-and-bet-limit-value-template.html"
         "AgentPTIsOutOfRange": "代理商佔成數超出範圍。",
         "TotalPTMustBeInRange": "總佔成數必須在{0}%和 {1}%之間。請重試",
         "TotalPTRangeConflict": "佔成數數值衝突。請在新佔成數生效後重試。",
-        "PTEffectiveTime": "（北京時間）{0} 後生效",
+        "PTEffectiveTime": "新佔成數設定將在 (北京時間) {0} 后生效",
         "CreditsMustBeGreaterThanOrEqualTo": "額度必須大於或等於已使用之額度{0}",
         "CreditsMustBeLessThanOrEqualTo": "信用額度必須小於或等於{0}。",
         "InvalidHeadline": "無效的總監。"

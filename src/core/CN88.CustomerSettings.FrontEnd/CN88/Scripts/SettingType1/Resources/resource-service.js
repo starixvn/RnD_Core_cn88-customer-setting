@@ -129,7 +129,7 @@
         "AgentPTIsOutOfRange": "代理商占成数超出范围。",
         "TotalPTMustBeInRange": "总占成数必须在{0}%和 {1}%之间。请重试",
         "TotalPTRangeConflict": "占成数数值冲突。请在新占成数生效后重试。",
-        "PTEffectiveTime": "（北京时间）{0} 后生效",
+        "PTEffectiveTime": "新占成数设定将在 (北京时间) {0} 后生效",
         "CreditsMustBeGreaterThanOrEqualTo": "额度必须大于或等于已使用之额度{0}",
         "CreditsMustBeLessThanOrEqualTo": "信用额度必须小于或等于{0}。",
         "InvalidHeadline": "无效的总监。"
@@ -149,7 +149,7 @@
         "AgentPTIsOutOfRange": "代理商佔成數超出範圍。",
         "TotalPTMustBeInRange": "總佔成數必須在{0}%和 {1}%之間。請重試",
         "TotalPTRangeConflict": "佔成數數值衝突。請在新佔成數生效後重試。",
-        "PTEffectiveTime": "（北京時間）{0} 後生效",
+        "PTEffectiveTime": "新佔成數設定將在 (北京時間) {0} 后生效",
         "CreditsMustBeGreaterThanOrEqualTo": "額度必須大於或等於已使用之額度{0}",
         "CreditsMustBeLessThanOrEqualTo": "信用額度必須小於或等於{0}。",
         "InvalidHeadline": "無效的總監。"
