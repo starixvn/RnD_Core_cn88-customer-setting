@@ -125,7 +125,7 @@
     <value>所有球類</value>
   </data>
   <data name="BetTypeName_1_1" xml:space="preserve">
-    <value>滾球讓球, 滾球大小, 滾球單/雙</value>
+    <value>滾球讓分, 滾球大小, 滾球單/雙</value>
   </data>
   <data name="BetTypeName_5_0" xml:space="preserve">
     <value>獨贏盤, 滾球獨贏盤</value>

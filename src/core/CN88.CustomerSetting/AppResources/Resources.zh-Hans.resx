@@ -104,7 +104,7 @@
     <value>已成功创建帐户{0}。</value>
   </data>
   <data name="BetTypeName_1_1" xml:space="preserve">
-    <value>滚球让球, 滚球大小, 滚球单/双</value>
+    <value>滚球让分, 滚球大小, 滚球单/双</value>
   </data>
   <data name="BetTypeName_5_0" xml:space="preserve">
     <value>独赢盘, 滚球独赢盘</value>
