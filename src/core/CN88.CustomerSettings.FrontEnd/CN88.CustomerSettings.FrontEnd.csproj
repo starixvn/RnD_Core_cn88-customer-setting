@@ -31,6 +31,25 @@
         <None Remove="$(SpaRoot)Temp\**" />
     </ItemGroup>
 
+    <ItemGroup>
+      <TypeScriptCompile Include="CN88\Scripts\Typings\angularjs\angular-animate.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\angularjs\angular-cookies.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\angularjs\angular-mocks.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\angularjs\angular-resource.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\angularjs\angular-route.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\angularjs\angular-sanitize.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\angularjs\angular.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\chalk\chalk.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\gulp-util\gulp-util.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\htmlparser2\htmlparser2.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\jquery\jquery.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\node\node.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\through2\through2.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\tsd.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\underscore\underscore.d.ts" />
+      <TypeScriptCompile Include="CN88\Scripts\Typings\vinyl\vinyl.d.ts" />
+    </ItemGroup>
+
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
         <!-- Ensure Node.js is installed -->
         <Exec Command="node --version" ContinueOnError="true">

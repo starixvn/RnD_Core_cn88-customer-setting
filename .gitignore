@@ -260,6 +260,5 @@ paket-files/
 __pycache__/
 *.pyc
 **/bower_components/**
-**/Typings/**
 **/Compass/**
 **/Temp/**
